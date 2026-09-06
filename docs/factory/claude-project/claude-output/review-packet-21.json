@@ -1,0 +1,2720 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-21",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q1",
+      "baseContentHash": "04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34",
+      "verdict": "repair",
+      "reason": "CONFIRMED GEOMETRY/ANSWER-KEY DEFECT, cross-checked against an already-vetted sibling scene with the identical coordinate. AUTHORING-CONTRACT.md fixes the right blue line at x=7.62. YOU (h1) is authored at x=10, i.e. 2.38m PAST the right blue line on the attacking-zone side (toward the net Navy attacks), computed directly from the setup. The keyed answer (b) 'Inside it toward centre ice' describes the neutral-zone side (x<7.62) -- the OPPOSITE of where YOU actually is. Option (a) 'Behind it toward the right net' is the geometrically correct description. This is not a guess: bank-snapshot.json's exp26-u11-024 ('Reset behind the blue line in a timing drill', a same-family precedent already in the live bank) places its own YOU at the SAME x=10 and keys the analogous question's answer as 'On the right attacking-zone side of the line' -- confirming x=10 is the attacking-zone side, matching option (a) here, not (b). The question's OWN explanation text ('YOU is inside the right blue line area in the +x attack picture; the reset asks for a move behind it') already describes the attacking-zone reading and does not support option (b) either -- this reads as an option-key mismatch (the wrong option letter was keyed), not a deliberately different teaching claim. Separately, this question's own text carries the recurring YOU-grammar defect ('Where is YOU' -> 'Where are YOU'; explanation 'YOU is' -> 'YOU are'), and the scene-level briefing/cues (shared by every question's hash) carry the same defect ('YOU is just inside the line' -> 'YOU are...'; cue 'YOU is near the right blue line.' -> 'YOU are...'), so grammar and geometry are marked fail for every question in this scenario until the scene-level text and this question's own key are corrected together. Fixed in the replacement: answer flipped to (a), prompt/explanation reworded to 'are', explanation now states the computed distance and direction explicitly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home/Navy) at (10,-3) facing 3.1 rad (toward -x).",
+          "F1 (h2, home/Navy) at (5,3) facing 0 (toward +x), owns the puck; carried-puck point computed at (6,3.7), confirmed on ice.",
+          "F2 (h3, home/Navy) at (3,-5) facing 0.",
+          "D1 (a1, away/Gold) at (14,0) facing 3.1.",
+          "Right blue line is x=7.62 (AUTHORING-CONTRACT.md constant); YOU's x=10 is 2.38m on the +x (attacking-zone/right-net) side of that line -- computed directly, not inferred."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. F1 carries near the right blue line; YOU are just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.'",
+          "Cue: 'The still scene does not make a full offside call.'"
+        ],
+        "unproven": [
+          "Whether F1 actually passes or the coach restarts the rep before or after YOU completes the reset -- this is a static freeze.",
+          "Any formal offside ruling -- the scene explicitly disclaims that call."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q2",
+      "baseContentHash": "9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210",
+      "verdict": "repair",
+      "reason": "This question's own text and key are sound: the coach's stated instruction and F1/F2's actual restart positions are the two facts that matter; a 'silent offside verdict from the still image' is correctly rejected as unsupported (the scene explicitly disclaims a formal call). No defect in this question's own content. It is marked repair only because it shares the scenario's briefing/cues (part of every question's hash), which carry the YOU-grammar defect described in q1's row ('YOU is' -> 'YOU are') -- grammar fails scenario-wide until that shared text is corrected. Unaffected otherwise by q1's answer-key fix or q4's geometry fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1 (YOU, F1, F2, D1); F1 owns the puck."
+        ],
+        "stated": [
+          "Briefing names the coach's reset instruction explicitly; cue confirms no formal offside call is being made from this freeze."
+        ],
+        "unproven": [
+          "Where F1/F2 will actually be positioned at the moment the coach restarts the rep -- this is a static freeze, not a recorded sequence."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could also ask whether D1's position affects the reset, though the scene's own teaching focus is the coach instruction and teammates' locations, not the opponent."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q3",
+      "baseContentHash": "db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e",
+      "verdict": "repair",
+      "reason": "The ordered steps (hear the instruction -> move behind the line under control -> re-check F1 before restarting) are a defensible, situation-specific routine: hearing the instruction necessarily precedes moving on it, and re-checking F1 before treating the rep as ready to restart is a sensible final step. This is not an artificial universal rule forcing scanning to wait; a player could begin moving while still processing the instruction, so some overlap is possible (noted in 'alternative'), but the given order is not wrong. No defect in this question's own content. Marked repair only for the scenario-wide grammar cascade described in q1's row (shared briefing/cues text).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1."
+        ],
+        "stated": [
+          "Briefing: 'The coach calls for a reset behind the line before the next rep.'"
+        ],
+        "unproven": [
+          "Whether a player who begins moving immediately upon hearing the instruction is doing something meaningfully different from this ordering -- overlap between hearing and moving is plausible and not penalized here."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Hearing the instruction and beginning the move can overlap in practice; the part that matters for this drill is completing the move and re-checking F1 before treating the rep as restarted."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q4",
+      "baseContentHash": "948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d",
+      "verdict": "repair",
+      "reason": "CONFIRMED GEOMETRY DEFECT, computed directly. The prompt asks to move YOU 'to an example reset point behind the right blue line,' i.e. back to the neutral-zone side (x<7.62, per q1's finding and the live-bank precedent exp26-u11-024's own analogous fix at x=6). The authored reference is (12.5,-3.5) -- x=12.5 is FARTHER into the attacking zone than YOU's own start (x=10), the opposite of a reset behind the line. The question's own explanation confirms the error rather than masking it: 'This point shifts YOU farther toward the right-net side,' which is explicitly the wrong direction for a 'reset behind the line.' Fixed in the replacement by moving the reference to (6,-3.5) -- confirmed on ice (isCoachRoutePoint), 4.03m from YOU's start (exceeds the 0.1m minimum-move rule), and on the neutral-zone side of the right blue line -- with the explanation rewritten to state the correct direction and distance. Grammar also fails via the scenario-wide cascade in q1's row (this question's own text has no YOU-grammar issue).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) starts at (10,-3). Authored reference (12.5,-3.5) is 2.53m farther onto the attacking-zone side of the right blue line (x=7.62), not behind it.",
+          "F1 (5,3), F2 (3,-5), D1 (14,0) unaffected by this question's own fix."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU to an example reset point behind the right blue line.'",
+          "Briefing's stated reset instruction is the same one q1 and q3 reference."
+        ],
+        "unproven": [
+          "Whether F1 or D1 remain literally 'visible' from any given point -- line-of-sight is not modeled by this renderer, so any such claim is qualitative, not computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Several neutral-zone points near (6,-3.5) would equally satisfy the reset; this is an illustrative example, not an exclusive correct spot."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q5",
+      "baseContentHash": "73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b",
+      "verdict": "repair",
+      "reason": "GRAMMAR DEFECT in this question's own prompt: 'F1 keeps waiting after YOU resets' should be 'F1 keeps waiting after YOU reset' (YOU takes the plural-form verb, never the third-person-singular '-s'). This is the single most recurring defect class named in this assignment. The keyed answer and its content are otherwise sound: re-checking F1's route and the coach's restart status is the correct response to a stalled wait, and the two distractors (assuming the pass must happen, inventing a formal rule call) are credible U11 misreadings. Fixed in the replacement by correcting 'resets' to 'reset'; also affected by the scenario-wide grammar cascade in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1; unaffected by q1/q4's geometry fixes."
+        ],
+        "stated": [
+          "Prompt introduces a hypothetical continuation ('F1 keeps waiting after YOU reset') not shown in the static freeze, explicitly flagged as a hypothetical rather than an observed fact."
+        ],
+        "unproven": [
+          "Whether the coach has in fact restarted the rep at this point -- the question asks the player to check this, not assume it."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also flag the wait to a coach directly rather than only self-checking F1's route, depending on team communication norms."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q6",
+      "baseContentHash": "00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881",
+      "verdict": "repair",
+      "reason": "This reflection's own text is sound: it correctly identifies that timing and rule context are missing from a static freeze and correctly avoids treating the image as a formal ruling, consistent with the scene's own disclaiming cue. No defect in this question's own content or its (absent, correctly so for an explain-type) answer key. Marked repair only for the scenario-wide grammar cascade in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1; this reflection has no answer key by design."
+        ],
+        "stated": [
+          "Cue: 'The still scene does not make a full offside call.'"
+        ],
+        "unproven": [
+          "Any specific timing detail (exact moment feet/puck cross the line) that a formal offside call would require -- correctly left unresolved."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could instead ask what a linesman or referee would need to see (skate position at the exact moment the puck crosses) to make this concrete, rather than only naming 'timing and rule context' abstractly."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q1",
+      "baseContentHash": "b4a59381ace7fd29f61df69765ee01cb4fbdb26073bdec5d1df2174dac6baed7",
+      "verdict": "retain",
+      "reason": "Scene-basis question correctly identifies the coach's stop call as what changed the task, while the puck remains loose (owner:null in setup). Computed geometry confirms the puck sits almost exactly on the line between YOU (-7,1) and D1 (-2,3) -- perpendicular offset only 0.19m from that segment -- so 'loose between YOU and D1' is a verified, not merely asserted, spatial claim. Distractors (D1 touched the puck; F2 was assigned the puck before the stop) directly contradict the stated loose-puck fact and are credible misreadings, not absurd trivia. No roster, geometry, answer, feedback, age, source or grammar defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home/Navy) at (-7,1) facing 0.3 rad.",
+          "F2 (h2, home/Navy) at (-8,-4) facing 0.7 rad.",
+          "D1 (a1, away/Gold) at (-2,3) facing -2.7 rad.",
+          "Loose puck at (-4,2), owner:null -- computed perpendicular distance from the YOU-D1 segment is 0.19m, confirming the puck is genuinely between them, not just nearby."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. The puck is loose between YOU and D1 when the coach stops the rep. F2 is nearby. The stop changes the task even though no player has yet touched the puck.'"
+        ],
+        "unproven": [
+          "Who would have won the loose-puck battle had the coach not stopped it -- explicitly not claimed."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q2",
+      "baseContentHash": "ec6589319c1a8b3124cc019251aefdb5dfb2019f3d24d3ac5d67a84c535a9275",
+      "verdict": "retain",
+      "reason": "Correctly keys pausing and moving to the stated reset area as fitting the stop instruction, and correctly rejects continuing to battle for the loose puck as no longer the objective once the coach has stopped play. Matches the briefing's explicit statement that the stop changes the task despite no possession change. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1."
+        ],
+        "stated": [
+          "Briefing explicitly states the stop changes the task even without a possession change."
+        ],
+        "unproven": [
+          "Exactly where the 'stated reset area' is -- not numerically specified in this multi-select; q4 supplies one example point separately."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also communicate the stop to a nearby teammate before moving, depending on team habit."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q3",
+      "baseContentHash": "a6c3b227252784a1e4331a0a945d385bffba70ef9e3c8514d2bc0a12a52b14bb",
+      "verdict": "retain",
+      "reason": "The ordered steps (hear/acknowledge the stop -> leave the contest under control -> confirm the restart cue) reflect a genuine procedural dependency: acknowledging the stop must precede leaving a live puck battle, and confirming the restart logically follows disengaging, not the other way around. This is not an artificial universal rule about scanning; it is the specific order a stop-and-reset in mid-battle requires. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1."
+        ],
+        "stated": [
+          "Briefing: the coach 'stops the rep' while the puck is still loose and contested."
+        ],
+        "unproven": [
+          "The exact timing of when a player would fully disengage versus still watching the puck while leaving -- not modeled, and not required by this ordering."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player already backing off the puck when the whistle sounds need not treat 'hear the stop' and 'leave the contest' as two fully separate steps, provided both happen before the restart is confirmed."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q4",
+      "baseContentHash": "ff662f13c33cb60009b74faec8ec676202994128407c767ae029c051a7eecd90",
+      "verdict": "retain",
+      "reason": "Computed geometry confirms the reference point (-10,6) is well clear of the loose-puck contest: 7.21m from the puck (-4,2) and 8.54m from D1 (-2,3), versus YOU's start only 3.16m from the puck -- a genuine, verified separation, not merely asserted. Confirmed on ice (isCoachRoutePoint) and 5.83m from YOU's start, exceeding the minimum-move rule. Basis is correctly coaching (an example point, not an exclusive target).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference (-10,6): 7.21m from the loose puck (-4,2), 8.54m from D1 (-2,3), versus YOU's own start (-7,1) at only 3.16m from the puck -- a computed, confirmed separation."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU to an open reset point away from the loose-puck contest.'"
+        ],
+        "unproven": [
+          "Whether this exact point is the single best reset location -- explicitly one example among several that would work."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Any nearby point clear of the puck and D1 would satisfy the same reset purpose; this is not a unique target."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q5",
+      "baseContentHash": "d086ef65d73c0285b469660e4267b6245bd8c9d033f6453db04f872721d2ce83",
+      "verdict": "retain",
+      "reason": "Correctly identifies that a restart assigning F2 as carrier requires re-scanning F2's location, D1's pressure, and the new support job, rather than continuing the old loose-puck plan or assuming YOU owns the restart. This matches the scene's teaching point that the right decision can change even without a possession change at the moment of the stop. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F2 (h2) and D1 (a1) are both present in the roster and available to reference in this hypothetical restart."
+        ],
+        "stated": [
+          "Prompt hypothetical: 'The coach restarts with F2 as the puck carrier,' explicitly flagged as a new condition, not an observed fact from the freeze."
+        ],
+        "unproven": [
+          "F2's and D1's exact positions at the moment of this hypothetical restart -- not specified beyond their frozen coordinates, appropriately left open."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "YOU could also ask a teammate to confirm D1's pressure verbally rather than relying only on a visual scan, depending on team communication habits."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q6",
+      "baseContentHash": "70c6a4cbddbc0956a003739171228dbe406bb8b015388744c86fb7c4c817d494",
+      "verdict": "retain",
+      "reason": "This reflection correctly explains that the coach's stop and the restart conditions can change the right decision independent of a puck touch, and correctly frames the follow-on read (possession, pressure, support) as something to re-check rather than assume. No defect found in this ungraded question.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1; this reflection has no answer key by design."
+        ],
+        "stated": [
+          "Briefing: 'The stop changes the task even though no player has yet touched the puck.'"
+        ],
+        "unproven": [
+          "No specific claim beyond the stated condition; appropriately open-ended for a reflection."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also point to a specific rule (e.g. an icing or offside condition tied to a whistle) as an example of a non-possession change, rather than only the general stop-and-restart case shown here."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q1",
+      "baseContentHash": "222bb38fb1ba608ee1ef5e56f74b7893a24bda5aeb6077e8ff38ce0c262f542a",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This question's own claim (D2 is on the opposite y-side of Navy's net from YOU: YOU.y=6, D2.y=-6, signs opposite) is unaffected by the depth error and remains correct; W (y=9, same side as YOU) and C (x=-15, 10.76m from the net, not plausibly 'beside the net') are not defensible alternate keys. Own text/answer unaffected; only the scenario-wide setup cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q2",
+      "baseContentHash": "a87e9875906db1d206102677f5059217ad8d6dfe6345e3d9997824ccd69f8768",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This multi-select's own claim is unaffected: correctly keys (a) D2's readiness and (c) reverse-lane pressure as the two genuine pre-reverse checks; (b) 'the first planned pass must be completed' is a credible U13 misconception (treating the original read as fixed) rather than an absurd distractor. Own text unaffected; only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A coach could also ask whether a brief hold near the net protects possession just as well as immediately checking the reverse, since delaying the decision slightly is not itself a fault."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q3",
+      "baseContentHash": "2e57f39d84ebaa1be8bda6d05805e2940fdd7a6410db0ac849ea469cc954c3b7",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. Independently re-examined the P3 teaching flag already on record (packet-21 catalog-review.json: 'notice/check/use-if-available' framed as ordered when the actions may overlap), and the later followup/u13-proposals.json 'keep' adjudication. I concur with keep: this sequence models a decision CHECKLIST (notice the closed lane, then confirm D2, then use the reverse only if still open), not a claim that a player must fully stop scanning before communicating, or stop communicating before moving. That reading matches the contract's 'scanning and moving can overlap' rule without requiring a rewrite. Own text/answer unaffected; only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A player already communicating with D2 while scanning need not treat 'notice the blocked side' as a finished first step before the next one starts, as long as the reverse itself is not used before the route is confirmed open."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q4",
+      "baseContentHash": "966c39846aedbfe87138f8645a7d92e48dd949ab96fb18686a98dc4add049e7e",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. ADDITIONAL, INDEPENDENT FINDING IN THIS QUESTION'S OWN TEXT: the explanation calls reference point (-24,3) 'a tighter position near the back of the net,' but (-24,3) is 1.7556m further IN FRONT of the net-front than even the scene's (already-too-forward) start position (-25,6) -- computed distance from start to reference is 3.16m, moving toward centre ice, not toward the back of the net. This is a second, independent geometry defect inside q4 itself (not merely inherited from the scene). Fix applied: reworded the explanation to 'A tighter position toward the middle of the net can change the angle you present to pressure' -- accurate, since y moves from 6 toward 0 (the net's lateral centre), which is the real effect of this specific reference move. The reference coordinate itself is unchanged (still >=0.1m from the actor and on ice) since the coaching point (a different puck-protection angle) remains valid once honestly described.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "YOU could also protect the puck from a spot closer to the boards on D2's side rather than centring toward the net, provided the same check of D2 and the reverse lane still happens before releasing."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q5",
+      "baseContentHash": "057c4ff77946d3d8fd9100831f3853cdaa11abc37ae1b9e7b0f8281793e39d12",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This choice's own claim is unaffected: (c) 'reassess a hold or another outlet' is the only option consistent with the stated premise ('D2 is closely marked'); (a) reverses automatically despite the marking and (b) passes through the marker unchecked are both credible but wrong U13 impulses. Own text unaffected; only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A player could also choose to hold possession briefly rather than immediately reassessing a different outlet, provided the puck stays protected while D2's coverage is rechecked."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q6",
+      "baseContentHash": "5a36a17057a5063892ac7f021c4257c7affeaad873a41421f4c51e49684eba80",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This explain question's own prompt/explanation is unaffected: it correctly requires naming a second condition (an open lane, a prepared receiver, pressure on D2) beyond just 'the first outlet is closed,' with no answer key to leak. Only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A player could also cite that Gold 1's exact pressure angle or D2's readiness matters as much as the closed lane itself, since either factor alone does not decide whether the reverse helps."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q7",
+      "baseContentHash": "370833f9b1b6038a2fdd49f5f4aa48526df2d24763a6c91fdb97a6017fa2b784",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. Verified geometrically: perpendicular distance from A1/Gold 1 (-18,8) to the segment YOU(-25,6)->W(-12,9) is 0.375m (t=0.545), confirming Gold 1 genuinely sits on the direct YOU-W lane, so 'the direct W outlet is restricted' is accurate and independent of the net-depth issue. Own text/answer unaffected; only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q8",
+      "baseContentHash": "3596968a190eecede0dafb9e32592f77df7728b410cf8f0ec92196d273f379a5",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This question is the already-applied repair from repairs/u13-repairs.json (before-hash eb819dd9..., after-hash 3596968a19... matching this packet's baseContentHash), independently re-reviewed here at its current (fixed) text: (c) 'D2 is automatically open because Gold 1 is near W' is a credible false-certainty distractor, correctly excluded; (a) D2's side and (b) reverse-lane access are the two genuine details. I concur with the prior repair; own text/answer otherwise unaffected by the net-depth issue found in this pass. Only the scenario-wide cascade changes this question's hash again (repair receipt predates this pass's briefing fix).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A coach could also ask whether holding possession behind the net is a live third option, since a reverse call is not the only response to a closed strong side."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q9",
+      "baseContentHash": "766aa274efbd6a87147c0b536c4d829753effc4e0a522e748126b11f9e06c948",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. Verified geometrically: reference (-26,5) sits 0.244m PAST net-front (-25.7556) into the behind-net zone, i.e. genuinely 'closer to the back of the net' than the start position (-25,6) which sits 0.756m in front of net-front -- this reference's own claim holds regardless of the briefing's separate 'below the goal line' overstatement, so no change to this question's reference/explanation is needed beyond the shared scene fix. Own text/answer unaffected; only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "YOU could also hold the current spot and change body position to protect the puck rather than moving toward the back of the net, if D2 is not yet ready to receive."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q10",
+      "baseContentHash": "6af7704fabddda699177bdd2c414e237d88c89476c523a70120b24dcdc6da17b",
+      "verdict": "repair",
+      "reason": "SCENE-WIDE FINDING: the briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m IN FRONT of Navy's own net-front line (x=-25.7556m, from NHL_200X85_PROFILE.landmarks.netFrontRight mirrored to -x) and 2.9138m in front of the actual goal line (x=-26.9138m, from landmarks.goalLineRight mirrored). \"Below/behind the goal line\" specifically names the area between the goal line and the endboards; the puck is not there -- it sits just in front of the net-front, in the low slot/net-front area instead. This is a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch): the WORD claims a depth the rendered position does not support. Because briefing and cues are part of every question's hashed scene (questionContentHash splits {scene,question}, and scene = every scenario field except questions/version), this affects every linked question's hash even where the individual question's own visible text is untouched. Fix applied: reworded briefing/cues to \"settled the puck low in your own end, at the front of the net\" -- accurate to the rendered position, and still fits the breakout-reverse teaching objective (a net-front puck battle facing a forechecker, deciding whether to reverse to a partner, is itself a standard tactical picture) -- no actor/puck coordinates were changed. This explain question's own prompt/explanation is unaffected: it correctly requires citing BOTH the closure and D2's side/pressure as joint conditions for a permitted-not-required reverse, with no answer key to leak. Only the scenario-wide cascade changes this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-25,6) facing 0 rad (toward +x), owns the puck; renderer carried-puck point computes to (-24,6.7) via x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing).",
+          "D2 (home-skater-2, home/Navy) at (-24,-6) facing 1.654 rad.",
+          "W (home-skater-3, home/Navy) at (-12,9) facing -2.915 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-18,8) facing -2.863 rad.",
+          "C (home-skater-4, home/Navy) at (-15,-2) facing 2.467 rad.",
+          "Navy's own net (mirrored from NHL_200X85_PROFILE.landmarks, src/play/rinkAnchors.js via feetPointToRinkFrame): net-front x=-25.7556m, goal line x=-26.9138m, behind-net x=-28.194m; net centre y=0."
+        ],
+        "stated": [
+          "Briefing (base v1) and cues[1] (verbatim repeat): \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"D2 and YOU are on opposite sides of Navy’s net.\""
+        ],
+        "unproven": [
+          "Whether D2 is actually ready to receive a reverse in the next instant, or whether Gold 1/another forechecker could reach the reverse lane in time -- this is a static freeze; no skating speed or interception timing is modeled.",
+          "Whether YOU would choose to reverse, hold, or use W at all -- the briefing explicitly permits but does not require the reverse."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ],
+      "alternative": "A player could also note that a closed strong side sometimes means holding possession and waiting, rather than choosing only between the reverse and the original plan."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q1",
+      "baseContentHash": "20dc42e9cbf86bff9b158f3442819ef5f16ab41f2c23c22d700039a7d675d8c6",
+      "verdict": "retain",
+      "reason": "Confirmed via puck.owner==='home-skater-2' (D1). YOU and C are plausible-but-wrong distractors (YOU is the support winger without the puck; C is a different teammate). No grammar, roster, age, or source issue.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q2",
+      "baseContentHash": "33ee83a5f8cedbf6149c36888b4bf9c57a9005d66dadf54cd52a0051b7fefdd1",
+      "verdict": "retain",
+      "reason": "Answer (b,c) correctly keys showing a ready stick after scanning and adjusting the receiving angle; (a) 'stay hidden behind Gold 1 until the pass arrives' is a credible U13 misconception (passive waiting instead of active support) rather than an absurd distractor. Age-appropriate wording for U13 (Learn-to-Train stage; matches 'Basic Breakouts'/'Basic Positioning' team-play concepts confirmed on the read source page).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A coach could also ask whether calling out loud for the puck, not only moving and showing a stick, would make the support option clearer to D1."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q3",
+      "baseContentHash": "07dd56e11a2db4e03d7270f1698d14797a622960058d9a7d1fd9bf9b3a5915fc",
+      "verdict": "retain",
+      "reason": "Independently re-examined the P3 teaching flag already on record (packet-21 catalog-review.json: 'identify/move/look-back' framed as ordered when the actions may overlap) and the later followup/u13-proposals.json 'keep' adjudication. I concur with keep: this sequence models a support ROUTINE (read the blocker, change the angle, then look for the puck), which a player can compress or overlap in real play without contradicting the teaching point; it does not claim a rigid stop-look-decide order for every read.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A player already moving to change the angle can look back for the puck at the same time, rather than treating 'look back and prepare' as a separate final step."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q4",
+      "baseContentHash": "d83fe383dbd59a0cef2faa63f81d2911f0d326ca9169fa06f3aca98cb6cdb746",
+      "verdict": "retain",
+      "reason": "Verified geometrically: moving YOU from (-7,9) to reference (-10,5) increases the perpendicular distance from A1/Gold 1 to the D1-YOU lane from 0.066m to 2.302m (t=0.635) -- a real escape from Gold 1's shadow, and distance from (-10,5) to C(-13,1) is 5m (not crowding). 'A different receiving angle' is accurate and specific.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "YOU could also step toward C's side rather than straight off the boards, provided that new angle still clears Gold 1's direct route to D1."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q5",
+      "baseContentHash": "05881b88a082c5cefbe7be23a941f462fefc9ffad4ecaaa709e348826165db1a",
+      "verdict": "retain",
+      "reason": "Answer (b) 'reoffer elsewhere or make room for C' is the only option consistent with the stated premise (Gold 1 follows the inward move); (a) calls for a pass without checking the follower and (c) wrongly assumes the first move must already have worked. No certainty or contact/safety claim is made.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A player could also call for a different pass entirely (asking D1 to hold and look elsewhere) rather than only reoffering or making room for C."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q6",
+      "baseContentHash": "7fb0a119cc321994021f4ae84c7278488dee6bff16bfc0b5d1c408c75b4b0e6e",
+      "verdict": "retain",
+      "reason": "Explain question, no answer key; correctly frames that receiving the puck is not the only useful outcome of movement (drawing Gold 1 can free C instead). No certainty claim, no invented outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A player could also note that occupying Gold 1's attention at all, even without moving into a new passing lane, can free space for a teammate elsewhere."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q7",
+      "baseContentHash": "0b50e2c683707c8031bfd3de9de7ccb8b5ad007ecfba1a926d97c5661fb9270b",
+      "verdict": "retain",
+      "reason": "Verified geometrically (see sceneEvidence): perpendicular distance from Gold 1 to the D1-YOU lane is 0.066m, essentially on the line, confirming 'the lane between D1 and YOU' is the correct, scene-visible answer over the two distractor routes (C-to-net, far blue-line exit), which are not depicted as blocked by anything.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q8",
+      "baseContentHash": "48753c7753f235f3a845b8a3194ee1fe6dc5a46ec88283066c2434e7bb56bfd9",
+      "verdict": "retain",
+      "reason": "This question is the already-applied repair from repairs/u13-repairs.json (before-hash 51309ccec2..., after-hash 48753c7753... matching this packet's baseContentHash), independently re-reviewed here at its current (fixed) text: (c) 'Call “I’m open” and leave D1 to guess your new angle' is a credible communication-failure distractor (vague call, no geometry given), correctly excluded; (a) announcing clearance and (b) naming C's inside support are the two genuine calls. I concur with the prior repair.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A coach could also ask whether pointing directly at the open lane, not just naming being clear or C's support, gives D1 the clearest information."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q9",
+      "baseContentHash": "822bb7ef33eb5ed15122e584b4314ee65a65459532218c4acb1763dff38c2403",
+      "verdict": "retain",
+      "reason": "Verified geometrically: reference (-9,7) increases the perpendicular distance from Gold 1 to the D1-YOU lane from 0.066m to 1.0m (t=0.615) -- a real, if more modest, escape than q4's alternative; distance from start (-7,9) to reference is 2.83m, comfortably over the 0.1m threshold and on ice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "YOU could also come off the boards at a sharper angle toward centre ice rather than staying this close to the boards, if Gold 1 is already anticipating the shallow move."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q10",
+      "baseContentHash": "31bc11989a2cdedd6b58a2db32b9a458ed5b9cfe2a6c790f0374fa147eacb7ab",
+      "verdict": "retain",
+      "reason": "Explain question, no answer key; correctly generalizes q6's point (movement can help even when the puck goes elsewhere) without asserting a guaranteed outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, home/Navy) at (-7,9) facing -3.009 rad (near -π, toward -x).",
+          "D1 (home-skater-2, home/Navy) at (-22,7) facing 0 rad, owns the puck; carried-puck point computes to (-21,7.7).",
+          "C (home-skater-3, home/Navy) at (-13,1) facing 2.554 rad.",
+          "A1 / 'Gold 1' (away-skater-1, away/Gold) at (-14,8) facing -3.017 rad.",
+          "A2 / 'Gold 2' (away-skater-2, away/Gold) at (-5,-2) facing 2.655 rad -- never named in any question text, present only as board context.",
+          "Perpendicular distance from A1(-14,8) to the segment D1(-22,7)->YOU(-7,9) is 0.066m (t=0.533), i.e. Gold 1 sits essentially ON the direct D1-YOU passing lane."
+        ],
+        "stated": [
+          "Briefing (base v1): \"D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net.\"",
+          "cues[0]: \"The puck is assigned to D1, so this question is about support without possession.\""
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually intercept a pass thrown down that lane, or merely be able to reach it -- no pass velocity/interception timing is modeled, only static lane occupancy.",
+          "Whether D1 will pass at all versus carry, cycle, or reverse -- the scene is a freeze before any such decision."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A player could also explain that drawing Gold 1's attention away from C, even without touching the puck, is itself a useful outcome of the movement."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q1",
+      "baseContentHash": "505e31cc1cc5323bd195bda91519a77ba250cf17b138ecda9de2a73d96429218",
+      "verdict": "retain",
+      "reason": "Basis:scene question asks what job is explicitly assigned to YOU. The briefing states 'your first job is to offer a short inside outlet' in nearly the same words as answer c, and no other actor performs that job, so the single-answer key is directly supported by stated text, not inference. Independently recomputed contentHash with the real questionContentHash() function and it matches the packet's baseContentHash exactly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck is owned by home-skater-2 (W); YOU is home-skater-1 at x=-3,y=1, a separate actor with no puck.",
+          "Five actors total: YOU, W, D1 (home/Navy skaters) and A1/A2 (away skaters, rendered as Gold 1/Gold 2 via actorDisplayName)."
+        ],
+        "stated": [
+          "Briefing: 'In this exercise your first job is to offer a short inside outlet.'"
+        ],
+        "unproven": [
+          "No timing, skating speed, or execution outcome is implied by this still freeze; the job is a stated instruction, not an observed action."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q2",
+      "baseContentHash": "0db564457adf7acc75c3be939e0dda40ffebb1f1741fd1e39df5668539e4bcc1",
+      "verdict": "retain",
+      "reason": "Correct pair (separation from Gold 1, a visible route) matches the 'short inside outlet' objective. Distractor c ('the greatest possible distance from W') is a credible U13-level misconception -- a young player might think bigger separation is always safer -- but it actually contradicts the stated 'short' requirement, so it is a believable wrong choice tied to this exact scene, not absurd trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (away-skater-1, x=-7,y=7) sits roughly 3.6m from W (x=-10,y=9) -- verified with Math.hypot, a genuinely close pressure distance on a 60m-long rink."
+        ],
+        "stated": [
+          "Briefing establishes the outlet must be 'short.'"
+        ],
+        "unproven": [
+          "Whether W would actually see or use any specific outlet at game speed is not established by a still frame."
+        ]
+      },
+      "alternative": "If Gold 1 shifts to cut off the most direct route before YOU can offer it, a slightly wider or delayed angle can still satisfy the objective as long as W can actually see a clear release; separation and a visible route matter more than any single fixed spot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q3",
+      "baseContentHash": "3881a8789901af274b1720911cd24a546d9e865a3f290def85e584af78dd6e1c",
+      "verdict": "retain",
+      "reason": "Historical P3 finding (catalog-review.json, id 'teaching-exp26-u13-004-q3') worried the ordered options ('Read Gold 1's approach' -> 'Move closer...' -> 'Prepare for a pass or another change') could imply a strict must-finish-before-next order. followup/u13-proposals.json re-reviewed this exact current hash and decided 'keep' because reading pressure while moving is a coherent, non-rigid routine. Independently re-read against the calibration adjudication's own precedent (U13-010 q3: 'watching, moving and offering the stick overlap... not an objectively scored timeline') and the question's own explanation, which already disclaims a rigid order ('the routine is not a rigid play call'): agree with keep. This is not a blanket acceptance of the historical pass label -- I re-derived the same conclusion from the actual current text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 at x=-7,y=7 is a real, positioned pressure actor between YOU's start (-3,1) and W (-10,9), so 'read Gold 1's approach' references an actual on-ice fact, not an invented threat."
+        ],
+        "stated": [
+          "Explanation: 'Keep updating pressure while moving; the routine is not a rigid play call.'"
+        ],
+        "unproven": [
+          "No forced timing or exclusive order is established; scanning and repositioning may legitimately overlap in real play."
+        ]
+      },
+      "alternative": "Reading pressure and adjusting position can happen together rather than strictly in sequence -- a player already moving while still checking Gold 1's angle is not doing it wrong, since scanning and repositioning legitimately overlap.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q4",
+      "baseContentHash": "673d13a427987641216254cf6c96356f2df0a7bc5e188830f6c0fe065e84c76e",
+      "verdict": "retain",
+      "reason": "Numerically verified with the real isCoachRoutePoint() and coordinate math: reference (-13,3) is on ice, is a genuine repositioning (10.2m from YOU's start at (-3,1), not a no-op), is strictly more negative in x than W's -10 (so it is actually 'closer to Navy's net than W', matching Navy-attacks-+x / Navy's-own-net-at--x convention), and is less extreme in |y| (3 vs 9) than W, so 'inside' is also satisfied. Explanation correctly hedges with 'several spots may work,' consistent with the contract's 'not an exclusive correct dot' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at x=-3,y=1. Reference point given is x=-13,y=3. W is at x=-10,y=9."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU closer to Navy's net than W.' Project convention: Navy/home attacks +x, so Navy's own net is at the -x end and 'closer' means more negative x."
+        ],
+        "unproven": [
+          "No single dot is claimed as the only correct answer; the explanation explicitly allows other spots."
+        ]
+      },
+      "alternative": "Other points nearer Navy's net and inside W's line would also work as a short-outlet demonstration -- for example, tighter to the boards if Gold 1 shifts to cover the middle; the exact metres are illustrative, not a scored target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q5",
+      "baseContentHash": "b4570d32737d06cf1126ee0e660eb23e62fc4ec789c2e68614639e1493294220",
+      "verdict": "retain",
+      "reason": "Answer a ('may move forward while remaining available') correctly avoids a rigid positional rule, consistent with the project's 'responsibilities can change with the play; do not enforce rigid positional rules' instruction. Distractors b ('must remain underneath for the rest of the shift') and c ('stop watching the puck') are clearly-labeled wrong answers representing realistic youth misconceptions about fixed roles, not smuggled certainty presented as correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "No actor or puck state changes in the rendered scene; this is an explicit hypothetical layered on the static freeze."
+        ],
+        "stated": [
+          "Prompt itself states the hypothetical: 'If W escapes Gold 1 with secure possession, what changes?'"
+        ],
+        "unproven": [
+          "Whether W actually gains that separation is not shown or claimed as having happened; it is conditional."
+        ]
+      },
+      "alternative": "If W's possession is only briefly secure and pressure is about to return, staying underneath a little longer before advancing can also be reasonable; advancing is not automatic the instant Gold 1 is beaten.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q6",
+      "baseContentHash": "fe56816cf6e03a581c60f24ed548a454e9d67291a890b81d00269e1923b3d3dd",
+      "verdict": "retain",
+      "reason": "Open reflection (basis:coaching, type:explain) with no answer key and no scoring implied, consistent with the contract's 'no writing requirement or scoring penalty for skipping' rule. The explanation gives one legitimate hockey distinction (a different angle/time advantage vs. joining the same pressure) without asserting it is the only correct essay response.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 is pressuring W at the wall; YOU is a separate, uncommitted actor with no puck."
+        ],
+        "stated": [
+          "Objective: 'Offer an inside release beneath a teammate under pressure.'"
+        ],
+        "unproven": [
+          "No specific outcome of 'skating into the problem' is shown or asserted; this is a conceptual contrast, not an observed event."
+        ]
+      },
+      "alternative": "A valid response could also note that simply holding a calm, predictable spot (rather than moving) can help if it removes doubt about YOU's job, letting W commit to the boards read without tracking a moving option; movement is one way to add value, not the only way.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q7",
+      "baseContentHash": "e8b262defa6479d31d6769d46a847bc1f4f9ccceb8603de339b8bd6776fe6fb7",
+      "verdict": "retain",
+      "reason": "This question was previously repaired (docs/factory/research/question-review/repairs/u13-repairs.json) from 'What is YOU's stated first job?' (a near-duplicate of q1, flagged P2 'u13-p2-repeat-q7-targets') to the current 'Which Navy teammate offers a deeper reset behind YOU if W remains pinned?'. I did not just trust that receipt: I independently recomputed the current text's hash with questionContentHash() and it matches the packet's baseContentHash exactly, confirming the repaired version is what is actually live. I then independently re-verified the tactical claim: D1 (home-skater-3, x=-22,y=5) is numerically the only other Navy/home skater in the scene and is genuinely more negative in x (deeper, closer to Navy's own net) than YOU (x=-3), so 'D1 offers a deeper reset' is geometrically true, not asserted.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 at x=-22,y=5; YOU at x=-3,y=1. -22 < -3, confirmed by direct computation, so D1 is deeper toward Navy's own net than YOU."
+        ],
+        "stated": [
+          "Only three home/Navy skaters exist in this scene (YOU, W, D1); no other Navy teammate is available to name."
+        ],
+        "unproven": [
+          "Whether D1 would actually be open for a pass at game speed is not shown; the explanation appropriately hedges with 'if D1 is covered, hold a support angle instead.'"
+        ]
+      },
+      "alternative": "If D1 is also closely covered by a forechecker, holding possession or looking for a shorter wall-support option instead of forcing the pass to D1 is a defensible alternative to naming D1 automatically.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q8",
+      "baseContentHash": "28afaf2a716e1e92072f15bcb1b76a0adf690e71d6356dc56527d4b55e665e62",
+      "verdict": "retain",
+      "reason": "Correct pair (Gold 1's pressure on W, W's puck control) are the two live, checkable cues in this exact freeze. Distractor c ('D1's old position alone') is correctly excluded because a single static fact about a third player, considered alone, cannot answer an immediate support-distance question -- this is a credible reasoning-gap distractor, not trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 at x=-7,y=7, ~3.6m from W; W owns the puck (home-skater-2)."
+        ],
+        "stated": [
+          "None beyond the briefing already covered in q1/q2."
+        ],
+        "unproven": [
+          "Actual tightness of W's puck control (loose vs. secure) is not rendered; the question treats it as a cue to keep reading, not a claimed fact."
+        ]
+      },
+      "alternative": "A third relevant cue not listed here -- whether YOU's own route to the middle is still open -- could also legitimately inform the stay-or-widen decision; pressure and control are the two offered here, not the only two a coach might accept.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q9",
+      "baseContentHash": "30ebe27a5f6d3fd50b8723edc06491501a1d19efd43abc7d9cd794c66ef003a4",
+      "verdict": "repair",
+      "reason": "Verified numerically with Math.hypot/direct coordinate comparison (not just reading the prompt): the given reference (x=-7,y=4) is LESS negative in x than W's x=-10. On the depth axis this scenario itself uses everywhere else -- q4's 'closer to Navy's net than W' at x=-13, q7's 'D1 is the deeper... option' at x=-22, and the scenario's own title 'Stay underneath a pressured wall receiver' -- YOU would remain up-ice of (not below/underneath) W at this reference point. Only the y-component (4 vs 9, 'inside') is actually satisfied. The prompt ('Move YOU below and inside W') and the explanation ('The lower-inside spot...') both assert a below/lower relationship to W that the given coordinates do not support. This is a genuine scene-text-vs-geometry conflict, not a stylistic quibble, and it was not caught by any prior AI pass -- every historical record for this exact hash (catalog-review.json, combined-review.json, historical-checks.json) says 'pass'/'no-open-ai-finding', which the project brief specifically warns is baseline evidence only. See the paired repair proposal below for the fix and its own independent geometric re-check.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at x=-3,y=1. W is at x=-10,y=9. The given reference is x=-7,y=4."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU below and inside W'. Explanation: 'The lower-inside spot gives W a short lane away from Gold 1.'"
+        ],
+        "unproven": [
+          "Whether 'below' was intended as a screen/rendering-relative description rather than the depth-relative (toward-own-net) sense used by every sibling question in this scene is not stated anywhere; either way the given point does not satisfy the depth sense this scenario otherwise relies on."
+        ]
+      },
+      "alternative": "Any point that is both deeper (more negative x, toward Navy's net) than W's x=-10 and closer to mid-ice (smaller |y|) than W's y=9 would work as an example; the exact metres chosen are illustrative, not a scored target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q10",
+      "baseContentHash": "4eb3775a99f31d1136ddff089fe99b55789d9df3200a41188b1a38161f201de0",
+      "verdict": "retain",
+      "reason": "Open reflection with no answer key. Explanation lists two legitimate, scene-grounded triggers for leaving the short-outlet position (W gains secure control and a better lane opens; pressure closes the route) and explicitly hedges with 'if W remains pinned, stay available' rather than asserting one guaranteed outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 pressuring W at the wall; D1 available deeper in the zone; no puck-movement or outcome is depicted."
+        ],
+        "stated": [
+          "Objective and prior questions establish the short-outlet job this reflection asks about leaving."
+        ],
+        "unproven": [
+          "No specific future event (W escaping, pressure closing) is shown as having happened; both are framed as conditions to watch for."
+        ]
+      },
+      "alternative": "A player could also leave the position because the coach calls a new instruction or a teammate's movement changes the read, not only because of W's control or a closing lane; stoppages and coaching calls are additional legitimate triggers beyond the two named here.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "baseVersion": 1,
+      "baseScenarioHash": "9f9c85f68065e7ff84fed91616aa3d6a6145bd29ae0370e66b155f62ea7aec4a",
+      "replacement": {
+        "id": "exp26b-u11-024",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Reset behind the blue line",
+        "family": "neutral-reset-timing",
+        "topic": "Rink awareness",
+        "objective": "Use a practice reset location while separating it from a formal rule judgement.",
+        "briefing": "Navy attacks +x. F1 carries near the right blue line; YOU are just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -3,
+              "facing": 3.1
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has stated a practice reset.",
+          "YOU are near the right blue line.",
+          "The still scene does not make a full offside call."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-024-q1",
+            "type": "choice",
+            "prompt": "Where are YOU relative to the right blue line in this practice?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Behind it toward the right net"
+              },
+              {
+                "id": "b",
+                "text": "Inside it toward centre ice"
+              },
+              {
+                "id": "c",
+                "text": "At the left goal line"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are past the right blue line (x=10 vs the line at x=7.62), on the attacking-zone side toward the right net, not toward centre ice; the coach's reset asks YOU to move back behind the line into the neutral zone."
+          },
+          {
+            "id": "exp26b-u11-024-q2",
+            "type": "multi",
+            "prompt": "Which two facts determine whether the reset is ready?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach's stated reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Where F1 and F2 are when the rep restarts"
+              },
+              {
+                "id": "c",
+                "text": "A silent offside verdict from the still image"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+          },
+          {
+            "id": "exp26b-u11-024-q3",
+            "type": "sequence",
+            "prompt": "Arrange the stated reset steps.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear the reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Move behind the blue line under control"
+              },
+              {
+                "id": "c",
+                "text": "Re-check F1 before starting again"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+          },
+          {
+            "id": "exp26b-u11-024-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example reset point behind the right blue line.",
+            "actorId": "h1",
+            "reference": {
+              "x": 6,
+              "y": -3.5
+            },
+            "basis": "coaching",
+            "explanation": "This point is on the neutral-zone side of the right blue line (x=6 vs the line at x=7.62), away from F1, completing the coach's reset; several nearby neutral-zone points would work equally well."
+          },
+          {
+            "id": "exp26b-u11-024-q5",
+            "type": "choice",
+            "prompt": "F1 keeps waiting after YOU reset. What is the useful next check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+              },
+              {
+                "id": "b",
+                "text": "Assume the pass must happen now"
+              },
+              {
+                "id": "c",
+                "text": "Make a full rule call from the picture"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+          },
+          {
+            "id": "exp26b-u11-024-q6",
+            "type": "explain",
+            "prompt": "What information is still missing before a formal offside decision?",
+            "basis": "coaching",
+            "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-024-q1",
+        "exp26b-u11-024-q2",
+        "exp26b-u11-024-q3",
+        "exp26b-u11-024-q4",
+        "exp26b-u11-024-q5",
+        "exp26b-u11-024-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-024-q1"
+          ],
+          "issue": "Keyed answer (b, 'Inside it toward centre ice') contradicts computed geometry: YOU (h1) is at x=10, which is 2.38m past the right blue line (x=7.62) on the attacking-zone side, not the neutral-zone/centre-ice side. Confirmed against the live bank's own analogous scene (exp26-u11-024), which places YOU at the identical x=10 and keys its equivalent question 'On the right attacking-zone side of the line.' The question's own explanation text ('inside the right blue line area in the +x attack picture') already matched the attacking-zone reading and did not support the keyed option (b), indicating an option-letter mismatch rather than a deliberate alternate teaching claim. Also carries the YOU-grammar defect ('Where is YOU' / 'YOU is').",
+          "change": "Flipped the keyed answer from ['b'] to ['a']; reworded prompt 'Where is YOU' to 'Where are YOU'; rewrote the explanation to state the computed distance (x=10 vs line at x=7.62) and direction explicitly, replacing the prior 'YOU is inside... the reset asks for a move behind it' wording.",
+          "evidence": "questionContentHash before=04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34, after=c12bb56c379d05fcdc965988c142f977cab0f0d51090d31db7ba1bd24813fa00 (computed via docs/factory/claude-project/validation/tools/question-batch-core.mjs questionContentHash, Node-verified this session). Geometry: YOU.x=10, right blue line=7.62 (AUTHORING-CONTRACT.md), difference=2.38m toward +x/the right net, computed with Node this session. Precedent: bank-snapshot.json scenario exp26-u11-024, question exp26-u11-024-q1, keys 'On the right attacking-zone side of the line' for an actor at the identical x=10."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q4"
+          ],
+          "issue": "The reference point (12.5,-3.5) moves YOU 2.53m FARTHER into the attacking zone than YOU's own start (x=10), the opposite of the stated instruction ('an example reset point behind the right blue line'). The question's own explanation ('shifts YOU farther toward the right-net side') confirms the wrong direction rather than masking it.",
+          "change": "Moved the reference from {x:12.5,y:-3.5} to {x:6,y:-3.5} (neutral-zone side of the right blue line at x=7.62); rewrote the explanation to state the corrected direction and distance and to note several nearby points would work equally well, replacing the claim that the point is 'farther toward the right-net side.'",
+          "evidence": "questionContentHash before=948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d, after=c1762b8d2401f52146a62d61daea044f34efd340768691b580729ee817d5c414 (computed via question-batch-core.mjs this session). Geometry: new reference (6,-3.5) is 4.03m from YOU's start (10,-3) (exceeds the 0.1m minimum-move rule from experimentalBankCore.js validateExperimentalBank), confirmed on ice via isCoachRoutePoint, and x=6<7.62 places it on the neutral-zone side -- all computed with Node this session."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q5"
+          ],
+          "issue": "Subject-verb agreement defect: 'F1 keeps waiting after YOU resets' uses the third-person-singular verb form with YOU, which the assignment names as the single most recurring defect class.",
+          "change": "Corrected 'YOU resets' to 'YOU reset' in the prompt.",
+          "evidence": "questionContentHash before=73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b, after=b9ab9c50e604989f639b3fc995db2a956f46b535e2f515b7248a03b48a405cad (computed via question-batch-core.mjs this session)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q1",
+            "exp26b-u11-024-q2",
+            "exp26b-u11-024-q3",
+            "exp26b-u11-024-q4",
+            "exp26b-u11-024-q5",
+            "exp26b-u11-024-q6"
+          ],
+          "issue": "Scene-level briefing ('YOU is just inside the line') and cue ('YOU is near the right blue line.') both carry the recurring YOU subject-verb defect. Because questionContentHash combines the scene (briefing/cues included) with each question, this scene-level text change alone changes every question's hash, so all six questions are listed as affected even though q2, q3 and q6's own question text was otherwise unaffected.",
+          "change": "Corrected 'YOU is just inside the line' to 'YOU are just inside the line' in the briefing, and 'YOU is near the right blue line.' to 'YOU are near the right blue line.' in the cues. No other scene-level field (actors, puck, focusActorId, tags, sources, limits) was touched.",
+          "evidence": "questionContentHash before/after pairs for q2 (9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210 -> e2f3fafdd49ce6adae757d874407c04f86c275bc41f447989725155cbc3ee9fc), q3 (db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e -> ced9dc63efac654132da96ed258ae681576049412643a98483f30743bbb3d4b6), q6 (00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881 -> 9050f8c272b60b20297d5996cb9f858124f08557c4a27690e0986d29fa2bb726) all change despite unchanged question-level text, confirming the scene-level cascade -- computed via question-batch-core.mjs this session."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-024-q1",
+            "contentHash": "c12bb56c379d05fcdc965988c142f977cab0f0d51090d31db7ba1bd24813fa00",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q2",
+            "contentHash": "e2f3fafdd49ce6adae757d874407c04f86c275bc41f447989725155cbc3ee9fc",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q3",
+            "contentHash": "ced9dc63efac654132da96ed258ae681576049412643a98483f30743bbb3d4b6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q4",
+            "contentHash": "c1762b8d2401f52146a62d61daea044f34efd340768691b580729ee817d5c414",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q5",
+            "contentHash": "b9ab9c50e604989f639b3fc995db2a956f46b535e2f515b7248a03b48a405cad",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q6",
+            "contentHash": "9050f8c272b60b20297d5996cb9f858124f08557c4a27690e0986d29fa2bb726",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "baseVersion": 1,
+      "baseScenarioHash": "d3907ad6c642e8139648427592fe68dc91f23d7398717f8e23706d2ac809fbe9",
+      "replacement": {
+        "id": "exp26-u13-002",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "The strong-side outlet closes",
+        "family": "breakout-reverse",
+        "topic": "breakout reverse",
+        "objective": "Reassess an outlet when a forechecker occupies its side.",
+        "briefing": "YOU have settled the puck low in your own end, at the front of the net. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -25,
+              "y": 6,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": -6,
+              "facing": 1.6539375586833378
+            },
+            {
+              "id": "home-skater-3",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 9,
+              "facing": -2.9147938055359073
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": 8,
+              "facing": -2.8632929945846817
+            },
+            {
+              "id": "home-skater-4",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": -2,
+              "facing": 2.4668517113662407
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "D2 and YOU are on opposite sides of Navy’s net.",
+          "YOU have settled the puck low in your own end, at the front of the net. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated."
+        ],
+        "tags": [
+          "breakout-reverse"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 12–13, Breakouts",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-002-q1",
+            "type": "choice",
+            "prompt": "Which teammate is on the opposite side of the net from YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "D2"
+              },
+              {
+                "id": "c",
+                "text": "W"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "D2 and YOU are on opposite sides of Navy’s net.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-002-q2",
+            "type": "multi",
+            "prompt": "Select two checks before using the permitted reverse.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D2 is ready"
+              },
+              {
+                "id": "b",
+                "text": "Whether the first planned pass must be completed"
+              },
+              {
+                "id": "c",
+                "text": "Whether pressure can reach the reverse route"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "The reverse is an option only if its receiver and route remain usable.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a possible reverse decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice the blocked strong side"
+              },
+              {
+                "id": "b",
+                "text": "Check and communicate with D2"
+              },
+              {
+                "id": "c",
+                "text": "Use the reverse only if that route remains available"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The routine supports a decision, not an automatic reverse every time pressure appears."
+          },
+          {
+            "id": "exp26-u13-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example spot for protecting possession while looking toward D2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -24,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A tighter position toward the middle of the net can change the angle you present to pressure. Actual goalie and defender locations still matter."
+          },
+          {
+            "id": "exp26-u13-002-q5",
+            "type": "choice",
+            "prompt": "If D2 is closely marked before you release, what is sensible?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Reverse automatically because it was the original plan"
+              },
+              {
+                "id": "b",
+                "text": "Pass through D2’s marker without checking"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a hold or another outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q6",
+            "type": "explain",
+            "prompt": "Why is “the first outlet is closed” insufficient by itself to choose a reverse?",
+            "basis": "coaching",
+            "explanation": "A different lane and a prepared receiver must also exist. Mention pressure on D2 or time to protect the puck."
+          },
+          {
+            "type": "choice",
+            "prompt": "What does Gold 1’s position between YOU and W change?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The direct W outlet is restricted"
+              },
+              {
+                "id": "b",
+                "text": "D2 must own the puck"
+              },
+              {
+                "id": "c",
+                "text": "The puck is already in the neutral zone"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1 occupies the direct lane to W, so that pass needs a different angle or protection; if Gold 1 moves away, recheck W.",
+            "id": "exp26-u13-002-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two details should accompany a reverse call?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Which side D2 is on"
+              },
+              {
+                "id": "b",
+                "text": "Whether the reverse lane is open"
+              },
+              {
+                "id": "c",
+                "text": "That D2 is automatically open because Gold 1 is near W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "D2’s side and the lane’s current access tell teammates what the reverse can solve; faceoff history does not.",
+            "id": "exp26-u13-002-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU closer to the back of the net while keeping Gold 1’s pressure side visible.",
+            "basis": "coaching",
+            "explanation": "The behind-net position can change Gold 1’s angle and keep D2 in view; if Gold 1 follows, protect before choosing the reverse.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -26,
+              "y": 5
+            },
+            "id": "exp26-u13-002-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does a closed strong-side outlet permit a reverse without requiring it?",
+            "basis": "coaching",
+            "explanation": "The closure removes one lane while D2’s side and pressure determine whether the reverse helps; if the reverse is covered too, protect or wait.",
+            "id": "exp26-u13-002-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-002-q1",
+        "exp26-u13-002-q2",
+        "exp26-u13-002-q3",
+        "exp26-u13-002-q4",
+        "exp26-u13-002-q5",
+        "exp26-u13-002-q6",
+        "exp26-u13-002-q7",
+        "exp26-u13-002-q8",
+        "exp26-u13-002-q9",
+        "exp26-u13-002-q10"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-002-q1",
+            "exp26-u13-002-q2",
+            "exp26-u13-002-q3",
+            "exp26-u13-002-q4",
+            "exp26-u13-002-q5",
+            "exp26-u13-002-q6",
+            "exp26-u13-002-q7",
+            "exp26-u13-002-q8",
+            "exp26-u13-002-q9",
+            "exp26-u13-002-q10"
+          ],
+          "issue": "Briefing and cues[1] state YOU \"settled the puck below the goal line,\" but the rendered carried-puck position for the puck owner (home-skater-1, facing 0) computes to (-24,6.7) -- 1.7556m in front of Navy's own net-front line (x=-25.7556m) and 2.9138m in front of the actual goal line (x=-26.9138m), both derived from NHL_200X85_PROFILE.landmarks (src/play/rinkAnchors.js -> validation/src/scenario-engine/rinkFrame.js) mirrored to the -x end Navy defends. 'Below/behind the goal line' names the zone between the goal line and the endboards; the puck sits at/just in front of the net-front instead, a scene/word mismatch in the same class as the calibration case (exp26-u13-001's rim-vs-open-ice mismatch).",
+          "change": "Briefing changed from \"YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.\" to \"YOU have settled the puck low in your own end, at the front of the net. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.\" cues[1] updated identically (it is a verbatim repeat of the briefing). No actor or puck coordinates changed; the breakout-reverse teaching objective (reassess an outlet when a forechecker occupies its side) is unaffected since a net-front puck battle facing a forechecker is itself a standard, common tactical picture for this family.",
+          "evidence": "Computed via Node using the project's own hash/geometry tooling (validation/src/one-on-one/experimentalBankCore.js makeScene + coachRouteSurfaceInput.js isCoachRoutePoint + validation/src/scenario-engine/rinkFrame.js NHL_200X85_PROFILE via src/play/rinkAnchors.js feetPointToRinkFrame): carried-puck position = (-24,6.7), on ice (isCoachRoutePoint=true). netFrontLeft=-25.7556, goalLineLeft=-26.9138, behindNetLeft=-28.194 (all metres). Puck.x(-24) minus netFrontLeft(-25.7556) = +1.7556m (positive = in front of net, toward centre ice). Before/after briefing text quoted in 'change' above."
+        },
+        {
+          "questionIds": [
+            "exp26-u13-002-q4"
+          ],
+          "issue": "q4's own explanation independently repeats a depth error: it calls reference point (-24,3) 'a tighter position near the back of the net,' but (-24,3) is 1.7556m further in front of the net-front than the scene's start position (-25,6) -- moving toward centre ice, away from the back of the net, not toward it.",
+          "change": "q4 explanation changed from \"A tighter position near the back of the net can change the approach angle. Actual goalie and defender locations still matter.\" to \"A tighter position toward the middle of the net can change the angle you present to pressure. Actual goalie and defender locations still matter.\" The reference coordinate (-24,3) and its actorId are unchanged; only the wording describing its effect was corrected to match what the coordinate actually does (y moves from 6 toward the net's lateral centre, y=0).",
+          "evidence": "Computed distance from start (-25,6) to reference (-24,3) = 3.162m. Reference x=-24 minus netFrontLeft(-25.7556) = +1.7556m (in front of net-front), versus start x=-25 minus netFrontLeft = +0.7556m (also in front, but 1m closer to it) -- confirming the reference moves AWAY from the back of the net in x, while moving toward the net's lateral centre in y (6->3, net centre y=0), which is the accurate claim now in the explanation."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-002-q1",
+            "contentHash": "b9fd18b442fc9b69dfdfd08d50d0baf807235b3c5565ebc4c1a95e1ce5ca39d2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q2",
+            "contentHash": "1fc979b4aa590a44a4c7b15b6426d88d746b061db4b14149ef6f592d98127229",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q3",
+            "contentHash": "e43dfd516b0b0a3ee4352d0242731f6fd8e11a32418d4857686def604cbd61d8",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q4",
+            "contentHash": "2dd04fc38900c5f769aa0f9cb7d2633a03fb5cd651b9ead2c7e5d7e44b1b2d42",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Explanation now reads 'A tighter position toward the middle of the net can change the angle you present to pressure,' matching the reference's actual y-shift (6->3) toward the net's lateral centre; reference/answer unchanged and still correct."
+          },
+          {
+            "questionId": "exp26-u13-002-q5",
+            "contentHash": "ce5b581cfe9ac71ea986ad2f269154ee8d960a5122d19156d5b758dbe47b2643",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q6",
+            "contentHash": "1fe371422437af9866cfabda3f6f5ec8cb3c8ef0f1cea27663dead5e09d286ed",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q7",
+            "contentHash": "07d19d04ef421d5f618b157f5ec3c7ba82af4962ad1ccacccef754637bf0d336",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q8",
+            "contentHash": "0257962e65116153ff1c6ca8c7eb612eef32172a2361c13f22c9cb038e8674af",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q9",
+            "contentHash": "40ffa5e951336812d848a2c8dbda8e68132980f8d31fcd242acbd8f6d986da1b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          },
+          {
+            "questionId": "exp26-u13-002-q10",
+            "contentHash": "24142b5694028ce4eb8e60b3e349ff9956c7c00a4f8687b4275273fa617214ef",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene-wide: briefing/cues now read 'settled the puck low in your own end, at the front of the net,' matching the computed carried-puck position (-24,6.7), 1.7556m in front of the net-front line. This question's own text/answer is unchanged and remains correct; only its hash changes because the shared scene changed."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "baseVersion": 1,
+      "baseScenarioHash": "411b45786042d6fe843af287892e734b527dc03e14daa54f75b3fff61726fd03",
+      "replacement": {
+        "id": "exp26-u13-004",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Stay underneath a pressured wall receiver",
+        "family": "centre-low-support",
+        "topic": "centre low support",
+        "objective": "Offer an inside release beneath a teammate under pressure.",
+        "briefing": "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "home-skater-2",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -10,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 5,
+              "facing": 0.3217505543966422
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -7,
+              "y": 7,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 0,
+              "y": -2,
+              "facing": 2.3086113869153615
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+          "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet."
+        ],
+        "tags": [
+          "centre-low-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-004-q1",
+            "type": "choice",
+            "prompt": "What support job is explicitly assigned to YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Wait at the far blue line"
+              },
+              {
+                "id": "b",
+                "text": "Pressure W as an opponent"
+              },
+              {
+                "id": "c",
+                "text": "Offer a short inside outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-004-q2",
+            "type": "multi",
+            "prompt": "Which two features would suit that outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Enough separation from Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "A route W can actually see"
+              },
+              {
+                "id": "c",
+                "text": "The greatest possible distance from W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "Short support needs usable spacing and a route, not just proximity.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q3",
+            "type": "sequence",
+            "prompt": "Order a support response to W’s pressure.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read Gold 1’s approach"
+              },
+              {
+                "id": "b",
+                "text": "Move closer to Navy’s net and inside W"
+              },
+              {
+                "id": "c",
+                "text": "Prepare for a pass or another change"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+          },
+          {
+            "id": "exp26-u13-004-q4",
+            "type": "position",
+            "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+          },
+          {
+            "id": "exp26-u13-004-q5",
+            "type": "choice",
+            "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "You may move forward while remaining available"
+              },
+              {
+                "id": "b",
+                "text": "You must remain underneath for the rest of the shift"
+              },
+              {
+                "id": "c",
+                "text": "You should stop watching the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q6",
+            "type": "explain",
+            "prompt": "What is the difference between supporting W and skating into W’s problem?",
+            "basis": "coaching",
+            "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+            "id": "exp26-u13-004-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues tell YOU whether to stay underneath W?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1’s pressure on W"
+              },
+              {
+                "id": "b",
+                "text": "W’s puck control"
+              },
+              {
+                "id": "c",
+                "text": "D1’s old position alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+            "id": "exp26-u13-004-q8"
+          },
+          {
+            "id": "exp26-u13-004-q9",
+            "type": "position",
+            "prompt": "Move YOU below and inside W to present the assigned short outlet.",
+            "basis": "coaching",
+            "explanation": "The lower-inside spot (deeper than W toward Navy’s net, and inside toward centre ice) gives W a short backward lane away from Gold 1; if W gains space, widen to support the next play.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -15,
+              "y": 6
+            }
+          },
+          {
+            "type": "explain",
+            "prompt": "What would make you leave the short-outlet position?",
+            "basis": "coaching",
+            "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+            "id": "exp26-u13-004-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-004-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-004-q9"
+          ],
+          "issue": "The prompt ('Move YOU below and inside W') and explanation ('The lower-inside spot...') claim YOU's example position is below/lower than W, but the original reference {x:-7,y:4} is numerically less negative in x than W's x=-10 (verified with Math.hypot/direct comparison via a Node script importing the repo's real coachRouteSurfaceInput.js/question-batch-core.mjs). On the depth axis this scene uses everywhere else (q4: 'closer to Navy's net than W' at x=-13; q7: D1 at x=-22 is 'the deeper... option'), YOU would still be up-ice of W at x=-7, not below/underneath it -- only the y-axis 'inside' half of the claim was actually true.",
+          "change": "Changed q9's reference from {x:-7,y:4} to {x:-15,y:6}. The new point is verified more negative in x than W's -10 (genuinely deeper/below, matching the scenario's own 'closer to Navy's net' convention from q4 and D1's 'deeper' framing from q7) and still closer to mid-ice than W's y=9 (still 'inside'). Also clarified the explanation's wording to spell out 'deeper than W toward Navy's net, and inside toward centre ice' so the same ambiguity cannot recur. Left the prompt, actorId, basis, and every other question in the scenario byte-identical; only q9 changed.",
+          "evidence": "Before: reference {x:-7,y:4}, contentHash 30ebe27a5f6d3fd50b8723edc06491501a1d19efd43abc7d9cd794c66ef003a4 (matches packet baseContentHash exactly, independently recomputed). After: reference {x:-15,y:6}, contentHash 01fe84f6051e22642491aeac4c4648d930f51898e1efc9a2c1deef3fd9908f74 (independently computed with the same questionContentHash() function against the replacement scenario, version 2). Verified with the repo's real validateExperimentalBank([replacement]) -> returns [] (no structural errors); isCoachRoutePoint({x:-15,y:6}) -> true (on ice); distance from YOU's start (-3,1) to the new reference -> 13.0m (a genuine repositioning, not a no-op, exceeding the validator's 0.1m minimum-move threshold); -15 < -10 confirms the new point is now genuinely deeper than W on the same x-axis convention q4 and q7 already use in this scene; all 9 other questions' contentHash recomputed against the replacement scenario and confirmed byte-identical to their original baseContentHash (because questionContentHash() excludes the scenario's `version` field from its hash input, so bumping version alone changes nothing else)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-004-q1",
+            "contentHash": "505e31cc1cc5323bd195bda91519a77ba250cf17b138ecda9de2a73d96429218",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash on the version-2 replacement confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q2",
+            "contentHash": "0db564457adf7acc75c3be939e0dda40ffebb1f1741fd1e39df5668539e4bcc1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q3",
+            "contentHash": "3881a8789901af274b1720911cd24a546d9e865a3f290def85e584af78dd6e1c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. Sequence ordering re-confirmed non-rigid per its own explanation."
+          },
+          {
+            "questionId": "exp26-u13-004-q4",
+            "contentHash": "673d13a427987641216254cf6c96356f2df0a7bc5e188830f6c0fe065e84c76e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. Its own (-13,3) reference is unaffected by q9's fix and remains independently verified as below/inside W."
+          },
+          {
+            "questionId": "exp26-u13-004-q5",
+            "contentHash": "b4570d32737d06cf1126ee0e660eb23e62fc4ec789c2e68614639e1493294220",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q6",
+            "contentHash": "fe56816cf6e03a581c60f24ed548a454e9d67291a890b81d00269e1923b3d3dd",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q7",
+            "contentHash": "e8b262defa6479d31d6769d46a847bc1f4f9ccceb8603de339b8bd6776fe6fb7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. D1-deeper-than-YOU claim re-verified numerically."
+          },
+          {
+            "questionId": "exp26-u13-004-q8",
+            "contentHash": "28afaf2a716e1e92072f15bcb1b76a0adf690e71d6356dc56527d4b55e665e62",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q9",
+            "contentHash": "68d1272e1281eb483240f3911344680e07ba940128c2a97576566ea74d4cb9d7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked against the corrected reference {x:-15,y:6}: on ice (isCoachRoutePoint true), a genuine 13.0m repositioning from YOU's start, strictly more negative in x than W's -10 (now genuinely 'below'/deeper), and closer to mid-ice than W's y=9 (still 'inside'). Explanation reworded to spell out both axes explicitly so the ambiguity cannot recur. Distinct from q4's example point (-13,3) by 3.6m, so it is not a duplicate position question."
+          },
+          {
+            "questionId": "exp26-u13-004-q10",
+            "contentHash": "4eb3775a99f31d1136ddff089fe99b55789d9df3200a41188b1a38161f201de0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Read the exact cited pages directly (WebFetch's text extraction failed on this PDF, so the Read tool was used on the downloaded binary at printed pages 17-19 / PDF pages 23-25, per the assignment's PDF-fallback instruction). Confirms 'offsides' is listed as a rules topic and generic Individual Hockey Skills (skating, puck control, passing/receiving, shooting, goaltending) and Team Play concepts (offensive: 2-on-1/1-on-1/triangle offense; defensive: gap control, protect centre of ice, backchecking) are listed for the 10-and-Under age band. It does NOT contain this scenario's specific reset-timing procedure, exact coordinates, blue-line-side terminology, or answer key -- it supports only age/topic placement (that rink/rules awareness and reacting to a coach's stop/reset instruction are age-appropriate 10-and-Under topics), matching the source's own 'use' note in both scenarios. Both exp26b-u11-024 and exp26b-u11-025 cite this same single source.",
+      "jurisdiction": "USA (USA Hockey ADM); the app's own convention already treats this as supporting only general age/topic placement, not a Canadian rule certification.",
+      "ageFormat": "10-and-Under (maps to this bank's U11 band)",
+      "claim": "Age/topic placement only: rink/rules awareness and reacting to a coach's stop or restart instruction are appropriate 10-and-Under teaching topics. No exact tactical answer, coordinate, or terminology claim is attributed to this source."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T06:08:21.920Z",
+      "access": "read",
+      "scope": "Read PDF pages 12-13 (\"BREAKOUTS\") directly via the Read tool (WebFetch's text extraction failed on this binary PDF, per project instructions). The page explicitly lists 'reverse' among named breakout options ('quick up, wheel, overs, reverse, rim, set, move it, flip, glass') and stresses D-partner support/communication and reading puck-possession quality -- direct support for exp26-u13-002's breakout-reverse topic and the 'permits but does not require' framing. This page does NOT itself state an age band; it is a general defencemen-development resource, not explicitly scoped to U13. The scenario's own 'limits' field ('Age adaptation... awaits coaching review') and sources.json's 'use' note already disclose this honestly. Recommend (not required) also citing hc-u13-core alongside this source for an explicit U13 age anchor, since hc-u13-core's own page 1 lists 'Basic Breakouts' under U13 Team Play.",
+      "jurisdiction": "Canada / Hockey Canada",
+      "ageFormat": "Not explicitly age-banded on the read pages; general defencemen-development resource (see recommendation above for pairing with an explicit U13 anchor).",
+      "claim": "Supports 'reverse' as a named, real breakout option and D-partner communication as a coaching principle. Does not certify these exact coordinates, this exact scene depiction, or a guaranteed outcome."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T06:08:21.920Z",
+      "access": "read",
+      "scope": "Read PDF page 1 directly via the Read tool (WebFetch's text extraction failed on this binary PDF). The page header reads \"U13 SKILLS -- LTPD STAGE - Learn to Train\" and lists, under 'Team Play': Basic Positioning - D Zone, Basic Breakouts, Regroups, Entries, Forechecks; under 'Individual Defensive Tactics': Angling, Basic 1 on 1's, Gap control, Escape moves, Puck retrievals, Tracking. This directly confirms 'Basic Breakouts' and forecheck/support concepts are age-placed at U13, supporting exp26-u13-003's wall-outlet-support topic (and, as a secondary anchor, exp26-u13-002's breakout-reverse topic).",
+      "jurisdiction": "Canada / Hockey Canada",
+      "ageFormat": "U13 (LTPD 'Learn to Train' stage, roughly ages 12-13) -- explicitly stated on the page.",
+      "claim": "Age/topic placement only, as the scenario's own source note already states; does not certify this scene's exact coordinates or answer choices."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched directly and read page 1 (WebFetch's text extraction failed on this PDF's compressed streams, so the Read tool was used directly on the saved PDF per the project's PDF-fallback instruction). Page 1 is a genuine Hockey Canada 'U13 SKILLS -- LTPD STAGE - Learn to Train' skills-by-category grid, confirming this is age-specific to U13 (not a generic or wrong-age document). Its 'Team Play' column lists 'Basic Positioning - D Zone', 'Basic Breakouts', 'Regroups', 'Entries', 'Forechecks', and its 'Individual Offensive Tactics' column lists puck protection, control skating, change of pace, etc. This supports the age/topic placement of a U13 breakout-support scenario (family: centre-low-support) but is only a skills checklist -- it gives no specific tactical instruction, geometry, or rule about 'offering a short inside outlet' or 'staying underneath' a pressured teammate, so it cannot certify any of this scenario's specific coaching claims, consistent with the source's own stated 'use' field.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U13 / LTPD 'Learn to Train' stage (approx. ages 12-13)",
+      "claim": "Age/topic placement only for the centre-low-support breakout-support family; does not certify specific tactical claims, geometry, or outcomes in exp26-u13-004."
+    }
+  ],
+  "remainingQuestionIds": []
+}

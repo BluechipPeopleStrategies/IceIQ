@@ -1,0 +1,4115 @@
+{
+  "schemaVersion": 1,
+  "author": "Codex root",
+  "status": "applied-locally",
+  "sourceSnapshotId": "rr-20260905-c8403be16748c919",
+  "proposalSha256": "09b57446180a6237b4b117d7a5bb8e18a3bc697e900523bd5db8f55a56f7d50b",
+  "sourceReturnFileHashes": {
+    "packet-21": "b139175ecec1a76cc1b861e88aa7e06c3c6e04cc37df9a3c5279d6bd3e383537"
+  },
+  "independentReview": "docs/factory/research/question-review/packet-21/independent-final-recheck.json",
+  "changes": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q1",
+      "beforeContentHash": "04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34",
+      "afterContentHash": "55cac0c1ad19889347e79608b0489c132f5eb710206bd882cd90495e4705566b",
+      "before": {
+        "id": "exp26b-u11-024-q1",
+        "type": "choice",
+        "prompt": "Where is YOU relative to the right blue line in this practice?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Behind it toward the right net"
+          },
+          {
+            "id": "b",
+            "text": "Inside it toward centre ice"
+          },
+          {
+            "id": "c",
+            "text": "At the left goal line"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "YOU is inside the right blue line area in the +x attack picture; the reset asks for a move behind it."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q1",
+        "type": "choice",
+        "prompt": "Where are YOU relative to the right blue line in this practice?",
+        "options": [
+          {
+            "id": "a",
+            "text": "On the attacking-zone side, toward the right net"
+          },
+          {
+            "id": "b",
+            "text": "On the neutral-zone side, toward centre ice"
+          },
+          {
+            "id": "c",
+            "text": "At the left goal line"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "YOU are on the attacking-zone side of the blue line. The reset asks YOU to return to its neutral-zone side."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q2",
+      "beforeContentHash": "9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210",
+      "afterContentHash": "eada8768edbc3d50fea16501cdec1360bf227841b7cec5ecd54ae000e54bee71",
+      "before": {
+        "id": "exp26b-u11-024-q2",
+        "type": "multi",
+        "prompt": "Which two facts determine whether the reset is ready?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The coach's stated reset instruction"
+          },
+          {
+            "id": "b",
+            "text": "Where F1 and F2 are when the rep restarts"
+          },
+          {
+            "id": "c",
+            "text": "A silent offside verdict from the still image"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q2",
+        "type": "multi",
+        "prompt": "Which two facts determine whether the reset is ready?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The coach's stated reset instruction"
+          },
+          {
+            "id": "b",
+            "text": "Where YOU and the teammates are before restarting"
+          },
+          {
+            "id": "c",
+            "text": "A silent offside verdict from the still image"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q3",
+      "beforeContentHash": "db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e",
+      "afterContentHash": "117c0703c211a79465a96ba6b0940bda4cbede0e3961c64a1874df74419f2dc3",
+      "before": {
+        "id": "exp26b-u11-024-q3",
+        "type": "sequence",
+        "prompt": "Arrange the stated reset steps.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Hear the reset instruction"
+          },
+          {
+            "id": "b",
+            "text": "Move behind the blue line under control"
+          },
+          {
+            "id": "c",
+            "text": "Re-check F1 before starting again"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q3",
+        "type": "sequence",
+        "prompt": "Arrange the stated reset steps.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Hear the reset instruction"
+          },
+          {
+            "id": "b",
+            "text": "Move behind the blue line under control"
+          },
+          {
+            "id": "c",
+            "text": "Re-check F1 before starting again"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q4",
+      "beforeContentHash": "948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d",
+      "afterContentHash": "7eba3d9356b7fe7761d9a31a56d844c85c457cd8762dec0c0cc3b5c29283c151",
+      "before": {
+        "id": "exp26b-u11-024-q4",
+        "type": "position",
+        "prompt": "Move YOU to an example reset point behind the right blue line.",
+        "actorId": "h1",
+        "reference": {
+          "x": 12.5,
+          "y": -3.5
+        },
+        "basis": "coaching",
+        "explanation": "This point shifts YOU farther toward the right-net side while keeping F1 and D1 visible."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q4",
+        "type": "position",
+        "prompt": "Move YOU to an example reset point behind the right blue line.",
+        "actorId": "h1",
+        "reference": {
+          "x": 6,
+          "y": -3.5
+        },
+        "basis": "coaching",
+        "explanation": "This example is on the neutral-zone side of the right blue line. It satisfies the stated location, but the restart still requires the coach’s cue and a check of the other players."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q5",
+      "beforeContentHash": "73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b",
+      "afterContentHash": "a288b5cdfd242b31dc5628133429395cfa758ab2797539f86f2da360e596561c",
+      "before": {
+        "id": "exp26b-u11-024-q5",
+        "type": "choice",
+        "prompt": "F1 keeps waiting after YOU resets. What is the useful next check?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+          },
+          {
+            "id": "b",
+            "text": "Assume the pass must happen now"
+          },
+          {
+            "id": "c",
+            "text": "Make a full rule call from the picture"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q5",
+        "type": "choice",
+        "prompt": "F1 keeps waiting after YOU reset. What is the useful next check?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+          },
+          {
+            "id": "b",
+            "text": "Assume the pass must happen now"
+          },
+          {
+            "id": "c",
+            "text": "Make a full rule call from the picture"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q6",
+      "beforeContentHash": "00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881",
+      "afterContentHash": "e555094f7f9aec647bfeea0ac7904646c81aa873031376e7c688572330dc3457",
+      "before": {
+        "id": "exp26b-u11-024-q6",
+        "type": "explain",
+        "prompt": "What information is still missing before a formal offside decision?",
+        "basis": "coaching",
+        "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+      },
+      "after": {
+        "id": "exp26b-u11-024-q6",
+        "type": "explain",
+        "prompt": "What information is still missing before a formal offside decision?",
+        "basis": "coaching",
+        "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q2",
+      "beforeContentHash": "ec6589319c1a8b3124cc019251aefdb5dfb2019f3d24d3ac5d67a84c535a9275",
+      "afterContentHash": "24bb91a12ca49dd545599541474623da9a7aeef188265b17d9d647ffbc02a9a3",
+      "before": {
+        "id": "exp26b-u11-025-q2",
+        "type": "multi",
+        "prompt": "Which actions fit the stop instruction?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Pause the contest and listen"
+          },
+          {
+            "id": "b",
+            "text": "Move to the stated reset area under control"
+          },
+          {
+            "id": "c",
+            "text": "Continue battling for the loose puck"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The stop call changes the task, so listening and resetting fit; the loose puck is no longer the immediate objective."
+      },
+      "after": {
+        "id": "exp26b-u11-025-q2",
+        "type": "multi",
+        "prompt": "Which actions fit the stop instruction?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Pause the contest and listen"
+          },
+          {
+            "id": "b",
+            "text": "Follow the coach’s reset directions under control"
+          },
+          {
+            "id": "c",
+            "text": "Continue battling for the loose puck"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The stop call changes the task, so listening and resetting fit; the loose puck is no longer the immediate objective."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q5",
+      "beforeContentHash": "d086ef65d73c0285b469660e4267b6245bd8c9d033f6453db04f872721d2ce83",
+      "afterContentHash": "465255683bb3d99ec1583c3f708f29900c4aece0d574ad3ee6baea21ca62ef23",
+      "before": {
+        "id": "exp26b-u11-025-q5",
+        "type": "choice",
+        "prompt": "The coach restarts with F2 as the puck carrier. What should YOU confirm?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's location, D1's pressure, and the new support job"
+          },
+          {
+            "id": "b",
+            "text": "Continue the old loose-puck plan"
+          },
+          {
+            "id": "c",
+            "text": "Assume YOU owns the restart"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The restart assigns a new carrier, so scan F2 and D1 before choosing support."
+      },
+      "after": {
+        "id": "exp26b-u11-025-q5",
+        "type": "choice",
+        "prompt": "The coach restarts with F2 as the puck carrier. What should YOU confirm?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's location, D1's pressure, and the new support job"
+          },
+          {
+            "id": "b",
+            "text": "Continue the old loose-puck plan"
+          },
+          {
+            "id": "c",
+            "text": "Assume YOU own the restart"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The restart assigns a new carrier, so scan F2 and D1 before choosing support."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q1",
+      "beforeContentHash": "222bb38fb1ba608ee1ef5e56f74b7893a24bda5aeb6077e8ff38ce0c262f542a",
+      "afterContentHash": "5b9b81c161845832712ac1aaabdd128d63b03dd0be98f83d4e114f25c13e864e",
+      "before": {
+        "id": "exp26-u13-002-q1",
+        "type": "choice",
+        "prompt": "Which teammate is on the opposite side of the net from YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "D2"
+          },
+          {
+            "id": "c",
+            "text": "W"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "D2 and YOU are on opposite sides of Navy’s net.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-002-q1",
+        "type": "choice",
+        "prompt": "Which teammate is on the opposite side of the net from YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "D2"
+          },
+          {
+            "id": "c",
+            "text": "W"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "D2 and YOU are on opposite sides of Navy’s net.",
+        "basis": "scene"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q2",
+      "beforeContentHash": "a87e9875906db1d206102677f5059217ad8d6dfe6345e3d9997824ccd69f8768",
+      "afterContentHash": "d6b670fcaa0c8ab6cbf7b13499f51929f14d2de41cd6bd77e8c751ac6a798731",
+      "before": {
+        "id": "exp26-u13-002-q2",
+        "type": "multi",
+        "prompt": "Select two checks before using the permitted reverse.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D2 is ready"
+          },
+          {
+            "id": "b",
+            "text": "Whether the first planned pass must be completed"
+          },
+          {
+            "id": "c",
+            "text": "Whether pressure can reach the reverse route"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "The reverse is an option only if its receiver and route remain usable.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-002-q2",
+        "type": "multi",
+        "prompt": "Select two checks before using the permitted reverse.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D2 is ready"
+          },
+          {
+            "id": "b",
+            "text": "Whether the first planned pass must be completed"
+          },
+          {
+            "id": "c",
+            "text": "Whether pressure can reach the reverse route"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "The reverse is an option only if its receiver and route remain usable.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q3",
+      "beforeContentHash": "2e57f39d84ebaa1be8bda6d05805e2940fdd7a6410db0ac849ea469cc954c3b7",
+      "afterContentHash": "d596d54ce2d954a80fbd4be8a4d2354fbf36cedb2b2b42b379a2a695c2380909",
+      "before": {
+        "id": "exp26-u13-002-q3",
+        "type": "sequence",
+        "prompt": "Arrange a possible reverse decision.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Notice the blocked strong side"
+          },
+          {
+            "id": "b",
+            "text": "Check and communicate with D2"
+          },
+          {
+            "id": "c",
+            "text": "Use the reverse only if that route remains available"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The routine supports a decision, not an automatic reverse every time pressure appears."
+      },
+      "after": {
+        "id": "exp26-u13-002-q3",
+        "type": "sequence",
+        "prompt": "Arrange a possible reverse decision.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Assess pressure near the strong-side outlet"
+          },
+          {
+            "id": "b",
+            "text": "Check and communicate with D2"
+          },
+          {
+            "id": "c",
+            "text": "Use the reverse only if that route remains available"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The routine supports a decision, not an automatic reverse every time pressure appears."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q4",
+      "beforeContentHash": "966c39846aedbfe87138f8645a7d92e48dd949ab96fb18686a98dc4add049e7e",
+      "afterContentHash": "5080c6ec15e4cc02599d7fc5b40799af15acf2c64212866254f431981b478044",
+      "before": {
+        "id": "exp26-u13-002-q4",
+        "type": "position",
+        "prompt": "Move YOU to an example spot for protecting possession while looking toward D2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -24,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "A tighter position near the back of the net can change the approach angle. Actual goalie and defender locations still matter."
+      },
+      "after": {
+        "id": "exp26-u13-002-q4",
+        "type": "position",
+        "prompt": "Move YOU to an example spot for protecting possession while looking toward D2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -24,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "A tighter position toward the middle of the net can change the angle you present to pressure. Actual goalie and defender locations still matter."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q5",
+      "beforeContentHash": "057c4ff77946d3d8fd9100831f3853cdaa11abc37ae1b9e7b0f8281793e39d12",
+      "afterContentHash": "a8c0f933a7cee4ca3182196b07a0517c60bcb7074481e2d83f87bf73b614747c",
+      "before": {
+        "id": "exp26-u13-002-q5",
+        "type": "choice",
+        "prompt": "If D2 is closely marked before you release, what is sensible?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reverse automatically because it was the original plan"
+          },
+          {
+            "id": "b",
+            "text": "Pass through D2’s marker without checking"
+          },
+          {
+            "id": "c",
+            "text": "Reassess a hold or another outlet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-002-q5",
+        "type": "choice",
+        "prompt": "If D2 is closely marked before you release, what is sensible?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reverse automatically because it was the original plan"
+          },
+          {
+            "id": "b",
+            "text": "Pass through D2’s marker without checking"
+          },
+          {
+            "id": "c",
+            "text": "Reassess a hold or another outlet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q6",
+      "beforeContentHash": "5a36a17057a5063892ac7f021c4257c7affeaad873a41421f4c51e49684eba80",
+      "afterContentHash": "c56e3eb680997c17e0a7f1571d417d58d1ed4c505575b7f0135fba350d0fd866",
+      "before": {
+        "id": "exp26-u13-002-q6",
+        "type": "explain",
+        "prompt": "Why is “the first outlet is closed” insufficient by itself to choose a reverse?",
+        "basis": "coaching",
+        "explanation": "A different lane and a prepared receiver must also exist. Mention pressure on D2 or time to protect the puck."
+      },
+      "after": {
+        "id": "exp26-u13-002-q6",
+        "type": "explain",
+        "prompt": "Why is “the first outlet is closed” insufficient by itself to choose a reverse?",
+        "basis": "coaching",
+        "explanation": "A different lane and a prepared receiver must also exist. Mention pressure on D2 or time to protect the puck."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q7",
+      "beforeContentHash": "370833f9b1b6038a2fdd49f5f4aa48526df2d24763a6c91fdb97a6017fa2b784",
+      "afterContentHash": "6ab7127b48a5cc02d3952b7406cdf84bbeb6bf6764e0f8d148c5dc0d400af877",
+      "before": {
+        "type": "choice",
+        "prompt": "What does Gold 1’s position between YOU and W change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The direct W outlet is restricted"
+          },
+          {
+            "id": "b",
+            "text": "D2 must own the puck"
+          },
+          {
+            "id": "c",
+            "text": "The puck is already in the neutral zone"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 occupies the direct lane to W, so that pass needs a different angle or protection; if Gold 1 moves away, recheck W.",
+        "id": "exp26-u13-002-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "What should YOU check with Gold 1 near the route to W?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether the direct W outlet is usable"
+          },
+          {
+            "id": "b",
+            "text": "D2 must own the puck"
+          },
+          {
+            "id": "c",
+            "text": "The puck is already in the neutral zone"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is near the direct lane to W. Check reach and movement before judging whether that lane is usable.",
+        "id": "exp26-u13-002-q7"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q8",
+      "beforeContentHash": "3596968a190eecede0dafb9e32592f77df7728b410cf8f0ec92196d273f379a5",
+      "afterContentHash": "e088ebffaa0fe0423d5350ff6089878bb6917674d0810a5edd103c347c184cfa",
+      "before": {
+        "type": "multi",
+        "prompt": "Which two details should accompany a reverse call?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Which side D2 is on"
+          },
+          {
+            "id": "b",
+            "text": "Whether the reverse lane is open"
+          },
+          {
+            "id": "c",
+            "text": "That D2 is automatically open because Gold 1 is near W"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D2’s side and the lane’s current access tell teammates what the reverse can solve; faceoff history does not.",
+        "id": "exp26-u13-002-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two details should accompany a reverse call?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Which side D2 is on"
+          },
+          {
+            "id": "b",
+            "text": "Whether the reverse lane is open"
+          },
+          {
+            "id": "c",
+            "text": "That D2 is automatically open because Gold 1 is near W"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Communicate D2’s side and whether the proposed route is usable. Keep the call accurate as pressure changes.",
+        "id": "exp26-u13-002-q8"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q9",
+      "beforeContentHash": "766aa274efbd6a87147c0b536c4d829753effc4e0a522e748126b11f9e06c948",
+      "afterContentHash": "355fe05f095783643a846485a0632404b09474d5549a6fc5a7f68775faa2e97f",
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU closer to the back of the net while keeping Gold 1’s pressure side visible.",
+        "basis": "coaching",
+        "explanation": "The behind-net position can change Gold 1’s angle and keep D2 in view; if Gold 1 follows, protect before choosing the reverse.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -26,
+          "y": 5
+        },
+        "id": "exp26-u13-002-q9"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU toward an example behind-net position to reassess pressure and D2.",
+        "basis": "coaching",
+        "explanation": "The example moves the carrier and puck behind the goal line, beside the back of the net. Recheck the net, boards and pressure; the position does not prove a safe skating or passing route to D2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -28,
+          "y": 4.5
+        },
+        "id": "exp26-u13-002-q9"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q10",
+      "beforeContentHash": "6af7704fabddda699177bdd2c414e237d88c89476c523a70120b24dcdc6da17b",
+      "afterContentHash": "13d96eccfbb48dbc856c0d9ce79c245fea2ea01acacc2de61413f84ebf87ec86",
+      "before": {
+        "type": "explain",
+        "prompt": "Why does a closed strong-side outlet permit a reverse without requiring it?",
+        "basis": "coaching",
+        "explanation": "The closure removes one lane while D2’s side and pressure determine whether the reverse helps; if the reverse is covered too, protect or wait.",
+        "id": "exp26-u13-002-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "Why does a closed strong-side outlet permit a reverse without requiring it?",
+        "basis": "coaching",
+        "explanation": "The closure removes one lane while D2’s side and pressure determine whether the reverse helps; if the reverse is covered too, protect or wait.",
+        "id": "exp26-u13-002-q10"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q1",
+      "beforeContentHash": "20dc42e9cbf86bff9b158f3442819ef5f16ab41f2c23c22d700039a7d675d8c6",
+      "afterContentHash": "507bc176d43c15cbd6ca086dbcd19b8bd0d05c108a67aaac8b7958192d74a220",
+      "before": {
+        "id": "exp26-u13-003-q1",
+        "type": "choice",
+        "prompt": "Who currently owns the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "C"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The puck is assigned to D1, so this question is about support without possession.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-003-q1",
+        "type": "choice",
+        "prompt": "Who currently owns the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "C"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The puck is assigned to D1, so this question is about support without possession.",
+        "basis": "scene"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q2",
+      "beforeContentHash": "33ee83a5f8cedbf6149c36888b4bf9c57a9005d66dadf54cd52a0051b7fefdd1",
+      "afterContentHash": "6c622e3fbc6e3b06a24d214140c6fc0f00a57f74ca7abf95eb61bf28454561de",
+      "before": {
+        "id": "exp26-u13-003-q2",
+        "type": "multi",
+        "prompt": "Which two changes might make your support more useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Stay hidden behind Gold 1 until the pass arrives"
+          },
+          {
+            "id": "b",
+            "text": "Show a ready stick after scanning"
+          },
+          {
+            "id": "c",
+            "text": "Adjust the receiving angle"
+          }
+        ],
+        "answer": [
+          "b",
+          "c"
+        ],
+        "explanation": "Moving and preparing can help D1 see an option; any new location still needs a lane check.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-003-q2",
+        "type": "multi",
+        "prompt": "Which two changes might make your support more useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Stay hidden behind Gold 1 until the pass arrives"
+          },
+          {
+            "id": "b",
+            "text": "Show a ready stick after scanning"
+          },
+          {
+            "id": "c",
+            "text": "Adjust the receiving angle"
+          }
+        ],
+        "answer": [
+          "b",
+          "c"
+        ],
+        "explanation": "Moving and preparing can help D1 see an option; any new location still needs a lane check.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q3",
+      "beforeContentHash": "07dd56e11a2db4e03d7270f1698d14797a622960058d9a7d1fd9bf9b3a5915fc",
+      "afterContentHash": "51505026518ea288774570bfce660910797d89800b637c18ecbbcf96a76c5dc9",
+      "before": {
+        "id": "exp26-u13-003-q3",
+        "type": "sequence",
+        "prompt": "Arrange a way to reoffer along this wall.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Identify Gold 1’s blocking position"
+          },
+          {
+            "id": "b",
+            "text": "Move to change the passing angle"
+          },
+          {
+            "id": "c",
+            "text": "Look back and prepare to receive"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The order is a suggested support routine rather than a fixed skating pattern."
+      },
+      "after": {
+        "id": "exp26-u13-003-q3",
+        "type": "sequence",
+        "prompt": "Arrange a way to reoffer along this wall.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Assess Gold 1 near the passing route"
+          },
+          {
+            "id": "b",
+            "text": "Move to change the passing angle"
+          },
+          {
+            "id": "c",
+            "text": "Look back and prepare to receive"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The order is a suggested support routine rather than a fixed skating pattern."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q4",
+      "beforeContentHash": "d83fe383dbd59a0cef2faa63f81d2911f0d326ca9169fa06f3aca98cb6cdb746",
+      "afterContentHash": "db4e5d1856b4bc185b71144e0367cee17967235a45f74e7da484da14a3ea52b2",
+      "before": {
+        "id": "exp26-u13-003-q4",
+        "type": "position",
+        "prompt": "Move YOU to a different receiving angle from D1.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -10,
+          "y": 5
+        },
+        "basis": "coaching",
+        "explanation": "Coming off the boards can separate the passing route from Gold 1. Check C’s space rather than crowding it."
+      },
+      "after": {
+        "id": "exp26-u13-003-q4",
+        "type": "position",
+        "prompt": "Move YOU to a different receiving angle from D1.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -10,
+          "y": 5
+        },
+        "basis": "coaching",
+        "explanation": "Coming off the boards can separate the passing route from Gold 1. Check C’s space rather than crowding it."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q5",
+      "beforeContentHash": "05881b88a082c5cefbe7be23a941f462fefc9ffad4ecaaa709e348826165db1a",
+      "afterContentHash": "b2cc07aa7cfc6290a35adf23c03a9f5001d0d44a4bbdb3619729966b7885670c",
+      "before": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 follows your inward move, which response could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call for a pass without looking at Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Reoffer elsewhere or make room for C"
+          },
+          {
+            "id": "c",
+            "text": "Remain still because your first move should have worked"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 follows your inward move, which response could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call for a pass without looking at Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Reoffer elsewhere or make room for C"
+          },
+          {
+            "id": "c",
+            "text": "Remain still because your first move should have worked"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q6",
+      "beforeContentHash": "7fb0a119cc321994021f4ae84c7278488dee6bff16bfc0b5d1c408c75b4b0e6e",
+      "afterContentHash": "1cce11a5ebe5f7cf92ec8ecea1fbef8dff281b8c174a3ffb576c08870984740a",
+      "before": {
+        "id": "exp26-u13-003-q6",
+        "type": "explain",
+        "prompt": "How can your movement help D1 even if D1 passes to C?",
+        "basis": "coaching",
+        "explanation": "Explain how moving Gold 1 or clearing a route can help another teammate. Receiving the puck is not the only useful outcome."
+      },
+      "after": {
+        "id": "exp26-u13-003-q6",
+        "type": "explain",
+        "prompt": "How can your movement help D1 even if D1 passes to C?",
+        "basis": "coaching",
+        "explanation": "Explain how moving Gold 1 or clearing a route can help another teammate. Receiving the puck is not the only useful outcome."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q7",
+      "beforeContentHash": "0b50e2c683707c8031bfd3de9de7ccb8b5ad007ecfba1a926d97c5661fb9270b",
+      "afterContentHash": "7ac794e8363e6de4037cff68c0ba5d25e7ea9bf014d7c6ab0250b4d0c11c28a6",
+      "before": {
+        "type": "choice",
+        "prompt": "What is the direct route Gold 1 is occupying?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The lane between D1 and YOU"
+          },
+          {
+            "id": "b",
+            "text": "The route from C to Navy’s net"
+          },
+          {
+            "id": "c",
+            "text": "The far blue-line exit"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 sits between D1 and YOU, so moving off that line can reoffer support; if Gold 1 follows, the new lane must be read.",
+        "id": "exp26-u13-003-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which passing route is Gold 1 closest to?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The lane between D1 and YOU"
+          },
+          {
+            "id": "b",
+            "text": "The route from C to Navy’s net"
+          },
+          {
+            "id": "c",
+            "text": "The far blue-line exit"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is close to the D1-to-YOU route. An angle change may help, but the new lane still needs checking.",
+        "id": "exp26-u13-003-q7"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q8",
+      "beforeContentHash": "48753c7753f235f3a845b8a3194ee1fe6dc5a46ec88283066c2434e7bb56bfd9",
+      "afterContentHash": "54e1e2bc7a4de81a64dd9e4fbe770435033a7f7dfdbc184f3bbcae4e10f47422",
+      "before": {
+        "type": "multi",
+        "prompt": "Which two calls help D1 use your movement?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Say when you are clear of the shadow"
+          },
+          {
+            "id": "b",
+            "text": "Identify C’s inside support"
+          },
+          {
+            "id": "c",
+            "text": "Call “I’m open” and leave D1 to guess your new angle"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 needs your new availability and C’s inside relationship to choose; a one-word call gives no geometry.",
+        "id": "exp26-u13-003-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two calls help D1 use your movement?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Say when you are clear of the shadow"
+          },
+          {
+            "id": "b",
+            "text": "Identify C’s inside support"
+          },
+          {
+            "id": "c",
+            "text": "Call “I’m open” and leave D1 to guess your new angle"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Communicate actual availability and C’s support position. A short clear call can work; it must match the current lane.",
+        "id": "exp26-u13-003-q8"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q9",
+      "beforeContentHash": "822bb7ef33eb5ed15122e584b4314ee65a65459532218c4acb1763dff38c2403",
+      "afterContentHash": "5c21c059dd6f957f867c6906d6b04c3c3717f6b636897feba94921b12ee7324d",
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU inward from the boards to create a visible angle for D1.",
+        "basis": "coaching",
+        "explanation": "The inward angle steps off Gold 1’s direct route and gives D1 a short option; if Gold 1 follows, C may become the next outlet.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -9,
+          "y": 7
+        },
+        "id": "exp26-u13-003-q9"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU toward the middle to compare a receiving angle from D1.",
+        "basis": "coaching",
+        "explanation": "The example moves YOU inward and changes the passing angle. It does not prove visibility or reception; recheck Gold 1 and C.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -9,
+          "y": 7
+        },
+        "id": "exp26-u13-003-q9"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q10",
+      "beforeContentHash": "31bc11989a2cdedd6b58a2db32b9a458ed5b9cfe2a6c790f0374fa147eacb7ab",
+      "afterContentHash": "ab9b6f31154f0349b08dc898dbc26c566c4341c9e54fe9b141d201c7bb7e944d",
+      "before": {
+        "type": "explain",
+        "prompt": "How can movement help D1 even if the puck goes to C?",
+        "basis": "coaching",
+        "explanation": "Stepping off the direct lane can pull Gold 1 and open C or D1’s next route; if the defender ignores you, D1 can use the space you created.",
+        "id": "exp26-u13-003-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "How can movement help D1 even if the puck goes to C?",
+        "basis": "coaching",
+        "explanation": "Stepping off the direct lane can pull Gold 1 and open C or D1’s next route; if the defender ignores you, D1 can use the space you created.",
+        "id": "exp26-u13-003-q10"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q1",
+      "beforeContentHash": "505e31cc1cc5323bd195bda91519a77ba250cf17b138ecda9de2a73d96429218",
+      "afterContentHash": "19bcf13c05684e11ae0750e9c7effae2ee00807dd248141cc231cf870ec690e0",
+      "before": {
+        "id": "exp26-u13-004-q1",
+        "type": "choice",
+        "prompt": "What support job is explicitly assigned to YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Wait at the far blue line"
+          },
+          {
+            "id": "b",
+            "text": "Pressure W as an opponent"
+          },
+          {
+            "id": "c",
+            "text": "Offer a short inside outlet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-004-q1",
+        "type": "choice",
+        "prompt": "What support job is explicitly assigned to YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Wait at the far blue line"
+          },
+          {
+            "id": "b",
+            "text": "Pressure W as an opponent"
+          },
+          {
+            "id": "c",
+            "text": "Offer a short inside outlet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+        "basis": "scene"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q2",
+      "beforeContentHash": "0db564457adf7acc75c3be939e0dda40ffebb1f1741fd1e39df5668539e4bcc1",
+      "afterContentHash": "0b366ff5e1bce209ee299bfa31b1c52f18e4b247da1d28f7af0037ef04dd426d",
+      "before": {
+        "id": "exp26-u13-004-q2",
+        "type": "multi",
+        "prompt": "Which two features would suit that outlet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Enough separation from Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "A route W can actually see"
+          },
+          {
+            "id": "c",
+            "text": "The greatest possible distance from W"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "Short support needs usable spacing and a route, not just proximity.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-004-q2",
+        "type": "multi",
+        "prompt": "Which two features would suit that outlet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Enough separation from Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "A route W can actually see"
+          },
+          {
+            "id": "c",
+            "text": "The greatest possible distance from W"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "Short support needs usable spacing and a route, not just proximity.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q3",
+      "beforeContentHash": "3881a8789901af274b1720911cd24a546d9e865a3f290def85e584af78dd6e1c",
+      "afterContentHash": "397a3c8dc01e5a38e501c5a539b781165c6b15d7c1888a53496f530cb887116a",
+      "before": {
+        "id": "exp26-u13-004-q3",
+        "type": "sequence",
+        "prompt": "Order a support response to W’s pressure.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Read Gold 1’s approach"
+          },
+          {
+            "id": "b",
+            "text": "Move closer to Navy’s net and inside W"
+          },
+          {
+            "id": "c",
+            "text": "Prepare for a pass or another change"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+      },
+      "after": {
+        "id": "exp26-u13-004-q3",
+        "type": "sequence",
+        "prompt": "Order a support response to W’s pressure.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Read Gold 1’s approach"
+          },
+          {
+            "id": "b",
+            "text": "Move closer to Navy’s net and inside W"
+          },
+          {
+            "id": "c",
+            "text": "Prepare for a pass or another change"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q4",
+      "beforeContentHash": "673d13a427987641216254cf6c96356f2df0a7bc5e188830f6c0fe065e84c76e",
+      "afterContentHash": "0c757197e1cb42812a67f82ba9d0320240b5ddcc791363db6512daa186367623",
+      "before": {
+        "id": "exp26-u13-004-q4",
+        "type": "position",
+        "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -13,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+      },
+      "after": {
+        "id": "exp26-u13-004-q4",
+        "type": "position",
+        "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -13,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q5",
+      "beforeContentHash": "b4570d32737d06cf1126ee0e660eb23e62fc4ec789c2e68614639e1493294220",
+      "afterContentHash": "21a6e8672e93477a08b833e2ed76fb5533786d4bde172571e0e3da12c8fa80f1",
+      "before": {
+        "id": "exp26-u13-004-q5",
+        "type": "choice",
+        "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "You may move forward while remaining available"
+          },
+          {
+            "id": "b",
+            "text": "You must remain underneath for the rest of the shift"
+          },
+          {
+            "id": "c",
+            "text": "You should stop watching the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-004-q5",
+        "type": "choice",
+        "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "You may move forward while remaining available"
+          },
+          {
+            "id": "b",
+            "text": "You must remain underneath for the rest of the shift"
+          },
+          {
+            "id": "c",
+            "text": "You should stop watching the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q6",
+      "beforeContentHash": "fe56816cf6e03a581c60f24ed548a454e9d67291a890b81d00269e1923b3d3dd",
+      "afterContentHash": "5257572ada7f2cf3015e0e092689cdc5995e81ebe703982110bc46fe54cc537c",
+      "before": {
+        "id": "exp26-u13-004-q6",
+        "type": "explain",
+        "prompt": "What is the difference between supporting W and skating into W’s problem?",
+        "basis": "coaching",
+        "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+      },
+      "after": {
+        "id": "exp26-u13-004-q6",
+        "type": "explain",
+        "prompt": "What is the difference between supporting W and skating into W’s problem?",
+        "basis": "coaching",
+        "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q7",
+      "beforeContentHash": "e8b262defa6479d31d6769d46a847bc1f4f9ccceb8603de339b8bd6776fe6fb7",
+      "afterContentHash": "860a1ccfcf3a03eb1c96ac4bb0d4b96f18416c589418dfd9ffa247ae86e8ec5e",
+      "before": {
+        "type": "choice",
+        "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+        "id": "exp26-u13-004-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+        "id": "exp26-u13-004-q7"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q8",
+      "beforeContentHash": "28afaf2a716e1e92072f15bcb1b76a0adf690e71d6356dc56527d4b55e665e62",
+      "afterContentHash": "715e8eba24e04c74f316bc5e6aec1d2215dd0047aace5ce59076f4353c048aaa",
+      "before": {
+        "type": "multi",
+        "prompt": "Which two cues tell YOU whether to stay underneath W?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1’s pressure on W"
+          },
+          {
+            "id": "b",
+            "text": "W’s puck control"
+          },
+          {
+            "id": "c",
+            "text": "D1’s old position alone"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+        "id": "exp26-u13-004-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two cues tell YOU whether to keep the short inside outlet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1’s pressure on W"
+          },
+          {
+            "id": "b",
+            "text": "W’s puck control"
+          },
+          {
+            "id": "c",
+            "text": "D1’s old position alone"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+        "id": "exp26-u13-004-q8"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q9",
+      "beforeContentHash": "30ebe27a5f6d3fd50b8723edc06491501a1d19efd43abc7d9cd794c66ef003a4",
+      "afterContentHash": "80ad28cdca0533f837ae54a50c6f9bc05500c9303f64e98d61e67de5dc912686",
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU below and inside W to present the assigned short outlet.",
+        "basis": "coaching",
+        "explanation": "The lower-inside spot gives W a short lane away from Gold 1; if W gains space, widen to support the next play.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -7,
+          "y": 4
+        },
+        "id": "exp26-u13-004-q9"
+      },
+      "after": {
+        "id": "exp26-u13-004-q9",
+        "type": "position",
+        "prompt": "Move YOU closer to Navy’s net than W and nearer the middle than W.",
+        "basis": "coaching",
+        "explanation": "The example is closer to the left net than W and nearer the middle. Recheck the passing lane and Gold 1; it does not guarantee a pressure-free outlet.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -15,
+          "y": 6
+        }
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q10",
+      "beforeContentHash": "4eb3775a99f31d1136ddff089fe99b55789d9df3200a41188b1a38161f201de0",
+      "afterContentHash": "775082327bc1a38e1f60ba400b7cf6093f1efd226d3ccb58e4c7bbfa428fa996",
+      "before": {
+        "type": "explain",
+        "prompt": "What would make you leave the short-outlet position?",
+        "basis": "coaching",
+        "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+        "id": "exp26-u13-004-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "What would make you leave the short-outlet position?",
+        "basis": "coaching",
+        "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+        "id": "exp26-u13-004-q10"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "before": {
+        "id": "exp26b-u11-024",
+        "version": 1,
+        "ageBand": "U11",
+        "title": "Reset behind the blue line",
+        "family": "neutral-reset-timing",
+        "topic": "Rink awareness",
+        "objective": "Use a practice reset location while separating it from a formal rule judgement.",
+        "briefing": "Navy attacks +x. F1 carries near the right blue line; YOU is just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -3,
+              "facing": 3.1
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has stated a practice reset.",
+          "YOU is near the right blue line.",
+          "The still scene does not make a full offside call."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-024-q1",
+            "type": "choice",
+            "prompt": "Where is YOU relative to the right blue line in this practice?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Behind it toward the right net"
+              },
+              {
+                "id": "b",
+                "text": "Inside it toward centre ice"
+              },
+              {
+                "id": "c",
+                "text": "At the left goal line"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "YOU is inside the right blue line area in the +x attack picture; the reset asks for a move behind it."
+          },
+          {
+            "id": "exp26b-u11-024-q2",
+            "type": "multi",
+            "prompt": "Which two facts determine whether the reset is ready?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach's stated reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Where F1 and F2 are when the rep restarts"
+              },
+              {
+                "id": "c",
+                "text": "A silent offside verdict from the still image"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+          },
+          {
+            "id": "exp26b-u11-024-q3",
+            "type": "sequence",
+            "prompt": "Arrange the stated reset steps.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear the reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Move behind the blue line under control"
+              },
+              {
+                "id": "c",
+                "text": "Re-check F1 before starting again"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+          },
+          {
+            "id": "exp26b-u11-024-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example reset point behind the right blue line.",
+            "actorId": "h1",
+            "reference": {
+              "x": 12.5,
+              "y": -3.5
+            },
+            "basis": "coaching",
+            "explanation": "This point shifts YOU farther toward the right-net side while keeping F1 and D1 visible."
+          },
+          {
+            "id": "exp26b-u11-024-q5",
+            "type": "choice",
+            "prompt": "F1 keeps waiting after YOU resets. What is the useful next check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+              },
+              {
+                "id": "b",
+                "text": "Assume the pass must happen now"
+              },
+              {
+                "id": "c",
+                "text": "Make a full rule call from the picture"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+          },
+          {
+            "id": "exp26b-u11-024-q6",
+            "type": "explain",
+            "prompt": "What information is still missing before a formal offside decision?",
+            "basis": "coaching",
+            "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26b-u11-024",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Reset behind the blue line",
+        "family": "neutral-reset-timing",
+        "topic": "Rink awareness",
+        "objective": "Use a practice reset location while separating it from a formal rule judgement.",
+        "briefing": "Navy attacks the right net (+x). F1 owns the puck on the neutral-zone side of the right blue line. YOU are on its attacking-zone side; F2 is farther toward centre ice and D1 is farther toward the right net. The coach asks YOU to reset to the neutral-zone side before the next rep.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -3,
+              "facing": 3.1
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has stated a practice reset.",
+          "YOU start on the attacking-zone side of the right blue line.",
+          "This practice instruction is separate from a formal offside decision."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-024-q1",
+            "type": "choice",
+            "prompt": "Where are YOU relative to the right blue line in this practice?",
+            "options": [
+              {
+                "id": "a",
+                "text": "On the attacking-zone side, toward the right net"
+              },
+              {
+                "id": "b",
+                "text": "On the neutral-zone side, toward centre ice"
+              },
+              {
+                "id": "c",
+                "text": "At the left goal line"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are on the attacking-zone side of the blue line. The reset asks YOU to return to its neutral-zone side."
+          },
+          {
+            "id": "exp26b-u11-024-q2",
+            "type": "multi",
+            "prompt": "Which two facts determine whether the reset is ready?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach's stated reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Where YOU and the teammates are before restarting"
+              },
+              {
+                "id": "c",
+                "text": "A silent offside verdict from the still image"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+          },
+          {
+            "id": "exp26b-u11-024-q3",
+            "type": "sequence",
+            "prompt": "Arrange the stated reset steps.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear the reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Move behind the blue line under control"
+              },
+              {
+                "id": "c",
+                "text": "Re-check F1 before starting again"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+          },
+          {
+            "id": "exp26b-u11-024-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example reset point behind the right blue line.",
+            "actorId": "h1",
+            "reference": {
+              "x": 6,
+              "y": -3.5
+            },
+            "basis": "coaching",
+            "explanation": "This example is on the neutral-zone side of the right blue line. It satisfies the stated location, but the restart still requires the coach’s cue and a check of the other players."
+          },
+          {
+            "id": "exp26b-u11-024-q5",
+            "type": "choice",
+            "prompt": "F1 keeps waiting after YOU reset. What is the useful next check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+              },
+              {
+                "id": "b",
+                "text": "Assume the pass must happen now"
+              },
+              {
+                "id": "c",
+                "text": "Make a full rule call from the picture"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+          },
+          {
+            "id": "exp26b-u11-024-q6",
+            "type": "explain",
+            "prompt": "What information is still missing before a formal offside decision?",
+            "basis": "coaching",
+            "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "before": {
+        "id": "exp26b-u11-025",
+        "version": 1,
+        "ageBand": "U11",
+        "title": "Stop the rep and reset",
+        "family": "stop-signal-reset",
+        "topic": "Practice awareness",
+        "objective": "Respond to a clear stop instruction before resuming a new puck task.",
+        "briefing": "Navy attacks +x. The puck is loose between YOU and D1 when the coach stops the rep. F2 is nearby. The stop changes the task even though no player has yet touched the puck.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -7,
+              "y": 1,
+              "facing": 0.3
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0.7
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 3,
+              "facing": -2.7
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -4,
+            "y": 2
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has clearly stopped the rep.",
+          "The puck remains loose.",
+          "A restart may assign F2 as the carrier."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-025-q1",
+            "type": "choice",
+            "prompt": "What changed the task while the puck stayed loose?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach called stop"
+              },
+              {
+                "id": "b",
+                "text": "D1 touched the puck"
+              },
+              {
+                "id": "c",
+                "text": "F2 was assigned the puck before the stop"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing states a clear stop call; the puck still has no owner."
+          },
+          {
+            "id": "exp26b-u11-025-q2",
+            "type": "multi",
+            "prompt": "Which actions fit the stop instruction?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Pause the contest and listen"
+              },
+              {
+                "id": "b",
+                "text": "Move to the stated reset area under control"
+              },
+              {
+                "id": "c",
+                "text": "Continue battling for the loose puck"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The stop call changes the task, so listening and resetting fit; the loose puck is no longer the immediate objective."
+          },
+          {
+            "id": "exp26b-u11-025-q3",
+            "type": "sequence",
+            "prompt": "Arrange this stop-and-reset response.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear and acknowledge the stop"
+              },
+              {
+                "id": "b",
+                "text": "Leave the contest under control"
+              },
+              {
+                "id": "c",
+                "text": "Confirm the restart cue"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The order respects the stated practice instruction before a new puck task begins."
+          },
+          {
+            "id": "exp26b-u11-025-q4",
+            "type": "position",
+            "prompt": "Move YOU to an open reset point away from the loose-puck contest.",
+            "actorId": "h1",
+            "reference": {
+              "x": -10,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "This point separates YOU from the puck and D1 so the stop can be followed without another contest."
+          },
+          {
+            "id": "exp26b-u11-025-q5",
+            "type": "choice",
+            "prompt": "The coach restarts with F2 as the puck carrier. What should YOU confirm?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2's location, D1's pressure, and the new support job"
+              },
+              {
+                "id": "b",
+                "text": "Continue the old loose-puck plan"
+              },
+              {
+                "id": "c",
+                "text": "Assume YOU owns the restart"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The restart assigns a new carrier, so scan F2 and D1 before choosing support."
+          },
+          {
+            "id": "exp26b-u11-025-q6",
+            "type": "explain",
+            "prompt": "Why can the right decision change even when nobody touches the puck?",
+            "basis": "coaching",
+            "explanation": "The coach changed the task and the restart conditions. A player must follow the new instruction, then re-read possession, pressure, and support."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26b-u11-025",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Stop the rep and reset",
+        "family": "stop-signal-reset",
+        "topic": "Practice awareness",
+        "objective": "Respond to a clear stop instruction before resuming a new puck task.",
+        "briefing": "Navy attacks +x. The puck is loose between YOU and D1 when the coach stops the rep. F2 is nearby. The stop changes the task even though no player has yet touched the puck.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -7,
+              "y": 1,
+              "facing": 0.3
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0.7
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 3,
+              "facing": -2.7
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -4,
+            "y": 2
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has clearly stopped the rep.",
+          "The puck remains loose.",
+          "A restart may assign F2 as the carrier."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-025-q1",
+            "type": "choice",
+            "prompt": "What changed the task while the puck stayed loose?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach called stop"
+              },
+              {
+                "id": "b",
+                "text": "D1 touched the puck"
+              },
+              {
+                "id": "c",
+                "text": "F2 was assigned the puck before the stop"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing states a clear stop call; the puck still has no owner."
+          },
+          {
+            "id": "exp26b-u11-025-q2",
+            "type": "multi",
+            "prompt": "Which actions fit the stop instruction?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Pause the contest and listen"
+              },
+              {
+                "id": "b",
+                "text": "Follow the coach’s reset directions under control"
+              },
+              {
+                "id": "c",
+                "text": "Continue battling for the loose puck"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The stop call changes the task, so listening and resetting fit; the loose puck is no longer the immediate objective."
+          },
+          {
+            "id": "exp26b-u11-025-q3",
+            "type": "sequence",
+            "prompt": "Arrange this stop-and-reset response.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear and acknowledge the stop"
+              },
+              {
+                "id": "b",
+                "text": "Leave the contest under control"
+              },
+              {
+                "id": "c",
+                "text": "Confirm the restart cue"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The order respects the stated practice instruction before a new puck task begins."
+          },
+          {
+            "id": "exp26b-u11-025-q4",
+            "type": "position",
+            "prompt": "Move YOU to an open reset point away from the loose-puck contest.",
+            "actorId": "h1",
+            "reference": {
+              "x": -10,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "This point separates YOU from the puck and D1 so the stop can be followed without another contest."
+          },
+          {
+            "id": "exp26b-u11-025-q5",
+            "type": "choice",
+            "prompt": "The coach restarts with F2 as the puck carrier. What should YOU confirm?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2's location, D1's pressure, and the new support job"
+              },
+              {
+                "id": "b",
+                "text": "Continue the old loose-puck plan"
+              },
+              {
+                "id": "c",
+                "text": "Assume YOU own the restart"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The restart assigns a new carrier, so scan F2 and D1 before choosing support."
+          },
+          {
+            "id": "exp26b-u11-025-q6",
+            "type": "explain",
+            "prompt": "Why can the right decision change even when nobody touches the puck?",
+            "basis": "coaching",
+            "explanation": "The coach changed the task and the restart conditions. A player must follow the new instruction, then re-read possession, pressure, and support."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-002",
+      "before": {
+        "id": "exp26-u13-002",
+        "version": 1,
+        "ageBand": "U13",
+        "title": "The strong-side outlet closes",
+        "family": "breakout-reverse",
+        "topic": "breakout reverse",
+        "objective": "Reassess an outlet when a forechecker occupies its side.",
+        "briefing": "YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -25,
+              "y": 6,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": -6,
+              "facing": 1.6539375586833378
+            },
+            {
+              "id": "home-skater-3",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 9,
+              "facing": -2.9147938055359073
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": 8,
+              "facing": -2.8632929945846817
+            },
+            {
+              "id": "home-skater-4",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": -2,
+              "facing": 2.4668517113662407
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "D2 and YOU are on opposite sides of Navy’s net.",
+          "YOU have settled the puck below the goal line. Gold 1 is between the puck side and W. D2 is on the other side of the net; this drill permits a short reverse but does not require it."
+        ],
+        "tags": [
+          "breakout-reverse"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 12–13, Breakouts",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-002-q1",
+            "type": "choice",
+            "prompt": "Which teammate is on the opposite side of the net from YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "D2"
+              },
+              {
+                "id": "c",
+                "text": "W"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "D2 and YOU are on opposite sides of Navy’s net.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-002-q2",
+            "type": "multi",
+            "prompt": "Select two checks before using the permitted reverse.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D2 is ready"
+              },
+              {
+                "id": "b",
+                "text": "Whether the first planned pass must be completed"
+              },
+              {
+                "id": "c",
+                "text": "Whether pressure can reach the reverse route"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "The reverse is an option only if its receiver and route remain usable.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a possible reverse decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice the blocked strong side"
+              },
+              {
+                "id": "b",
+                "text": "Check and communicate with D2"
+              },
+              {
+                "id": "c",
+                "text": "Use the reverse only if that route remains available"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The routine supports a decision, not an automatic reverse every time pressure appears."
+          },
+          {
+            "id": "exp26-u13-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example spot for protecting possession while looking toward D2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -24,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A tighter position near the back of the net can change the approach angle. Actual goalie and defender locations still matter."
+          },
+          {
+            "id": "exp26-u13-002-q5",
+            "type": "choice",
+            "prompt": "If D2 is closely marked before you release, what is sensible?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Reverse automatically because it was the original plan"
+              },
+              {
+                "id": "b",
+                "text": "Pass through D2’s marker without checking"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a hold or another outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q6",
+            "type": "explain",
+            "prompt": "Why is “the first outlet is closed” insufficient by itself to choose a reverse?",
+            "basis": "coaching",
+            "explanation": "A different lane and a prepared receiver must also exist. Mention pressure on D2 or time to protect the puck."
+          },
+          {
+            "type": "choice",
+            "prompt": "What does Gold 1’s position between YOU and W change?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The direct W outlet is restricted"
+              },
+              {
+                "id": "b",
+                "text": "D2 must own the puck"
+              },
+              {
+                "id": "c",
+                "text": "The puck is already in the neutral zone"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1 occupies the direct lane to W, so that pass needs a different angle or protection; if Gold 1 moves away, recheck W.",
+            "id": "exp26-u13-002-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two details should accompany a reverse call?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Which side D2 is on"
+              },
+              {
+                "id": "b",
+                "text": "Whether the reverse lane is open"
+              },
+              {
+                "id": "c",
+                "text": "That D2 is automatically open because Gold 1 is near W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "D2’s side and the lane’s current access tell teammates what the reverse can solve; faceoff history does not.",
+            "id": "exp26-u13-002-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU closer to the back of the net while keeping Gold 1’s pressure side visible.",
+            "basis": "coaching",
+            "explanation": "The behind-net position can change Gold 1’s angle and keep D2 in view; if Gold 1 follows, protect before choosing the reverse.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -26,
+              "y": 5
+            },
+            "id": "exp26-u13-002-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does a closed strong-side outlet permit a reverse without requiring it?",
+            "basis": "coaching",
+            "explanation": "The closure removes one lane while D2’s side and pressure determine whether the reverse helps; if the reverse is covered too, protect or wait.",
+            "id": "exp26-u13-002-q10"
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u13-002",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "The strong-side outlet closes",
+        "family": "breakout-reverse",
+        "topic": "breakout reverse",
+        "objective": "Reassess an outlet when a forechecker occupies its side.",
+        "briefing": "YOU control the puck beside Navy’s net on its centre-ice side. Gold 1 is near the direct lane to W. D2 is across the middle on the other side of the net. This drill permits a reverse if its route is available; it is not an automatic instruction. Navy defends the left net and attacks the right net.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -25,
+              "y": 6,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": -6,
+              "facing": 1.6539375586833378
+            },
+            {
+              "id": "home-skater-3",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 9,
+              "facing": -2.9147938055359073
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": 8,
+              "facing": -2.8632929945846817
+            },
+            {
+              "id": "home-skater-4",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": -2,
+              "facing": 2.4668517113662407
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "D2 is across the middle from YOU.",
+          "Gold 1 is near the direct route to W."
+        ],
+        "tags": [
+          "breakout-reverse"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 12–13, Breakouts",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-002-q1",
+            "type": "choice",
+            "prompt": "Which teammate is on the opposite side of the net from YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "D2"
+              },
+              {
+                "id": "c",
+                "text": "W"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "D2 and YOU are on opposite sides of Navy’s net.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-002-q2",
+            "type": "multi",
+            "prompt": "Select two checks before using the permitted reverse.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D2 is ready"
+              },
+              {
+                "id": "b",
+                "text": "Whether the first planned pass must be completed"
+              },
+              {
+                "id": "c",
+                "text": "Whether pressure can reach the reverse route"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "The reverse is an option only if its receiver and route remain usable.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a possible reverse decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Assess pressure near the strong-side outlet"
+              },
+              {
+                "id": "b",
+                "text": "Check and communicate with D2"
+              },
+              {
+                "id": "c",
+                "text": "Use the reverse only if that route remains available"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The routine supports a decision, not an automatic reverse every time pressure appears."
+          },
+          {
+            "id": "exp26-u13-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example spot for protecting possession while looking toward D2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -24,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A tighter position toward the middle of the net can change the angle you present to pressure. Actual goalie and defender locations still matter."
+          },
+          {
+            "id": "exp26-u13-002-q5",
+            "type": "choice",
+            "prompt": "If D2 is closely marked before you release, what is sensible?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Reverse automatically because it was the original plan"
+              },
+              {
+                "id": "b",
+                "text": "Pass through D2’s marker without checking"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a hold or another outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-002-q6",
+            "type": "explain",
+            "prompt": "Why is “the first outlet is closed” insufficient by itself to choose a reverse?",
+            "basis": "coaching",
+            "explanation": "A different lane and a prepared receiver must also exist. Mention pressure on D2 or time to protect the puck."
+          },
+          {
+            "type": "choice",
+            "prompt": "What should YOU check with Gold 1 near the route to W?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether the direct W outlet is usable"
+              },
+              {
+                "id": "b",
+                "text": "D2 must own the puck"
+              },
+              {
+                "id": "c",
+                "text": "The puck is already in the neutral zone"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1 is near the direct lane to W. Check reach and movement before judging whether that lane is usable.",
+            "id": "exp26-u13-002-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two details should accompany a reverse call?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Which side D2 is on"
+              },
+              {
+                "id": "b",
+                "text": "Whether the reverse lane is open"
+              },
+              {
+                "id": "c",
+                "text": "That D2 is automatically open because Gold 1 is near W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Communicate D2’s side and whether the proposed route is usable. Keep the call accurate as pressure changes.",
+            "id": "exp26-u13-002-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU toward an example behind-net position to reassess pressure and D2.",
+            "basis": "coaching",
+            "explanation": "The example moves the carrier and puck behind the goal line, beside the back of the net. Recheck the net, boards and pressure; the position does not prove a safe skating or passing route to D2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -28,
+              "y": 4.5
+            },
+            "id": "exp26-u13-002-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does a closed strong-side outlet permit a reverse without requiring it?",
+            "basis": "coaching",
+            "explanation": "The closure removes one lane while D2’s side and pressure determine whether the reverse helps; if the reverse is covered too, protect or wait.",
+            "id": "exp26-u13-002-q10"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "before": {
+        "id": "exp26-u13-003",
+        "version": 1,
+        "ageBand": "U13",
+        "title": "Step out of the forechecker’s shadow",
+        "family": "wall-outlet-support",
+        "topic": "wall outlet support",
+        "objective": "Create a visible receiving option for a defender.",
+        "briefing": "D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -7,
+              "y": 9,
+              "facing": -3.0090411212931194
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 7,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -13,
+              "y": 1,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -14,
+              "y": 8,
+              "facing": -3.017237659043032
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -5,
+              "y": -2,
+              "facing": 2.654693421778524
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The puck is assigned to D1, so this question is about support without possession.",
+          "D1 has the puck. YOU are the puck-side winger at the boards. Gold 1 sits close to the direct route between D1 and YOU; C waits closer to Navy’s net and inside the boards."
+        ],
+        "tags": [
+          "wall-outlet-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-003-q1",
+            "type": "choice",
+            "prompt": "Who currently owns the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "C"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The puck is assigned to D1, so this question is about support without possession.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-003-q2",
+            "type": "multi",
+            "prompt": "Which two changes might make your support more useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Stay hidden behind Gold 1 until the pass arrives"
+              },
+              {
+                "id": "b",
+                "text": "Show a ready stick after scanning"
+              },
+              {
+                "id": "c",
+                "text": "Adjust the receiving angle"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "Moving and preparing can help D1 see an option; any new location still needs a lane check.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-003-q3",
+            "type": "sequence",
+            "prompt": "Arrange a way to reoffer along this wall.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify Gold 1’s blocking position"
+              },
+              {
+                "id": "b",
+                "text": "Move to change the passing angle"
+              },
+              {
+                "id": "c",
+                "text": "Look back and prepare to receive"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The order is a suggested support routine rather than a fixed skating pattern."
+          },
+          {
+            "id": "exp26-u13-003-q4",
+            "type": "position",
+            "prompt": "Move YOU to a different receiving angle from D1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -10,
+              "y": 5
+            },
+            "basis": "coaching",
+            "explanation": "Coming off the boards can separate the passing route from Gold 1. Check C’s space rather than crowding it."
+          },
+          {
+            "id": "exp26-u13-003-q5",
+            "type": "choice",
+            "prompt": "If Gold 1 follows your inward move, which response could help?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Call for a pass without looking at Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "Reoffer elsewhere or make room for C"
+              },
+              {
+                "id": "c",
+                "text": "Remain still because your first move should have worked"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-003-q6",
+            "type": "explain",
+            "prompt": "How can your movement help D1 even if D1 passes to C?",
+            "basis": "coaching",
+            "explanation": "Explain how moving Gold 1 or clearing a route can help another teammate. Receiving the puck is not the only useful outcome."
+          },
+          {
+            "type": "choice",
+            "prompt": "What is the direct route Gold 1 is occupying?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The lane between D1 and YOU"
+              },
+              {
+                "id": "b",
+                "text": "The route from C to Navy’s net"
+              },
+              {
+                "id": "c",
+                "text": "The far blue-line exit"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1 sits between D1 and YOU, so moving off that line can reoffer support; if Gold 1 follows, the new lane must be read.",
+            "id": "exp26-u13-003-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two calls help D1 use your movement?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Say when you are clear of the shadow"
+              },
+              {
+                "id": "b",
+                "text": "Identify C’s inside support"
+              },
+              {
+                "id": "c",
+                "text": "Call “I’m open” and leave D1 to guess your new angle"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 needs your new availability and C’s inside relationship to choose; a one-word call gives no geometry.",
+            "id": "exp26-u13-003-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU inward from the boards to create a visible angle for D1.",
+            "basis": "coaching",
+            "explanation": "The inward angle steps off Gold 1’s direct route and gives D1 a short option; if Gold 1 follows, C may become the next outlet.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -9,
+              "y": 7
+            },
+            "id": "exp26-u13-003-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "How can movement help D1 even if the puck goes to C?",
+            "basis": "coaching",
+            "explanation": "Stepping off the direct lane can pull Gold 1 and open C or D1’s next route; if the defender ignores you, D1 can use the space you created.",
+            "id": "exp26-u13-003-q10"
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u13-003",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Step out of the forechecker’s shadow",
+        "family": "wall-outlet-support",
+        "topic": "wall outlet support",
+        "objective": "Create a visible receiving option for a defender.",
+        "briefing": "Navy D1 has the puck. YOU are a wide support player near the blue line. Gold 1 is close to the direct passing route. Navy C is closer to the defended left net and nearer the middle. Reoffer support if a usable lane is available.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -7,
+              "y": 9,
+              "facing": -3.0090411212931194
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 7,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -13,
+              "y": 1,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -14,
+              "y": 8,
+              "facing": -3.017237659043032
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -5,
+              "y": -2,
+              "facing": 2.654693421778524
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "D1 owns the puck.",
+          "Gold 1 is close to the direct route to YOU.",
+          "C is a navy inside support option."
+        ],
+        "tags": [
+          "wall-outlet-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-003-q1",
+            "type": "choice",
+            "prompt": "Who currently owns the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "C"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The puck is assigned to D1, so this question is about support without possession.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-003-q2",
+            "type": "multi",
+            "prompt": "Which two changes might make your support more useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Stay hidden behind Gold 1 until the pass arrives"
+              },
+              {
+                "id": "b",
+                "text": "Show a ready stick after scanning"
+              },
+              {
+                "id": "c",
+                "text": "Adjust the receiving angle"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "Moving and preparing can help D1 see an option; any new location still needs a lane check.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-003-q3",
+            "type": "sequence",
+            "prompt": "Arrange a way to reoffer along this wall.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Assess Gold 1 near the passing route"
+              },
+              {
+                "id": "b",
+                "text": "Move to change the passing angle"
+              },
+              {
+                "id": "c",
+                "text": "Look back and prepare to receive"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The order is a suggested support routine rather than a fixed skating pattern."
+          },
+          {
+            "id": "exp26-u13-003-q4",
+            "type": "position",
+            "prompt": "Move YOU to a different receiving angle from D1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -10,
+              "y": 5
+            },
+            "basis": "coaching",
+            "explanation": "Coming off the boards can separate the passing route from Gold 1. Check C’s space rather than crowding it."
+          },
+          {
+            "id": "exp26-u13-003-q5",
+            "type": "choice",
+            "prompt": "If Gold 1 follows your inward move, which response could help?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Call for a pass without looking at Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "Reoffer elsewhere or make room for C"
+              },
+              {
+                "id": "c",
+                "text": "Remain still because your first move should have worked"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-003-q6",
+            "type": "explain",
+            "prompt": "How can your movement help D1 even if D1 passes to C?",
+            "basis": "coaching",
+            "explanation": "Explain how moving Gold 1 or clearing a route can help another teammate. Receiving the puck is not the only useful outcome."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which passing route is Gold 1 closest to?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The lane between D1 and YOU"
+              },
+              {
+                "id": "b",
+                "text": "The route from C to Navy’s net"
+              },
+              {
+                "id": "c",
+                "text": "The far blue-line exit"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1 is close to the D1-to-YOU route. An angle change may help, but the new lane still needs checking.",
+            "id": "exp26-u13-003-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two calls help D1 use your movement?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Say when you are clear of the shadow"
+              },
+              {
+                "id": "b",
+                "text": "Identify C’s inside support"
+              },
+              {
+                "id": "c",
+                "text": "Call “I’m open” and leave D1 to guess your new angle"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Communicate actual availability and C’s support position. A short clear call can work; it must match the current lane.",
+            "id": "exp26-u13-003-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU toward the middle to compare a receiving angle from D1.",
+            "basis": "coaching",
+            "explanation": "The example moves YOU inward and changes the passing angle. It does not prove visibility or reception; recheck Gold 1 and C.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -9,
+              "y": 7
+            },
+            "id": "exp26-u13-003-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "How can movement help D1 even if the puck goes to C?",
+            "basis": "coaching",
+            "explanation": "Stepping off the direct lane can pull Gold 1 and open C or D1’s next route; if the defender ignores you, D1 can use the space you created.",
+            "id": "exp26-u13-003-q10"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "before": {
+        "id": "exp26-u13-004",
+        "version": 1,
+        "ageBand": "U13",
+        "title": "Stay underneath a pressured wall receiver",
+        "family": "centre-low-support",
+        "topic": "centre low support",
+        "objective": "Offer an inside release beneath a teammate under pressure.",
+        "briefing": "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "home-skater-2",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -10,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 5,
+              "facing": 0.3217505543966422
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -7,
+              "y": 7,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 0,
+              "y": -2,
+              "facing": 2.3086113869153615
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+          "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet."
+        ],
+        "tags": [
+          "centre-low-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-004-q1",
+            "type": "choice",
+            "prompt": "What support job is explicitly assigned to YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Wait at the far blue line"
+              },
+              {
+                "id": "b",
+                "text": "Pressure W as an opponent"
+              },
+              {
+                "id": "c",
+                "text": "Offer a short inside outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-004-q2",
+            "type": "multi",
+            "prompt": "Which two features would suit that outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Enough separation from Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "A route W can actually see"
+              },
+              {
+                "id": "c",
+                "text": "The greatest possible distance from W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "Short support needs usable spacing and a route, not just proximity.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q3",
+            "type": "sequence",
+            "prompt": "Order a support response to W’s pressure.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read Gold 1’s approach"
+              },
+              {
+                "id": "b",
+                "text": "Move closer to Navy’s net and inside W"
+              },
+              {
+                "id": "c",
+                "text": "Prepare for a pass or another change"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+          },
+          {
+            "id": "exp26-u13-004-q4",
+            "type": "position",
+            "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+          },
+          {
+            "id": "exp26-u13-004-q5",
+            "type": "choice",
+            "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "You may move forward while remaining available"
+              },
+              {
+                "id": "b",
+                "text": "You must remain underneath for the rest of the shift"
+              },
+              {
+                "id": "c",
+                "text": "You should stop watching the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q6",
+            "type": "explain",
+            "prompt": "What is the difference between supporting W and skating into W’s problem?",
+            "basis": "coaching",
+            "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+            "id": "exp26-u13-004-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues tell YOU whether to stay underneath W?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1’s pressure on W"
+              },
+              {
+                "id": "b",
+                "text": "W’s puck control"
+              },
+              {
+                "id": "c",
+                "text": "D1’s old position alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+            "id": "exp26-u13-004-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU below and inside W to present the assigned short outlet.",
+            "basis": "coaching",
+            "explanation": "The lower-inside spot gives W a short lane away from Gold 1; if W gains space, widen to support the next play.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -7,
+              "y": 4
+            },
+            "id": "exp26-u13-004-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "What would make you leave the short-outlet position?",
+            "basis": "coaching",
+            "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+            "id": "exp26-u13-004-q10"
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u13-004",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Offer a short inside outlet",
+        "family": "centre-low-support",
+        "topic": "centre low support",
+        "objective": "Offer a short inside outlet for a teammate under pressure.",
+        "briefing": "Navy W owns the puck in a wide lane, with Gold 1 nearby. YOU start farther up ice and nearer the middle. In this exercise, offer a short inside outlet closer to Navy’s defended left net than W, if the lane is usable.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "home-skater-2",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -10,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 5,
+              "facing": 0.3217505543966422
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -7,
+              "y": 7,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 0,
+              "y": -2,
+              "facing": 2.3086113869153615
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The coach assigns a short inside outlet.",
+          "W is the navy puck carrier under nearby gold pressure."
+        ],
+        "tags": [
+          "centre-low-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-004-q1",
+            "type": "choice",
+            "prompt": "What support job is explicitly assigned to YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Wait at the far blue line"
+              },
+              {
+                "id": "b",
+                "text": "Pressure W as an opponent"
+              },
+              {
+                "id": "c",
+                "text": "Offer a short inside outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-004-q2",
+            "type": "multi",
+            "prompt": "Which two features would suit that outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Enough separation from Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "A route W can actually see"
+              },
+              {
+                "id": "c",
+                "text": "The greatest possible distance from W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "Short support needs usable spacing and a route, not just proximity.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q3",
+            "type": "sequence",
+            "prompt": "Order a support response to W’s pressure.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read Gold 1’s approach"
+              },
+              {
+                "id": "b",
+                "text": "Move closer to Navy’s net and inside W"
+              },
+              {
+                "id": "c",
+                "text": "Prepare for a pass or another change"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+          },
+          {
+            "id": "exp26-u13-004-q4",
+            "type": "position",
+            "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+          },
+          {
+            "id": "exp26-u13-004-q5",
+            "type": "choice",
+            "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "You may move forward while remaining available"
+              },
+              {
+                "id": "b",
+                "text": "You must remain underneath for the rest of the shift"
+              },
+              {
+                "id": "c",
+                "text": "You should stop watching the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q6",
+            "type": "explain",
+            "prompt": "What is the difference between supporting W and skating into W’s problem?",
+            "basis": "coaching",
+            "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+            "id": "exp26-u13-004-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues tell YOU whether to keep the short inside outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1’s pressure on W"
+              },
+              {
+                "id": "b",
+                "text": "W’s puck control"
+              },
+              {
+                "id": "c",
+                "text": "D1’s old position alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+            "id": "exp26-u13-004-q8"
+          },
+          {
+            "id": "exp26-u13-004-q9",
+            "type": "position",
+            "prompt": "Move YOU closer to Navy’s net than W and nearer the middle than W.",
+            "basis": "coaching",
+            "explanation": "The example is closer to the left net than W and nearer the middle. Recheck the passing lane and Gold 1; it does not guarantee a pressure-free outlet.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -15,
+              "y": 6
+            }
+          },
+          {
+            "type": "explain",
+            "prompt": "What would make you leave the short-outlet position?",
+            "basis": "coaching",
+            "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+            "id": "exp26-u13-004-q10"
+          }
+        ]
+      }
+    }
+  ],
+  "limits": "Experimental content only. Independent AI review is not human coach approval or mastery admission.",
+  "appliedAt": "2026-09-06T14:05:12.520Z"
+}

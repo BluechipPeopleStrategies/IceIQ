@@ -1,0 +1,3412 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-25",
+  "completion": "complete",
+  "coverage": [
+    {
+      "questionId": "exp26-u13-021-q1",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "7d16904f646604b249a7a3ba3db9bafc920023fdcfb4de57d6b19b8c0c4ea556",
+      "verdict": "retain",
+      "reason": "Choice asks the puck state at the board battle. Puck is loose (owner:null) at (22,11.8); F1 (home-skater-2) sits at (21,11.3) and Gold 1/A1 at (23,11.8) -- both close but neither owns it, matching 'Loose and contested'. F2 (25,5) is nowhere near the puck, ruling out option b; puck x=22 is nowhere near centre ice (x=0), ruling out option c.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck loose at (22,11.8), owner:null.",
+          "F1 (home-skater-2) at (21,11.3); Gold 1/A1 (away-skater-1) at (23,11.8); both within ~1-2m of the puck, consistent with a contested battle.",
+          "F2 (home-skater-3) at (25,5), roughly 7m from the puck and closer to the Gold net (5.43m from goal line x=27.13) than F1 is (12.86m), matching the briefing's 'F2 is closer to Gold's net than they are.'"
+        ],
+        "stated": [
+          "Briefing: 'F1 and Gold 1 contest a loose puck along the attacking-zone side boards.'",
+          "Cue: 'The puck marker is separate from F1 and Gold 1, as the briefing states.'"
+        ],
+        "unproven": [
+          "Which player will actually win the battle is not shown; this is a still freeze, not a resolved outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q2",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "81c7eca7940c3e0a4a3cccf15a71b2396467ab2f5a00d2c933350c806805021b",
+      "verdict": "retain",
+      "reason": "Multi correctly pairs 'help against a counterattack if Gold wins' with 'an outlet if Navy wins control' as the two jobs of high support; 'guaranteed possession merely by standing high' is a credible but flawed youth assumption (that positioning alone wins pucks), not an absurd joke option, and makes no certainty claim the scene contradicts.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is well separated from the board battle (14.5m from the puck at (22,11.8))."
+        ],
+        "stated": [
+          "Briefing assigns YOU to 'support higher than the battle until control changes.'"
+        ],
+        "unproven": [
+          "Whether Gold actually wins the puck is not resolved; the question correctly frames both outcomes as live possibilities."
+        ]
+      },
+      "alternative": "A coach short a body in the wall battle could instead ask the high forward to also collapse in as a second retriever, trading the clean two-way outlet/recovery job this exercise teaches for extra numbers at the puck; that is a defensible alternative system, not an error in this exercise's stated assignment.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q3",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "3d37b8cb06609aedd61d814abdab3d2871dd295a7075b1d3b33b505ebcc40b28",
+      "verdict": "retain",
+      "reason": "Sequence orders 'Track who controls the puck' -> 'Check the high-slot space and opposing outlet' -> 'Adjust to the actual winner'. No historical P3 sequence-teaching flag exists for this exact question (unlike the sibling flags on -019-q3/-020-q3/-022-q3/-023-q3/-024-q3), but independently re-reviewed against the same standard: the explanation hedges ('a coach may assign a different forecheck elsewhere') rather than asserting one universal order, and the three actions are not claimed to require full completion of one before the next may begin.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck loose and contested at the boards; high-slot space and the possible opposing outlet lane are both visible reference areas from YOU's position at (12,1)."
+        ],
+        "stated": [
+          "Briefing frames this as a 'read from high support' while ownership is unresolved."
+        ],
+        "unproven": [
+          "Whether these three checks happen in strict serial order for a real player is not established; the hedge in the explanation correctly avoids that claim."
+        ]
+      },
+      "alternative": "A high forward with an already-clear view could check the high-slot space and the opposing outlet before or simultaneously with tracking puck control, since both are visible without waiting on the battle's outcome; strict serial order is not the only workable read here.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q4",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "2cb0ea0966b4242c129a2bbeb79599c7ba3752c81981343c50f9cd57fb972aae",
+      "verdict": "retain",
+      "reason": "Position moves YOU (home-skater-1) from (12,1) to the reference (15,0). Verified on-ice (isCoachRoutePoint true) and a genuine move (3.16m, exceeds the 0.1m minimum). x=15 sits just inside the offensive-zone faceoff-circle top (circle centred at x=20.7, r=4.572, so the circle's near edge is x=16.13), i.e. just outside/above the circles -- a defensible 'high slot' reference distinct from the board battle at (21-23,11.3-11.8), which is 13.5m away. The explanation does not claim this is the only correct dot, consistent with the position-question contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at (12,1); reference point (15,0) is 3.16m away and remains on the ice.",
+          "Reference point sits just outside the top of the offensive faceoff circle (circle centre 20.7,6.7 or 20.7,-6.7 per the shared circle geometry, r=4.572), the conventional 'high slot' band."
+        ],
+        "stated": [
+          "Briefing: 'this exercise assigns YOU to support higher than the battle until control changes.'"
+        ],
+        "unproven": [
+          "Whether this exact point is reachable in time, or whether opponents would contest it, is not shown; it is offered as one workable example, not an exclusive target."
+        ]
+      },
+      "alternative": "A point a few metres lower or more central could serve the same high-slot job depending on where F2 and the two Gold skaters actually are; (15,0) is one workable example, not the only correct dot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q5",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "dbdd779be9740f0c3c52b3c11e3f171fee40c4023b8f108ecf35dbb3ee014cfd",
+      "verdict": "retain",
+      "reason": "Choice asks what YOU could offer if F1 wins clean possession and looks inside; 'a visible high-slot option' is correct given YOU's assigned high-support job, while 'an automatic move into F1's crowded wall space' contradicts the stated high-support assignment and 'a claim that the puck remains loose' contradicts the question's own hypothetical (F1 has won it). No certainty about F1 actually passing is asserted.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (21,11.3) with the loose puck nearby; a 'clean possession' outcome is an explicit hypothetical, not the pictured freeze (puck owner is still null in the base scene)."
+        ],
+        "stated": [
+          "Basis is coaching; the question explicitly introduces the hypothetical 'if F1 wins clean possession'."
+        ],
+        "unproven": [
+          "Whether F1 actually looks inside or passes to YOU is not resolved; the explanation correctly frames this as an offered option, not a guaranteed connection."
+        ]
+      },
+      "alternative": "If both Gold skaters collapse toward F1's inside look, the crowded wall space could briefly open as a give-and-go option instead; that depends on defender reactions this static scene cannot show, so it is not the default recommendation here.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q6",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "2a18c23e390eb6ace06f0fe667b63933bcfcaf0c75d3cf9a8a990556e76cb88b",
+      "verdict": "retain",
+      "reason": "Explain reflection asks why the high forward's position matters before the battle is decided; no answer key to grade, and the explanation appropriately asks the player to describe both possible jobs (outlet, recovery) without asserting one is more correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU separated from the battle at (12,1), 14.5m from the loose puck."
+        ],
+        "stated": [
+          "Briefing assigns the high-support role explicitly to YOU."
+        ],
+        "unproven": [
+          "No response is scored; this is a discussion prompt, not an objectively graded item."
+        ]
+      },
+      "alternative": "A player could reasonably answer with only the recovery role and skip the outlet role (or vice versa) depending on which they were more recently coached on; the explanation's own guidance to 'describe both' is a teaching suggestion, not a required minimum for credit, since reflections carry no answer key.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q7",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "93f9dd7f56a4d51c1431a9925ff95f60013caf80f267c9aa3b4254c70fea01cc",
+      "verdict": "retain",
+      "reason": "Choice asks which Navy player is assigned the high support role; YOU (home-skater-1) is the only Navy skater positioned away from the board battle at (12,1), matching the briefing's explicit assignment. F1 and F2 are both engaged near/at the battle (F1 in it, F2 nearer the net). Already independently rechecked once historically (u13-p1-high-support-key) and current content matches that rechecked version exactly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (12,1) is 14.5m from the board battle; F1 (21,11.3) is at the battle; F2 (25,5) is closer to the Gold net than F1."
+        ],
+        "stated": [
+          "Briefing: 'YOU are the high forward; this exercise assigns YOU to support higher than the battle until control changes.'"
+        ],
+        "unproven": [
+          "No new claim beyond the explicitly stated assignment."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q8",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "178b0ea8c4a446b8674216c2e77a382fcc585170edd28f4b76f8bcb2385318b4",
+      "verdict": "retain",
+      "reason": "Multi asks which two jobs high support can serve, correctly keying 'be a reset if F1 wins it' and 'recover inside if Gold wins it', rejecting 'join F1's exact board lane' (which would abandon the high job entirely). This restates q2's two-job teaching point using scenario-specific action language (reset/recover framed around F1 and Gold by name) rather than q2's abstract category language (outlet/counterattack-help); reviewed as overlapping in objective with q2 but not a verbatim repeat, so retained rather than repaired -- unlike q10 vs q6 (see repair below), the option sets and framing genuinely differ.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same board-battle geometry as q1-q7: puck loose at (22,11.8), YOU separated at (12,1)."
+        ],
+        "stated": [
+          "Briefing's high-support assignment applies unchanged."
+        ],
+        "unproven": [
+          "Which team actually wins the puck is still unresolved."
+        ]
+      },
+      "alternative": "A coach emphasizing puck pressure over balance could argue high support should immediately collapse toward the boards the instant Gold wins clean control, rather than 'recovering inside'; the scene's own explanation treats inside recovery as the taught default, not the only defensible reaction.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q9",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "e244a43046ac0f438d6cbf918cc00a7c4e4a73a8c4ce0f4c3b03b96328ea6b8d",
+      "verdict": "retain",
+      "reason": "Position moves YOU from (12,1) to (13,-1), verified on-ice and a genuine 2.24m move. Numerically this new point is slightly FARTHER from the board battle at (22,11.8) than the start (15.40m vs 14.50m), consistent with 'above the board battle'; the y-flip from +1 to -1 places YOU on the opposite side from the near-boards battle, a defensible reading of 'inside' relative to this specific battle even though |y| is nearly unchanged (1.0 vs 1.0) relative to rink centre. The 'slightly' qualifier matches the small (1-2m) actual movement; no exact distance is asserted as a scored target.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Distance from YOU's start (12,1) to the board battle (22,11.8): 14.50m. Distance from the q9 reference (13,-1) to the same battle: 15.40m -- farther, not closer.",
+          "The reference flips YOU to the opposite side of rink-centre from the battle's y=+11.8 side."
+        ],
+        "stated": [
+          "Explanation: 'keeps both puck outcomes visible and protects the middle; if F1 wins cleanly, lower into the next support lane.'"
+        ],
+        "unproven": [
+          "Whether this exact point is optimal versus other nearby points is not established, consistent with 'not an exclusive correct dot.'"
+        ]
+      },
+      "alternative": "A slightly lower, more central point (closer to x=12, y=0) would keep the same dual-outcome visibility with an even smaller move; (13,-1) is one workable example, not the only correct answer.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q10",
+      "scenarioId": "exp26-u13-021",
+      "baseContentHash": "bbeba59668b581124c2f984a7c0b63027146aea27a7522dfd1621103001a1876",
+      "verdict": "repair",
+      "reason": "Explain reflection ('Why should high support remain useful before the battle is decided?') restates q6 ('Explain why the high forward's position matters before the battle is decided?') almost verbatim -- same generic prompt shape, same underlying answer content (balanced position enables either an attack or recovery job), no new cue, decision, or retrieval target beyond q6. This is the exact recurring q7-q10-addition-repeats-earlier-question defect the assignment flagged (previously only partially fixed in packet-24). Repaired to ask a genuinely distinct question tied specifically to q9's own conditional (when to leave the re-positioned spot), not a restatement of 'why does position matter'.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "q6 and q10 (original) both key off the same static freeze with no new visible fact between them."
+        ],
+        "stated": [
+          "Both prompts reference 'before the battle is decided' using near-identical wording."
+        ],
+        "unproven": [
+          "No new scene fact distinguishes q10 from q6; this is a content/redundancy defect, not a geometry or roster error."
+        ]
+      },
+      "alternative": "An acceptable alternative repair would delete q10 entirely rather than replace it, since a 10-question scenario is not required to fill every slot with a distinct explain question; replacement was chosen instead to preserve the required question ID and the four-plus-format variety this scenario already satisfies.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q1",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "939eed36d2297447dfa80a82abd3544a424580c701637b2b375ee1e90a84fe57",
+      "verdict": "retain",
+      "reason": "Choice asks which named area lies between the two forward positions (F1 at (19,9), YOU at (16,-7)). 'The high slot' is correct: x=16-19 sits at/just inside the top of the offensive faceoff circle (circle centre x=20.7, r=4.572, near edge x=16.13), and the two forwards straddle y=0 on opposite sides, consistent with the high-slot band. The defending crease (near Navy's own net, x=-27.13) and the centre faceoff circle (x=0) are both far from this x=16-19 area, correctly wrong.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (home-skater-2) at (19,9); YOU (home-skater-1) at (16,-7); both near x=16-19, opposite sides of y=0."
+        ],
+        "stated": [
+          "Cue: 'The forwards are on opposite sides of the high slot.'"
+        ],
+        "unproven": [
+          "No claim about who could see whom is made in this question; that is reserved for q2/q8."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q2",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "c37f20a637f5db86360df0ca124dfb3bc7e5ef7d12a4b4ab4e8b3296e2f58679",
+      "verdict": "retain",
+      "reason": "Multi correctly pairs 'whether F1 can see your target' and 'whether Gold 2 can reach the lane' as the two real checks for an inside connection; 'whether every cross-ice pass is automatically available' is a credible flawed youth assumption (treating open ice as proof of safety), matching the briefing's explicit warning not to assume a cross-ice pass is safe.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2/A2 at (15,5) sits between F1 (19,9) and YOU (16,-7) in x, a plausible lane obstruction to check."
+        ],
+        "stated": [
+          "Briefing: 'without assuming a cross-ice pass is safe.'"
+        ],
+        "unproven": [
+          "Whether Gold 2 would actually reach the lane in real time (skating speed/reaction) is not modelled; the check is presented as a read, not a guaranteed outcome."
+        ]
+      },
+      "alternative": "A coach could add a third check (whether YOU has time to receive and move the puck before pressure arrives) as equally important; the two-check pair here is the minimum taught set, not an exhaustive list.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q3",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "6e3e4c5d350a1b889b430b28c4a72ef9f8e7fbedee69b891adf6ac45c857a574",
+      "verdict": "retain",
+      "reason": "Historical finding 'teaching-exp26-u13-022-q3' (P3) already characterized the sequence ('Identify the defender crossing the route' -> 'Change your angle through useful space' -> 'Show the target and reassess') as an editorial opportunity, not an established error, recommending retention where ordering adds value. Independently re-reviewed: the explanation ('The movement may create a pass or move a defender for another teammate') hedges the outcome rather than asserting a guaranteed lane, satisfying the no-false-certainty rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2/A2 at (15,5) is a plausible route-crossing defender between F1 and YOU."
+        ],
+        "stated": [
+          "Briefing frames this as one way to create a clearer lane, not the only way."
+        ],
+        "unproven": [
+          "Whether this specific movement actually opens a lane for THIS exact defender arrangement is not simulated; the explanation correctly hedges this."
+        ]
+      },
+      "alternative": "A player could instead hold position and wait for a teammate's puck movement to shift the defender, rather than moving themselves first; both are defensible reads of 'create a clearer lane.'",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q4",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "5f86ce64d14e09a77da71be9f64b34fed56e2852aec5326b06bae1a6225b8980",
+      "verdict": "retain",
+      "reason": "Position moves YOU from (16,-7) to (18,-3), verified on-ice and a genuine 4.47m move. The explanation's claim ('a shorter inside connection than the original far-side position') is numerically confirmed: distance to F1 (puck owner) drops from 16.28m at the start to 12.04m at the reference -- a real, meaningful reduction, not an invented certainty.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Distance YOU-start to F1: 16.28m. Distance from reference (18,-3) to F1: 12.04m -- confirmed shorter."
+        ],
+        "stated": [
+          "Briefing: coach asks to 'look for a clearly visible passing connection.'"
+        ],
+        "unproven": [
+          "Whether Gold 2 would actually contest this new spot once occupied is addressed separately in q5, not claimed here."
+        ]
+      },
+      "alternative": "A point closer to x=20 could shorten the connection even further, at the cost of moving nearer to Gold 1 (21,6); (18,-3) is one workable balance, not the only correct target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q5",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "cc9449a26cbeb9c010ee91aeff7335377bc39191d6559223157c9940fffd7953",
+      "verdict": "retain",
+      "reason": "Choice asks what helps once Gold 2 (an explicit hypothetical shift, coaching basis, not the pictured freeze) enters the high-slot connection; 'use another support angle or leave room for D1' correctly reflects that the first support target is no longer permanent. 'Assume the old connection remains clear' contradicts the question's own stated premise; 'treat Gold 2 as irrelevant because the pass is cross-ice' repeats the briefing's explicitly flagged false-safety assumption.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (home-skater-3) at (10,0) is an actual named Navy actor available as the referenced alternative outlet."
+        ],
+        "stated": [
+          "Question explicitly introduces the hypothetical: 'Gold 2 shifts into the high-slot connection.'"
+        ],
+        "unproven": [
+          "Exactly where YOU should re-space to is not prescribed; the answer names the principle (use another angle / leave room for D1), not one exclusive new dot."
+        ]
+      },
+      "alternative": "Depending on Gold 1's exact reaction, holding the current spot and waiting for Gold 2 to leave again could also work rather than re-spacing immediately; the scene does not resolve Gold 1's response, so immediate re-spacing is the taught default, not the only option.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q6",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "6acceeb3621dfc16c53c809245568dc90405c248e28159aaee062a73f1f2a277",
+      "verdict": "retain",
+      "reason": "Explain reflection asks the player to name the space (high slot) and explain what made its passing angle different, tied specifically to the q4 move. No answer key; the explanation appropriately asks for a named connection to F1, Gold 2 and the route rather than a bare zone label.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference point from q4 (18,-3) is numerically closer to F1 than the start, as verified above."
+        ],
+        "stated": [
+          "Explanation: 'Use \"high slot\" if describing the central pocket; connect the name to F1, Gold 2 and the route.'"
+        ],
+        "unproven": [
+          "No response is scored; this is a discussion prompt."
+        ]
+      },
+      "alternative": "A player could reasonably describe the change in terms of Gold 1's position instead of Gold 2's, since both defenders factor into the lane; the explanation's naming of Gold 2 specifically is a teaching suggestion, not the only creditable answer.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q7",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "7b482bc36b174ddd146e2944bb3899310ce15700f8f001fcac5e71b994ec08d6",
+      "verdict": "retain",
+      "reason": "Choice asks what YOU should call if Gold 2 enters the high-slot connection; 'I have the inside lane' correctly models a communication call, while 'the lane is clear because Gold 2 moved' inverts the premise (Gold 2 entering blocks it) and 'ignore the slot' is poor practice. Already independently repaired once historically (u13-p2-repeat-q7-targets, removing an outcome-guarantee distractor and giving q7 its own communication-focused premise distinct from q1); current content matches that rechecked version exactly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same high-slot geometry as q1: F1 (19,9), YOU (16,-7), Gold 2/A2 (15,5)."
+        ],
+        "stated": [
+          "Question explicitly introduces the hypothetical: 'if Gold 2 enters the high-slot connection.'"
+        ],
+        "unproven": [
+          "Whether F1 actually hears/acts on the call is not shown."
+        ]
+      },
+      "alternative": "A player could instead call out Gold 1's position rather than claiming the inside lane, if Gold 1 (not Gold 2) were the more immediate threat; the taught call here is scoped to this specific Gold 2 hypothetical.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q8",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "9e3d91ad2c21ce46d35a67038931847df58e9ab1cbe46e97134fde36d9366309",
+      "verdict": "retain",
+      "reason": "Multi asks which two cues decide whether a cross-ice look is usable, correctly keying 'Gold 1 and Gold 2's positions' and 'YOU's visibility from F1', rejecting 'assuming distance makes the pass safe' (the briefing's named false assumption). This restates q2's two-check objective using combined/renamed framing (both defenders as one option; visibility direction reversed to 'YOU's visibility from F1' vs q2's 'whether F1 can see your target') -- reviewed as the same underlying concept from a flipped vantage point, not a verbatim repeat, so retained.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1/A1 (21,6) and Gold 2/A2 (15,5) both sit in the general vicinity of the F1-YOU connection, as established in q1-q2."
+        ],
+        "stated": [
+          "Briefing's 'clearly visible passing connection, without assuming a cross-ice pass is safe' applies unchanged."
+        ],
+        "unproven": [
+          "No new geometric claim is made beyond q1/q2/q4's already-verified positions."
+        ]
+      },
+      "alternative": "A coach could instead teach this as a single combined cue ('is the lane both open and seen') rather than two separate cues; splitting them here is a teaching choice to make each factor checkable on its own, not the only valid framing.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q9",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "1f4d183d940f87eecbbf76220aec4dafb8266df9d848c7bd7f08e50158b28179",
+      "verdict": "retain",
+      "reason": "Position moves YOU from (16,-7) to (14,-5), verified on-ice and a genuine 2.83m move. Distance to F1 drops from 16.28m to 14.87m (shorter, supporting 'changes F1's passing angle'). The explanation's 'keeping separation from Gold 1 and Gold 2' is a looser claim: distance to Gold 1 barely changes (13.93m to 13.04m) and distance to Gold 2 actually shortens more (12.04m to 10.05m) -- read as 'still not marked/covered' (10m is a large gap on a 26m-wide rink) rather than 'distance unchanged', this is defensible, but it is a softer claim than q4's more precisely-supported 'shorter connection' language.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Distance from reference (14,-5) to F1: 14.87m (vs 16.28m at start) -- shorter, supporting the stated angle change.",
+          "Distance from reference to Gold 2/A2: 10.05m (vs 12.04m at start) -- also shorter, not 'kept'; still a large real-ice gap."
+        ],
+        "stated": [
+          "Explanation: 'gives F1 a clearer angle while keeping separation from Gold 1 and Gold 2; if a defender fills it, re-space.'"
+        ],
+        "unproven": [
+          "Whether 10m qualifies as meaningfully 'separated' at this age/level is a coaching judgment, not a scored fact; no rule source certifies a minimum safe gap."
+        ]
+      },
+      "alternative": "A point that holds x closer to 16 (less depth change) would keep more distance from Gold 2 while still shifting the angle from F1; (14,-5) trades a bit more separation for a clearer angle, which is a defensible but not the only balance.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q10",
+      "scenarioId": "exp26-u13-022",
+      "baseContentHash": "9e0da3e60a8bd0f21a0d6f351da62fc830614d403366a8fd2a7f12dfd5bd9b4f",
+      "verdict": "repair",
+      "reason": "Explain reflection ('Name the space you moved into and explain what made its angle different.') restates q6 ('Name the space you moved into and explain what made its passing angle different.') almost word-for-word -- one word removed ('passing'), same underlying task, no new cue or decision beyond q6. This is the same recurring q7-q10-addition-repeats-earlier-question defect already caught once in this scenario at q7 (historical finding u13-p2-repeat-q7-targets) but missed at q10, matching the assignment's warning that a prior repair can fix one instance and miss a sibling with the identical problem. Repaired to ask a genuinely distinct question tied to q9's own conditional (what to check if Gold 2 reacts to the new pocket), not a restatement of 'name the space and what changed the angle'.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "q6 and q10 (original) both key off the same two facts (the named space, the changed angle) with no new visible fact distinguishing them."
+        ],
+        "stated": [
+          "Both prompts use near-identical 'name the space ... explain what made its angle different' phrasing."
+        ],
+        "unproven": [
+          "No new scene fact distinguishes q10 from q6; this is a content/redundancy defect, not a geometry or roster error."
+        ]
+      },
+      "alternative": "An acceptable alternative repair would delete q10 entirely rather than replace it, since this scenario would still satisfy the four-plus-format and question-count requirements at nine questions; replacement was chosen instead to preserve the existing question ID and give the extra practice rep genuinely new content.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q1",
+      "baseContentHash": "cc1fc89d840ebc1aaf7a949e2c83c79a3c7256dbe5c3c4e1ae1a7ec7e148401f",
+      "verdict": "repair",
+      "reason": "Subject-verb agreement defect: \"Has YOU established possession\" is wrong (YOU takes \"have\"). Repaired to \"Have YOU established possession in this freeze?\" with no change to options, answer or explanation.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q2",
+      "baseContentHash": "12a6ad8a91b394230070b7309ff88a0eb1330769083500865508c8b5ccb8b776",
+      "verdict": "retain",
+      "reason": "Multi-select correctly asks for pass quality and Gold 1’s approach speed as the two live cues; the \"every pass must be one-touched\" distractor is a credible but wrong absolute rule, not trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "If Gold 1 is still well off the puck, weighting puck protection over pass quality alone is also a defensible read."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q3",
+      "baseContentHash": "ec83a6228a8019599ee492a7fd6683dcad4c768e7e59163de8349c2eeaa4a5af",
+      "verdict": "retain",
+      "reason": "Sequence (read the bounce/pressure -> establish control if there is time -> recheck the forward option) was previously flagged (finding teaching-exp26-u13-023-q3) as overlapping/conditional. Its own explanation already discloses the condition (\"this sequence assumes time to settle\") and the historical adjudication treated this class as an editorial opportunity, not an established tactical error (calibration-adjudication.md lesson 9: role/order flexibility, not a rigid system). Retained; the qualifier keeps it honest about when it applies.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Under tighter pressure (see the amended q6), an emergency touch can replace the \"establish control\" step rather than following this order."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q4",
+      "baseContentHash": "35525c4cada927cbfadad9e6d8fe6efe5610c25cac822e9f18352fb5c584541f",
+      "verdict": "retain",
+      "reason": "Position example (3,-4) moves YOU 2.236 m from the start (1,-3) and to 1.0 m from the puck (3,-3), i.e. verified closer to the puck (was 2.0 m) exactly as the explanation claims (\"moves toward the puck\"). On-ice confirmed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A position slightly higher or wider of this example still works provided it keeps the loose puck reachable without assuming control is already won."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q5",
+      "baseContentHash": "5224beec30137fbea445e5fdaabd8959eff4f06c7055fb260fbf3db87d517a54",
+      "verdict": "retain",
+      "reason": "Hypothetical is explicitly conditioned (\"If the puck arrives flat and F2’s lane is clearly available\") and the correct answer (\"an earlier pass may be practical\") is qualified with \"may\", not guaranteed; the \"Gold 1 no longer needs to be checked\" distractor is correctly wrong since Gold 1’s pressure is never nullified by reception quality alone.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Even with a clear lane, taking one more beat to fully control the puck is defensible if Gold 1’s pressure is still developing rather than imminent."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q6",
+      "baseContentHash": "cd0373472849076180e5e21e27662ae914c138ee77de8dd6703f04383b03c242",
+      "verdict": "repair",
+      "reason": "Near-duplicate premise: q6’s original prompt (\"What would you need to see before recommending a one-touch pass here?\") and q10’s prompt (\"What would you need to see before recommending a one-touch pass?\") differ by only the word \"here\" and tested the identical one-touch-conditions premise, leaving q6 without a distinct teaching purpose (AUTHORING-CONTRACT: \"Every question needs a distinct teaching purpose\"; this is the same q7-q10-style repeated-premise defect class flagged in packet-24). Retargeted q6 to the complementary, previously-untested premise of tighter/immediate pressure (an emergency touch when there is no time to settle), which q3’s own explanation already gestures at (\"Emergency touches may be needed under tighter pressure\") but no question had actually tested.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "If there genuinely is time to settle even with a stick nearby, a controlled reception followed by a normal pass can still be better than forcing an emergency touch."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q7",
+      "baseContentHash": "0e4b596b440c19f1e596c48bd7e491a7135a4d6db139f9a0e110b1d6466c0b9c",
+      "verdict": "repair",
+      "reason": "This question was already amended once (historical finding u13-p2-repeat-q7-targets, receipt in docs/factory/research/question-review/repairs/u13-repairs.json lines 3083-3140) and that repair itself introduced a new subject-verb agreement defect: \"while YOU still needs control\" (should be \"need\"). Current baseContentHash confirmed identical to that historical after-hash. Fixed only the verb; prompt, options, answer and the rest of the explanation are untouched.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "If F2’s lane closes before control is won, protecting the puck alone without calling for the pass is also defensible."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q8",
+      "baseContentHash": "341c2392567e1c5677901c3205a97bc59d64f8b9fa3e659ca29783b32d0a39d0",
+      "verdict": "retain",
+      "reason": "Multi-select correctly identifies F2’s higher position and Gold 1’s approach as the two cues; distinct from q2 (which tests generic pass-quality/pressure-timing rather than these two named actor facts). \"The pass being difficult no longer matters\" is a credible-but-wrong dismissal, not trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Even without checking those exact two cues, defaulting to puck protection first is a safe fallback."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q9",
+      "baseContentHash": "10a0b75e8966cfa2585554ec249c058b4630c255a4685c964730bd92d09cc697",
+      "verdict": "retain",
+      "reason": "Position example (-1,-1) is 7.0 m from Gold 1 (verified farther than the 5.385 m start-to-Gold-1 distance), matching the \"away from Gold 1\" claim. \"Behind the bounced puck\" is read as goal-side of the puck (x=-1 is behind YOU’s own x=1 and the puck’s x=3, on the defensive side, consistent with Navy attacking +x) rather than a literal alignment with Gold 1’s approach vector; basis is coaching with an explicit \"recover rather than forcing a pass\" condition, so this is a defensible discussion example, not an objective claim. On-ice confirmed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A position closer to the puck than this example is equally defensible if Gold 1’s pressure is not yet close enough to threaten a direct challenge."
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q10",
+      "baseContentHash": "66ad70b42aa6ecae8b8a92f7c5ad5b35c49059457952134af37fa11d348a4e13",
+      "verdict": "retain",
+      "reason": "This question was already amended once (historical finding u13-p2-one-touch-certainty) to condition the one-touch cue on settled control, a visible F2 lane and readable pressure timing, and to state \"A one-touch is an option, not a promise.\" Current baseContentHash confirmed identical to that historical after-hash; no new defect found. Now distinct from the amended q6 (which covers the opposite, no-time/emergency-touch case).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (1,-3); F2 (home-skater-2) is at (11,5); D1 (home-skater-3) is at (-8,-7); Gold 1/A1 (away-skater-1) is at (6,-1); all four are on-ice (within the 30.48x12.954 bounds and corner radius).",
+          "The loose puck (owner:null) sits at (3,-3): 2.0 m from YOU, 3.606 m from Gold 1, 11.314 m from F2.",
+          "Navy (home) attacks +x and defends -x per the project convention; Gold (away) is the only opposing team present."
+        ],
+        "stated": [
+          "Briefing states a pass has bounced just ahead of YOU in the neutral zone and that YOU has not settled it.",
+          "Briefing states F2 is higher up ice and Gold 1 is approaching but not yet on the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reaches the puck before YOU is not established by the frozen scene; only relative distance is known.",
+          "Facing values do not establish where any player is actually looking, and no skating speed, stick reach or bounce trajectory is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Securing the puck first and delaying the decision is equally defensible even when those cues appear present."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q1",
+      "baseContentHash": "bea40b3e2438e51d85e560d7855dd99be716d424fea73ea78e17f0cb21ec18c5",
+      "verdict": "retain",
+      "reason": "Scene-basis question correctly identifies \"who will control the next touch\" as unknown; loose puck (10,6) sits 1.0 m from F1 and 1.414 m from Gold 1, so both are plausibly live, matching \"no winner is stated.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q2",
+      "baseContentHash": "b857630f23a97ef617a0d06bededb8b034b6e87ea245a9482210b3ace8718939",
+      "verdict": "retain",
+      "reason": "Correctly rejects \"a guaranteed attack because F1 is close\" (false certainty) and selects the two conditional outcomes (defend if Gold 1 wins, support if F1 wins), matching the contested state.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "If F1 already looks clearly favoured to win the touch, weighting more attention toward the support/outlet role than the defensive read is also defensible."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q3",
+      "baseContentHash": "e56a3e079e420c29504676981415a5ef9018ba2948cd612a1f7e6331513610ef",
+      "verdict": "retain",
+      "reason": "Sequence (observe the contested touch -> identify the actual owner -> commit to the useful support job) was previously flagged (finding teaching-exp26-u13-024-q3) as overlapping/conditional, same class as u13-023-q3. Its own explanation discloses the condition (\"Anticipation can help, but the question does not grant control based on proximity\"), and the historical adjudication treated this class as an editorial opportunity rather than an established error. Retained.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Under faster-developing pressure, observing and committing may need to happen almost together rather than in strict sequence."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q4",
+      "baseContentHash": "91b6c4c4562bc216639e7e9524ebd3320c8a0b74c35b16cf813e9341595616dc",
+      "verdict": "retain",
+      "reason": "Position example (6,0) moves YOU 3.162 m from the start (3,1). Verified \"behind the battle\": reference x=6 is less than the battle’s x~9-11 (Navy attacks +x, so lower x is behind). Verified \"more central\": reference y=0 is the rink’s literal centreline (bounds ±12.954), closer to centre than the battle’s y~5-6. Both explanation claims hold.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A slightly wider or higher support point also works if it keeps both a recovery angle and an outlet option open."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q5",
+      "baseContentHash": "eeff00e6a128eecb1ef20caa1d8d561d603d077b511b19d76a88c086fe15b5f3",
+      "verdict": "retain",
+      "reason": "Hypothetical is explicit (\"Gold 1 now takes clear control\") and the correct answer (the recovery/defensive-support read changes) does not claim a guaranteed outcome or an automatic net-front result; \"nothing until Gold 1 reaches the net\" is correctly wrong since the support job changes immediately on a possession change, not only near the net.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Staying central for one more beat is defensible if no immediate rush develops even after Gold 1 gains control."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q6",
+      "baseContentHash": "dc7055a17aaf1992f0ac2d863dfd0a59f46fcf6df28f514956fd2cbccb0306c8",
+      "verdict": "retain",
+      "reason": "Reflection distinguishes anticipation (keeping conditional alternatives live) from assumption (treating uncertain possession as settled); consistent with the scene’s explicit \"no winner stated\" condition and not a duplicate of q10 (which asks what the benefit protects against, a different specific question).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Anticipation can reasonably shade toward a working assumption once one player is clearly closer and already gaining an edge on the puck, provided YOU stays ready to adjust if that read proves wrong."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q7",
+      "baseContentHash": "cbdab8ea1379fe487579a47d1db41341c4b305c73d660d2a3e7b644d98c9e135",
+      "verdict": "retain",
+      "reason": "This question was already amended once (historical finding u13-p2-repeat-q7-targets, receipt in u13-repairs.json lines 3143-3200) to a \"both outcomes are live; I am middle support\" call. Current baseContentHash confirmed identical to that historical after-hash; grammar and roster both check out (\"YOU’s support location\" is an established possessive-YOU convention already used elsewhere in this bank, not a new agreement error). No new defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A call naming the specific opponent pressuring the puck can also work as long as it still keeps both outcomes live."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q8",
+      "baseContentHash": "9c09f469cfdd193ee90d3048153cf106bbcfa76d4262dd0ad831b686b19f92e9",
+      "verdict": "retain",
+      "reason": "Multi-select correctly rejects \"assuming F1 has already won\" (false certainty) and selects the two conditional outcomes (F1-controls-needs-outlet, Gold-1-controls-attacks); distinct from q2 by naming the specific role each side takes rather than a generic defend/support split, so this is reinforcing retrieval practice rather than a raw duplicate.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Preparing mainly for the more probable outcome, while still glancing at the other, is defensible once one side looks clearly favoured."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q9",
+      "baseContentHash": "939ad3cb2e4da605c8fbb1a2f868082616b7c2a011b1171ff81efbd95afdbbce",
+      "verdict": "retain",
+      "reason": "Position example (5,0) moves YOU 2.236 m from the start (3,1). Verified \"behind F1\": reference x=5 is less than F1’s x=9 (Navy attacks +x). Verified \"protects the middle\": reference y=0 is the literal centreline. Both explanation claims hold.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "A position a little farther from centre is defensible if it keeps a clearer passing lane open to F1."
+    },
+    {
+      "scenarioId": "exp26-u13-024",
+      "questionId": "exp26-u13-024-q10",
+      "baseContentHash": "2bd4de746947e9f6f6c7233ab59c691c57ceae4696399990ed829cdd3d1a9d9e",
+      "verdict": "retain",
+      "reason": "Reflection correctly ties \"keeping both outcomes available\" to not leaving the middle uncovered by a false possession assumption; consistent with the scene’s unresolved puck state and distinct from q6 (which contrasts anticipation vs. assumption conceptually rather than naming what a benefit protects against).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (3,1); F1 (home-skater-2) is at (9,6); Gold 1/A1 (away-skater-1) is at (11,5), 2.236 m from F1; Gold 2/A2 (away-skater-2) is at (15,-4); all four are on-ice.",
+          "The loose puck (owner:null) sits at (10,6): 1.0 m from F1 and 1.414 m from Gold 1, i.e. both are close enough to contest the next touch.",
+          "Navy (home) attacks +x and defends -x; Gold (away) fields both A1 and A2 here."
+        ],
+        "stated": [
+          "Briefing states F1 and Gold 1 arrive near a loose puck at the blue-line area, YOU is behind F1 as support, and no race winner is specified."
+        ],
+        "unproven": [
+          "Which of F1 or Gold 1 actually wins the next touch is not established by the frozen scene.",
+          "Facing values do not establish gaze, intended direction or reach; no skating speed is modelled."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ],
+      "alternative": "Committing early to one outcome becomes defensible once the puck is clearly won, since anticipation should update the moment ownership resolves."
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q1",
+      "baseContentHash": "7d909734a3829c95e74bd541891ba022514a584aa83463294de8d8ae89f4fda5",
+      "verdict": "retain",
+      "reason": "Choice asks which task the coach assigned YOU. The briefing explicitly and only states one assignment: pursue the loose puck toward the boards while C stays inside; a faceoff-violation review is explicitly disclaimed ('no faceoff violation is being assessed'). Answer 'c' matches the sole stated assignment; 'a' swaps YOU's job for C's job; 'b' introduces a rules topic the briefing explicitly rules out. All three options are grammatically parallel and age-appropriate for U13.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) is at (-12,10.8), 3.162m (Math.hypot) from the loose puck at (-15,11.8); home-skater-2 (C) is at (-17,2), far from both the puck and the boards.",
+          "The puck is loose (owner:null) at (-15,11.8), about 1.15m from the y=12.954 side boards."
+        ],
+        "stated": [
+          "Briefing: 'The coach asked YOU, the winger, to pursue a loose puck toward the side boards while C stays inside... The puck remains loose; no faceoff violation is being assessed.'"
+        ],
+        "unproven": [
+          "Whether YOU actually reaches the puck before an opponent is not shown; this is a static pre-movement freeze, not a resolved outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q2",
+      "baseContentHash": "cf58a85e4a55c8f8ce48b7ffd79897ac7aaae7fce786e1d6986dd1dac3f2fe8b",
+      "verdict": "retain",
+      "reason": "Multi asks which two facts should update the stated plan. 'a' (C's inside support) and 'b' (who gains control first) are exactly the two live variables the briefing leaves open (the plan assigns a starting job but not an outcome); 'c' is a credible-sounding but incorrect generalization (assuming every faceoff uses this exact arrangement), consistent with the contract's ban on absurd/joke distractors while remaining clearly wrong. Basis is correctly 'coaching' (not objectively graded per the engine's reviewResponse logic), matching a suggested set of relevant facts rather than a provable scene fact.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "C (home-skater-2) is at (-17,2), well inside relative to the puck/boards cluster; no actor's facing or position by itself proves support 'remains' available at a later moment."
+        ],
+        "stated": [
+          "Briefing assigns YOU to pursue while C stays inside; nothing in the briefing states the plan is permanent or override-proof."
+        ],
+        "unproven": [
+          "Whether C's support remains available past this freeze, and who actually reaches the puck first, are both open -- consistent with listing both as facts to keep checking rather than facts already resolved."
+        ]
+      },
+      "alternative": "A coach could instead teach players to react purely to who touches the puck first without separately naming C's support as its own checkpoint, since puck control usually reveals both at once; that is a defensible simplification for a first pass through this idea, though it teaches less about tracking a teammate independently of the puck outcome.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q3",
+      "baseContentHash": "c277192de90260bf09576c5d6d7afe710edd7439d0ced777146485a94f1e9433",
+      "verdict": "retain",
+      "reason": "Sequence orders 'locate the loose puck' -> 'check the opponent and assigned support' -> 'pursue or adjust to the actual control.' Unlike the sibling sequences in exp26-u13-022/-023/-024's q3 (flagged historically, P3, 'teaching-exp26-u13-02x-q3', for actions that are conditional/overlapping in THEIR own scenes), this scenario's steps are not obviously simultaneous: locating a stationary loose puck is a distinct first read from evaluating a moving opponent's route, which itself precedes committing to pursue-or-adjust. The explanation explicitly disclaims a 'universal faceoff play,' so it does not forbid the overlap the contract protects (checking pressure/support while still moving).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "The puck is loose and stationary (owner:null) at (-15,11.8); Gold 1 (away-skater-1) is at (-14,5) and Gold 2 (away-skater-2) at (-19,-1), both farther from the puck than YOU (3.162m) at this instant."
+        ],
+        "stated": [
+          "Briefing: this is a post-draw teaching freeze; 'no movement is implied unless stated.'"
+        ],
+        "unproven": [
+          "Nothing in the static scene proves any actor is already moving toward the puck, so the sequence describes a suggested cognitive routine, not an observed, timed sequence of events."
+        ]
+      },
+      "alternative": "A coach teaching a more advanced group could instead present 'check support and opponent while already skating toward the puck' as one combined step rather than three, since an experienced player scans continuously; the three-step version is a scaffold for a still-developing player, not the only routine that works.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q4",
+      "baseContentHash": "95ed3c08f3b220300421856c4d1d7665cf93f4df6f0b3628b8acdb59d7d54bd6",
+      "verdict": "retain",
+      "reason": "Position moves YOU (home-skater-1, matches the prompt's 'Move YOU') from (-12,10.8) to reference (-14,10.5). Numerically verified with Math.hypot against the real coordinate data: the reference is 1.640m from the loose puck versus 3.162m from YOU's start -- genuinely closer to the puck, not merely an arbitrary >=0.1m shift satisfying the schema minimum. The reference is 8.616m from C (home-skater-2 at (-17,2)), matching the explanation's 'without moving onto C.' isCoachRoutePoint (validation/src/one-on-one/coachRouteSurfaceInput.js) confirms the point stays on the ice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at (-12,10.8); reference (-14,10.5) is 1.640m from the puck at (-15,11.8) versus 3.162m from YOU's start -- a real, computed reduction."
+        ],
+        "stated": [
+          "Briefing assigns YOU to pursue the loose puck toward the boards; the question is explicitly an 'example' position, matching the schema's position contract."
+        ],
+        "unproven": [
+          "Actual skating reach, speed, or whether YOU beats an opponent to this spot are not established by a static reference point."
+        ]
+      },
+      "alternative": "A slightly different point along the same board-side approach (for example closer to wherever the puck actually settles) would be equally defensible; the shown reference is one workable example, not an exclusive correct dot, which the scenario's own 'limits' field already discloses.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q5",
+      "baseContentHash": "a9d4b4cf20fc2b749899bdda1353c5bafd2bbee76af53748bec9e66431340f74",
+      "verdict": "retain",
+      "reason": "Choice asks what YOU should do if Gold 1 controls the puck before YOU arrives. 'a' (reassess pressure and C's support) correctly treats opponent possession as a plan-changing event; 'b' invents a false outcome ('Act as if the draw was already won by Navy') that contradicts the scene (the puck is explicitly loose/contested, not Navy-controlled); 'c' names the realistic but flawed habit of blindly finishing a pre-set route. This matches the reassess-don't-guarantee-an-outcome framing already adjudicated for this same U13 faceoff family (calibration decisions on U13-001 q7/q9).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (away-skater-1) at (-14,5) and Gold 2 (away-skater-2) at (-19,-1) are both live opponents on the ice; the puck is still loose (owner:null); no actor currently owns it."
+        ],
+        "stated": [
+          "Question explicitly hypothesizes a changed fact ('if Gold 1 controls the puck before you arrive'), matching the contract's requirement that hypotheticals be stated, not assumed."
+        ],
+        "unproven": [
+          "Whether Gold 1 would actually win the race from this frozen frame is not shown or claimed; the question is an explicit hypothetical, not a prediction from the static positions."
+        ]
+      },
+      "alternative": "If YOU is already close enough and reading a clean angle, a defensible alternative response consistent with 'reassess' is to immediately close in and contest possession rather than retreating first -- provided that choice still comes from re-reading the situation rather than blindly finishing the original route, which is what option c actually describes and rules out.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q6",
+      "baseContentHash": "1dcf3b1ecf1f11ec0ac08a84dd0663d6347251183063d4db7b2782221825cc26",
+      "verdict": "retain",
+      "reason": "Reflection asks why a faceoff plan doesn't remove the need to read the puck. The explanation ties the answer to concrete, scene-grounded variables (bounce, opponent, possession) rather than a generic platitude, and correctly carries no answer key (explain type has none, per schema).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "The puck is loose and unowned; two opponents (Gold 1, Gold 2) are on the ice who could reach it first."
+        ],
+        "stated": [
+          "Briefing states the plan (pursue while C stays inside) without stating an outcome."
+        ],
+        "unproven": [
+          "What actually happens to the puck next is not shown; the reflection is asked precisely because that is unresolved."
+        ]
+      },
+      "alternative": "A player might instead answer that the plan only tells you where to start, while the actual bounce and the opponent's first touch tell you what is still possible -- a differently worded but equally correct response, since reflections have no single required answer.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q7",
+      "baseContentHash": "7866870a71a6f3d6a70118225ff2bf1ebae0a89cd88183bbc4db9e177b92e728",
+      "verdict": "retain",
+      "reason": "Choice asks which Navy teammate YOU keeps inside while pursuing. Only C (home-skater-2) is explicitly assigned an inside role in the briefing; D1 (home-skater-3) is a third Navy skater given no inside-support role here; Gold 1 is an opponent, a credible-but-wrong distractor testing team-vs-opponent labeling. Independently confirmed this question no longer restates q1's premise (coach's task assignment) the way it did before the recorded v1->v2 repair (docs/factory/research/question-review/repairs/u13-repairs.json and u13-related-board-repairs.json), which resolves the historical P2 finding 'u13-p2-repeat-q7-targets' listed against this exact question ID.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Roster has exactly 3 Navy/home skaters (YOU, C, D1) and 2 Gold/away skaters (Gold 1, Gold 2); C is at (-17,2), clearly separated from and more central than the boards-side puck/YOU cluster."
+        ],
+        "stated": [
+          "Briefing: 'C stays inside' is the only explicitly assigned inside role among Navy teammates."
+        ],
+        "unproven": [
+          "Whether D1 has any inside responsibility of their own is not stated one way or the other; the question only asks which teammate YOU specifically keeps inside, which the briefing answers for C alone."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q8",
+      "baseContentHash": "696b3ddf80a12e7e787d1a0fb114371f4cc357999bd857e2a07a0bf7d44c66d2",
+      "verdict": "retain",
+      "reason": "Multi asks which two facts should update the faceoff plan, naming specific live facts: the puck remains loose, and Gold 1's actual route to it. Compared with q2's more general pairing (C's support availability / who gains control first), q8 asks the player to track a named opponent's movement specifically -- a distinguishable, more advanced tactical read rather than a restatement of q2. 'The faceoff was in the previous period' is a clearly irrelevant time-based distractor, consistent with the contract's ban on trivia-as-plausible-wrong-answer. Considered and rejected treating q2/q8 as a duplicate pair: the specific tracked facts genuinely differ (state-of-possession vs. a named opponent's route) even though the surface format repeats.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (away-skater-1) is at (-14,5), a live, trackable position distinct from the abstract 'who gains control' framing in q2."
+        ],
+        "stated": [
+          "Puck ownership is explicitly null (loose) in the setup, matching option a."
+        ],
+        "unproven": [
+          "Gold 1's actual intended route is not depicted (facing alone does not prove intended path), so the question correctly frames this as a fact to keep tracking rather than a resolved outcome."
+        ]
+      },
+      "alternative": "A coach could instead have players track only Gold 1's route without separately naming 'the puck remains loose' as its own checkpoint, since the route only matters once possession is confirmed live; that is a defensible simplification, though it drops the possession-state check q1/q2 already built toward.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q9",
+      "baseContentHash": "4e2f060b4256f3ad6efeb75f4ad94ce75f1f087af4a1aef382525159e7a4f896",
+      "verdict": "retain",
+      "reason": "Position moves YOU from (-12,10.8) to (-15,10.6), explicitly 'while keeping C's inside lane visible.' Numerically verified: 1.200m from the puck versus 3.162m from YOU's start (closer, matching 'toward the side-board puck'), and the reference is 8.615m from C (home-skater-2 at (-17,2)), so it does not sit on top of her. Distinct from q4: q4 teaches a generic first retrieval move, while q9 explicitly ties the movement to keeping a teammate's lane in view, connecting to q7's teaching of which teammate stays inside -- an added responsibility, not a restated instruction.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference (-15,10.6) is 1.200m from the puck (-15,11.8) versus 3.162m from YOU's start; C remains at (-17,2), well outside this board-side path."
+        ],
+        "stated": [
+          "Briefing and q7 establish C's inside assignment; this question asks YOU to move while keeping that lane visible, not to abandon it."
+        ],
+        "unproven": [
+          "Whether C's lane is actually visible from this exact spot depends on facing/sightline the schema does not model; the explanation is a coaching suggestion, not a proven visibility claim."
+        ]
+      },
+      "alternative": "A slightly different board-side point that still keeps C's lane open would be equally defensible depending on exactly where the puck settles; the reference is one workable example, not the only correct spot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "questionId": "exp26-u13-025-q10",
+      "baseContentHash": "7e5ba79ea704430aafaae8d9e545a5ead2bd58107279d6bff316a9bdaa4ac136",
+      "verdict": "repair",
+      "reason": "Reflection duplicates q6 almost verbatim ('Why does knowing a faceoff plan not remove the need to read the puck?' vs. 'Why does a faceoff plan still require a puck read?'), and both explanations restate the same idea ('the plan sets a starting job; the bounce/opponent/possession decide what's next') with no new fact, cue, actor, or decision distinguishing them. This is the sibling-redundancy defect the assignment requires flagging ('no sibling question should... merely repeat an earlier prompt in a different format'; 'flag redundancy when the later item adds no useful cue, decision, actor responsibility, or retrieval practice'). Proposing a repair that replaces only q10's prompt/explanation (id/type/basis unchanged) with a reflection on why C specifically stays inside while YOU pursues -- a spacing/role-complementarity rationale q7 tests factually but no question currently explains.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "The puck is loose; two opponents are on the ice; C (home-skater-2 at (-17,2)) is well inside relative to YOU/the puck near the boards."
+        ],
+        "stated": [
+          "q6's explanation and the original q10's explanation both state the same 'plan assigns a starting job; the bounce/opponent/possession decide what's next' idea in different words."
+        ],
+        "unproven": [
+          "No sibling question or scene fact distinguishes what the original q10 uniquely adds beyond q6; that absence is itself the evidence for the redundancy finding."
+        ]
+      },
+      "alternative": "A player might instead explain that C staying inside protects against a counter-rush if Gold wins the puck, rather than framing it purely as 'covering space' -- both are acceptable answers to the replacement question, since reflections have no single required response.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 2,
+      "baseScenarioHash": "218ace5a30d769608d92308b25c8660f7759b855d2a0087151d97b57e1a5cc3d",
+      "replacement": {
+        "id": "exp26-u13-021",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Remain useful higher than the board battle",
+        "family": "high-forward-support",
+        "topic": "high forward support",
+        "objective": "Recognize high support while teammates contest the puck low.",
+        "briefing": "F1 and Gold 1 contest a loose puck along the attacking-zone side boards. F2 is closer to Gold’s net than they are. YOU are the high forward; this exercise assigns YOU to support higher than the battle until control changes. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 12,
+              "y": 1,
+              "facing": 0.6107259643892086
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": 11.3,
+              "facing": 0.464
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 25,
+              "y": 5,
+              "facing": 2.356194490192345
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": 11.8,
+              "facing": 3.142
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": -3,
+              "facing": 1.0714496051147666
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 22,
+            "y": 11.8
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The puck marker is separate from F1 and Gold 1, as the briefing states.",
+          "F1 and Gold 1 contest a loose puck along the attacking-zone side boards. F2 is closer to Gold’s net than they are. YOU are the high forward; this exercise assigns YOU to support higher than the battle until control changes."
+        ],
+        "tags": [
+          "high-forward-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u17-principles",
+            "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+            "section": "PDF pages 7–8, team support and transition principles",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-021-q1",
+            "type": "choice",
+            "prompt": "What is the puck state at the board battle?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Loose and contested"
+              },
+              {
+                "id": "b",
+                "text": "Securely on F2’s stick"
+              },
+              {
+                "id": "c",
+                "text": "Already back at centre ice"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The puck marker is separate from F1 and Gold 1, as the briefing states.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-021-q2",
+            "type": "multi",
+            "prompt": "Which two jobs could high support serve?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Guaranteed possession merely by standing high"
+              },
+              {
+                "id": "b",
+                "text": "Help against a counterattack if Gold wins"
+              },
+              {
+                "id": "c",
+                "text": "An outlet if Navy wins control"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "High support can preserve options in either outcome, but does not win the battle itself.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-021-q3",
+            "type": "sequence",
+            "prompt": "Arrange a read from high support behind the battle.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Track who controls the puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the high-slot space and opposing outlet"
+              },
+              {
+                "id": "c",
+                "text": "Adjust to the actual winner"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The high role is this exercise’s stated plan; a coach may assign a different forecheck elsewhere."
+          },
+          {
+            "id": "exp26-u13-021-q4",
+            "type": "position",
+            "prompt": "Move YOU to a useful high-slot support example without joining the scrum.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 15,
+              "y": 0
+            },
+            "basis": "coaching",
+            "explanation": "The reference keeps separation from the wall contest and access to middle ice. Other distances may suit the play."
+          },
+          {
+            "id": "exp26-u13-021-q5",
+            "type": "choice",
+            "prompt": "If F1 wins clean possession and looks inside, what could you offer?",
+            "options": [
+              {
+                "id": "a",
+                "text": "An automatic move into F1’s crowded wall space"
+              },
+              {
+                "id": "b",
+                "text": "A visible high-slot option"
+              },
+              {
+                "id": "c",
+                "text": "A claim that the puck remains loose"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "Control permits an attacking read, but you still need a reachable lane.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-021-q6",
+            "type": "explain",
+            "prompt": "Explain why the high forward’s position matters before the battle is decided.",
+            "basis": "coaching",
+            "explanation": "Describe both the possible outlet and defensive recovery roles, using the opponent’s location."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy player is assigned the high support role?",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU"
+              },
+              {
+                "id": "b",
+                "text": "F1"
+              },
+              {
+                "id": "c",
+                "text": "F2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU is the assigned high Navy forward supporting above the loose-puck battle; if F1 wins, offer the high outlet, while a Gold win changes YOU to recovery.",
+            "id": "exp26-u13-021-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two jobs can high support serve?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Be a reset if F1 wins it"
+              },
+              {
+                "id": "b",
+                "text": "Recover inside if Gold wins it"
+              },
+              {
+                "id": "c",
+                "text": "Join F1’s exact board lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "High separation supports either possession outcome; joining the battle removes balance.",
+            "id": "exp26-u13-021-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU slightly higher and inside, above the board battle.",
+            "basis": "coaching",
+            "explanation": "The high-inside position keeps both puck outcomes visible and protects the middle; if F1 wins cleanly, lower into the next support lane.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 13,
+              "y": -1
+            },
+            "id": "exp26-u13-021-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "From the inside spot in q9, what cue tells YOU it is time to lower into the next support lane?",
+            "basis": "coaching",
+            "explanation": "Watch for the moment F1 actually gains clean control of the puck; a confirmed Navy touch is the signal to leave the high-inside spot for the next assigned job, not a guess made before it happens.",
+            "id": "exp26-u13-021-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-021-q10"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-021-q10"
+          ],
+          "issue": "q10 ('Why should high support remain useful before the battle is decided?') restates q6 ('Explain why the high forward's position matters before the battle is decided?') almost verbatim -- same generic prompt shape and answer content, no new cue/decision/retrieval target.",
+          "change": "Replaced q10's prompt and explanation with a question specifically about the transition cue that ends q9's high-inside positioning (recognizing when F1 gains clean control), leaving q1-q9 byte-identical (verified: only q10's contentHash differs between original and replacement).",
+          "evidence": "questionContentHash comparison across all 10 questions shows q1-q9 hashes unchanged between original and replacement; only q10 differs (old 'bbeba596...' vs new 'c0e3319b...'). Structural validator (validateExperimentalBank) returns zero errors on the replacement scene."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-021-q1",
+            "contentHash": "7d16904f646604b249a7a3ba3db9bafc920023fdcfb4de57d6b19b8c0c4ea556",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q2",
+            "contentHash": "81c7eca7940c3e0a4a3cccf15a71b2396467ab2f5a00d2c933350c806805021b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q3",
+            "contentHash": "3d37b8cb06609aedd61d814abdab3d2871dd295a7075b1d3b33b505ebcc40b28",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q4",
+            "contentHash": "2cb0ea0966b4242c129a2bbeb79599c7ba3752c81981343c50f9cd57fb972aae",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q5",
+            "contentHash": "dbdd779be9740f0c3c52b3c11e3f171fee40c4023b8f108ecf35dbb3ee014cfd",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q6",
+            "contentHash": "2a18c23e390eb6ace06f0fe667b63933bcfcaf0c75d3cf9a8a990556e76cb88b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q7",
+            "contentHash": "93f9dd7f56a4d51c1431a9925ff95f60013caf80f267c9aa3b4254c70fea01cc",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q8",
+            "contentHash": "178b0ea8c4a446b8674216c2e77a382fcc585170edd28f4b76f8bcb2385318b4",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q9",
+            "contentHash": "e244a43046ac0f438d6cbf918cc00a7c4e4a73a8c4ce0f4c3b03b96328ea6b8d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-021-q10",
+            "contentHash": "c0e3319b01c1a8679342eff7d9e34a94ca5affb33338b32a51330d0c200bfaa1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "New prompt asks for the specific cue that signals leaving the q9 high-inside spot (a confirmed Navy touch on the puck), a genuinely distinct retrieval target from q6's general 'why does position matter' question. No answer key (explain type); coaching basis preserved; no invented rule or certainty (explanation says 'watch for the moment', not a guaranteed timing).",
+            "alternative": "A player could also cite a Gold clean recovery (not just a Navy touch) as the cue to shift into the recovery job instead of the outlet job; the explanation's 'Navy touch' framing covers only one of the two branches, so a fuller answer would name both triggers."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-022",
+      "baseVersion": 1,
+      "baseScenarioHash": "5cddef0d46eda4386993cfd3df70ef1cb77be25bcb6d126e7271eff782bf070e",
+      "replacement": {
+        "id": "exp26-u13-022",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Look across from the half wall",
+        "family": "cross-ice-support",
+        "topic": "cross ice support",
+        "objective": "Compare inside support with a crowded puck-side lane.",
+        "briefing": "F1 controls the puck at the puck-side half wall. YOU are across the high slot. Gold 1 and Gold 2 are on the puck side. The coach asks you to look for a clearly visible passing connection, without assuming a cross-ice pass is safe. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 16,
+              "y": -7,
+              "facing": 1.3854483767992019
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 21,
+              "y": 6,
+              "facing": 2.158798930342464
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 5,
+              "facing": 0.7853981633974483
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": 0,
+              "facing": 0.7853981633974483
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The forwards are on opposite sides of the high slot.",
+          "F1 controls the puck at the puck-side half wall. YOU are across the high slot. Gold 1 and Gold 2 are on the puck side. The coach asks you to look for a clearly visible passing connection, without assuming a cross-ice pass is safe."
+        ],
+        "tags": [
+          "cross-ice-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-022-q1",
+            "type": "choice",
+            "prompt": "Which named area lies between the two forward positions?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The defending crease at the Navy net"
+              },
+              {
+                "id": "b",
+                "text": "The centre faceoff circle"
+              },
+              {
+                "id": "c",
+                "text": "The high slot"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The forwards are on opposite sides of the high slot.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-022-q2",
+            "type": "multi",
+            "prompt": "Select two checks for an inside passing connection.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 can see your target"
+              },
+              {
+                "id": "b",
+                "text": "Whether Gold 2 can reach the lane"
+              },
+              {
+                "id": "c",
+                "text": "Whether every cross-ice pass is automatically available"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "Both the route and the carrier’s view matter; a large empty-looking space is not proof of safety.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-022-q3",
+            "type": "sequence",
+            "prompt": "Arrange one way to create a clearer lane.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify the defender crossing the route"
+              },
+              {
+                "id": "b",
+                "text": "Change your angle through useful space"
+              },
+              {
+                "id": "c",
+                "text": "Show the target and reassess"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The movement may create a pass or move a defender for another teammate."
+          },
+          {
+            "id": "exp26-u13-022-q4",
+            "type": "position",
+            "prompt": "Move YOU toward a high-slot pocket that changes the passing angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 18,
+              "y": -3
+            },
+            "basis": "coaching",
+            "explanation": "This offers a shorter inside connection than the original far-side position. Gold 2’s response still needs checking."
+          },
+          {
+            "id": "exp26-u13-022-q5",
+            "type": "choice",
+            "prompt": "Gold 2 shifts into the high-slot connection. What might help now?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Use another support angle or leave room for D1"
+              },
+              {
+                "id": "b",
+                "text": "Assume the old connection remains clear"
+              },
+              {
+                "id": "c",
+                "text": "Treat Gold 2 as irrelevant because the pass is cross-ice"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The new defender position changes the read; the first support target is not permanent.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-022-q6",
+            "type": "explain",
+            "prompt": "Name the space you moved into and explain what made its passing angle different.",
+            "basis": "coaching",
+            "explanation": "Use “high slot” if describing the central pocket; connect the name to F1, Gold 2 and the route rather than only naming a zone."
+          },
+          {
+            "type": "choice",
+            "prompt": "What should YOU call if Gold 2 enters the high-slot connection?",
+            "options": [
+              {
+                "id": "a",
+                "text": "I have the inside lane"
+              },
+              {
+                "id": "b",
+                "text": "The lane is clear because Gold 2 moved"
+              },
+              {
+                "id": "c",
+                "text": "Ignore the slot"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Calling the inside lane tells F1 that Gold 2 has entered the connection and helps coordinate the next look; if the lane is still blocked, keep the puck moving only when another route is visible.",
+            "id": "exp26-u13-022-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues decide whether a cross-ice look is usable?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 and Gold 2’s positions"
+              },
+              {
+                "id": "b",
+                "text": "YOU’s visibility from F1"
+              },
+              {
+                "id": "c",
+                "text": "Assuming distance makes the pass safe"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Defender positions and a visible receiver determine the lane; distance alone does not make a pass safe.",
+            "id": "exp26-u13-022-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU into a high-slot pocket that changes F1’s passing angle.",
+            "basis": "coaching",
+            "explanation": "The pocket gives F1 a clearer angle while keeping separation from Gold 1 and Gold 2; if a defender fills it, re-space.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 14,
+              "y": -5
+            },
+            "id": "exp26-u13-022-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "If Gold 2 shifts to cover the pocket from q9, what would YOU check before offering another spot?",
+            "basis": "coaching",
+            "explanation": "Check whether F1 can still see you and whether Gold 1 has also adjusted; re-spacing without checking both can trade one covered lane for another.",
+            "id": "exp26-u13-022-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-022-q10"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-022-q10"
+          ],
+          "issue": "q10 ('Name the space you moved into and explain what made its angle different.') restates q6 ('Name the space you moved into and explain what made its passing angle different.') almost word-for-word, the same recurring defect already caught once in this scenario at q7 (historical finding u13-p2-repeat-q7-targets) but missed at q10.",
+          "change": "Replaced q10's prompt and explanation with a question about what to check if Gold 2 reacts to the q9 pocket (F1's visibility, Gold 1's adjustment), leaving q1-q9 byte-identical (verified: only q10's contentHash differs between original and replacement).",
+          "evidence": "questionContentHash comparison across all 10 questions shows q1-q9 hashes unchanged between original and replacement; only q10 differs (old '9e0da3e6...' vs new '3dda5214...'). Structural validator (validateExperimentalBank) returns zero errors on the replacement scene."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-022-q1",
+            "contentHash": "939eed36d2297447dfa80a82abd3544a424580c701637b2b375ee1e90a84fe57",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q2",
+            "contentHash": "c37f20a637f5db86360df0ca124dfb3bc7e5ef7d12a4b4ab4e8b3296e2f58679",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q3",
+            "contentHash": "6e3e4c5d350a1b889b430b28c4a72ef9f8e7fbedee69b891adf6ac45c857a574",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q4",
+            "contentHash": "5f86ce64d14e09a77da71be9f64b34fed56e2852aec5326b06bae1a6225b8980",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q5",
+            "contentHash": "cc9449a26cbeb9c010ee91aeff7335377bc39191d6559223157c9940fffd7953",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q6",
+            "contentHash": "6acceeb3621dfc16c53c809245568dc90405c248e28159aaee062a73f1f2a277",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q7",
+            "contentHash": "7b482bc36b174ddd146e2944bb3899310ce15700f8f001fcac5e71b994ec08d6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q8",
+            "contentHash": "9e3d91ad2c21ce46d35a67038931847df58e9ab1cbe46e97134fde36d9366309",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q9",
+            "contentHash": "1f4d183d940f87eecbbf76220aec4dafb8266df9d848c7bd7f08e50158b28179",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the original packet content; verbatim carry-forward, hash recomputed against the replacement scene (version bump only affects the excluded version field, not this hash)."
+          },
+          {
+            "questionId": "exp26-u13-022-q10",
+            "contentHash": "3dda5214f96ef0e1124e30d306c58d30612421541e19b1efe708f7efe7b5e2e1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "New prompt asks what to check if Gold 2 reacts to the q9 pocket, a genuinely distinct decision-focused target from q6's naming/description task. No answer key (explain type); coaching basis preserved; references only actual roster actors (F1, Gold 1/A1) already established in this scene.",
+            "alternative": "A player could also name distance from Gold 1 alone as sufficient without checking F1's visibility; the explanation's two-part check (visibility AND Gold 1's adjustment) is the taught standard, not the only defensible single check."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "baseVersion": 1,
+      "baseScenarioHash": "ebfab08dd57ada605c462f2875ae1ba3ef19b54e4d10bfec4fd4d5e2207d711e",
+      "replacement": {
+        "id": "exp26-u13-023",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Settle a difficult pass before choosing",
+        "family": "receiving-control",
+        "topic": "receiving control",
+        "objective": "Notice when control needs to be established before the next action.",
+        "briefing": "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 1,
+              "y": -3,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 5,
+              "facing": -2.356194490192345
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -7,
+              "facing": 0.348771003583907
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 6,
+              "y": -1,
+              "facing": -2.5535900500422257
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 3,
+            "y": -3
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+          "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it."
+        ],
+        "tags": [
+          "receiving-control"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-023-q1",
+            "type": "choice",
+            "prompt": "Have YOU established possession in this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2 already controls the pass"
+              },
+              {
+                "id": "b",
+                "text": "No, the pass is still loose"
+              },
+              {
+                "id": "c",
+                "text": "Yes, the puck is secured on the stick"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-023-q2",
+            "type": "multi",
+            "prompt": "Which two cues affect the next action?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The quality of the arriving pass"
+              },
+              {
+                "id": "b",
+                "text": "A rule that every pass must be one-touched"
+              },
+              {
+                "id": "c",
+                "text": "How soon Gold 1 can pressure it"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Control and pressure determine what is practical; one-touch passing is not always available.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-023-q3",
+            "type": "sequence",
+            "prompt": "Arrange one response to a difficult neutral-zone pass.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read the bounce and approaching pressure"
+              },
+              {
+                "id": "b",
+                "text": "Establish control if there is time"
+              },
+              {
+                "id": "c",
+                "text": "Recheck the forward option"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Emergency touches may be needed under tighter pressure; this sequence assumes time to settle."
+          },
+          {
+            "id": "exp26-u13-023-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example position for collecting the unsettled puck.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 3,
+              "y": -4
+            },
+            "basis": "coaching",
+            "explanation": "The position moves toward the puck without pretending it is already controlled. Stick reach and bounce remain unmodelled."
+          },
+          {
+            "id": "exp26-u13-023-q5",
+            "type": "choice",
+            "prompt": "If the puck arrives flat and F2’s lane is clearly available, what might change?",
+            "options": [
+              {
+                "id": "a",
+                "text": "You must always take several extra touches"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1 no longer needs to be checked"
+              },
+              {
+                "id": "c",
+                "text": "An earlier pass may be practical"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "A better reception can create an earlier option, but only while the lane remains available.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-023-q6",
+            "type": "explain",
+            "prompt": "If Gold 1 already had a stick on YOU instead of still approaching, how might your response change?",
+            "basis": "coaching",
+            "explanation": "With a stick already on YOU, there may be no time to fully settle the puck. A quick chip past the check or a body-protected touch can matter more than the fuller control this freeze’s approaching pressure still allows."
+          },
+          {
+            "type": "choice",
+            "prompt": "What should YOU call while F2’s lane is available but the puck is unsettled?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Not settled; give me a short option"
+              },
+              {
+                "id": "b",
+                "text": "One-touch now no matter the pressure"
+              },
+              {
+                "id": "c",
+                "text": "F2 cannot be used"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call tells F2 that support exists while YOU still need control, so the pass can wait for a readable touch; if pressure closes the short option, secure the puck first.",
+            "id": "exp26-u13-023-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues affect the next touch?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2’s higher position"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1’s approach"
+              },
+              {
+                "id": "c",
+                "text": "The pass being difficult no longer matters"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "F2’s lane and Gold 1’s pressure shape whether to settle, protect or move it; a difficult reception remains relevant.",
+            "id": "exp26-u13-023-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU to an example collecting position behind the bounced puck and away from Gold 1.",
+            "basis": "coaching",
+            "explanation": "The offset position gives YOU room to settle while seeing F2 and Gold 1; if the puck jumps away, recover rather than forcing a pass.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -1,
+              "y": -1
+            },
+            "id": "exp26-u13-023-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "What would you need to see before recommending a one-touch pass?",
+            "basis": "coaching",
+            "explanation": "Look for settled control, a visible lane to F2, and enough time that Gold 1 cannot immediately close the touch; if any cue is missing, secure the puck first. A one-touch is an option, not a promise.",
+            "id": "exp26-u13-023-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-023-q1",
+        "exp26-u13-023-q6",
+        "exp26-u13-023-q7"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-023-q1"
+          ],
+          "issue": "Subject-verb agreement: \"Has YOU established possession in this freeze?\" is grammatically wrong; YOU takes \"have\".",
+          "change": "Changed prompt to \"Have YOU established possession in this freeze?\" Options, answer and explanation unchanged.",
+          "evidence": "Direct reading of the prompt text against the project’s \"YOU are/have/do\" convention (RINKREADS-CLAUDE-PROJECT.md writing parameters) and the assignment’s explicit subject-verb-agreement check."
+        },
+        {
+          "questionIds": [
+            "exp26-u13-023-q6"
+          ],
+          "issue": "Near-duplicate premise: q6 (\"What would you need to see before recommending a one-touch pass here?\") and q10 (\"What would you need to see before recommending a one-touch pass?\") differ only by the word \"here\" and tested the identical one-touch-conditions premise, so q6 had no distinct teaching purpose.",
+          "change": "Retargeted q6 to a complementary premise: an immediate/tighter-pressure hypothetical (Gold 1 already has a stick on YOU) asking for the emergency-touch alternative, distinct from q10’s time-available conditions check.",
+          "evidence": "Side-by-side prompt comparison of q6 and q10 in the base packet; q3’s own explanation already names the untested condition (\"Emergency touches may be needed under tighter pressure\") that the new q6 now covers."
+        },
+        {
+          "questionIds": [
+            "exp26-u13-023-q7"
+          ],
+          "issue": "Subject-verb agreement introduced by an earlier historical repair (finding u13-p2-repeat-q7-targets): \"while YOU still needs control\" is grammatically wrong; YOU takes \"need\".",
+          "change": "Changed only that verb to \"while YOU still need control\" in the explanation. Prompt, options and answer unchanged.",
+          "evidence": "Direct reading of the current (already-amended) explanation text; confirmed the pre-fix baseContentHash matches the historical after-hash recorded in docs/factory/research/question-review/repairs/u13-repairs.json (line ~3132) and historical-checks.json, so this is a fresh defect in already-integrated content, not a re-opened old issue."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-023-q1",
+            "contentHash": "a7855a48d01d01f77415b16ec9d07d2664a94a840149b8bd8f397388fabbe4c0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for the changed question; text verified against the intended fix (grammar or distinct-premise repair) with no other field altered."
+          },
+          {
+            "questionId": "exp26-u13-023-q2",
+            "contentHash": "12a6ad8a91b394230070b7309ff88a0eb1330769083500865508c8b5ccb8b776",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q3",
+            "contentHash": "ec83a6228a8019599ee492a7fd6683dcad4c768e7e59163de8349c2eeaa4a5af",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q4",
+            "contentHash": "35525c4cada927cbfadad9e6d8fe6efe5610c25cac822e9f18352fb5c584541f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q5",
+            "contentHash": "5224beec30137fbea445e5fdaabd8959eff4f06c7055fb260fbf3db87d517a54",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q6",
+            "contentHash": "42eece50ca15fcf8a748f1206c09c20c770a59e922144e9da9adab5254745e79",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for the changed question; text verified against the intended fix (grammar or distinct-premise repair) with no other field altered."
+          },
+          {
+            "questionId": "exp26-u13-023-q7",
+            "contentHash": "581b28365161c388dc16937212dfd837315c29def2cce9b5d980b7e20fc6fb1c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for the changed question; text verified against the intended fix (grammar or distinct-premise repair) with no other field altered."
+          },
+          {
+            "questionId": "exp26-u13-023-q8",
+            "contentHash": "341c2392567e1c5677901c3205a97bc59d64f8b9fa3e659ca29783b32d0a39d0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q9",
+            "contentHash": "10a0b75e8966cfa2585554ec249c058b4630c255a4685c964730bd92d09cc697",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          },
+          {
+            "questionId": "exp26-u13-023-q10",
+            "contentHash": "66ad70b42aa6ecae8b8a92f7c5ad5b35c49059457952134af37fa11d348a4e13",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed final hash for this unchanged question; content is byte-identical to the reviewed original (scene fields excluded from the hash are also unchanged since only version incremented)."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 2,
+      "baseScenarioHash": "c742b71fd8d4684563e61fd1a2c58169fc3236749cb201298ae8c88cfaa866c0",
+      "replacement": {
+        "id": "exp26-u13-025",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Follow the assigned faceoff support role",
+        "family": "faceoff-support",
+        "topic": "faceoff support",
+        "objective": "Use a simple stated retrieval plan without treating it as a universal system.",
+        "briefing": "This even-strength practice draw has already occurred. The coach asked YOU, the winger, to pursue a loose puck toward the side boards while C stays inside. The puck remains loose; no faceoff violation is being assessed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 10.8,
+              "facing": 2.82
+            },
+            {
+              "id": "home-skater-2",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 2,
+              "facing": 1.2924966677897853
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -4,
+              "facing": 1.0768549578753155
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -14,
+              "y": 5,
+              "facing": 1.8157749899217608
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -19,
+              "y": -1,
+              "facing": 1.1902899496825317
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -15,
+            "y": 11.8
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The assignment is explicitly stated and applies only to this exercise.",
+          "This even-strength practice draw has already occurred. The coach asked YOU, the winger, to pursue a loose puck toward the side boards while C stays inside. The puck remains loose; no faceoff violation is being assessed."
+        ],
+        "tags": [
+          "faceoff-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-025-q1",
+            "type": "choice",
+            "prompt": "Which task did the coach assign YOU after the draw?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Remain in C’s inside position"
+              },
+              {
+                "id": "b",
+                "text": "Evaluate a faceoff rule violation"
+              },
+              {
+                "id": "c",
+                "text": "Pursue the loose puck near the side boards"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The assignment is explicitly stated and applies only to this exercise.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-025-q2",
+            "type": "multi",
+            "prompt": "Which two facts should update that plan?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether C’s inside support remains available"
+              },
+              {
+                "id": "b",
+                "text": "Who gains control first"
+              },
+              {
+                "id": "c",
+                "text": "The assumption that all faceoffs use this arrangement"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "A planned role still responds to possession and support.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-025-q3",
+            "type": "sequence",
+            "prompt": "Arrange one follow-up to this draw.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Locate the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the opponent and assigned support"
+              },
+              {
+                "id": "c",
+                "text": "Pursue or adjust to the actual control"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The sequence is a suggested response under the stated drill plan, not a universal faceoff play."
+          },
+          {
+            "id": "exp26-u13-025-q4",
+            "type": "position",
+            "prompt": "Move YOU toward an example retrieval position near the side boards.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -14,
+              "y": 10.5
+            },
+            "basis": "coaching",
+            "explanation": "This follows the stated role without moving onto C. Actual reach and timing remain unvalidated."
+          },
+          {
+            "id": "exp26-u13-025-q5",
+            "type": "choice",
+            "prompt": "If Gold 1 controls the puck before you arrive, what should you do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Reassess pressure and C’s support"
+              },
+              {
+                "id": "b",
+                "text": "Act as if the draw was already won by Navy"
+              },
+              {
+                "id": "c",
+                "text": "Follow the retrieval route with no new read"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The opponent’s control changes the action even when the pre-draw plan was clear.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-025-q6",
+            "type": "explain",
+            "prompt": "Why does knowing a faceoff plan not remove the need to read the puck?",
+            "basis": "coaching",
+            "explanation": "A plan assigns starting responsibilities; the bounce, opponent and possession decide what is possible next."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy teammate should YOU keep inside as you pursue the loose puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "C"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "C is the Navy teammate assigned to stay inside, so YOU can pursue toward the boards without losing the middle; if Gold 1 controls first, recover instead of completing the old route.",
+            "id": "exp26-u13-025-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two facts should update that faceoff plan?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The puck remains loose"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1’s route to the puck"
+              },
+              {
+                "id": "c",
+                "text": "The faceoff was in the previous period"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Loose ownership and Gold 1’s route decide whether pursuit remains useful; period history does not.",
+            "id": "exp26-u13-025-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU toward the side-board puck while keeping C’s inside lane visible.",
+            "basis": "coaching",
+            "explanation": "The board-side route follows the assignment and leaves C inside; if Gold reaches the puck, stop the chase and support coverage.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -15,
+              "y": 10.6
+            },
+            "id": "exp26-u13-025-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why should C stay inside instead of also chasing the loose puck toward the boards?",
+            "basis": "coaching",
+            "explanation": "If both YOU and C converge on the puck near the boards, the middle of the ice opens up; C staying inside keeps that space covered in case Gold 1 wins the puck and looks to counter.",
+            "id": "exp26-u13-025-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-025-q10"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-025-q10"
+          ],
+          "issue": "q10 ('Why does a faceoff plan still require a puck read?') asks the same question as q6 ('Why does knowing a faceoff plan not remove the need to read the puck?') in different words, with explanations that both restate 'the plan is a starting point; the bounce/opponent/possession decide what's next.' No new fact, cue, actor, or decision distinguishes the two -- the sibling-question redundancy the project instructions require flagging ('no sibling question should... merely repeat an earlier prompt in a different format'; 'flag redundancy when the later item adds no useful cue, decision, actor responsibility, or retrieval practice').",
+          "change": "Replaced only q10's prompt and explanation (type, basis, and id all unchanged) with a distinct reflection on why C specifically stays inside while YOU pursues the puck -- a spacing/role-complementarity rationale that q7 tests factually (which teammate stays inside) but that no question in this scenario currently explains. No other field of the scenario or any other question was touched; scenario version incremented from 2 to 3.",
+          "evidence": "Built the replacement via structuredClone(original) and mutated only exp26-u13-025-q10's prompt/explanation. Recomputed questionContentHash (validation/tools/question-batch-core.mjs, run in Node against the real helper) for every question in both the original and the replacement. The original reproduces the packet manifest exactly: scenarioSnapshotHash = c742b71fd8d4684563e61fd1a2c58169fc3236749cb201298ae8c88cfaa866c0 and all ten baseContentHash values matched before any edit was made. After the edit, q1-q9 hash identically between original and replacement (e.g. q1 7d909734...9fda5, q7 7866870a...92e728, q9 4e2f060b...40f896 all unchanged); only q10 differs (old 7e5ba79ea704430aafaae8d9e545a5ead2bd58107279d6bff316a9bdaa4ac136, new 873fa6357e5961a9283ebd51b3049f24505e1b6221db9c45d4c371c989ea4032). validateExperimentalBank([replacement]) returns an empty error array, positionSubjectIssue/questionActorWarnings return nothing for any question, and isCoachRoutePoint confirms the loose puck and both position references (q4, q9) stay on the ice."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-025-q1",
+            "contentHash": "7d909734a3829c95e74bd541891ba022514a584aa83463294de8d8ae89f4fda5",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q2",
+            "contentHash": "cf58a85e4a55c8f8ce48b7ffd79897ac7aaae7fce786e1d6986dd1dac3f2fe8b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q3",
+            "contentHash": "c277192de90260bf09576c5d6d7afe710edd7439d0ced777146485a94f1e9433",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q4",
+            "contentHash": "95ed3c08f3b220300421856c4d1d7665cf93f4df6f0b3628b8acdb59d7d54bd6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly; independently reverified its own geometry (1.640m from puck vs 3.162m from YOU's start) as correct."
+          },
+          {
+            "questionId": "exp26-u13-025-q5",
+            "contentHash": "a9d4b4cf20fc2b749899bdda1353c5bafd2bbee76af53748bec9e66431340f74",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q6",
+            "contentHash": "1dcf3b1ecf1f11ec0ac08a84dd0663d6347251183063d4db7b2782221825cc26",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly; now clearly distinct from the replaced q10."
+          },
+          {
+            "questionId": "exp26-u13-025-q7",
+            "contentHash": "7866870a71a6f3d6a70118225ff2bf1ebae0a89cd88183bbc4db9e177b92e728",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q8",
+            "contentHash": "696b3ddf80a12e7e787d1a0fb114371f4cc357999bd857e2a07a0bf7d44c66d2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly."
+          },
+          {
+            "questionId": "exp26-u13-025-q9",
+            "contentHash": "4e2f060b4256f3ad6efeb75f4ad94ce75f1f087af4a1aef382525159e7a4f896",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged by this repair; recomputed hash matches the pre-repair baseline exactly; independently reverified its own geometry (1.200m from puck vs 3.162m from YOU's start) as correct."
+          },
+          {
+            "questionId": "exp26-u13-025-q10",
+            "contentHash": "873fa6357e5961a9283ebd51b3049f24505e1b6221db9c45d4c371c989ea4032",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "New content recomputed and verified: prompt/explanation now ask why C specifically stays inside (spacing/role-complementarity) rather than restating q6's 'plan vs puck-read' idea. Roster check: only named actors (YOU, C, Gold 1) all exist on the roster. Geometry check: C (home-skater-2, (-17,2)) is 10.121m from YOU's start and well separated in y from the boards-side puck cluster, supporting the 'middle of the ice opens up' spacing claim without asserting any unverified number. basis remains 'coaching' (no answer key, matching explain-type schema). Age-appropriate U13 language, no invented contact/safety/rule claim. validateExperimentalBank([replacement]) returned no errors for this question and positionSubjectIssue/questionActorWarnings returned nothing."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched and read directly (WebFetch text extraction failed on the PDF binary as expected; read the saved PDF with the Read tool). Document is Hockey Canada's 'U13 SKILLS' matrix, LTPD 'Learn to Train' stage (internal title metadata: 'Draft 2017 - Peewee Pathway'; Peewee corresponds to U13/ages 11-12). Page 1 lists skill categories (skating, puck control, passing/receiving, shooting, individual offensive/defensive tactics) and a 'Team Play' checklist (Basic Positioning - D Zone, Basic Breakouts, Regroups, Entries, Forechecks) at a topic-checklist level; it does not itemize cross-ice support, high-slot positioning or inside-lane passing by name. Supports age/topic placement for exp26-u13-022 only, not the scene's exact coordinates, answers or feedback.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U13 / Peewee, LTPD Learn to Train stage",
+      "claim": "Cross-ice support, inside-lane passing checks and high-slot positioning decisions are age-appropriate U13 tactical topics."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched and read directly (WebFetch text extraction failed on the PDF binary as expected; read the saved PDF with the Read tool, pages covering the requested 'team support and transition principles'). Document is Hockey Canada's Program of Excellence U17 Technical Curriculum (internal title metadata: 'U17 Tech Curriculum - Adjustments'), an elite/selection-camp resource, NOT a U13 document. Confirmed content: defines four offensive/defensive team-play principles (Pressure, Puck Control/Stall-Contain, Support, Transition); 'Support - Offensive' states offensive players away from the puck must be available as passing options and read the puck carrier's options and intentions. This directly supports the general 'high support away from the puck' principle used in exp26-u13-021, but the source is scoped to U17 elite selection, not U13 -- flagging this age/level gap per the assignment's instruction to flag (not necessarily reject) an older-bracket source used as a disclosed adaptation. The scenario's own 'use' field already discloses 'not source-certified' for the exact coordinates/answers.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U17 Program of Excellence (elite/selection) -- used here as a disclosed older-bracket adaptation for a U13 scenario, not an age-matched source",
+      "claim": "High forward support away from the puck preserves both an attacking outlet option and a defensive-transition/recovery option."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T08:45:19.704Z",
+      "access": "read",
+      "scope": "Page 1 (title \"U13 SKILLS — LTPD STAGE – Learn to Train\") lists Individual Offensive Tactics, Individual Defensive Tactics (incl. puck retrievals, tracking) and Team Play columns for the U13 age band specifically. Supports age/topic placement for the receiving-control and contested-possession families only; it does not certify these scenes’ exact coordinates, wording or suggested answers, which remain original coaching synthesis.",
+      "jurisdiction": "Canadian (Hockey Canada)",
+      "ageFormat": "U13",
+      "claim": "Age/topic placement only — the document is explicitly titled and scoped to U13, so no adaptation-from-an-older-bracket disclosure is needed."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T08:42:00Z",
+      "access": "read",
+      "scope": "Fetched directly (WebFetch's text extraction failed on this PDF's binary stream, so the saved PDF was opened and its one page read directly, per the project's PDF-fallback instruction). The single page is a Hockey Canada 'U13 SKILLS -- LTPD STAGE - Learn to Train' checklist. It lists 'Puck retrievals' and 'Tracking' under 'Individual Defensive Tactics' and 'Basic Positioning - D Zone' under 'Team Play' as U13-appropriate skill topics. This confirms U13 as a correct age/topic placement for a faceoff-support puck-retrieval scenario. It supports age/topic placement only -- it is a bullet-point skills checklist with no diagrams, coordinates, or worded tactical guidance, so it does not certify any specific coaching answer, position reference, or sequence in this scenario.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U13",
+      "claim": "Age/topic placement for a U13 faceoff-support puck-retrieval scenario (individual defensive tactics: puck retrievals, tracking; team play: basic D-zone positioning)."
+    }
+  ],
+  "remainingQuestionIds": []
+}

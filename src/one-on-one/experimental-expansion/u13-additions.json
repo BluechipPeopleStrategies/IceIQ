@@ -75,15 +75,15 @@
   },
   {
     "scenarioId": "exp26-u13-002",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
-        "prompt": "What does Gold 1’s position between YOU and W change?",
+        "prompt": "What should YOU check with Gold 1 near the route to W?",
         "options": [
           {
             "id": "a",
-            "text": "The direct W outlet is restricted"
+            "text": "Whether the direct W outlet is usable"
           },
           {
             "id": "b",
@@ -98,7 +98,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 1 occupies the direct lane to W, so that pass needs a different angle or protection; if Gold 1 moves away, recheck W.",
+        "explanation": "Gold 1 is near the direct lane to W. Check reach and movement before judging whether that lane is usable.",
         "id": "exp26-u13-002-q7"
       },
       {
@@ -123,18 +123,18 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "D2’s side and the lane’s current access tell teammates what the reverse can solve; faceoff history does not.",
+        "explanation": "Communicate D2’s side and whether the proposed route is usable. Keep the call accurate as pressure changes.",
         "id": "exp26-u13-002-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU closer to the back of the net while keeping Gold 1’s pressure side visible.",
+        "prompt": "Move YOU toward an example behind-net position to reassess pressure and D2.",
         "basis": "coaching",
-        "explanation": "The behind-net position can change Gold 1’s angle and keep D2 in view; if Gold 1 follows, protect before choosing the reverse.",
+        "explanation": "The example moves the carrier and puck behind the goal line, beside the back of the net. Recheck the net, boards and pressure; the position does not prove a safe skating or passing route to D2.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -26,
-          "y": 5
+          "x": -28,
+          "y": 4.5
         },
         "id": "exp26-u13-002-q9"
       },
@@ -149,11 +149,11 @@
   },
   {
     "scenarioId": "exp26-u13-003",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
-        "prompt": "What is the direct route Gold 1 is occupying?",
+        "prompt": "Which passing route is Gold 1 closest to?",
         "options": [
           {
             "id": "a",
@@ -172,7 +172,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 1 sits between D1 and YOU, so moving off that line can reoffer support; if Gold 1 follows, the new lane must be read.",
+        "explanation": "Gold 1 is close to the D1-to-YOU route. An angle change may help, but the new lane still needs checking.",
         "id": "exp26-u13-003-q7"
       },
       {
@@ -197,14 +197,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "D1 needs your new availability and C’s inside relationship to choose; a one-word call gives no geometry.",
+        "explanation": "Communicate actual availability and C’s support position. A short clear call can work; it must match the current lane.",
         "id": "exp26-u13-003-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU inward from the boards to create a visible angle for D1.",
+        "prompt": "Move YOU toward the middle to compare a receiving angle from D1.",
         "basis": "coaching",
-        "explanation": "The inward angle steps off Gold 1’s direct route and gives D1 a short option; if Gold 1 follows, C may become the next outlet.",
+        "explanation": "The example moves YOU inward and changes the passing angle. It does not prove visibility or reception; recheck Gold 1 and C.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -9,
@@ -223,7 +223,7 @@
   },
   {
     "scenarioId": "exp26-u13-004",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -251,7 +251,7 @@
       },
       {
         "type": "multi",
-        "prompt": "Which two cues tell YOU whether to stay underneath W?",
+        "prompt": "Which two cues tell YOU whether to keep the short inside outlet?",
         "options": [
           {
             "id": "a",
@@ -275,16 +275,16 @@
         "id": "exp26-u13-004-q8"
       },
       {
+        "id": "exp26-u13-004-q9",
         "type": "position",
-        "prompt": "Move YOU below and inside W to present the assigned short outlet.",
+        "prompt": "Move YOU closer to Navy’s net than W and nearer the middle than W.",
         "basis": "coaching",
-        "explanation": "The lower-inside spot gives W a short lane away from Gold 1; if W gains space, widen to support the next play.",
+        "explanation": "The example is closer to the left net than W and nearer the middle. Recheck the passing lane and Gold 1; it does not guarantee a pressure-free outlet.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -7,
-          "y": 4
-        },
-        "id": "exp26-u13-004-q9"
+          "x": -15,
+          "y": 6
+        }
       },
       {
         "type": "explain",
@@ -297,7 +297,7 @@
   },
   {
     "scenarioId": "exp26-u13-005",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -320,7 +320,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The puck has no owner, so possession is unresolved; if D1 controls it, YOU supports breakout, while Gold control starts a defensive read.",
+        "explanation": "The puck has no owner, so possession is unresolved; if D1 controls it, YOU support breakout, while Gold control starts a defensive read.",
         "id": "exp26-u13-005-q7"
       },
       {
@@ -350,9 +350,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU slightly inside to support D1 while keeping the net between you and Gold 1.",
+        "prompt": "Move YOU nearer the middle while staying closer to Navy’s net than Gold 2.",
         "basis": "coaching",
-        "explanation": "The inside support spot protects the net and leaves D1 the puck-side route; if Gold 1 wins it, step to the new carrier.",
+        "explanation": "The example is nearer the middle and still closer to the defended net than Gold 2. The net is not between YOU and Gold 1. If gold gains control, reassess pressure and coverage before moving again.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -20,
@@ -371,15 +371,15 @@
   },
   {
     "scenarioId": "exp26-u13-006",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
-        "prompt": "What should YOU call before dropping below F1?",
+        "prompt": "What could YOU call before moving closer to Navy’s net than F1?",
         "options": [
           {
             "id": "a",
-            "text": "Middle support below F1"
+            "text": "I will offer middle support closer to our net"
           },
           {
             "id": "b",
@@ -394,7 +394,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The call names the deeper middle support the coach assigned, giving D1 a different height to see; if Gold 1 closes that lane, call the next connected angle.",
+        "explanation": "State the planned support angle and recheck availability. A call does not make the passing lane open.",
         "id": "exp26-u13-006-q7"
       },
       {
@@ -403,11 +403,11 @@
         "options": [
           {
             "id": "a",
-            "text": "F1 is already high on the boards"
+            "text": "F1 is already farther up ice and wide"
           },
           {
             "id": "b",
-            "text": "D1 needs a different passing height"
+            "text": "The coach has asked for a different passing angle"
           },
           {
             "id": "c",
@@ -419,33 +419,33 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "F1’s high position and D1’s need for a different lane make the deeper route useful; overlap removes the separation.",
+        "explanation": "The assigned depth and middle angle can offer another option if the route is usable.",
         "id": "exp26-u13-006-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU below F1 into the coach-assigned middle support pocket.",
+        "prompt": "Move YOU closer to Navy’s net than F1 and toward the middle.",
         "basis": "coaching",
-        "explanation": "The lower-middle spot separates YOU from F1 and gives D1 a safer connection; if Gold 1 follows, preserve the lane behind the pressure.",
+        "explanation": "This example changes depth and width, but brings YOU closer to Gold 1. Recheck pressure rather than assuming the connection is safer.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 1,
-          "y": 9
+          "y": 3
         },
         "id": "exp26-u13-006-q9"
       },
       {
         "type": "explain",
-        "prompt": "Why can two players at the same height make D1’s reset harder?",
+        "prompt": "When might different depths give D1 more options?",
         "basis": "coaching",
-        "explanation": "They present one predictable line, allowing one defender to cover both, while different heights create a forward and backward choice; if one lane closes, the other can remain.",
+        "explanation": "Different depths can create distinct passing angles if both remain reachable. One defender does not automatically cover both players at the same depth, and staggering does not guarantee an open route.",
         "id": "exp26-u13-006-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-007",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -453,7 +453,7 @@
         "options": [
           {
             "id": "a",
-            "text": "I am your lower outlet"
+            "text": "I will offer a return option closer to our net"
           },
           {
             "id": "b",
@@ -468,12 +468,12 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Calling the lower outlet gives D2 a connected escape from the approaching pressure; if D2 advances, re-read the next support lane rather than staying fixed.",
+        "explanation": "Communicate the planned return angle, then check whether it is reachable as Gold 1 approaches.",
         "id": "exp26-u13-007-q7"
       },
       {
         "type": "multi",
-        "prompt": "Which two facts should shape YOU’s follow-up?",
+        "prompt": "Which two facts should shape your follow-up?",
         "options": [
           {
             "id": "a",
@@ -481,7 +481,7 @@
           },
           {
             "id": "b",
-            "text": "YOU can be a lower outlet"
+            "text": "Whether a deeper return option is reachable"
           },
           {
             "id": "c",
@@ -493,33 +493,33 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Pressure and a lower outlet give D2 a connected next action; matching height makes the reset flat.",
+        "explanation": "Pressure and the possible return route shape support. Being level with D2 is not automatically wrong; follow the actual lanes and the stated exercise.",
         "id": "exp26-u13-007-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU below D2 to show the requested return outlet.",
+        "prompt": "If Gold 1 angles toward the boards, choose a deeper return target to reassess.",
         "basis": "coaching",
-        "explanation": "The lower position gives D2 a backward safety valve and keeps Gold 1’s approach visible; if D2 advances, YOU can support the next lane.",
+        "explanation": "The example changes the return angle and depth. It does not guarantee a clear lane after Gold 1 moves; check pressure and reach before calling for the pass.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -6,
-          "y": 8
+          "x": -13,
+          "y": 2
         },
         "id": "exp26-u13-007-q9"
       },
       {
         "type": "explain",
-        "prompt": "How is staggering different from simply moving away from D2?",
+        "prompt": "How can communicating a planned return angle help D2?",
         "basis": "coaching",
-        "explanation": "Staggering changes the passing height and keeps a connected lane, while random distance can leave D2 with no useful angle; if pressure changes, adjust the stagger.",
+        "explanation": "A clear call can help D2 locate the intended option. Confirm readiness and lane access rather than assuming the call makes it available.",
         "id": "exp26-u13-007-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-008",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -567,14 +567,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The defender’s inside position and carrier control determine whether the middle route helps; the bench is unrelated.",
+        "explanation": "The defender’s inside position and carrier control determine whether the middle route helps; F1 being wide does not by itself mean the far-post route is clear too.",
         "id": "exp26-u13-008-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU inside but below F1 to show a far-post support route.",
+        "prompt": "Move YOU nearer the middle as an early support step, without overtaking F1.",
         "basis": "coaching",
-        "explanation": "The inside-lower spot gives F1 a different lane toward the far post; if Gold 1 closes it, stay connected to the wide carrier.",
+        "explanation": "The example moves YOU toward the middle while remaining closer to Navy’s net than F1. It is an early support point, not a position at the far post. Recheck both defenders before continuing.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 12,
@@ -584,16 +584,16 @@
       },
       {
         "type": "explain",
-        "prompt": "Why must the supporting forward avoid filling F1’s exact lane?",
+        "prompt": "Why does the far-post route help more than simply avoiding F1’s lane?",
         "basis": "coaching",
-        "explanation": "Separate lanes give F1 room and create a second passing angle, while the same lane lets one defender cover both; if the carrier changes direction, re-space.",
+        "explanation": "A route toward the far-post area may provide another scoring angle if it is reachable and unblocked. It is one option; keeping separation elsewhere can also be useful depending on coverage.",
         "id": "exp26-u13-008-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-009",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -601,7 +601,7 @@
         "options": [
           {
             "id": "a",
-            "text": "I am available behind your lane"
+            "text": "I am looking for support space behind your route"
           },
           {
             "id": "b",
@@ -616,7 +616,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The call gives F1 a reachable support target without making the pass automatic; if Gold 1 closes that route, change the angle or hold connected ice.",
+        "explanation": "Communicate the intended support and call availability only after checking the lane. F1 does not have to pass immediately.",
         "id": "exp26-u13-009-q7"
       },
       {
@@ -641,14 +641,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Control and pressure tell YOU whether to present or hold ice; unrelated score cannot set the route.",
+        "explanation": "Control and pressure tell YOU whether to present or hold ice; assuming the support route must stay fixed ignores how F1's delay and Gold 1's pressure can change that read.",
         "id": "exp26-u13-009-q8"
       },
       {
         "type": "position",
         "prompt": "Move YOU to a staggered support pocket behind F1’s lane.",
         "basis": "coaching",
-        "explanation": "The pocket preserves a pass option without overtaking F1; if Gold 1 closes it, shift to the next visible support.",
+        "explanation": "The example stays closer to Navy’s net than F1 and changes the passing angle. It does not guarantee a usable pass; recheck pressure and timing.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 12,
@@ -741,7 +741,7 @@
   },
   {
     "scenarioId": "exp26-u13-011",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -764,7 +764,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "D2 is the Navy teammate positioned for a lateral option, so moving the puck can change Gold 1’s screen; if D2 is covered, keep the blocker in the read.",
+        "explanation": "D2 is a Navy teammate at a different lateral angle. Check the route and receiver before passing; Gold 1 may adjust.",
         "id": "exp26-u13-011-q7"
       },
       {
@@ -777,7 +777,7 @@
           },
           {
             "id": "b",
-            "text": "YOU changes the screen angle"
+            "text": "YOU change the puck’s angle to the net"
           },
           {
             "id": "c",
@@ -789,14 +789,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "A lateral puck option or changed screen can alter the line; shooting through the blocker ignores the visible constraint.",
+        "explanation": "Moving the carrier or finding a lateral pass can change the shooting line. Recheck the blocker and goalie before choosing.",
         "id": "exp26-u13-011-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU laterally to create a different sightline from the puck.",
+        "prompt": "Move YOU to compare another puck angle toward the net.",
         "basis": "coaching",
-        "explanation": "The lateral position changes the screen and may open D2’s route; if Gold 1 follows, the new lane must be checked.",
+        "explanation": "YOU carry the puck to the example point. It shifts the shooting line slightly and moves closer to Gold 1; neither a clear shot nor a pass to D2 is guaranteed.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 15,
@@ -815,7 +815,7 @@
   },
   {
     "scenarioId": "exp26-u13-012",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -868,9 +868,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU inside and slightly lower to create another visible option for F2.",
+        "prompt": "Move YOU to compare another passing angle for F2.",
         "basis": "coaching",
-        "explanation": "The new angle gives F2 a short release and changes Gold 1’s line; if the defender tracks, rotate to another support lane.",
+        "explanation": "The example changes the passing angle. It is farther from F2 than the starting spot, so it is not automatically a shorter release. Recheck both defenders before calling for a pass.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 13,
@@ -889,7 +889,7 @@
   },
   {
     "scenarioId": "exp26-u13-013",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -912,7 +912,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "F2 is the Navy teammate inside and visible as the outlet, so protection can lead to a connected pass; if Gold 1 closes F2’s lane, keep protecting until another route appears.",
+        "explanation": "F2 is the shown Navy teammate to assess as an outlet. Position alone does not establish a clear lane or readiness to receive.",
         "id": "exp26-u13-013-q7"
       },
       {
@@ -921,11 +921,11 @@
         "options": [
           {
             "id": "a",
-            "text": "Gold 1’s stick side"
+            "text": "The side from which Gold 1 applies pressure"
           },
           {
             "id": "b",
-            "text": "F2’s available lane"
+            "text": "Whether a route to F2 is available"
           },
           {
             "id": "c",
@@ -937,14 +937,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Pressure side and support lane decide where the puck can be protected and released; faceoff history does not.",
+        "explanation": "Check pressure and the next passing route before turning. The picture does not establish stick reach or puck protection.",
         "id": "exp26-u13-013-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU closer to the boards while keeping F2 visible inside.",
+        "prompt": "Move YOU closer to the boards to compare a protective reset.",
         "basis": "coaching",
-        "explanation": "The wall-side spot shields the puck from Gold 1 and preserves F2’s lane; if F2 is covered, continue protecting or reset.",
+        "explanation": "The example moves the carrier and puck nearer the boards and farther from Gold 1. It does not prove the body shields the puck or the F2 lane stays open; check reach, board space and the next action.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 6,
@@ -956,14 +956,14 @@
         "type": "explain",
         "prompt": "When does a protective turn become a possession play rather than just avoiding contact?",
         "basis": "coaching",
-        "explanation": "It buys time while keeping a reachable outlet visible, allowing the next action; if no lane opens, protection should continue until support changes.",
+        "explanation": "Protection is useful when it preserves time or a next action. Reassess passing, carrying or resetting as pressure changes rather than waiting indefinitely for an outlet.",
         "id": "exp26-u13-013-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-014",
-    "scenarioVersion": 2,
+    "scenarioVersion": 3,
     "questions": [
       {
         "type": "choice",
@@ -986,7 +986,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is drawn between Gold 1 and the Navy net, so inside protection is first; if C arrives, communicate the next assignment.",
+        "explanation": "YOU are drawn between Gold 1 and the Navy net, so inside protection is first; if C arrives, communicate the next assignment.",
         "id": "exp26-u13-014-q7"
       },
       {
@@ -1016,9 +1016,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU slightly inside Gold 1’s route while keeping C’s recovery lane visible.",
+        "prompt": "Move YOU to compare another net-side position against Gold 1.",
         "basis": "coaching",
-        "explanation": "The inside position protects the net and leaves C a readable recovery route; if Gold 1 passes, switch to the new carrier.",
+        "explanation": "The example stays closer to Navy’s net than Gold 1 and slightly reduces the gap. It does not establish gaze or recovery speed. If Gold 1 passes, reassess responsibilities with C rather than both automatically chasing the new carrier.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -8,
@@ -1037,7 +1037,7 @@
   },
   {
     "scenarioId": "exp26-u13-015",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1069,7 +1069,7 @@
         "options": [
           {
             "id": "a",
-            "text": "YOU can stay between carrier and net"
+            "text": "YOU can work toward a net-side approach"
           },
           {
             "id": "b",
@@ -1077,7 +1077,7 @@
           },
           {
             "id": "c",
-            "text": "YOU skates past the puck"
+            "text": "YOU skate past the puck"
           }
         ],
         "answer": [
@@ -1090,9 +1090,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU closer to the inside lane beside Gold 1’s path.",
+        "prompt": "Move YOU toward Navy’s net while staying nearer the middle than Gold 1.",
         "basis": "coaching",
-        "explanation": "The inside spot keeps the carrier outside and preserves a recovery route to Navy’s net; if Gold 1 passes inside, switch threats.",
+        "explanation": "The example stays inside Gold 1 but is level along the rink’s length, not clearly net-side. It is a comparison point, not proof the carrier stays outside. Recheck speed, recovery and D1’s coverage.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -6,
@@ -1104,14 +1104,14 @@
         "type": "explain",
         "prompt": "Why is the wall the preferred direction in this angle, while still requiring a read?",
         "basis": "coaching",
-        "explanation": "Guiding a carrier toward the wall protects the middle, but the carrier’s speed, pass and support can change the next route; if Gold 2 appears inside, recover.",
+        "explanation": "The drill aims to limit middle access, but speed, passing and support change the next decision. Gold 2 is already inside, so coordinate that threat with D1.",
         "id": "exp26-u13-015-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-016",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1164,12 +1164,12 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU between Gold 2 and the Navy net while keeping Gold 1’s wall side visible.",
+        "prompt": "Move YOU to compare a net-side position near Gold 2.",
         "basis": "coaching",
-        "explanation": "The net-side spot protects the low slot and leaves a glance toward the puck; if Gold 2 rises, follow the new lane.",
+        "explanation": "The example is closer to Navy’s net than Gold 2. Recheck the puck and threat, and communicate any coverage change rather than following a fixed spot.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -20,
+          "x": -25,
           "y": -2
         },
         "id": "exp26-u13-016-q9"
@@ -1178,18 +1178,18 @@
         "type": "explain",
         "prompt": "How can you check the puck side without abandoning Gold 2?",
         "basis": "coaching",
-        "explanation": "Keep Gold 2 between you and the net, then shoulder-check the carrier and D1; if Gold 2 cuts behind, net-side coverage takes priority.",
+        "explanation": "Seek a position between Gold 2 and Navy’s net while repeatedly checking the puck and communicating with D1. Do not leave Gold 2 between YOU and the net as a default coverage rule; adjust to the actual threat and team plan.",
         "id": "exp26-u13-016-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-017",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
-        "prompt": "Which Navy defender already has the carrier-side job while YOU protects the inside route?",
+        "prompt": "Which Navy defender starts closer to the net than Gold 1?",
         "options": [
           {
             "id": "a",
@@ -1208,7 +1208,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "D1 is already between Gold 1 and the Navy net, so YOU can protect Gold 2’s inside support; if D1 loses the carrier route, communicate before switching.",
+        "explanation": "D1 starts net-side of Gold 1. YOU are still recovering; communicate which threat each defender can cover rather than assuming coverage is complete.",
         "id": "exp26-u13-017-q7"
       },
       {
@@ -1238,13 +1238,13 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU into the middle lane below Gold 2.",
+        "prompt": "Move YOU to an example middle recovery target closer to Navy’s net than Gold 2.",
         "basis": "coaching",
-        "explanation": "The middle position protects the inside route and leaves D1 to manage Gold 1; if Gold 2 receives, close that carrier.",
+        "explanation": "The target is net-side of Gold 2 and in the middle. The image cannot prove YOU can reach it in time. If possession changes, reassess responsibilities with D1.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": 4,
-          "y": 2
+          "x": -6,
+          "y": 0
         },
         "id": "exp26-u13-017-q9"
       },
@@ -1259,7 +1259,7 @@
   },
   {
     "scenarioId": "exp26-u13-018",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1282,7 +1282,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The save creates a loose rebound and neither player controls it; if the goalie covers it later, the contest ends.",
+        "explanation": "The stated save produced a loose rebound; nobody controls it in this scene. A later cover changes the situation, so reassess pursuit and follow the official’s signal.",
         "id": "exp26-u13-018-q7"
       },
       {
@@ -1299,7 +1299,7 @@
           },
           {
             "id": "c",
-            "text": "Assuming YOU owns it because you defend"
+            "text": "Assuming YOU own it because you defend"
           }
         ],
         "answer": [
@@ -1312,13 +1312,13 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU to a net-side angle that reaches the rebound without losing Gold 1.",
+        "prompt": "Move YOU to compare an approach nearer the loose rebound.",
         "basis": "coaching",
-        "explanation": "The offset position keeps the puck and Gold 1 in view, letting YOU contest or contain; if Gold 1 arrives first, protect the net.",
+        "explanation": "The example is nearer the rebound than the start, but does not prove reach, visibility or control. Gold 1 is also close; reassess the immediate threat and goalie before acting.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -21,
-          "y": -3
+          "x": -23.5,
+          "y": -2.5
         },
         "id": "exp26-u13-018-q9"
       },
@@ -1333,7 +1333,7 @@
   },
   {
     "scenarioId": "exp26-u13-019",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1388,7 +1388,7 @@
         "type": "position",
         "prompt": "Move YOU into a middle cover position between Gold 2 and the Navy net.",
         "basis": "coaching",
-        "explanation": "This point places YOU between Gold 2 and the Navy net while D1 reads Gold 1; if Gold 1 cuts inside, communicate the handoff and stay net-side of the nearest threat.",
+        "explanation": "The example is closer to Navy’s net than Gold 2. It does not assign D1 solely to Gold 1 or prove arrival in time; communicate coverage of both threats.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 2,
@@ -1407,7 +1407,7 @@
   },
   {
     "scenarioId": "exp26-u13-020",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1430,7 +1430,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "D1 is the Navy defender assigned to contest Gold 1 in the corner, so YOU can leave only after checking that pressure and Gold 2’s inside route; if D1 falls, stay net-side.",
+        "explanation": "D1 is assigned to contest the corner. Before changing position, check the immediate puck danger and who can cover Gold 2. If D1 falls, reassess both threats and communicate.",
         "id": "exp26-u13-020-q7"
       },
       {
@@ -1462,7 +1462,7 @@
         "type": "position",
         "prompt": "Move YOU closer to the lane between Gold 2 and the Navy net.",
         "basis": "coaching",
-        "explanation": "The inside position protects the slot while D1 contests the corner; if Gold 1 wins inside, switch to that carrier.",
+        "explanation": "The example lies in the lane between Gold 2 and Navy’s net. If Gold 1 wins inside, reassess the immediate threat and coordinate coverage rather than automatically abandoning Gold 2.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -20,
@@ -1472,16 +1472,16 @@
       },
       {
         "type": "explain",
-        "prompt": "How could both defenders chasing the corner help Gold 1?",
+        "prompt": "If YOU decide to leave the net front, what should YOU communicate to D1 before making the move?",
         "basis": "coaching",
-        "explanation": "Leaving Gold 2’s slot lane uncovered can give Gold 1 a direct pass or route to net, so one defender stays inside; if D1 loses the corner, communicate before switching.",
+        "explanation": "A short call — such as confirming D1 has Gold 1 contained, or telling D1 that YOU are stepping away from the net front — helps D1 adjust instead of being surprised. There is no single required wording, and what YOU say can change with what D1 signals back.",
         "id": "exp26-u13-020-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-021",
-    "scenarioVersion": 2,
+    "scenarioVersion": 3,
     "questions": [
       {
         "type": "choice",
@@ -1504,7 +1504,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is the assigned high Navy forward supporting above the loose-puck battle; if F1 wins, offer the high outlet, while a Gold win changes YOU to recovery.",
+        "explanation": "YOU are assigned the high support role. Reassess the outlet or defensive response when possession changes.",
         "id": "exp26-u13-021-q7"
       },
       {
@@ -1529,14 +1529,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "High separation supports either possession outcome; joining the battle removes balance.",
+        "explanation": "Separation can help with either possession outcome. Joining the battle is a different choice that needs a coverage check.",
         "id": "exp26-u13-021-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU slightly higher and inside, above the board battle.",
+        "prompt": "Move YOU to compare a middle support point closer to the blue line than the battle.",
         "basis": "coaching",
-        "explanation": "The high-inside position keeps both puck outcomes visible and protects the middle; if F1 wins cleanly, lower into the next support lane.",
+        "explanation": "The example remains separate from the board contest. Check Gold 2 and the actual puck winner before choosing the next route.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 13,
@@ -1546,16 +1546,16 @@
       },
       {
         "type": "explain",
-        "prompt": "Why should high support remain useful before the battle is decided?",
+        "prompt": "What should change in your read when F1 wins clean possession?",
         "basis": "coaching",
-        "explanation": "Ownership is unknown, so a balanced position can attack or recover without guessing; once control is clear, move to the new job.",
+        "explanation": "Check whether a useful passing lane has opened and what the coach’s support plan requires. A touch alone is not settled control, and winning possession does not automatically require leaving high support.",
         "id": "exp26-u13-021-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-022",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1563,7 +1563,7 @@
         "options": [
           {
             "id": "a",
-            "text": "I have the inside lane"
+            "text": "Gold 2 is in that lane; check another option"
           },
           {
             "id": "b",
@@ -1578,7 +1578,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Calling the inside lane tells F1 that Gold 2 has entered the connection and helps coordinate the next look; if the lane is still blocked, keep the puck moving only when another route is visible.",
+        "explanation": "Tell F1 that the intended route has changed. Do not call yourself open when Gold 2 occupies the connection.",
         "id": "exp26-u13-022-q7"
       },
       {
@@ -1591,7 +1591,7 @@
           },
           {
             "id": "b",
-            "text": "YOU’s visibility from F1"
+            "text": "your visibility from F1"
           },
           {
             "id": "c",
@@ -1610,7 +1610,7 @@
         "type": "position",
         "prompt": "Move YOU into a high-slot pocket that changes F1’s passing angle.",
         "basis": "coaching",
-        "explanation": "The pocket gives F1 a clearer angle while keeping separation from Gold 1 and Gold 2; if a defender fills it, re-space.",
+        "explanation": "The pocket changes the line between F1 and YOU while Gold 1 and Gold 2 remain relevant; recheck whether any connection is usable.",
         "actorId": "home-skater-1",
         "reference": {
           "x": 14,
@@ -1620,16 +1620,16 @@
       },
       {
         "type": "explain",
-        "prompt": "Name the space you moved into and explain what made its angle different.",
+        "prompt": "If Gold 2 shifts to cover the pocket from q9, what would YOU check before offering another spot?",
         "basis": "coaching",
-        "explanation": "The high-slot pocket changes the line between F1 and YOU and may move the defender’s stick lane; if Gold 2 shifts across, inspect the new obstruction.",
+        "explanation": "Check whether F1 can still see you and whether Gold 1 has also adjusted; re-spacing without checking both can trade one covered lane for another.",
         "id": "exp26-u13-022-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-023",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1652,7 +1652,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The call tells F2 that support exists while YOU still needs control, so the pass can wait for a readable touch; if pressure closes the short option, secure the puck first.",
+        "explanation": "Communicate that the puck is unsettled and ask for support. Whether to settle, protect or redirect still depends on pressure.",
         "id": "exp26-u13-023-q7"
       },
       {
@@ -1682,13 +1682,13 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU to an example collecting position behind the bounced puck and away from Gold 1.",
+        "prompt": "Move YOU closer to the unsettled puck to compare a collecting angle.",
         "basis": "coaching",
-        "explanation": "The offset position gives YOU room to settle while seeing F2 and Gold 1; if the puck jumps away, recover rather than forcing a pass.",
+        "explanation": "The example is nearer the puck. Gold 1 is also approaching, so check time and reach before treating the puck as controlled.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": -1,
-          "y": -1
+          "x": 2,
+          "y": -4
         },
         "id": "exp26-u13-023-q9"
       },
@@ -1696,14 +1696,14 @@
         "type": "explain",
         "prompt": "What would you need to see before recommending a one-touch pass?",
         "basis": "coaching",
-        "explanation": "Look for settled control, a visible lane to F2, and enough time that Gold 1 cannot immediately close the touch; if any cue is missing, secure the puck first. A one-touch is an option, not a promise.",
+        "explanation": "Check the arriving puck’s speed and path, F2’s readiness and the passing lane. A one-touch redirects the arriving puck without first settling it; if that touch is not practical, compare other available actions.",
         "id": "exp26-u13-023-q10"
       }
     ]
   },
   {
     "scenarioId": "exp26-u13-024",
-    "scenarioVersion": 1,
+    "scenarioVersion": 2,
     "questions": [
       {
         "type": "choice",
@@ -1726,7 +1726,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The call keeps both possible winners in the read and names YOU’s support location; once control is clear, switch to the winner’s outlet or defensive lane.",
+        "explanation": "Name your support position without claiming a winner. Reassess an outlet or defensive job once control is clear.",
         "id": "exp26-u13-024-q7"
       },
       {
@@ -1777,11 +1777,11 @@
   },
   {
     "scenarioId": "exp26-u13-025",
-    "scenarioVersion": 2,
+    "scenarioVersion": 3,
     "questions": [
       {
         "type": "choice",
-        "prompt": "Which Navy teammate should YOU keep inside as you pursue the loose puck?",
+        "prompt": "Which Navy teammate is assigned to stay inside?",
         "options": [
           {
             "id": "a",
@@ -1800,7 +1800,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "C is the Navy teammate assigned to stay inside, so YOU can pursue toward the boards without losing the middle; if Gold 1 controls first, recover instead of completing the old route.",
+        "explanation": "C has the stated inside assignment. If Gold wins control, reassess pressure and coverage together.",
         "id": "exp26-u13-025-q7"
       },
       {
@@ -1817,7 +1817,7 @@
           },
           {
             "id": "c",
-            "text": "The faceoff was in the previous period"
+            "text": "The assumption that Navy already controls the puck"
           }
         ],
         "answer": [
@@ -1825,14 +1825,14 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Loose ownership and Gold 1’s route decide whether pursuit remains useful; period history does not.",
+        "explanation": "The puck’s actual state and Gold 1’s approach shape the next action.",
         "id": "exp26-u13-025-q8"
       },
       {
         "type": "position",
-        "prompt": "Move YOU toward the side-board puck while keeping C’s inside lane visible.",
+        "prompt": "Move YOU toward the side-board puck while leaving space for C inside.",
         "basis": "coaching",
-        "explanation": "The board-side route follows the assignment and leaves C inside; if Gold reaches the puck, stop the chase and support coverage.",
+        "explanation": "The example approaches the loose puck and stays separate from C. Reassess if Gold gains control.",
         "actorId": "home-skater-1",
         "reference": {
           "x": -15,
@@ -1842,9 +1842,9 @@
       },
       {
         "type": "explain",
-        "prompt": "Why does a faceoff plan still require a puck read?",
+        "prompt": "Why should C stay inside instead of also chasing the loose puck toward the boards?",
         "basis": "coaching",
-        "explanation": "The plan describes an intended first job, but the loose puck and opponent route can change ownership; if Gold wins it, recover instead of completing the old route.",
+        "explanation": "If both YOU and C converge on the puck near the boards, the middle of the ice opens up; C staying inside keeps that space covered in case Gold 1 wins the puck and looks to counter.",
         "id": "exp26-u13-025-q10"
       }
     ]

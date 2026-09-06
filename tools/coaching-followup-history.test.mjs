@@ -13,7 +13,13 @@ const snapshots = loadHistoricalQuestionSnapshots(join(reviewRoot, "repairs"));
 test("all historical follow-ups resolve to exact archived or current content", () => {
   const resolved = rows.map(row => resolveHistoricalQuestion(row, source.get(row.questionId), snapshots));
   assert.equal(resolved.length, 55);
-  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 5);
+  // Packet 21–34 repairs changed 15 more of the 55 archived question versions.
+  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 20);
+  resolved.forEach((result, index) => {
+    assert.equal(result.contentHash, rows[index].contentHash);
+    assert.equal(result.question.id, rows[index].questionId);
+    if (!result.matchesCurrent) assert.ok(result.receipt, "Changed content must resolve through an immutable receipt");
+  });
 });
 
 test("historical resolver rejects an unreceipted hash", () => {

@@ -4441,13 +4441,13 @@
   },
   {
     "id": "exp26b-u11-024",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Reset behind the blue line",
     "family": "neutral-reset-timing",
     "topic": "Rink awareness",
     "objective": "Use a practice reset location while separating it from a formal rule judgement.",
-    "briefing": "Navy attacks +x. F1 carries near the right blue line; YOU is just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.",
+    "briefing": "Navy attacks the right net (+x). F1 owns the puck on the neutral-zone side of the right blue line. YOU are on its attacking-zone side; F2 is farther toward centre ice and D1 is farther toward the right net. The coach asks YOU to reset to the neutral-zone side before the next rep.",
     "setup": {
       "actors": [
         {
@@ -4494,8 +4494,8 @@
     "focusActorId": "h1",
     "cues": [
       "The coach has stated a practice reset.",
-      "YOU is near the right blue line.",
-      "The still scene does not make a full offside call."
+      "YOU start on the attacking-zone side of the right blue line.",
+      "This practice instruction is separate from a formal offside decision."
     ],
     "tags": [
       "experimental",
@@ -4515,15 +4515,15 @@
       {
         "id": "exp26b-u11-024-q1",
         "type": "choice",
-        "prompt": "Where is YOU relative to the right blue line in this practice?",
+        "prompt": "Where are YOU relative to the right blue line in this practice?",
         "options": [
           {
             "id": "a",
-            "text": "Behind it toward the right net"
+            "text": "On the attacking-zone side, toward the right net"
           },
           {
             "id": "b",
-            "text": "Inside it toward centre ice"
+            "text": "On the neutral-zone side, toward centre ice"
           },
           {
             "id": "c",
@@ -4531,10 +4531,10 @@
           }
         ],
         "answer": [
-          "b"
+          "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is inside the right blue line area in the +x attack picture; the reset asks for a move behind it."
+        "explanation": "YOU are on the attacking-zone side of the blue line. The reset asks YOU to return to its neutral-zone side."
       },
       {
         "id": "exp26b-u11-024-q2",
@@ -4547,7 +4547,7 @@
           },
           {
             "id": "b",
-            "text": "Where F1 and F2 are when the rep restarts"
+            "text": "Where YOU and the teammates are before restarting"
           },
           {
             "id": "c",
@@ -4593,16 +4593,16 @@
         "prompt": "Move YOU to an example reset point behind the right blue line.",
         "actorId": "h1",
         "reference": {
-          "x": 12.5,
+          "x": 6,
           "y": -3.5
         },
         "basis": "coaching",
-        "explanation": "This point shifts YOU farther toward the right-net side while keeping F1 and D1 visible."
+        "explanation": "This example is on the neutral-zone side of the right blue line. It satisfies the stated location, but the restart still requires the coach’s cue and a check of the other players."
       },
       {
         "id": "exp26b-u11-024-q5",
         "type": "choice",
-        "prompt": "F1 keeps waiting after YOU resets. What is the useful next check?",
+        "prompt": "F1 keeps waiting after YOU reset. What is the useful next check?",
         "options": [
           {
             "id": "a",
@@ -4634,7 +4634,7 @@
   },
   {
     "id": "exp26b-u11-025",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Stop the rep and reset",
     "family": "stop-signal-reset",
@@ -4733,7 +4733,7 @@
           },
           {
             "id": "b",
-            "text": "Move to the stated reset area under control"
+            "text": "Follow the coach’s reset directions under control"
           },
           {
             "id": "c",
@@ -4800,7 +4800,7 @@
           },
           {
             "id": "c",
-            "text": "Assume YOU owns the restart"
+            "text": "Assume YOU own the restart"
           }
         ],
         "answer": [
