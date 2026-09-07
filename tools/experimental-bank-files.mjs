@@ -10,7 +10,8 @@ export function readBankFiles({originalOnly=false,ages=[]}={}) {
   const expansion = join(projectRoot,'src/one-on-one/experimental-expansion');
   const original = ['u7','u9','u11','u13','u15','u18'].flatMap(age => readJson(join(base,`${age}.json`)));
   const files = !originalOnly && existsSync(expansion) ? readdirSync(expansion).sort().filter(f=>!ages.length||ages.some(age=>f.startsWith(`${age.toLowerCase()}-`))) : [];
-  const newScenarios = files.filter(f => /^u\d+-scenarios\.json$/.test(f)).flatMap(f => readJson(join(expansion,f)));
+  const companions = originalOnly ? [] : readJson(join(projectRoot,'src/one-on-one/experimental-companions.json')).filter(s=>!ages.length||ages.includes(s.ageBand));
+  const newScenarios = [...files.filter(f => /^u\d+-scenarios\.json$/.test(f)).flatMap(f => readJson(join(expansion,f))),...companions];
   const additions = files.filter(f => /^u\d+-additions\.json$/.test(f)).flatMap(f => readJson(join(expansion,f)));
   return {original, newScenarios, additions, bank:composeExperimentalBank(original,newScenarios,additions)};
 }

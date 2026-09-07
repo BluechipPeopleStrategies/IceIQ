@@ -8,133 +8,136 @@
       "version": 1,
       "ageBand": "U11",
       "title": "FORMAT EXAMPLE — replace with an original situation",
-      "family": "retrieval-scan",
-      "topic": "Scanning",
-      "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
-      "briefing": "You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+      "family": "read-the-change",
+      "topic": "Cause & Effect",
+      "objective": "Locate the defender relative to a passing lane.",
+      "briefing": "YOU have the puck. Teammate 1 and gold F1 are both visible. Compare their positions.",
       "setup": {
         "actors": [
           {
-            "id": "h1",
+            "id": "you",
             "label": "YOU",
             "team": "home",
             "role": "skater",
-            "x": -16,
-            "y": -6,
-            "facing": -1.88283844835743
+            "x": 0,
+            "y": 0,
+            "facing": 0.559
           },
           {
-            "id": "h2",
-            "label": "F2",
+            "id": "gold1",
+            "label": "Navy 1",
             "team": "home",
             "role": "skater",
-            "x": -10,
-            "y": -1,
-            "facing": 3.14
+            "x": 8,
+            "y": 5,
+            "facing": -2.583
           },
           {
-            "id": "a1",
-            "label": "D1",
+            "id": "f1",
+            "label": "F1",
             "team": "away",
             "role": "skater",
-            "x": -12,
-            "y": -6,
-            "facing": 3.14
+            "x": 5,
+            "y": -4,
+            "facing": 1.249
           }
         ],
         "puck": {
-          "owner": null,
-          "x": -18,
-          "y": -12.2
+          "owner": "you"
         }
       },
-      "focusActorId": "h1",
+      "focusActorId": "you",
       "cues": [
-        "The puck is loose beside the wall.",
-        "F2 is away from the wall.",
-        "D1 approaches from the up-ice side."
+        "YOU have the puck. Teammate 1 and gold F1 are both visible. Compare their positions."
       ],
       "tags": [
-        "retrieval-scan",
-        "scanning",
-        "experimental"
+        "read-the-change",
+        "u11-tactical",
+        "experimental-draft"
       ],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
       "sources": [
         {
-          "id": "hc-vision-2024",
-          "title": "7 Principles for Coaches: Vision & Scanning",
+          "id": "hc-vision-scanning",
+          "title": "Hockey Canada: Vision and Scanning",
           "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
-          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
-          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+          "section": "Vision and scanning coaching principle",
+          "use": "Scanning and reassessment theme; does not certify this scene or key."
         }
       ],
-      "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
       "questions": [
         {
-          "id": "claude-example-u11-001-q1",
           "type": "choice",
-          "prompt": "What is true about possession at this freeze?",
+          "prompt": "Is F1 between YOU and teammate 1 in this freeze?",
           "options": [
             {
               "id": "a",
-              "text": "YOU already control the puck"
+              "text": "No, F1 is away from that passing lane"
             },
             {
               "id": "b",
-              "text": "The puck is loose"
-            },
-            {
-              "id": "c",
-              "text": "D1 has made a pass"
+              "text": "Yes, F1 is on that passing lane"
             }
           ],
           "answer": [
-            "b"
+            "a"
           ],
           "basis": "scene",
-          "explanation": "The puck is drawn away from every blade and has no owner."
+          "explanation": "F1 is away from the straight lane joining YOU and 1. This describes the current picture; it does not mean a pass is always better than keeping the puck.",
+          "id": "claude-example-u11-001-q1"
         },
         {
-          "id": "claude-example-u11-001-q2",
+          "type": "explain",
+          "prompt": "Suppose F1 moves into the lane to teammate 1. What would you check before passing?",
+          "basis": "coaching",
+          "explanation": "Check whether another lane is open and whether you have space to keep the puck. If the lane to 1 has closed, you can delay or choose another option. Explain which cue would guide your choice.",
+          "optional": true,
+          "id": "claude-example-u11-001-q2"
+        },
+        {
           "type": "multi",
-          "prompt": "Which two things would help YOU plan the pickup?",
+          "prompt": "Which two statements match the current positions?",
           "options": [
             {
               "id": "a",
-              "text": "Where F2 is available"
+              "text": "Teammate 1 is farther toward the right-hand net than F1"
             },
             {
               "id": "b",
-              "text": "The direction D1 approaches from"
+              "text": "YOU have the puck"
             },
             {
               "id": "c",
-              "text": "Only the loose puck, without checking the players"
+              "text": "F1 is on the straight passing lane to 1"
+            },
+            {
+              "id": "d",
+              "text": "F1 has the puck"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "An outlet and the approaching pressure inform the next action; neither guarantees a successful pickup."
+          "basis": "scene",
+          "explanation": "Teammate 1 is farther toward the right-hand net on the overhead board, and YOU have the puck. F1 is offset from the direct passing lane.",
+          "id": "claude-example-u11-001-q3"
         },
         {
-          "id": "claude-example-u11-001-q3",
           "type": "sequence",
-          "prompt": "Arrange this suggested retrieval plan.",
+          "prompt": "Put this scan-and-decide routine in a useful order for the current freeze.",
           "options": [
             {
               "id": "a",
-              "text": "Find the pressure and outlet"
+              "text": "Locate F1 and the lane to teammate 1"
             },
             {
               "id": "b",
-              "text": "Approach and control the loose puck"
+              "text": "Check another support lane or space"
             },
             {
               "id": "c",
-              "text": "Check whether the outlet is still available"
+              "text": "Choose whether to pass, carry, or keep the puck"
             }
           ],
           "answer": [
@@ -143,46 +146,40 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "This is a simple discussion routine. Real scanning may repeat throughout the approach."
+          "explanation": "This is one suggested scan-to-decision routine: see the pressure, check support, then choose an action. Players may scan in a slightly different order when the picture changes; the routine is not the only possible temporal action.",
+          "id": "claude-example-u11-001-q4"
         },
         {
-          "id": "claude-example-u11-001-q4",
           "type": "position",
-          "prompt": "Move YOU to an approach point on the middle side of the wall-side puck.",
-          "actorId": "h1",
+          "prompt": "Place teammate 1 in a support position that opens a different passing angle from YOU.",
+          "actorId": "gold1",
           "reference": {
-            "x": -18,
-            "y": -10.5
+            "x": -4,
+            "y": 3
           },
           "basis": "coaching",
-          "explanation": "The example is 1.70 m from the puck and closer to rink middle than the puck. Recheck F2 and D1 before the touch; the marker does not prove where YOU look or whether possession is gained."
+          "explanation": "A support spot with separation can give the puck carrier another angle. This is a coaching suggestion to discuss, not an objectively graded single correct location.",
+          "id": "claude-example-u11-001-q5"
         },
         {
-          "id": "claude-example-u11-001-q5",
           "type": "choice",
-          "prompt": "Before planning a pass after the pickup, which relationship should YOU account for in this view?",
+          "prompt": "Suppose 1 moves behind F1 along the same passing line from YOU. What is a useful next step?",
           "options": [
             {
               "id": "a",
-              "text": "D1 and F2 are both up ice from the loose puck"
+              "text": "Check for another passing lane"
             },
             {
               "id": "b",
-              "text": "D1 is on the net side of the loose puck, opposite F2 along the rink"
+              "text": "Use the same straight lane to 1"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "scene",
-          "explanation": "Both the opponent D1 and teammate F2 are up ice from the loose puck. That puts pressure and the possible outlet in the area YOU need to read before recovery. It does not show who reaches the puck first or establish that a pass to F2 is clear."
-        },
-        {
-          "id": "claude-example-u11-001-q6",
-          "type": "explain",
-          "prompt": "What would you want to see again just before touching this puck?",
           "basis": "coaching",
-          "explanation": "Name a change in D1 or F2 that could alter the plan. Saying where you would look is more useful than simply saying “scan.”"
+          "explanation": "In that hypothetical, the receiver has moved behind the defender on the passing line. Check for a new lane or keep the puck while another option develops.",
+          "id": "claude-example-u11-001-q6"
         }
       ]
     }

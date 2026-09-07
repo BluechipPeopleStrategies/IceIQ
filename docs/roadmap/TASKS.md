@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-07 · Expanded the repaired drafts into eight staged lessons / 48 questions, including 38 companions and six optional reflections. Fixed reversed-direction rink context. See docs/factory/companion-lessons-8/README.md; qualified admission remains pending.
+**Last updated:** 2026-09-07 · Owner authorized publication of eight companion lessons / 48 questions to experimental practice. Release payload and content identities verified; 208 scenarios / 1,648 questions. Mastery admission remains separate.
 `claude/ten-hour-followthrough` (commit `16a67ef`, based on `899e96f7`) — see
 `docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/REPORT-BACK-TO-CODEX.md`
 for the full handoff. Headline findings: U15/U18 skating-movement content confirmed absent
@@ -67,6 +67,8 @@ isolated branch/worktree only, awaiting Codex/Thomas review.
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-07: Prepared owner-authorized experimental publication of all eight companion lessons, preserving version-2 reviewed payloads and regenerating catalog/feedback identities. Fourteen release/core tests and production build pass; approved mastery bank unchanged.
 
 - 2026-09-07: Completed eight staged companion lessons (48 questions, five types, 12.5% optional reflections), corrected independent-review findings, and added hash-bound coverage/review evidence and an actual-interface preview. Reversed Navy attack direction now informs zone context and board description; defaults remain compatible. Live bank and paused qualification stream unchanged.
 
