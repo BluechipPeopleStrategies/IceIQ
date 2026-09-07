@@ -1,6 +1,17 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Sixty repairs verified live (5c17736). Prepared an owner-requested five-hour Claude handoff: 60-question rendered audit, bounded curriculum proposals and isolated feedback workflow checks. Handoff is ready; Claude execution has not been launched here. Supabase and shared-3D redesign remain deferred/paused.
+**Last updated:** 2026-09-07 · Ten-hour Claude followthrough (gates A-F) completed on branch
+`claude/ten-hour-followthrough` (commit `16a67ef`, based on `899e96f7`) — see
+`docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/REPORT-BACK-TO-CODEX.md`
+for the full handoff. Headline findings: U15/U18 skating-movement content confirmed absent
+across every live catalog (not a mapping artifact); U11 cause-and-effect was undercounted by
+the prior naive measurement (53/400 vs 14/400 by an explicit rule); `src/data/povQuestions.json`
+(280 authored questions) confirmed dead/unreachable code, needs a product decision; one
+`.gitignore` gap fixed for the synthetic feedback inbox; one server-side double-submit race
+reproduced and left unfixed (low severity, out of this task's scope). Not pushed to `main` —
+isolated branch/worktree only, awaiting Codex/Thomas review.
+
+**Last updated (prior):** 2026-09-06 · Sixty repairs verified live (5c17736). Prepared an owner-requested five-hour Claude handoff: 60-question rendered audit, bounded curriculum proposals and isolated feedback workflow checks. Handoff is ready; Claude execution has not been launched here. Supabase and shared-3D redesign remain deferred/paused.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
