@@ -1,0 +1,40 @@
+{
+  "packetId": "visual-01",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5)",
+  "method": "Solved from packets/visual-01-manifest.json + packets/visual-01-blind.json only. Did not open visual-01-after-solve.json, output/visual-01/review.json, or output/visual-01/blind.json before writing this file. No screenshot/live render was inspected -- JSON scene data only.",
+  "answers": [
+    {
+      "questionId": "exp26-u9-003-q3",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Roster: YOU=home(-6,4); H2/Navy2=home(-1,4); H3/Navy3=home(3,-5); A1/Gold1=away(-3.5,4); A2/Gold2=away(6,2). Straight line YOU-to-Navy2 is y=4; Gold1's x=-3.5 sits between YOU's x=-6 and Navy2's x=-1 on that same y=4 line, so Gold1 literally occupies the direct passing lane (option a, true, though 'close to' understates 'occupies'). Line YOU-to-Navy3 (from (-6,4) to (3,-5)) is a diagonal (slope 1, y=-x-2); Gold2 at (6,2) is far off that line (predicted y at x=6 would be -8, actual is 2) -- consistent with the briefing's 'Gold2 is away from that illustrated line,' so option b (Navy3 offers a different angle) is true and relevant. Option c ('both teammates lie on the same passing line behind Gold 1') is false: Navy2's line is y=4 (horizontal) and Navy3's line is the diagonal through (3,-5) -- they are not the same line at all.",
+      "defectFound": false,
+      "note": "Minor wording softness only: option (a) says Gold1 is 'close to' the line when the briefing/geometry says Gold1 sits ON it. Not a factual contradiction, flagged for awareness only."
+    },
+    {
+      "questionId": "exp26-u9-007-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy attacks +x, so 'farther toward the attacking net' means larger x. YOU=(18,-10). Navy3/H3=(23,-9): x=23>18, farther toward net, and y=-9 is close to YOU's y=-10, consistent with 'along the board side.' Navy2/H2=(10,-5): x=10<18, i.e. behind YOU relative to the attacking net, so Navy2 cannot be the 'farther' option. Answer is Navy 3 (option a).",
+      "defectFound": false
+    },
+    {
+      "questionId": "exp26b-u9-003-q5",
+      "myAnswer": "a",
+      "reasoning": "This question correctly separates arrival from control (charter check #4). Puck=(22,-7). Distance YOU(20,-8)->puck = sqrt(2^2+1^2)=2.24; Gold1(18,-3)->puck = sqrt(4^2+4^2)=5.66; both are stated as 'arrives beside' hypotheticals in the prompt, not the current state (YOU is actually closest right now, matching the briefing). The prompt asks which observation would show YOU must now defend a carrier: merely 'closest to the puck' (option b) is proximity, not possession; only 'gets the puck under control' (option a) establishes an actual puck carrier to defend. This mirrors -- and correctly avoids -- the arrival/control conflation error documented in the historical calibration set (exp26-u11-012-q5).",
+      "defectFound": false
+    },
+    {
+      "questionId": "exp26b-u9-004-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy's own (defended) net is at the -x end (navy attacks +x). Distance-to-net ranks by x ascending: Navy2 x=10 (nearest), Gold1 x=13 (middle), YOU x=17 (farthest). So Navy2 is nearer Navy's net than Gold1, and YOU are farther from it than Gold1 -- exactly option (a). Option (b) reverses this and is false on the coordinates.",
+      "defectFound": "minor",
+      "note": "The briefing text says 'Navy2 is closer to the middle,' but by y-coordinate alone Gold1 (y=0) is exactly centered while Navy2 (y=1) is one unit off-center -- Gold1 is technically nearer true lateral middle than Navy2. This does not affect the graded answer (which is about distance to Navy's net along x, not lateral centering), but the briefing's 'closer to the middle' cue is imprecise/unverified against the y-values given. Flagging as a minor scene-description inconsistency, not a defect in the scored question."
+    },
+    {
+      "questionId": "exp26b-u9-005-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(8,0), facing=0 (explicit, i.e. facing +x). Gold1=(13,0): x=13>8, i.e. ahead of YOU along YOU's own explicit facing vector -- properly 'in front.' Navy2=(3,-5): x=3<8 (behind the facing vector) and y=-5 differs from YOU's y=0 (lateral offset, 'off to one side'). This matches option (a) and is grounded in an explicit facing value, not an unanchored camera-relative claim (satisfies charter check #7). Option (b) reverses the two teammates and is false.",
+      "defectFound": false
+    }
+  ],
+  "overall_note": "No hard geometric defect found in any of the 5 questions. Two soft/wording-level observations recorded (q3's 'close to' vs 'occupies', q5-004's 'closer to the middle' cue) that a repair pass could tighten but that do not by themselves invalidate the graded answers. Given my own calibration scorecard (4/8 known defects missed, recorded separately), these blind findings should be treated as provisional, not a clearance."
+}

@@ -1,0 +1,50 @@
+{
+  "packetId": "visual-06",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-06-manifest.json and packets/visual-06-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T02:45:00Z",
+  "questions": [
+    {
+      "questionId": "exp26-u13-014-q8",
+      "scenarioId": "exp26-u13-014",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(-9,0) is stated as between Gold1 and Navy's net, so the net sits at very negative x (consistent with the ~-26 pattern seen elsewhere) and 'farther from net' = higher x. C=(-1,-4), Gold1(A1,puck)=(-2,1), Gold2(A2)=(4,7). (a) C's x(-1) > Gold1's x(-2) -> C is farther from net, true. (b) C y=-4 and Gold2 y=7 are opposite-sign -> other side of the middle, true. (c) Gold2 x(4) > Gold1 x(-2) -> Gold2 is actually FARTHER from net, not nearer -- false.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u13-015-q5",
+      "scenarioId": "exp26-u13-015",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU=(-3,3), D1=(-14,0), Gold2(A2, hypothetical new carrier)=(-11,-3). Distance D1-to-Gold2 ~4.24; YOU-to-Gold2 ~10. D1 starts clearly closer.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u13-016-q5",
+      "scenarioId": "exp26-u13-016",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU=(-18,-5), Gold2(A2)=(-23,-3), Navy's own net/goalie=(-26,0). Distance YOU-to-net ~9.43; Gold2-to-net ~4.24. Gold2 is clearly closer to Navy's net than YOU are -- a real coverage gap worth flagging, matching (a).",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u13-017-q2",
+      "scenarioId": "exp26-u13-017",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(8,6), D1=(-10,4), Gold1(A1,puck)=(-3,8), Gold2(A2)=(-2,-1). Assuming Navy's net at very negative x (per D1 'already between Gold1 and the net' -- D1 x=-10 sits between Gold1 x=-3 and a net farther negative). (a) YOU x=8 is the highest (farthest from net) of all four skaters -- farther than both gold attackers, true. (b) distance D1-to-Gold1 ~8.06 vs YOU-to-Gold1 ~11.18 -- D1 closer, true. (c) directly contradicts (a) using the same coordinates and is false: YOU (x=8) is not between anyone and the net, YOU is the farthest back.",
+      "note": "No defect found. (a) and (c) are a deliberate contradiction pair resolved cleanly by the same coordinates."
+    },
+    {
+      "questionId": "exp26-u13-020-q2",
+      "scenarioId": "exp26-u13-020",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(-23,1), D1=(-23,-8), Gold1(A1,puck)=(-25,-9), Gold2(A2)=(-18,0). (a) distance D1-to-Gold1 ~2.24 vs YOU-to-Gold1 ~10.2 -- D1 much closer, true, matches 'D1 pressures Gold1 in the corner'. (b) distance YOU-to-Gold2 ~5.1 vs D1-to-Gold2 ~9.43 -- YOU closer, true, matches 'YOU protect the inside threat'. (c) 'Gold2 farther toward side boards than either defender' is false: |Gold2 y|=0 is smaller than both |YOU y|=1 and |D1 y|=8 -- Gold2 is actually more central, not more boards-side.",
+      "note": "No defect found."
+    }
+  ],
+  "grammarPass": "Read all five prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "All 5 scenes in this packet use D1/D2-style labels for NAVY's own teammate defensemen (home team), with opponents generically labeled A1/A2 (rendered as Gold N) -- consistent with the U13 convention established in visual-05, confirmed again via setup.actors.team for every scene here rather than assumed."
+}

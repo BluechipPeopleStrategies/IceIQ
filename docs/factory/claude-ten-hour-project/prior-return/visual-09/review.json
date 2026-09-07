@@ -1,0 +1,77 @@
+{
+  "packetId": "visual-09",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u15-009", "questionId": "exp26-u15-009-q5", "scenarioVersion": 3,
+      "contentHash": "074fa0246e5c141b5233666fcabd6ee55bd510a2d775be8763a2639a006d99ab", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "hypothetical possession + comparative geometry (defender exactly on the line)",
+      "blindAnswer": "b", "keyedAnswer": "b", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 sits directly on the line from YOU's shown position to the net; Gold1/Gold3 clearly off to the sides. Interactively tested live: selecting 'Gold 2' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-09/screenshots/v09_exp26-u15-009-q5_desktop-1365x900.png","sha256":"b1ca94182c9788a7fbe8e37c3c299ce457c82927169c07a642199fda6014794c"},
+        {"viewport":"390x844","screenshotPath":"output/visual-09/screenshots/v09_exp26-u15-009-q5_phone-390x844_scene.png","sha256":"7f6dfa6655c776662a31c21f9610c9b7f717fe70226d16c55e15f36ebda13f3e"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u15-015", "questionId": "exp26-u15-015-q7", "scenarioVersion": 3,
+      "contentHash": "0643497665b1fd15fae857ac2cbd98a88d4d34f5b507fd1c1afa0352674852c4", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry, both t-parameters checked valid",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold1 sits close to the YOU-to-F2 line, matching the briefing's own claim that Gold1 shades the slot route to F2. Interactively tested live: selecting the F2-nearer option returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-09/screenshots/v09_exp26-u15-015-q7_desktop-1365x900.png","sha256":"6612a2676830c9b2be41c66642a68ec3c51fa17151106e442c85c4ee116e9259"},
+        {"viewport":"390x844","screenshotPath":"output/visual-09/screenshots/v09_exp26-u15-015-q7_phone-390x844_scene.png","sha256":"5982e5e08c3bc9f5a2d0d751bb8b3f6d22372a9a319c1287e15b0e2859a86371"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 1 is nearer the line to F2 than the line to F1; compare the low outlet", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u15-002", "questionId": "exp26b-u15-002-q2", "scenarioVersion": 3,
+      "contentHash": "9817a116bd4fb36cb2073a8122a5c5fecf009fcac0189046b5e1d1d7dcb6519e", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 near F3, Gold1 on the F3 passing line, D1 far from F2. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim, correctly excluding (c) which reverses the D1-to-F2 vs Gold2-to-F2 comparison.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-002-q2_desktop-1365x900.png","sha256":"16f57cf8b62375af9d15919cedbffc82f60b7b491b68dfd231e2ed8c27eb1f40"},
+        {"viewport":"390x844","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-002-q2_phone-390x844_scene.png","sha256":"7ae6fdddff6e5e34e9890cf933302909bce4a7c76f85593cab6cf7ed6d53697e"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["Gold 2 is closer to F3 than to F2","Gold 1 is nearer the direct line to F3 than the line to F2"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u15-003", "questionId": "exp26b-u15-003-q2", "scenarioVersion": 3,
+      "contentHash": "4f98a233c22945161ed788a3912581f92e1f7d6ddc01f407afe0d71825f679cf", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "5-on-4 penalty-kill formation, comparative geometry across 5 opponents",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms YOU near Gold3 (closer than Gold5), D1 near Gold2, F2 and Gold2 on opposite sides of the middle. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-003-q2_desktop-1365x900.png","sha256":"e914599aec051f19911337284d55991b8dbc3f21bb64f15746da9443d0734718"},
+        {"viewport":"390x844","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-003-q2_phone-390x844_scene.png","sha256":"b2cd8ff067c3f82f45d32eb0d0e8d831983f3f2080bbc1c5bc89c60d6ace8b7a"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D1 is closer to Gold 2 than YOU are","YOU are closer to Gold 3 in the middle than to Gold 5 on the flank"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u15-005", "questionId": "exp26b-u15-005-q2", "scenarioVersion": 4,
+      "contentHash": "f53361499e3096271abc133b657f57998896fd55fec6284940f4ec2c24ca5552", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry with a genuinely thin margin on one option (1 unit)",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Flagged blind: option (a)'s margin (YOU x=20 vs F2 x=19) is only 1 unit, thinner than most comparisons in this bank. Interactively tested live anyway: selecting a+b returned 'Yep, you got it.' with explanation text that itself says 'YOU currently sit SLIGHTLY ahead of F2 in attacking depth' -- explicitly confirming the thin margin is real and intentional, not a coincidence or an error.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-005-q2_desktop-1365x900.png","sha256":"edb842a4981511df8d8bb898411541762c5413387f84bc40e93ec2bca495324a"},
+        {"viewport":"390x844","screenshotPath":"output/visual-09/screenshots/v09_exp26b-u15-005-q2_phone-390x844_scene.png","sha256":"4fa792ad33b4b00714839836aa2fffa241ee83336381c19f47b9e4094e976376"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["Gold D1 is farther toward the blue line than F2 is","YOU are farther toward Gold's goal line than F2 is"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-09-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "milestone": "49/60 targets complete. All-U15 packet. All 5 targets interactively tested live."
+}

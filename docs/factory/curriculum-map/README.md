@@ -1,6 +1,6 @@
 # Curriculum coverage map
 
-Generated 2026-09-06T18:02:49.683Z by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
+Generated 2026-09-07T06:48:03.413Z by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
 
 ## What this measures
 

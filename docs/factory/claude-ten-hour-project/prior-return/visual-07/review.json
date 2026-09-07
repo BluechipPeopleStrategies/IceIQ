@@ -1,0 +1,77 @@
+{
+  "packetId": "visual-07",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u13-023", "questionId": "exp26-u13-023-q5", "scenarioVersion": 3,
+      "contentHash": "d9cf82565efc0c1a62817099d0f94ce5878df92e6ede8f705ff9d8fc4d1b9418", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry requiring segment-bounded (not infinite-line) distance",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene shows Gold1 sitting almost directly adjacent to the loose puck, on the same general side as F2's direction and far from D1's direction -- confirms the segment-bounded distance read (D1 line clearly farther) rather than the misleading near-tie an infinite-line calculation alone would suggest. Interactively tested live: selecting 'the line toward D1' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-07/screenshots/v07_exp26-u13-023-q5_desktop-1365x900.png","sha256":"1b2bb4a4c205ba4ec7bd2b03455e14fa789cb6cfe7eb124e8145f14c4060f2b1"},
+        {"viewport":"390x844","screenshotPath":"output/visual-07/screenshots/v07_exp26-u13-023-q5_phone-390x844_scene.png","sha256":"e84232c7139489ade2463a58f16ad1f16a10aa79a983e1d155cf5307b05fe8b8"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "The line toward D1", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u13-007", "questionId": "exp26b-u13-007-q2", "scenarioVersion": 5,
+      "contentHash": "5ecb6831cc8841d51ab84ce833d3029afc5a65dcf43047dbb8cf117ededfcfa8", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms YOU close to net, W and D2 on opposite sides of the middle. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-007-q2_desktop-1365x900.png","sha256":"db6a3144ce24d8552faea0ccbd314255db00bb1dbded8563bfb1f65853485367"},
+        {"viewport":"390x844","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-007-q2_phone-390x844_scene.png","sha256":"a097de3764944dce38cee82e370fe2d2e7b95a90bb861f28823d38a0c700f3f4"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["YOU are nearer the net and nearer the middle than D2","W offers width on the opposite side of the middle from D2"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u13-012", "questionId": "exp26b-u13-012-q2", "scenarioVersion": 4,
+      "contentHash": "ec8a60ffe02f8d806a7053ed5de0652e0a9074219b9aca69f93e4037b8ecce65", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms YOU is the farthest-back skater (closest to own net), D1 tight on Gold1. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-012-q2_desktop-1365x900.png","sha256":"11df20cd26867894ea670b72673f8f391090bee5b4c00e47f298b77051d298de"},
+        {"viewport":"390x844","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-012-q2_phone-390x844_scene.png","sha256":"93d18f0e7525e4fac23a32c30cd2ab17f96745b822a98d75fa6076ae24c035f6"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D1 is closer to Gold 1 than YOU are","YOU are already closer to Navy's net than both gold attackers"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u13-014", "questionId": "exp26b-u13-014-q2", "scenarioVersion": 5,
+      "contentHash": "76d58e08eb2255caabccd5e462bd33a0efb7b0943e0d7ffbc0ef24fea198dcde", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry, three-way proximity comparison",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms goalie and D1 clustered right at the crease with the goalie marginally closest, YOU also net-side and Gold2 far off. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-014-q2_desktop-1365x900.png","sha256":"adacf76952b5380ef86e210a227eb894febf1c2ff8769d9985a919c2a876983f"},
+        {"viewport":"390x844","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-014-q2_phone-390x844_scene.png","sha256":"b6f5f6642ca23e021b8a807fdec2e43867c4c2746beb647280a4be8cd53e4f8f"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["YOU are nearer Navy's net than Gold 2 is","The goalie is closer to the loose puck than D1 is"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u13-019", "questionId": "exp26b-u13-019-q2", "scenarioVersion": 5,
+      "contentHash": "67683fd76f51bf423270988f54fd1cbf76055df6173a6097001f1317339cabf3", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 (puck) and D2 clustered near one corner, opposite YOU's side; Gold1 also near the puck. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-019-q2_desktop-1365x900.png","sha256":"a14deaf3a90f9bb42f81c0ae7be2e3e5d7cbbeb24a0106ba9889e2af2997c556"},
+        {"viewport":"390x844","screenshotPath":"output/visual-07/screenshots/v07_exp26b-u13-019-q2_phone-390x844_scene.png","sha256":"a504d8805586ac2799c6ab6246c9834b7a21c6bf835b78fbea3cf1a8fc9740af"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D2 is closer to D1's puck than YOU are","D1 has the puck across the middle from YOU"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-07-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "note": "exp26-u13-023-q5 required a segment-bounded distance check (not just infinite-line perpendicular distance) to reach a confident verdict -- raw infinite-line distances looked deceptively close (0.85 vs 0.71); once bounded to the actual passing segments the true margin was much larger (3.6 vs 0.71). All 5 targets interactively tested live."
+}

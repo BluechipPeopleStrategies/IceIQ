@@ -1,0 +1,58 @@
+{
+  "packetId": "visual-05",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-05-manifest.json and packets/visual-05-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T02:25:00Z",
+  "questions": [
+    {
+      "questionId": "exp26b-u11-019-q5",
+      "scenarioId": "exp26b-u11-019",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Navy's attacking end is fixed at +x (the right net) for the whole scene, per the briefing. Possession changing hands (gold currently has it, so gold attacks -x) does not flip NAVY's own fixed attacking direction. If F1 (navy) regains the puck, Navy still attacks the right net (+x) -- (a). Option (b) conflates 'the direction the puck was just heading' with the team's permanent attacking assignment.",
+      "note": "No defect found. This is a legitimate conceptual check (attacking direction is a fixed team assignment, not something that flips with each possession change), correctly designed."
+    },
+    {
+      "questionId": "exp26b-u11-021-q5",
+      "scenarioId": "exp26b-u11-021",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(12,5), F2=(16,-5), D1=(18,2), net=(26,0). Perpendicular distance from D1 to the YOU-F2 line ~4.46; to the YOU-net line ~0.81. F2 line is clearly farther from D1. Matches briefing: D1 is 'farther toward the right goal line than both navy skaters, with a lateral position between your lanes' (D1 y=2 sits between YOU y=5 and F2 y=-5, and D1 x=18 exceeds both YOU x=12 and F2 x=16).",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u13-009-q2",
+      "scenarioId": "exp26-u13-009",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(5,0), F1(puck)=(18,9), Gold1(away-skater-1)=(21,7), Gold2(away-skater-2)=(22,-3), D1=(4,-5, home/navy -- a TEAMMATE defenseman here, not an opponent, per setup.actors.team). (a) YOU x=5 < F1 x=18 -> behind F1 toward navy's own end, true. (b) Gold1 is ~3.6 units from F1 and has lower |y| (7 vs 9) -> closer to F1 and nearer the middle, true. (c) D1 x=4 is far LESS than F1 x=18, so D1 is NOT farther toward the attacking net than F1 -- false, a good distractor since D1 is navy's own defenseman sitting back, not an attacker pushing forward.",
+      "note": "No defect found. Roster check mattered here: D1 is home/navy in this scene (a teammate defenseman), not an opponent -- confirmed via setup.actors before scoring option (c)."
+    },
+    {
+      "questionId": "exp26-u13-011-q8",
+      "scenarioId": "exp26-u13-011",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU(puck)=(12,0), D2(home/navy teammate)=(13,-8), F1(home/navy)=(23,6), A1/Gold=(18,0). (a) YOU carrying the puck elsewhere changes the shooter's position directly -- true. (b) D2 receiving a pass moves puck control (and thus the shot-origin position) to D2's different location -- true. (c) 'D2 moves while YOU keep the puck at its current spot' explicitly states the puck stays with YOU at the SAME spot, so the position Navy could shoot from is unchanged by D2 merely moving -- false, correctly tests whether a player moving is conflated with the puck-holder's position changing.",
+      "note": "No defect found. D2 confirmed as home/navy (teammate), not an opponent."
+    },
+    {
+      "questionId": "exp26-u13-013-q2",
+      "scenarioId": "exp26-u13-013",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU(puck)=(5,-9), F2(home/navy)=(9,-3), Gold1(A1)=(6,-5), Gold2(A2)=(14,1). (a) distance puck-to-Gold1 ~4.12 vs puck-to-Gold2 ~13.45 -- Gold1 clearly closer, true. (b) F2 x=9>YOU x=5 (farther up ice) and |F2 y|=3<|YOU y|=9 (nearer middle) -- both true. (c) 'Gold2 closer to YOU than F2' is false: distance YOU-to-Gold2 ~13.45 vs YOU-to-F2 ~7.2 -- Gold2 is actually farther, not closer.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u13-013-q5",
+      "scenarioId": "exp26-u13-013",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(5,-9), F2=(9,-3). Perpendicular distance from Gold1(6,-5) to the YOU-F2 line ~1.39; from Gold2(14,1) ~1.94. Gold1 is nearer, matching the briefing's framing of Gold1 as the approaching pressure defender.",
+      "note": "No defect found, though the two distances (~1.39 vs ~1.94) are closer together than in most other packets' comparisons -- worth a careful visual confirmation rather than treating this as an obviously wide gap."
+    }
+  ],
+  "grammarPass": "Read all six prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "exp26-u13-009 and exp26-u13-011 both use 'D1'/'D2' labels for NAVY's own teammate defensemen (not opponents), while opponents are generically labeled A1/A2 (rendered as Gold N on screen). This differs from earlier U9/U11 packets where D1 was usually the away/opponent defender. Checked setup.actors.team explicitly for every D-labeled actor in this packet rather than assuming the D1=opponent pattern from prior packets."
+}

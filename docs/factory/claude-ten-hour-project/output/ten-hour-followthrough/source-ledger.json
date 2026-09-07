@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-07T06:53:52.189Z",
+  "status": "draft-not-reviewed",
+  "verificationMethodGeneral": "Every URL below was fetched directly via curl with a browser User-Agent string (the WebFetch tool itself receives an HTTP 403 from hockeycanada.ca, consistent with the repo's existing note that this host needs a browser UA -- see docs/one-on-one and prior memory on this exact issue). Each page's full extracted text was read before any claim was cited from it -- no citation below is copied from memory or from the prior return's own list without independent re-verification this session.",
+  "sourcesConsideredButExcluded": [
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/associations/game-play-rules",
+      "reason": "Originally cited by curriculum-gap-plan.json as hc-u9-half-ice-rules for the U9 receiving-in-motion gap. Fetched and read in full; contains only game-format, bench-rotation and ice-time-policy content, with zero mentions of passing or receiving. Excluded as a mismatched citation; replaced with hc-u9-skills below, which is directly on point."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-15/coaches/skills",
+      "reason": "Returned a live 404 (\"The information you are looking for has moved or is no longer available\") when fetched directly -- not used as a citation for this reason alone. Confirms the U15/U18 skills-page URL pattern used for U9/U11 does not exist for these older bands; U18 sourcing instead relies on hc-skating-pathway's explicit \"Refine (U18 and beyond)\" stage language."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-18/coaches/skills",
+      "reason": "Same 404 as the U15 skills page above."
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "hc-skating-pathway",
+      "publisher": "Hockey Canada",
+      "title": "Skating Skill Development | The Skating Pathway",
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+      "accessDate": "2026-09-07",
+      "section": "\"Continue to build the Skating Foundation\" and \"Eight specialized skating skills\"",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent; the WebFetch tool itself receives a 403 from hockeycanada.ca) and read the full extracted page text before citing.",
+      "exactQuote": "Introduce: Players are introduced to basic skating skills (Timbits U7, U9). Develop: Players add and develop skills to further improve skating (U11, U13, U15). Refine: Players have a variety of skating skills they should continue to refine (U18 and beyond). ... Eight specialized skating skills: Agility and balance, Edge control and coordination, Forward skating, Backward skating, Turning, Crossovers, Transition, Quick Feet. ... Tactical play can then be incorporated, such as gap control, angling, reading and reacting.",
+      "honestLimitation": null,
+      "usedByDraftIds": [
+        "draft26-u15-skate-001-q1",
+        "draft26-u18-skate-002-q1"
+      ]
+    },
+    {
+      "sourceId": "hc-u9-skills",
+      "publisher": "Hockey Canada",
+      "title": "Under-9 Coaches Skills + Drills (skill progression list)",
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/coaches/skills",
+      "accessDate": "2026-09-07",
+      "section": "\"Turning and Crossovers\" and \"Moving Passing and Receiving\" skill lists",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent) and read the full extracted page text before citing.",
+      "exactQuote": "Turning and Crossovers: Glide turns / Tight turns, C-cuts, Crossovers - forward & backward, Pivots - bwd to fwd & fwd to bwd, Pivots - open & reverse. ... Moving Passing and Receiving: Moving forehand pass, Moving backhand pass, Pass and Follow.",
+      "honestLimitation": null,
+      "usedByDraftIds": [
+        "draft26-u18-skate-002-q1",
+        "draft26-u9-receive-001-q1",
+        "draft26-u9-receive-002-q1"
+      ]
+    },
+    {
+      "sourceId": "hc-u11-skills",
+      "publisher": "Hockey Canada",
+      "title": "Under-11 Coaches Skills + Drills (skill progression list)",
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-11/coaches/skills",
+      "accessDate": "2026-09-07",
+      "section": "\"Turning & Crossovers\" and \"Forward Skating & Striding\" skill lists",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent) and read the full extracted page text before citing.",
+      "exactQuote": "Forward Skating & Striding: Linear crossovers, Evasive skating. ... Turning & Crossovers: Glide turns / Tight turns, C-cuts, Crossovers - forward & backward, Pivots - backward to forward & forward to backward, Pivots - open & reverse.",
+      "honestLimitation": null,
+      "usedByDraftIds": [
+        "draft26-u15-skate-001-q1",
+        "draft26-u18-skate-002-q1"
+      ]
+    },
+    {
+      "sourceId": "hc-vision-scanning-2024",
+      "publisher": "Hockey Canada",
+      "title": "7 Principles for Coaches: Vision & Scanning",
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "accessDate": "2026-09-07",
+      "section": "\"Key Information to Identify\"",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent) and read the full extracted page text before citing.",
+      "exactQuote": "When scanning or looking around on the ice, players should focus on two main sources of information: where their teammates are and where the opposition's pressure is coming from. Being able to quickly identify these factors will assist in making better decisions with the puck under pressure.",
+      "honestLimitation": "This source supports 'identify teammate position + opposition pressure to inform the decision' as a real, named coaching principle. It does NOT itself use hypothetical/'Suppose the defender moves' framing -- the cause-and-effect family's specific instructional device (state one explicit hypothetical change, ask the learner to update their read) is this project's own original design layered on top of the source's general scanning principle, not something quoted or implied verbatim by Hockey Canada. Flagging this distinction rather than overclaiming direct textual support.",
+      "usedByDraftIds": [
+        "draft26-u9-receive-001-q1",
+        "draft26-u9-receive-002-q1",
+        "draft26-u11-cause-001-q1",
+        "draft26-u11-cause-001-q2",
+        "draft26-u11-cause-002-q1",
+        "draft26-u11-cause-002-q2"
+      ]
+    },
+    {
+      "sourceId": "hc-u7-faq",
+      "publisher": "Hockey Canada",
+      "title": "Timbits U7 Hockey: Frequently Asked Questions",
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+      "accessDate": "2026-09-07",
+      "section": "Cross-ice dimensions Q&A; crease/face-off-circle placement Q&A; program-priority framing paragraph",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent) and read the full extracted page text before citing.",
+      "exactQuote": "The average dimensions of a regular ice surface in Canada are 200 feet by 85 feet... The cross-ice surface can be a maximum of 100 feet by 60 feet if the dividers are placed at the blue-line. ... Each net should be placed just inside the face-off circle, which will provide a small marking to aid the goaltender in positioning themselves.",
+      "honestLimitation": "The same FAQ also states: \"the primary focus on age-appropriate training and programming needs to be on skill development in skating, puck control, passing, receiving and shooting. Concepts like offside, icing, positional play and face-offs can be introduced at a later age.\" This is a real tension worth surfacing, not resolving unilaterally: the source confirms the blue line and face-off circle are real, physically present U7 landmarks (supporting pure landmark-naming), but also explicitly deprioritizes teaching 'positional play' and 'face-off' CONCEPTS (i.e., the rules/procedures) at this age in favour of raw skill reps. This draft pair is scoped to bare landmark identification only (naming a line/circle), not face-off procedure or positional-play tactics, which is a narrower claim than what the caution addresses -- but a qualified reviewer should confirm that distinction holds before real authoring, since it is this session's own reading, not something the source states explicitly.",
+      "usedByDraftIds": [
+        "draft26-u7-vocab-001-q1",
+        "draft26-u7-vocab-002-q1"
+      ]
+    },
+    {
+      "sourceId": "hc-u7-cross-ice-rules",
+      "publisher": "Hockey Canada",
+      "title": "Timbits Under-7 Hockey: Cross-Ice Set-Up, Game Play Guidelines & Rules",
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/associations/game-play-rules",
+      "accessDate": "2026-09-07",
+      "section": "\"Playing Surface - Cross-ice\" and \"Cross-ice Game Play Rules\"",
+      "verificationMethod": "Fetched directly (curl, browser User-Agent) and read the full extracted page text before citing.",
+      "exactQuote": "Timbits U7 games will be played cross-ice for the entire season. ... It is recommended that in each half, the centre-ice spot should be marked to indicate where the face-off will take place.",
+      "honestLimitation": null,
+      "usedByDraftIds": [
+        "draft26-u7-vocab-001-q1"
+      ]
+    }
+  ]
+}

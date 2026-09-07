@@ -1,0 +1,91 @@
+{
+  "packetId": "visual-08",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26b-u13-020", "questionId": "exp26b-u13-020-q5", "scenarioVersion": 4,
+      "contentHash": "ddcbfa40bdd0778cdf6ff1331bf62e77f703b04e27e93d91b837f5189bc4c225", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": "b", "keyedAnswer": "b", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 immediately adjacent to YOU, Gold1 far across the zone. Interactively tested live: selecting 'Gold 2' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26b-u13-020-q5_desktop-1365x900.png","sha256":"30218c49c5a64fd341eaf7f1b1ea161f9a8608ab84796f1fe3ec78780347a3fc"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26b-u13-020-q5_phone-390x844_scene.png","sha256":"dddf196bebf6ea5057e1520fcb71dfddc39f94ee3cf49838a2315652f6e2fc43"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u15-001", "questionId": "exp26-u15-001-q2", "scenarioVersion": 2,
+      "contentHash": "659ff70efa06364d789866e0ddb63016875f12bd689519c7ddca981dae8880b9", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "procedural/checklist question (not pure geometry) -- flagged as higher interpretive uncertainty blind, confirmed correct after live test",
+      "blindAnswer": ["a","b","c"], "keyedAnswer": ["a","b","c"], "blindMatchesKey": true,
+      "sceneEvidence": "First U15 target and first 4-option/pick-3 question in the assignment. Rendered scene confirms F3's position is closer to the net than to the puck (matching the briefing's own claim that the named cover is not established). Interactively tested live: selecting a+b+c returned 'Yep, that matches the suggested approach.' matching the key verbatim, correctly excluding (d) which conflates F2 filling F3's specifically-named job.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-001-q2_desktop-1365x900.png","sha256":"06379ddd6facbdd2c6d996ba9216a5f1b65737b61bc634b18bed8a1d0884ac64"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-001-q2_phone-390x844_scene.png","sha256":"c223286030a7dde6b9c45bdc91349d660f69e67d4365773c143ad4957f8fd8d5"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D2's position allows the defenders to coordinate recovery","F3 has taken the agreed high-cover responsibility","The current wall contest leaves a puck route YOU can reach"], "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": [],
+      "note": "This question type (procedural checklist, 4 options / pick 3) is a genuine departure from the geometry-comparison pattern seen in every other question so far. Flagging for the second reviewer to weigh independently rather than defer to this session's reasoning, since the correct-vs-incorrect distinction here is conceptual (does the named checklist item logically belong) rather than purely computable from coordinates."
+    },
+    {
+      "scenarioId": "exp26-u15-002", "questionId": "exp26-u15-002-q5", "scenarioVersion": 3,
+      "contentHash": "ccdf49cfe3c391bad183074d024729b4e6384540932fce8cb86dff0c902a15aa", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry, 5-on-4 formation with 4 gold skaters to disambiguate",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 sits immediately next to F3's slot position; Gold3/Gold4 are clearly farther. Interactively tested live: selecting 'Gold 2' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-002-q5_desktop-1365x900.png","sha256":"85978caff4de5af70c284a3cb405efabc657ba8adafe776cea82148f4fe416aa"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-002-q5_phone-390x844_scene.png","sha256":"e7d4b4718b109a5fef9fe07c9c3445544a2bf27baadb6c184920d2c7d12cddc7"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u15-002", "questionId": "exp26-u15-002-q7", "scenarioVersion": 3,
+      "contentHash": "7a01e77557a079ab3462b9455d92a31cbdbcac79ec68b9c9c18899857297a509", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (two passing lines, both t-parameters checked valid)",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold1 sits directly between YOU and F3, close to that line, with more separation from the line to F2. Interactively tested live: selecting the F3-nearer option returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-002-q7_desktop-1365x900.png","sha256":"548ad7f536ea2088107aaf024c01a943f7781cc5bf7f1d436721d2806be224d8"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-002-q7_phone-390x844_scene.png","sha256":"f4fd4295b3fcd6d843f53920f807a7f832c1134ab66feff776e15355aae530f7"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 1 is nearer the line to F3 than the line to F2; check both options", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u15-005", "questionId": "exp26-u15-005-q5", "scenarioVersion": 3,
+      "contentHash": "b0db6fea6dbd35a485c46cefa12fef8f24575fd180fdea755d790c7c051e0e02", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (distance to own net)",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 well back (near the blue line, neutral zone side) while F3 is deep in the attacking end. Interactively tested live: selecting 'D1' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-005-q5_desktop-1365x900.png","sha256":"efeedc1e1ac00efb362ec523283fd137de13379b13219dafbcb7c8905dfd5ac3"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-005-q5_phone-390x844_scene.png","sha256":"d853f9fccc6420632bd26de6372a81da5faa3406aa875c95a0fb6f124d76a3d2"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "D1", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u15-007", "questionId": "exp26-u15-007-q5", "scenarioVersion": 3,
+      "contentHash": "09838397cb41e809e806245b5aaabe7fcf16759581c68cc1ebeeaa7880088c3b", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "hypothetical (defender removed) comparative geometry, coincidental-overlap case",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold1 sits close to YOU/F1's shared line even though the briefing names Gold2 (not Gold1) as the deliberate screener -- verified Gold2's distance independently to confirm this is a real, not fabricated, coincidental overlap. Interactively tested live: selecting 'Gold 1' returned 'Yep, that matches the suggested approach.' with explanation explicitly confirming Gold1 remains near the line after Gold2 hypothetically leaves, matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-007-q5_desktop-1365x900.png","sha256":"4f95f1b2a97b960e616176f10b82c968262539efeb0ca4dc3c0aa2c67c862a94"},
+        {"viewport":"390x844","screenshotPath":"output/visual-08/screenshots/v08_exp26-u15-007-q5_phone-390x844_scene.png","sha256":"2913613a7cf27ada1005cf3d5f771ddbeac70c0b89a8a109214dea56db7b9ca2"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 1", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 6 blind answers matched packets/visual-08-after-solve.json exactly (6/6), including option-letter mapping.",
+  "hashVerification": "All 6 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 6.",
+  "milestone": "44/60 targets complete. First U15 targets in this assignment (5 of 6 in this packet). All 6 targets interactively tested live."
+}

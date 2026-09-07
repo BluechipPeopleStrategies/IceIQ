@@ -1,0 +1,28 @@
+{
+  "packetId": "visual-05",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5) -- same model family as the lead reviewer, not cross-model independence.",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 known calibration defects missed). All findings below are provisional second-opinion evidence, not a trusted clearance.",
+    "toolLimitation": "No live browser/Playwright access this pass. Answers derived solely from packets/visual-05-manifest.json and packets/visual-05-blind.json. Cannot independently confirm the lead's screenshots or interaction-test transcripts."
+  },
+  "questions": [
+    {"questionId":"exp26b-u11-019-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Navy's attacking direction is a fixed team assignment independent of momentary possession."},
+    {"questionId":"exp26b-u11-021-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. D1 perpendicular distance to shot line 0.81 (valid, t=0.448) vs to F2 line 4.46 (valid, t=0.466); matches the lead's figures."},
+    {"questionId":"exp26-u13-009-q2","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Independently confirmed the flagged roster claim directly against setup.actors: home-skater-3, label='D1', team='home' -- D1 is Navy's own teammate defenseman in this scene, not the opponent (opponents are away-skater-1/2, rendered 'Gold 1'/'Gold 2'). This falsifies option (c) since D1(x=4) is nowhere near the attacking net compared to F1(x=18)."},
+    {"questionId":"exp26-u13-011-q8","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Independently confirmed the flagged roster claim directly against setup.actors: home-skater-2, label='D2', team='home' -- D2 is Navy's own teammate defenseman, not the opponent (A1/'Gold 1' is the opponent, confirmed exactly on the YOU-to-net line at y=0, x=18 in [12,26]). Both (a) and (b) describe real puck-location changes; (c) does not, since the puck stays with YOU."},
+    {"questionId":"exp26-u13-013-q2","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold1-to-puck=4.12 vs Gold2-to-puck=13.45 (a, true); F2 farther up ice and nearer middle than YOU (b, true); Gold2-to-YOU=13.45 is actually farther than F2-to-YOU=7.21, falsifying (c)."},
+    {"questionId":"exp26-u13-013-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect, with one added rigor check beyond the lead's write-up: I additionally verified the t-parameter (position along the segment) for each perpendicular-distance calc, not just the raw distance. Gold1's projection (t=0.538) falls validly inside the YOU-F2 segment, so its perpendicular distance (1.387) is a fair 'nearness to the lane' measure. Gold2's projection (t=1.846) falls OUTSIDE the segment (past F2), so its raw perpendicular-distance figure (1.94) actually understates how far Gold2 is from the real, finite passing lane -- the true nearest-point distance (to endpoint F2) is 6.40. This doesn't change the answer (Gold1 is still nearer either way) but it means the margin is more decisive than the lead's noted '~1.39 vs ~1.94, a closer margin than most' framing suggests; the naive infinite-line distances happen to understate the gap for Gold2 specifically."}
+  ],
+  "overallDisagreements": "None on any final answer. All 6 blind answers match the authored after-solve key and the lead reviewer's blind/after-key findings. Per the coordinator's request, both flagged roster claims (D1=home in u13-009, D2=home in u13-011) were verified directly against setup.actors.team rather than trusted from the lead's write-up or the D1/D2-label pattern used in most U9/U11 packets -- both confirmed exactly as stated. One added observation (not a disagreement): for u13-013-q5, Gold2's projection onto the infinite YOU-F2 line falls outside the actual pass segment, so its true distance from the real lane is larger than the naive perpendicular-distance number suggests -- worth flagging for anyone doing segment-vs-line geometry checks on this bank going forward.",
+  "limitsOnThisAgreement": [
+    "Same-model convergence (both reviewers are Claude Sonnet 5) is weaker independence than cross-model or human agreement.",
+    "No screenshot/live-app inspection this pass; cannot confirm the lead's interaction-test transcripts, only the underlying coordinate math and roster fields.",
+    "Neither reviewer is currently qualified to issue a trusted clearance; this packet's 'no defect found' is two unqualified, provisional passes that agree, not sign-off."
+  ]
+}

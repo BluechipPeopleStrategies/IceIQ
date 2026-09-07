@@ -1,0 +1,33 @@
+{
+  "packetId": "visual-07",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-07-manifest.json + packets/visual-07-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26-u13-023-q5",
+      "myAnswer": "a",
+      "reasoning": "Independently re-derived per coordinator's flag, not trusting the lead's t-parameter claim. puck=(3,-3), D1=(-8,-7), F2=(11,5), Gold1=(6,-1). Line puck->D1: d1=(-11,-4), |d1|=11.705; vec1=Gold1-puck=(3,2); cross1=(-11)(2)-(-4)(3)=-10; raw perp distance=10/11.705=0.854. t1=(vec1.d1)/|d1|^2=(3*-11+2*-4)/137=-41/137=-0.299 -- NEGATIVE, confirming Gold1's projection falls outside the puck-D1 segment (behind the puck's own end). The real segment-bounded distance is then the distance to the nearest actual endpoint (the puck itself, t=0): sqrt(3^2+2^2)=sqrt(13)=3.606 -- matching the lead's claimed ~3.6 exactly. Line puck->F2: d2=(8,8), |d2|=11.314; vec2=(3,2) (same); cross2=8*2-8*3=-8; perp distance=8/11.314=0.707; t2=(3*8+2*8)/128=40/128=0.3125 -- VALID, inside [0,1], so 0.707 is the real, meaningful distance for this line. Segment-bounded comparison: D1-line=3.606 vs F2-line=0.707 -- D1's line is unambiguously (~5x) farther from Gold1, not the deceptively-close 0.854-vs-0.707 the naive infinite-line math would suggest. Answer: (a) the line toward D1."
+    },
+    {
+      "questionId": "exp26b-u13-007-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "D2(puck)=(15,8), W=(23,-7): opposite-sign y -> W on opposite side of middle from D2, true (a). YOU=(22,0): x=22>D2.x=15 (nearer net) and |y|=0<|D2.y|=8 (nearer middle), true (b). Gold1=(21,3): |y|=3<|D2.y|=8 -- Gold1 is actually NEARER the middle than D2, not farther; (c) false, reversed."
+    },
+    {
+      "questionId": "exp26b-u13-012-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "YOU=(8,9), Gold1=(20,5,puck), Gold2=(17,0). Navy's own net at very negative x. YOU.x=8 < both Gold1.x=20 and Gold2.x=17 -> YOU closer to Navy's net than both, true (a). D1(14,2) to Gold1 = sqrt(6^2+3^2)=6.71; YOU to Gold1 = sqrt(12^2+4^2)=12.65 -- D1 much closer, true (b). (c) 'Gold2 farther toward boards than Gold1': |Gold2.y|=0 < |Gold1.y|=5 -- Gold2 is actually nearer the middle, not farther toward the boards; false, reversed."
+    },
+    {
+      "questionId": "exp26b-u13-014-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Goalie=(-26,0) to puck(-26,0.6)=0.6; D1(-26,-1) to puck=1.6 -- goalie closer, true (a). YOU(-24,2) to net(-26,0)=sqrt(2^2+2^2)=2.83; Gold2(-22,-5) to net=sqrt(4^2+5^2)=6.40 -- YOU nearer net, true (b). (c) 'Gold2 closer to loose puck than YOU': Gold2-to-puck=sqrt(4^2+5.6^2)=6.88 vs YOU-to-puck=sqrt(2^2+1.4^2)=2.44 -- YOU are actually much closer; (c) false, reversed."
+    },
+    {
+      "questionId": "exp26b-u13-019-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "D1/puck y~-6 to -7 (negative), YOU y=6 (positive) -- opposite sides, 'across the middle' true (a). D2(-19,2) to puck(-25.16,-6.12) = sqrt(6.16^2+8.12^2)=10.19; YOU(-20,6) to puck = sqrt(5.16^2+12.12^2)=13.17 -- D2 closer, true (b). (c) 'Gold1 farther from puck than YOU': Gold1(-23,-2) to puck = sqrt(2.16^2+4.12^2)=4.65, far LESS than YOU's 13.17 -- Gold1 (the forechecker) is actually much closer, not farther; (c) false, reversed."
+    }
+  ],
+  "grammarCheck": "Read all 5 prompts aloud for YOU-subject verb agreement (should YOU use, YOU choose, YOU include) -- no violations found."
+}

@@ -1,0 +1,1096 @@
+{
+  "packetId": "visual-07",
+  "scenes": [
+    {
+      "id": "exp26-u13-023",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Settle a difficult pass before choosing",
+      "family": "receiving-control",
+      "topic": "receiving control",
+      "objective": "Notice when control needs to be established before the next action.",
+      "briefing": "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 5,
+            "facing": -2.356194490192345
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": -7,
+            "facing": 0.348771003583907
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -1,
+            "facing": -2.5535900500422257
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": 3,
+          "y": -3
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+        "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it."
+      ],
+      "tags": [
+        "receiving-control"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-023-q1",
+          "type": "choice",
+          "prompt": "Have YOU established possession in this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 already controls the pass"
+            },
+            {
+              "id": "b",
+              "text": "No, the pass is still loose"
+            },
+            {
+              "id": "c",
+              "text": "Yes, the puck is secured on the stick"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-023-q2",
+          "type": "multi",
+          "prompt": "Which two cues affect the next action?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The quality of the arriving pass"
+            },
+            {
+              "id": "b",
+              "text": "A rule that every pass must be one-touched"
+            },
+            {
+              "id": "c",
+              "text": "How soon Gold 1 can pressure it"
+            }
+          ],
+          "answer": [
+            "a",
+            "c"
+          ],
+          "explanation": "Control and pressure determine what is practical; one-touch passing is not always available.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-023-q3",
+          "type": "sequence",
+          "prompt": "Arrange one response to a difficult neutral-zone pass.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Read the bounce and approaching pressure"
+            },
+            {
+              "id": "b",
+              "text": "Establish control if there is time"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the forward option"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Emergency touches may be needed under tighter pressure; this sequence assumes time to settle."
+        },
+        {
+          "id": "exp26-u13-023-q4",
+          "type": "position",
+          "prompt": "Move YOU to an example position for collecting the unsettled puck.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 3,
+            "y": -4
+          },
+          "basis": "coaching",
+          "explanation": "The position moves toward the puck without pretending it is already controlled. Stick reach and bounce remain unmodelled."
+        },
+        {
+          "id": "exp26-u13-023-q5",
+          "type": "choice",
+          "prompt": "When comparing a next touch from the puck’s current position, which teammate line stays farther from Gold 1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line toward D1"
+            },
+            {
+              "id": "b",
+              "text": "The line toward F2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "The line back toward D1 stays farther from Gold 1 than the forward line to F2. That gives YOU another option to assess while reading the difficult puck. Whether to settle or redirect it depends on the bounce, pressure and readiness; this line comparison does not prove either touch is available.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-023-q6",
+          "type": "explain",
+          "prompt": "If Gold 1 could already reach the puck, how might your response change?",
+          "basis": "coaching",
+          "explanation": "There may be less time to settle it. Compare a controlled touch, protection or an available outlet using the actual pressure and puck path."
+        },
+        {
+          "type": "choice",
+          "prompt": "What should YOU call while F2’s lane is available but the puck is unsettled?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Not settled; give me a short option"
+            },
+            {
+              "id": "b",
+              "text": "One-touch now no matter the pressure"
+            },
+            {
+              "id": "c",
+              "text": "F2 cannot be used"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Communicate that the puck is unsettled and ask for support. Whether to settle, protect or redirect still depends on pressure.",
+          "id": "exp26-u13-023-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two cues affect the next touch?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2’s higher position"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1’s approach"
+            },
+            {
+              "id": "c",
+              "text": "The pass being difficult no longer matters"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "F2’s lane and Gold 1’s pressure shape whether to settle, protect or move it; a difficult reception remains relevant.",
+          "id": "exp26-u13-023-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU closer to the unsettled puck to compare a collecting angle.",
+          "basis": "coaching",
+          "explanation": "The example is nearer the puck. Gold 1 is also approaching, so check time and reach before treating the puck as controlled.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 2,
+            "y": -4
+          },
+          "id": "exp26-u13-023-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "What would you need to see before recommending a one-touch pass?",
+          "basis": "coaching",
+          "explanation": "Check the arriving puck’s speed and path, F2’s readiness and the passing lane. A one-touch redirects the arriving puck without first settling it; if that touch is not practical, compare other available actions.",
+          "id": "exp26-u13-023-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u13-007",
+      "version": 5,
+      "ageBand": "U13",
+      "title": "Move the puck around the blocked point lane",
+      "family": "point-lane-adjustment",
+      "topic": "point attack",
+      "objective": "Recognize a blocker and create a different lane before selecting a shot or pass",
+      "briefing": "Navy attacks the right net. D2 has the puck in a wide position near the blue line. Gold 1 is near the direct shooting line. YOU are nearer the net and middle, with W in a separate wide lane. No stick reach or shot outcome is established.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 22,
+            "y": 0,
+            "facing": 3
+          },
+          {
+            "id": "n2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": 8,
+            "facing": 2.8
+          },
+          {
+            "id": "n3",
+            "label": "W",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": -7,
+            "facing": 2.7
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 3,
+            "facing": 2.8
+          },
+          {
+            "id": "ga",
+            "label": "Gold goalie",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": 13.823285954222207,
+          "y": 7.675432511687844
+        }
+      },
+      "focusActorId": "n1",
+      "cues": [
+        "D2 has the puck in a wide position near the blue line.",
+        "Gold 1 is near the direct shooting line.",
+        "YOU are nearer the net and middle, with W in a separate wide lane."
+      ],
+      "tags": [
+        "point-lane-adjustment",
+        "point attack"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF pages 12–18, breakouts, regroups and shooting",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which Gold skater is nearest D2’s direct shooting line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "W behind the net"
+            },
+            {
+              "id": "c",
+              "text": "The centre red line"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 1 is near the direct shooting line. Check reach and movement before treating it as closed.",
+          "id": "exp26b-u13-007-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two current relationships help YOU compare support around D2’s point possession?",
+          "options": [
+            {
+              "id": "a",
+              "text": "W offers width on the opposite side of the middle from D2"
+            },
+            {
+              "id": "b",
+              "text": "YOU are nearer the net and nearer the middle than D2"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1 is farther from the middle than D2"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "W is across the middle from D2, while YOU provide a nearer-net, more central option. Gold 1 is also nearer the middle than D2, so the support lines still need checking. These positions offer comparisons; they do not prove a screen, an open pass or a clear shot.",
+          "id": "exp26b-u13-007-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Order one read of a contested shooting lane.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate Gold 1 near the puck line"
+            },
+            {
+              "id": "b",
+              "text": "Move or pass to change the sightline"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the net-front lane"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Locate the defender, compare an angle change, then reassess the lane. A changed position alone does not establish an open shot.",
+          "id": "exp26b-u13-007-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to compare an offset support position near the net.",
+          "basis": "coaching",
+          "explanation": "The example changes the angle between YOU, D2 and the net. Recheck Gold 1 and W; it does not establish a screen or an open pass.",
+          "actorId": "n1",
+          "reference": {
+            "x": 23,
+            "y": -2
+          },
+          "id": "exp26b-u13-007-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "If Gold 1 follows your lateral move, what changes first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The defender’s body may open or close W’s low lane"
+            },
+            {
+              "id": "b",
+              "text": "That D2 must shoot before Gold 1 can recover"
+            },
+            {
+              "id": "c",
+              "text": "That changing your angle guarantees a clear shot"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Gold 1’s movement changes low and point lanes, so D2 scans the new spacing; if both stay closed, reset.",
+          "id": "exp26b-u13-007-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why should D2 recheck the lane when Gold 1 follows a support move?",
+          "basis": "coaching",
+          "explanation": "A defender’s movement can close one route and open another. Compare the resulting shot and pass options rather than assuming every lateral move succeeds or fails.",
+          "id": "exp26b-u13-007-q6"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u13-012",
+      "version": 4,
+      "ageBand": "U13",
+      "title": "Backcheck the middle before the puck",
+      "family": "backcheck-middle",
+      "topic": "transition defence",
+      "objective": "Recover through the middle so the most dangerous attacker stays in view",
+      "briefing": "Navy defends the left net. Gold 1 carries from the right-hand zone toward Navy’s end, with Gold 2 in the middle. YOU are a recovering forward already closer to Navy’s net than both attackers; D1 is nearer the carrier. Coordinate which threat each player can cover.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 9,
+            "facing": 2.9
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 2,
+            "facing": 3.1
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 5,
+            "facing": 3
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": 0,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "g1",
+          "x": 18.911,
+          "y": 4.448
+        }
+      },
+      "focusActorId": "n1",
+      "cues": [
+        "Gold 1 carries from the right-hand zone toward Navy’s end, with Gold 2 in the middle.",
+        "YOU are a recovering forward already closer to Navy’s net than both attackers; D1 is nearer the carrier.",
+        "Coordinate which threat each player can cover."
+      ],
+      "tags": [
+        "backcheck-middle",
+        "transition defence"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-drill-2016",
+          "title": "14U Offense-Defense-Out with a Goalie Twist",
+          "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+          "section": "Coaching points: middle-lane backcheck",
+          "use": "Supports the stated middle-lane coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "Closing The Gap and A Proper Angle",
+          "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which attacker is the inside support threat?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1"
+            },
+            {
+              "id": "c",
+              "text": "D1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 2 is nearer the middle than Gold 1. D1 is nearer the carrier, but completed coverage is not proved.",
+          "id": "exp26b-u13-012-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two starting relationships should YOU use when coordinating the backcheck with D1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU are already closer to Navy’s net than both gold attackers"
+            },
+            {
+              "id": "b",
+              "text": "D1 is closer to Gold 1 than YOU are"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is farther toward the side boards than Gold 1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "YOU start net-side of both attackers and D1 is nearer the carrier. Gold 2 is central, not the wider attacker. Use that picture to coordinate useful coverage without assuming D1 has contained Gold 1 or that a particular recovery route will succeed.",
+          "id": "exp26b-u13-012-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange one middle-lane backcheck.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find the inside attacker"
+            },
+            {
+              "id": "b",
+              "text": "Compare middle support while staying net-side"
+            },
+            {
+              "id": "c",
+              "text": "Communicate the handoff with D1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Seeing Gold 2 prevents a puck-only chase; middle recovery protects net; communication avoids two defenders following Gold 1.",
+          "id": "exp26b-u13-012-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU toward the middle while remaining closer to Navy’s net than Gold 2.",
+          "basis": "coaching",
+          "explanation": "The example moves YOU toward the middle but farther from Navy’s net than the starting spot. It remains net-side of Gold 2; check speed and D1 before adjusting.",
+          "actorId": "n1",
+          "reference": {
+            "x": 10,
+            "y": 3
+          },
+          "id": "exp26b-u13-012-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "If Gold 2 receives before you arrive, what changes?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2 becomes carrier and D1’s coverage must be reassessed"
+            },
+            {
+              "id": "b",
+              "text": "Your original route stays correct automatically"
+            },
+            {
+              "id": "c",
+              "text": "The net-side lane can be abandoned"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The reception changes the threat, so update carrier and roles; if Gold 2 is contained, recover to the next danger.",
+          "id": "exp26b-u13-012-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "How can you tell you are helping D1 rather than duplicating D1?",
+          "basis": "coaching",
+          "explanation": "Cover the middle attacker while D1 faces the carrier, then call when roles change; if both chase one puck, another lane is open.",
+          "id": "exp26b-u13-012-q6"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u13-014",
+      "version": 5,
+      "ageBand": "U13",
+      "title": "Choose the second rebound job",
+      "family": "rebound-role-choice",
+      "topic": "net-front defence",
+      "objective": "Separate the first rebound player from the supporting defender’s job",
+      "briefing": "Navy defends the left net. After Gold 1’s shot, a rebound is loose near the crease. D1 is the closest shown skater, while the goalie is closer still. YOU are nearer Navy’s net than Gold 2. No skater controls the rebound.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -24,
+            "y": 2,
+            "facing": 0.14159265358979312
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -26,
+            "y": -1,
+            "facing": 0.04159265358979303
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": -20,
+            "y": 7,
+            "facing": 0.2415926535897932
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": -22,
+            "y": -5,
+            "facing": 0.14159265358979312
+          },
+          {
+            "id": "nga",
+            "label": "Navy goalie",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -26,
+          "y": 0.6
+        }
+      },
+      "focusActorId": "n1",
+      "cues": [
+        "After Gold 1’s shot, a rebound is loose near the crease.",
+        "D1 is the closest shown skater, while the goalie is closer still.",
+        "YOU are nearer Navy’s net than Gold 2."
+      ],
+      "tags": [
+        "rebound-role-choice",
+        "net-front defence"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "hc-u17-principles",
+          "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+          "section": "PDF pages 7–8, team support and transition principles",
+          "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which shown skater is closest to the loose rebound?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "D1 is the closest shown skater. The goalie is also nearby and is closer to the puck; proximity does not establish control.",
+          "id": "exp26b-u13-014-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two relationships matter before YOU choose a second rebound job?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The goalie is closer to the loose puck than D1 is"
+            },
+            {
+              "id": "b",
+              "text": "YOU are nearer Navy’s net than Gold 2 is"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is closer to the loose puck than YOU are"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The goalie is closest to the puck, and YOU have a net-side position relative to Gold 2. D1 is the nearest skater, but neither proximity nor the prior shot establishes who controls the rebound. Coordinate the puck contest and the attacker instead of assuming the nearest player wins it.",
+          "id": "exp26b-u13-014-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange one second-player rebound read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate the loose puck"
+            },
+            {
+              "id": "b",
+              "text": "Check D1’s approach and the goalie"
+            },
+            {
+              "id": "c",
+              "text": "Coordinate coverage of Gold 2"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The closest skater is not automatically the winner. Check the goalie and opponent before deciding who contests and who covers.",
+          "id": "exp26b-u13-014-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to a net-side cover position while D1 approaches the loose rebound.",
+          "basis": "coaching",
+          "explanation": "The target keeps YOU net-side of Gold 2 and leaves D1 room to contest the rebound; D1 is the closest shown skater to the loose puck, so control is unresolved.",
+          "actorId": "n1",
+          "reference": {
+            "x": -25,
+            "y": -1
+          },
+          "id": "exp26b-u13-014-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "If D1 gains clear control, what should YOU reassess?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether Gold 2 remains the nearest uncovered attacker"
+            },
+            {
+              "id": "b",
+              "text": "Diving onto D1’s puck"
+            },
+            {
+              "id": "c",
+              "text": "Leaving the net front immediately"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "D1’s control changes the puck threat, so keep Gold 2 covered and prepare an outlet; if Gold 2 leaves, scan next lane.",
+          "id": "exp26b-u13-014-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why must a rebound read distinguish loose from controlled?",
+          "basis": "coaching",
+          "explanation": "A loose puck may require a contest or containment. Control changes the available actions; a goalie cover or official’s signal requires another reassessment.",
+          "id": "exp26b-u13-014-q6"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u13-019",
+      "version": 5,
+      "ageBand": "U13",
+      "title": "Change jobs after a goalie outlet",
+      "family": "goalie-outlet-support",
+      "topic": "defensive-zone breakout",
+      "objective": "Become support when the goalie’s outlet changes the puck side",
+      "briefing": "Navy defends the left net. The goalie passed to D1 near one corner, and D1 now controls the puck. YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks. The goalie remains behind the net, outside the mesh on D1’s side.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -20,
+            "y": 6,
+            "facing": 2.5
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -26,
+            "y": -7,
+            "facing": 0.2
+          },
+          {
+            "id": "n3",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -19,
+            "y": 2,
+            "facing": 0.4
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": -23,
+            "y": -2,
+            "facing": 2.9
+          },
+          {
+            "id": "ng",
+            "label": "Navy goalie",
+            "team": "home",
+            "role": "goalie",
+            "x": -28.8,
+            "y": -2,
+            "facing": -1.0603080048781208
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": -25.1590019537153,
+          "y": -6.11528406471607
+        }
+      },
+      "focusActorId": "n1",
+      "cues": [
+        "The goalie passed to D1 near one corner, and D1 now controls the puck.",
+        "YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks."
+      ],
+      "tags": [
+        "goalie-outlet-support",
+        "defensive-zone breakout"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF pages 12–18, breakouts, regroups and shooting",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "hc-u17-principles",
+          "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+          "section": "PDF pages 7–8, team support and transition principles",
+          "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Who receives the goalie’s outlet?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "D1 is assigned the puck after release, so YOU become support on the new side; if Gold wins it, update.",
+          "id": "exp26b-u13-019-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two relationships should YOU include before offering support for D1’s new possession?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 has the puck across the middle from YOU"
+            },
+            {
+              "id": "b",
+              "text": "D2 is closer to D1’s puck than YOU are"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1 is farther from D1’s puck than YOU are"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "D1 now has the puck on the other side of the middle, and D2 is a nearer support option. Gold 1 is closer to the puck than YOU, so pressure still matters. Compare the available lines rather than assuming YOU must leave your side or that D2 is open.",
+          "id": "exp26b-u13-019-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange one goalie-outlet support change.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find the new puck side"
+            },
+            {
+              "id": "b",
+              "text": "Show D1 a usable lane"
+            },
+            {
+              "id": "c",
+              "text": "Recheck Gold 1 before receiving"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Puck side determines route; showing a lane connects D1; Gold 1 decides whether it is safe.",
+          "id": "exp26b-u13-019-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU nearer the middle to compare an outlet for D1.",
+          "basis": "coaching",
+          "explanation": "The example moves YOU closer to D1 while remaining across the middle. Recheck Gold 1 and D2 before calling for the pass.",
+          "actorId": "n1",
+          "reference": {
+            "x": -20,
+            "y": 4
+          },
+          "id": "exp26b-u13-019-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "If Gold 1 closes the middle outlet, what is a useful update?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether D2 provides the next short option or D1 protects"
+            },
+            {
+              "id": "b",
+              "text": "Calling the same pass louder"
+            },
+            {
+              "id": "c",
+              "text": "Leaving D1 alone"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The forechecker removed the first route, so D2 and D1’s protection become the next read; if middle reopens, present again.",
+          "id": "exp26b-u13-019-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why does the goalie’s release change your support job?",
+          "basis": "coaching",
+          "explanation": "The new puck owner and side determine where a short outlet can exist, so move with the play while scanning Gold 1; if contested, support becomes protection.",
+          "id": "exp26b-u13-019-q6"
+        }
+      ]
+    }
+  ]
+}

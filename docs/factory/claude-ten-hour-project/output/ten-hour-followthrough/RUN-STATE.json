@@ -1,0 +1,51 @@
+{
+  "runId": "claude-ten-hour-followthrough-2026-09-07",
+  "startedAt": "2026-09-07T05:52:04Z",
+  "finishedAt": "2026-09-07T07:45:00Z",
+  "baselineCommit": "899e96f7a6c35e16422e6c9a99a1f9914d2f6d45",
+  "finalCommit": null,
+  "qualification": "provisional-needs-qualified-review",
+  "claims": [
+    "U15/U18 skating-movement content genuinely absent across all 4 live catalogs (high confidence)",
+    "U11 cause-and-effect: 53/400 (13.3%) genuine changed-cue questions by an explicit stated rule, vs prior naive 14/400",
+    "pov-questions.json (280 questions) is dead code, unreachable from the live app",
+    "3 of 10 Task C draft questions had off-rink coordinates before correction",
+    "Server-side double-submit race exists in feedback submission, reproduced and left unfixed",
+    "RETRACTED: a screenshot-mislabeling claim from this session's Task A pass was false (image-batch read artifact); corrected in visual-inspection-log.md"
+  ],
+  "changedFiles": "see integration-manifest.json (136 files: 5 modified, 131 new)",
+  "tests": [
+    { "command": "node --test tools/build-full-curriculum-matrix.test.mjs", "exitCode": 0 },
+    { "command": "node --test tools/coaching-feedback-plugin.test.mjs", "exitCode": 0 }
+  ],
+  "unexecutedChecks": [
+    "Full browser-based UI testing (Playwright lock held by a concurrent session)",
+    "Exhaustive visual inspection of all 122 screenshots (25 sampled)",
+    "Exhaustive geometry re-verification of all 60 questions (4 checked)"
+  ],
+  "contentHolds": [
+    "All 10 Task C drafts remain draft-not-reviewed / provisional-needs-qualified-review",
+    "No content admitted to the live experimental bank",
+    "Hockey Authority qualification/calibration stream remains paused, not relaunched"
+  ],
+  "checkpoints": [
+    "Task A complete (mechanical + visual + geometry)",
+    "Task B complete (curriculum matrix + both gap rechecks)",
+    "Task C complete (10 drafts revised)",
+    "Task D complete (feedback flow tested + .gitignore fix)",
+    "Task E complete (adversarial cross-check + next-authoring queue; retry after first attempt stalled)",
+    "Task F complete (this report)"
+  ],
+  "nextAction": "Hand off to Codex/Thomas per REPORT-BACK-TO-CODEX.md 'Next action' section. No further autonomous work queued.",
+  "executionMode": "until-completed",
+  "status": "complete",
+  "completionGates": {
+    "A": { "status": "complete", "evidence": ["intake-verification.json", "visual-inspection-log.md", "geometry-verification.json"] },
+    "B": { "status": "complete", "evidence": ["curriculum-matrix.json", "curriculum-matrix.csv", "curriculum-report.html"] },
+    "C": { "status": "complete", "evidence": ["draft-revisions.json", "source-ledger.json"] },
+    "D": { "status": "complete", "evidence": ["feedback-flow-report.md", "task-d-evidence/"] },
+    "E": { "status": "complete", "evidence": ["adversarial-cross-check.json", "next-authoring-queue.json"] },
+    "F": { "status": "complete", "evidence": ["integration-manifest.json", "REPORT-BACK-TO-CODEX.md"] }
+  },
+  "resumeInstruction": null
+}

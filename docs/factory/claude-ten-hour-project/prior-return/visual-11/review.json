@@ -1,0 +1,77 @@
+{
+  "packetId": "visual-11",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u18-002", "questionId": "exp26-u18-002-q2", "scenarioVersion": 3,
+      "contentHash": "c7574074fdcba9f06a7ee1b973a10deb879acc1dee41847015bb8c161e757d70", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "10-actor 5-on-5 scene, comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold1 near F1's line and Gold3 near F2's line, Gold2 clearly much closer to F1 than Gold5 is. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim, correctly excluding (c) which reverses Gold5-vs-Gold2 proximity to F1.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-002-q2_desktop-1365x900.png","sha256":"b7f5414feaa7eac5ccf303563287628234556e8f1981a8f25f8d52cf4af54568"},
+        {"viewport":"390x844","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-002-q2_phone-390x844_scene.png","sha256":"e34bb9ef76607c2f510ddd41ce820e2c2bf022cc4b4d44dcdfa3d1718496ff27"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["Gold 3 is nearer the direct line to F2 than the line to F1","Gold 1 is nearer the direct line to F1 than the line to F2"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u18-005", "questionId": "exp26-u18-005-q5", "scenarioVersion": 3,
+      "contentHash": "644b13601611fd026a29e2090b475dd253af645e20d9af682451e8d6f360cc48", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "combined-proximity-to-two-points geometry",
+      "blindAnswer": "c", "keyedAnswer": "c", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold3 positioned between YOU and F1, clearly closer to both than Gold1/Gold2. Interactively tested live: selecting 'Gold 3' returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-005-q5_desktop-1365x900.png","sha256":"63bfc29e2d0283a5ba9f1f5ea4ceb1c54cace46d6e36c887d3294243d255c7ed"},
+        {"viewport":"390x844","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-005-q5_phone-390x844_scene.png","sha256":"0e0e27da373cefb56997055de6ec63bfbad6ed96562c9b51d5519faa49a13ac9"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 3", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u18-009", "questionId": "exp26-u18-009-q2", "scenarioVersion": 3,
+      "contentHash": "0577ab7a0473c98fef0e35d4d06dde41348eea671cd1a2a8d80d67e897ec5725", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold1 near F1, Gold2 near F2. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim, correctly excluding (c) which reverses Gold3-vs-Gold2 proximity to YOU.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-009-q2_desktop-1365x900.png","sha256":"1f303c533677879b0284d78c523dbc373b5f2098e4b584dd5f40186ec9010c01"},
+        {"viewport":"390x844","screenshotPath":"output/visual-11/screenshots/v11_exp26-u18-009-q2_phone-390x844_scene.png","sha256":"f11c11302b3069a048621e5a39512aea8f055258c1ca72e351bf45aacc089c51"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["Gold 1 is closer to F1 than Gold 2 is","Gold 2 is closer to F2 than Gold 1 is"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u18-001", "questionId": "exp26b-u18-001-q5", "scenarioVersion": 3,
+      "contentHash": "3d88ff7067496cd7b02cfa29872650744adc8377d0ee2efeff014a04f6122d07", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 much closer to F2's area than to F1's. Interactively tested live: selecting the F1-line option returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-11/screenshots/v11_exp26b-u18-001-q5_desktop-1365x900.png","sha256":"361f726fbff04680e79a51532cd55112395f90678ae6157b997b97982911d079"},
+        {"viewport":"390x844","screenshotPath":"output/visual-11/screenshots/v11_exp26b-u18-001-q5_phone-390x844_scene.png","sha256":"4a46e6f449a1c3479f1a9fa2a9c318544abce18b3b5470b153dc9dc98ef63af5"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "The direct line from YOU to F1", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u18-004", "questionId": "exp26b-u18-004-q5", "scenarioVersion": 3,
+      "contentHash": "d939cac2ca29203552ca8bdc8fbbb8416cfd656f4a1f0b2ae1ef7b75c7416ea4", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "procedural/communication-discipline question (stay with confirmed assignment) + shuffled id-to-label roster mapping",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 on YOU's side (low slot), matching the briefing. Roster note: this scene's JSON actor ids do not match label numbering order (id='a4' carries label='A1'/Gold1, etc.) -- resolved by reading each actor's actual label field, not id order, and cross-checked against puck.owner. Interactively tested live: selecting 'Gold 2' returned 'Yep, that matches the suggested approach.' matching the key verbatim -- confirms the drill's 'stay with your confirmed assignment until a teammate hands off' rule, not the newer-looking threat (Gold3).",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-11/screenshots/v11_exp26b-u18-004-q5_desktop-1365x900.png","sha256":"bd8cd7987ae6f126eebe3f4c7c8349268621391338a93a4d928eec13aa84b570"},
+        {"viewport":"390x844","screenshotPath":"output/visual-11/screenshots/v11_exp26b-u18-004-q5_phone-390x844_scene.png","sha256":"f583d4bd1dd115355a1f6c5e91b284d669c52686292194ff4f50d4128b94b436"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-11-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "milestone": "FINAL PACKET. 60/60 targets complete. Work 1 (rendered audit) is done: 60/60 blind==key, 0 repair-worthy defects found, all 60 targets captured at both required viewports with real screenshots and SHA-256 hashes, 45+ representative live interaction tests all confirmed correct."
+}

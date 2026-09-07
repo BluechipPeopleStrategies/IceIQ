@@ -1,0 +1,44 @@
+{
+  "packetId": "visual-02",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses, see output/calibration/second-reviewer-reconciliation.json).",
+  "method": "Solved from packets/visual-02-manifest.json + packets/visual-02-blind.json only, no live render access. All distance/angle claims recomputed by hand from raw x,y coordinates.",
+  "answers": [
+    {
+      "questionId": "exp26b-u9-010-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy2(-25,-3) to YOU(-22,-8): dist=sqrt(3^2+5^2)=sqrt(34)=5.83. Navy2 to Navy3(-14,1): dist=sqrt(11^2+4^2)=sqrt(137)=11.70. Pass to YOU is shorter. Team check: YOU/Navy2/Navy3 all home; Gold1 (away) correctly not offered as a pass target."
+    },
+    {
+      "questionId": "exp26b-u9-014-q5",
+      "myAnswer": "a",
+      "reasoning": "Puck/YOU=(20,-7). Navy2=(18,-1). Gold1=(23,-2). Perpendicular distance from Gold1 to the puck-Navy2 line = 4.43 units (line direction (-2,6); vector puck->Gold1=(3,5); |3*6+5*2|/sqrt(40)=28/6.32). Perpendicular distance from Gold1 to the puck-net line (tested net~(26,0) and ~(25,0), both give ~0.5-1.0) is far smaller -- Gold1 sits almost exactly on the puck-to-net bearing (angle 49-59 deg from puck, vs. Gold1's own bearing of 59 deg from puck: near-zero separation) while the Navy2 line bears 108 deg, ~49 deg away from Gold1. This is robust to reasonable net-position uncertainty and matches the briefing's own explicit claim that 'Gold1 is between you and the net.' The line toward Navy2 gives more room from Gold1."
+    },
+    {
+      "questionId": "exp26-u11-001-q5",
+      "myAnswer": "a",
+      "reasoning": "Puck=(-18,-12.2) [own-zone corner, most negative x = deepest/nearest own net]. D1=(-12,-6): x=-12 > puck's -18 (i.e. up ice / toward neutral zone from the puck, NOT toward the net). F2=(-10,-1): x=-10, also up ice, even farther. Both D1 and F2 have higher x (less negative, i.e. up ice) than the puck -- option (a) true. Option (b) claims D1 is 'on the net side of the loose puck, opposite F2' -- false: D1 is on the SAME (up-ice) side as F2 relative to the puck, not the net side, and not opposite F2. Sanity check: YOU's facing (-1.88 rad, -107.7 deg) matches the bearing from YOU to the puck (atan2(-6.2,-2)=-107.9 deg) almost exactly, confirming the scene's facing data is internally consistent."
+    },
+    {
+      "questionId": "exp26-u11-003-q5",
+      "myAnswer": "a",
+      "reasoning": "D1(12.5,-4.5) is exactly the midpoint of F1(10,-5) and YOU(15,-4) -- ((10+15)/2,(-5-4)/2)=(12.5,-4.5) -- confirming the briefing's stated 'D1 stands between you and the puck.' This question is a hypothetical-reasoning check, not a new coordinate claim: the premise explicitly states D1 'keeps the same distance from YOU' while following -- which directly rules out option (b) ('more separation from D1 for YOU'), since the premise stipulates no separation change. The only consistent benefit is the by-product effect on F1's own space (option a)."
+    },
+    {
+      "questionId": "exp26-u11-003-q7",
+      "myAnswer": "a",
+      "reasoning": "F1(10,-5) to F2(17,6): steep diagonal crossing y=0 (center), a genuinely 'different angle across the ice.' F1 to YOU(15,-4): a much flatter, near-direct line. D1(12.5,-4.5) sits exactly ON the F1-YOU line (distance 0, computed above) and far from the F1-F2 line (perpendicular distance ~1.84, computed via normal (11,-7)/13.04 dotted with vector (2.5,0.5)). So 'D1 is close to the line to me [YOU, the focus actor speaking]' is true, and 'F2 has a different angle across the ice' is true -- matches option (a). Option (b) reverses both claims and is false on the geometry."
+    },
+    {
+      "questionId": "exp26-u11-004-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "F2(14,-3) is across the middle (y<0) from YOU(10,4) (y>0) -- option (a) true. D1(12,0.5) is EXACTLY the midpoint of YOU and F2: ((10+14)/2,(4-3)/2)=(12,0.5) -- confirms option (b) ('near the direct return line') is true, if anything an understatement of 'exactly on.' Option (c) claims D1 is 'closer to the side boards than either Navy skater' -- false: |D1.y|=0.5 is the SMALLEST of the three (YOU |y|=4, F2 |y|=3), meaning D1 is actually closest to CENTER ice, not the boards, the opposite of the claim. Team check: D1 is away/opponent, correctly identified as the obstacle, not a supporting teammate."
+    }
+  ],
+  "arithmeticDoubleCheck": {
+    "note": "Per coordinator instruction, independently re-verified the two flagged midpoint/line claims rather than trusting any prior numbers.",
+    "exp26-u11-004-q2": "D1(12,0.5) = midpoint of YOU(10,4) and F2(14,-3): ((10+14)/2, (4+(-3))/2) = (12, 0.5). Exact match, confirmed independently.",
+    "exp26b-u9-014-q5": "No exact-midpoint claim exists here (net exact coordinates are not in the provided JSON); verified instead via perpendicular-distance-to-line and bearing-angle comparisons, both of which are robust across a reasonable range of assumed net positions (tested (26,0) and (25,0)) and agree with the briefing's own stated premise that Gold1 sits between the puck and net."
+  },
+  "grammarCheck": "Read all 6 prompts aloud for YOU-subject verb agreement (account for, offer) -- no violations found.",
+  "teamResolutionCheck": "In all 6 questions this packet, YOU/F1/F2/Navy2/Navy3 = home/Navy and D1/Gold1 = away/Gold, consistently -- no actor-team mislabeling trap found this round (unlike visual-01's exp26-u11-016 defensive scenario)."
+}

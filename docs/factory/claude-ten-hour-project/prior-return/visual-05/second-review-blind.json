@@ -1,0 +1,43 @@
+{
+  "packetId": "visual-05",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-05-manifest.json + packets/visual-05-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26b-u11-019-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy's attacking direction (+x, right net) is a fixed team attribute stated in the briefing, independent of current possession. If Navy F1 regains the puck, Navy is again the attacking team toward +x. Answer (a)."
+    },
+    {
+      "questionId": "exp26b-u11-021-q5",
+      "myAnswer": "a",
+      "reasoning": "D1=(18,2). Perp distance to YOU(12,5)-F2(16,-5) line: d=(4,-10), vec=(6,-3), cross=4*(-3)-(-10)(6)=48, |d|=10.77, dist=4.46 (t=0.466, valid in-segment). Perp distance to YOU-net(26,0) line: d2=(14,-5), cross2=14*(-3)-(-5)(6)=-12, |d2|=14.87, dist=0.81 (t=0.448, valid). D1 sits much closer to the shot line (0.81) than the cross-ice line (4.46), so the pass to F2 stays farther from D1 -- answer (a)."
+    },
+    {
+      "questionId": "exp26-u13-009-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "YOU=(5,0), F1=(18,9): YOU.x<F1.x -> behind toward Navy's own end, true (a). Gold1/A1=(21,7): distance to F1=sqrt(3^2+2^2)=3.61 (close), |A1.y|=7<|F1.y|=9 (nearer middle), true (b). D1=(4,-5) is HOME team (confirmed directly from setup.actors: home-skater-3, team='home') -- i.e. Navy's own teammate defenseman, not an opponent, matching the coordinator's flagged convention for this scene. D1.x=4 is far LESS than F1.x=18, so D1 is much closer to Navy's own end, NOT 'farther toward the attacking net than F1' -- option (c) is false, reversed from the actual coordinates."
+    },
+    {
+      "questionId": "exp26-u13-011-q8",
+      "myAnswer": ["a", "b"],
+      "reasoning": "D2=(13,-8) confirmed HOME team directly from setup.actors (home-skater-2, team='home') -- Navy's own teammate defenseman, per the coordinator's flagged convention, not the opponent (A1/'Gold 1' is the opponent at (18,0), exactly on the YOU-to-net line, y=0 for both, x=18 in [12,26]). (a) moving the puck-carrier (YOU) obviously changes the shooting spot, true. (b) if D2 (teammate) receives a pass, the puck (and thus the shooting position) moves to D2's spot (13,-8), a real change, true. (c) 'D2 moves while YOU keep the puck at its current spot' -- if the puck stays with YOU unchanged, the shooting position is unchanged regardless of D2's own movement; false."
+    },
+    {
+      "questionId": "exp26-u13-013-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Puck=YOU=(5,-9). Gold1/A1=(6,-5): dist=sqrt(1+16)=4.12. Gold2/A2=(14,1): dist=sqrt(81+100)=13.45. Gold1 much closer to puck than Gold2, true (a). F2=(9,-3): x=9>YOU.x=5 (farther up ice) and |y|=3<|YOU.y|=9 (nearer middle), true (b). (c) 'Gold 2 is closer to YOU than F2 is': Gold2-to-YOU=13.45 vs F2-to-YOU=sqrt(16+36)=7.21 -- Gold2 is actually FARTHER, not closer; (c) is false, reversed."
+    },
+    {
+      "questionId": "exp26-u13-013-q5",
+      "myAnswer": "a",
+      "reasoning": "Line YOU(5,-9)-F2(9,-3): d=(4,6), |d|=7.211. Gold1(6,-5): vec=(1,4), cross=4*4-6*1=10, perp dist=1.387, t=(1*4+4*6)/52=0.538 (valid, inside segment). Gold2(14,1): vec=(9,10), cross=4*10-6*9=-14, perp dist=1.942, BUT t=(9*4+10*6)/52=1.846 -- this is OUTSIDE the [0,1] segment, meaning Gold2's closest point on the infinite line lies well past F2, not actually on the real puck-to-F2 path. Using the true segment-distance (nearest point = F2 itself) gives Gold2 an actual distance of sqrt(5^2+4^2)=6.40 from the real lane, far more than the naive infinite-line figure. Either way, Gold1 (1.387, validly in-segment) is unambiguously nearer the real passing lane than Gold2 -- answer (a), and the gap is even larger than a naive perpendicular-distance-only check would suggest."
+    }
+  ],
+  "grammarCheck": "Read all 6 prompts aloud for YOU-subject verb agreement -- no violations found.",
+  "flaggedRosterDoubleCheck": {
+    "note": "Per coordinator's flag, confirmed directly against setup.actors.team (not label pattern) for both cited cases.",
+    "exp26-u13-009-q2": "home-skater-3, label='D1', team='home' -- CONFIRMED: D1 is Navy's own teammate defenseman in this scene, not the opponent. The opponent skaters are away-skater-1/2 (A1/A2), rendered as 'Gold 1'/'Gold 2' per the option text.",
+    "exp26-u13-011-q8": "home-skater-2, label='D2', team='home' -- CONFIRMED: D2 is Navy's own teammate defenseman, not the opponent. The opponent is away-skater-1 (A1), rendered as 'Gold 1' per the option/briefing text ('Gold 1 is directly between YOU and the net')."
+  }
+}

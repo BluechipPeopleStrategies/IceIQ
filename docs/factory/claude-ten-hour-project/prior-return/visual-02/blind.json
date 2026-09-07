@@ -1,0 +1,58 @@
+{
+  "packetId": "visual-02",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear (see output/calibration/reconciliation.json)",
+  "readOrderDisclosure": "Read packets/visual-02-manifest.json and packets/visual-02-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T01:35:00Z",
+  "questions": [
+    {
+      "questionId": "exp26b-u9-010-q5",
+      "scenarioId": "exp26b-u9-010",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Navy2 (puck, -25,-3) to YOU (-22,-8): dist=sqrt(3^2+5^2)=sqrt(34)~5.83. Navy2 to Navy3 (-14,1): dist=sqrt(11^2+4^2)=sqrt(137)~11.7. Pass to YOU is clearly shorter (not a near-tie -- ~5.8 vs ~11.7, unambiguous, unlike the historical near-equal-distance regression).",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u9-014-q5",
+      "scenarioId": "exp26b-u9-014",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Puck/YOU=(20,-7), Navy2=(18,-1), Gold1=(23,-2), assumed net near (26,0) (Navy attacks +x = Gold's own net, consistent with 'attacking faceoff circle' framing and 'Gold1 is between you and the net'). Perpendicular distance from Gold1 to the puck-to-Navy2 line ~4.4 units; to the puck-to-net line ~1.0 unit. The Navy2 line clearly gives more room from Gold1.",
+      "note": "No defect found. Net position is an assumption (~26,0) consistent with other scenes in this bank; will confirm against the render."
+    },
+    {
+      "questionId": "exp26-u11-001-q5",
+      "scenarioId": "exp26-u11-001",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Puck=(-18,-12.2) no owner, YOU=(-16,-6), F2=(-10,-1), D1=(-12,-6). Navy defends the nearby net at very negative x. Puck (-18) is the most-negative (closest to own net) of the four x-values; D1 (-12) and F2 (-10) are both less negative than the puck, i.e. both up-ice from it. Option b ('D1 is on the net side of the loose puck, opposite F2') is false -- D1 is NOT more net-side than the puck.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u11-003-q5",
+      "scenarioId": "exp26-u11-003",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Prompt explicitly states D1 keeps the SAME distance from YOU while following farther from F1. Option b ('more separation from D1 for YOU') directly contradicts that stated premise (same distance, not more), so b is self-contradictory. F1 gains more room/time since D1 is no longer near F1 -- matches option a.",
+      "note": "No defect found. This is exactly the 'stays close/same distance' precision the historical regressions warn about, and the question is built correctly around it (the premise states 'same distance' and the correct answer respects that, unlike the flagged bad pattern where 'stays close' was misused to claim unchanged separation when it should have changed)."
+    },
+    {
+      "questionId": "exp26-u11-003-q7",
+      "scenarioId": "exp26-u11-003",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "F1=(10,-5), YOU=(15,-4), F2=(17,6), D1=(12.5,-4.5). D1 sits exactly on the F1-to-YOU line (at x=12.5, the line's y is -4.5, matching D1 exactly) -- D1 blocks the line to YOU, not to F2. F2's y (6) is far from F1's y (-5), a clearly different angle across the ice. Matches option a ('F2 has a different angle across the ice; D1 is close to the line to me') where 'me'=YOU, the focus actor.",
+      "note": "No defect found. Precise geometry (D1 exactly on the line) -- worth confirming visually that this reads clearly on screen and isn't ambiguous at a glance."
+    },
+    {
+      "questionId": "exp26-u11-004-q2",
+      "scenarioId": "exp26-u11-004",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(10,4), F2=(14,-3, puck), D1=(12,0.5). YOU and F2 have opposite-sign y (4 vs -3) -- across the middle, true (a). D1 sits exactly on the F2-to-YOU line (at x=12, the line's y is 0.5, matching D1 exactly) -- true (b). D1's |y|=0.5 is smaller than both YOU's (4) and F2's (3), so D1 is actually closer to the MIDDLE than either Navy skater, making (c) 'D1 is closer to the side boards than either Navy skater' false -- correctly-designed false distractor (opposite of true).",
+      "note": "No defect found. Same precise-geometry authoring pattern as q7 above (defender placed exactly on the relevant line)."
+    }
+  ],
+  "grammarPass": "Read all six prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "Confirmed every named actor (Navy2, Navy3, Gold1, F1, F2, D1, YOU) against each scene's actual team field before using its position; no D/F-label-vs-roster mismatches found in this packet."
+}

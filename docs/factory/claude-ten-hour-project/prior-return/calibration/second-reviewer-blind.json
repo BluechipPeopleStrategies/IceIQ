@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) - same model family as lead reviewer, disclosed limitation",
+  "method": "Blind: written before opening calibration-key-after-solve.json, HISTORICAL-CHECKS.md, or OPERATING-CHARTER.md. Recomputed all geometry from setup.actors x/y/facing and puck x/y directly; did not accept any prose distance/side/between claim at face value.",
+  "cases": [
+    {
+      "id": "exp26-u11-006-q7",
+      "verdict": "DEFECT_FOUND",
+      "reasoning": "Marked-plausible answer (a) 'Puck below the circle; D1 is between it and the net' contains a geometric claim that fails on the actual coordinates. Puck=(23,5); D1=(22,1); net/goalie=(26,0). D1's x=22 is LESS than the puck's x=23, meaning D1 sits further from the net (in x) than the puck itself -- D1 is on the near side of the puck, not on the segment between the puck and the net. 'Between it and the net' requires D1's x to fall between 23 and 26; it does not. Also 'below the circle' is an unanchored above/below claim: no circle coordinates exist anywhere in the scene JSON, and the scene's own cue states the puck is on the 'positive-y side,' so 'below' is asserted without a named landmark or explicit facing tie (charter check #7).",
+      "alternative_considered": "If 'between' is read loosely as 'closer to the net than YOU/F1 are, in the same general direction,' the option could be defended as coaching shorthand rather than strict geometry. Distinguishing condition: an explicit statement of what 'between' means (segment-between vs. general-proximity) would resolve this."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "verdict": "NO_DEFECT",
+      "reasoning": "Reference point (22.2,-4.2) is a waypoint on the negative-y (opposite-side) boards relative to YOU's start (19,-2) and the puck's positive-y location (23,5) -- consistent with 'opposite-side boards' framing. From that point, D1 (22,1) and the net/goalie (26,0) both remain plausibly in the forward field of view if YOU curls back toward +x/+y after the waypoint. The scene's own explanation correctly disclaims that the point proves arrival order or control. I found no coordinate contradiction."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "verdict": "DEFECT_FOUND",
+      "reasoning": "'The goalie covers before you arrive' most naturally means the goalie smothers/freezes the loose puck, which is a whistle and stoppage of play (charter check #5). The explanation instead treats the situation as continuing live play ('identify who has the puck ... before choosing the next pressure or reset'), but if it is truly a stoppage, there is no live 'who has the puck' question and no 'next pressure' -- the re-read should be about the ensuing faceoff/reset, not about contesting a live puck. Either the word 'covers' needs disambiguation (covers-the-puck vs. covers-the-net/post), or the explanation needs to name the stoppage explicitly.",
+      "alternative_considered": "If 'covers' means the goalie recovers position/covers the post (not the puck), play stays live and the given explanation is fine. The scene text does not distinguish these, which is itself the defect: an ambiguous stoppage-trigger word with no whistle/no-whistle branch given."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "verdict": "NO_DEFECT",
+      "reasoning": "D1 (16,7) sits exactly on the F1(12,7)-YOU(20,7) line (same y=7), correctly blocking the direct line. D2 (23,1) is nearer the net/middle, matching the cue. The marked answer (a,b) -- where YOU can receive the bank rebound, and whether D2 remains available at the opposite point -- are the two variables that actually determine whether a bank pass is useful; (c) 'D2 does not move' is rightly excluded since movement is not simulated. No geometric contradiction found."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "verdict": "DEFECT_FOUND",
+      "reasoning": "Marked answer (a) 'The puck is below me' is a body-relative/camera-relative directional claim I checked against YOU's explicit facing. YOU=(5,-3), facing=-1 rad (~-57.3 deg). Puck=(7,-6). Bearing from YOU to puck = atan2(-6-(-3), 7-5) = atan2(-3,2) = -56.3 deg -- within ~1 degree of YOU's own facing vector. That means the puck is essentially straight ahead of where YOU is looking, not 'below' in any body-relative sense. If 'below' is intended as rink-relative slang (toward the goal line/boards, independent of facing), that is defensible coaching idiom, but the option ties it to 'me' (a moving, explicitly-facing actor), not to a named rink landmark, which fails charter check #7 as written.",
+      "alternative_considered": "Standard hockey shorthand ('get below the puck,' 'low guy') often uses map-relative 'below' regardless of body facing. If that convention is confirmed as the packet's standing usage, this would not be a defect. Distinguishing condition: a stated convention (map-relative vs. facing-relative 'below') for the corpus, or landmark anchoring instead of 'below me.'"
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "verdict": "NO_DEFECT",
+      "reasoning": "If D1 (opponent) reaches the loose puck first, actual possession has changed hands regardless of who the pass was originally intended for. Answer (b) 'next read becomes defending/regaining possession' is the only option consistent with possession being determined by who actually has the puck, not by intent. No geometry contradicts this."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "verdict": "NO_DEFECT",
+      "reasoning": "YOU=(11,2), F1=(9,7). |YOU.y|=2 vs |F1.y|=7 against a stated middle of y~0: YOU is closer to the middle. Team roles check out (away/gold defends the +x net per briefing, matching goalie g1 at x=26; home/navy attacks +x, matching F1 carrying toward the right net). Answer (a) is correct on the coordinates as given."
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "verdict": "DEFECT_FOUND",
+      "reasoning": "Prompt asks 'What should YOU tell F1 from the inside angle?' but F1 is the opposing puck carrier (home/navy), while YOU is the defender (away/gold) -- confirmed by roster: h1/h2=home, a1(YOU)=away, and the briefing states 'YOU are gold and defend the right goal.' A defender does not communicate a defensive read to the opponent they are angling; that call would go to a teammate (here, only the goalie g1 is on YOU's team). This reads as a template carried over from an offensive scenario (like exp26-u11-006/011 above, where F1 is YOU's own teammate and 'tell F1' makes sense) without re-checking which team F1 belongs to in this defensive scene -- exactly the actor/team-resolution failure the review charter calls out first (check #1)."
+    }
+  ]
+}

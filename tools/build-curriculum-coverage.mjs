@@ -9,14 +9,17 @@ import {questionContentHash} from './question-batch-core.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUTPUT = resolve(ROOT, 'docs/factory/curriculum-map');
-const AGE_ORDER = ['U7', 'U9', 'U11', 'U13', 'U15', 'U18'];
+export const AGE_ORDER = ['U7', 'U9', 'U11', 'U13', 'U15', 'U18'];
 const TYPE_ORDER = ['choice', 'multi', 'sequence', 'position', 'explain'];
 const TYPE_LABELS = {
   choice: 'Multiple choice', multi: 'Multi-select cues', sequence: 'Order actions',
   position: 'Move a player', explain: 'Explain / compare',
 };
 
-const DOMAIN_RULES = [
+// Reused verbatim by tools/build-full-curriculum-matrix.mjs (task B, 2026-09-07)
+// so the cross-catalog matrix shares one taxonomy instead of a second guessed
+// keyword list. Do not fork this array; add tokens here if the taxonomy grows.
+export const DOMAIN_RULES = [
   { id: 'skating-movement', tokens: ['skating', 'skate', 'backward', 'pivot', 'agility', 'edge', 'footwork'] },
   { id: 'puck-skills', tokens: ['puck', 'passing', 'pass', 'receiv', 'shoot', 'carry', 'possession', 'retrieval', 'protection'] },
   { id: 'hockey-sense', tokens: ['scan', 'read', 'awareness', 'decision', 'timing', 'space', 'support', 'risk', 'clock'] },
@@ -69,16 +72,20 @@ const BACKLOG_SOURCES = [
   { id: 'iihf-development-hub', title: 'IIHF Development Hub', url: 'https://www.iihf.com/en/statichub/4625/development', use: 'Official coaching and development resource index; specific goalie claims need a specific reviewed source.' },
 ];
 
-const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
+// hash/canonicalGeometry/geometryHash are exported so
+// tools/build-full-curriculum-matrix.mjs can compute the SAME
+// per-scenario opening-geometry hash for its "uniqueOpeningGeometry" count
+// instead of a second, possibly-inconsistent implementation.
+export const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
 const countBy = (values, mapper = value => value) => Object.fromEntries([...new Set(values.map(mapper))].sort().map(key => [key, values.filter(value => mapper(value) === key).length]));
 const increment = (object, key, amount = 1) => { object[key] = (object[key] || 0) + amount; };
 const sortedCounts = object => Object.fromEntries(Object.entries(object).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
 const ageSort = (a, b) => AGE_ORDER.indexOf(a) - AGE_ORDER.indexOf(b);
-const canonicalGeometry = scenario => ({
+export const canonicalGeometry = scenario => ({
   actors: (scenario.setup?.actors || []).map(actor => ({ id: actor.id, role: actor.role, team: actor.team, x: actor.x, y: actor.y, facing: actor.facing })).sort((a, b) => a.id.localeCompare(b.id)),
   puck: scenario.setup?.puck || null,
 });
-const geometryHash = scenario => hash(canonicalGeometry(scenario));
+export const geometryHash = scenario => hash(canonicalGeometry(scenario));
 const fieldsFor = scenario => ({
   tags: Array.isArray(scenario.tags) ? scenario.tags : [],
   topic: scenario.topic || '', family: scenario.family || '', objective: scenario.objective || '',

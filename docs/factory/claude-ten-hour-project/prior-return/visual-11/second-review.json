@@ -1,0 +1,26 @@
+{
+  "packetId": "visual-11",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5) -- same model family as the lead reviewer, not cross-model independence.",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 known calibration defects missed). All findings below are provisional second-opinion evidence, not a trusted clearance.",
+    "toolLimitation": "No live browser/Playwright access this pass. Answers derived solely from packets/visual-11-manifest.json and packets/visual-11-blind.json. Cannot independently confirm the lead's screenshots or interaction-test transcripts."
+  },
+  "questions": [
+    {"questionId":"exp26-u18-002-q2","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold1 nearer F1-line (0.28 vs 3.15); Gold3 nearer F2-line (1.61 vs 4.33); Gold5-to-F1=13.60 is far greater than Gold2-to-F1=2.24, falsifying (c)."},
+    {"questionId":"exp26-u18-005-q5","myBlindAnswer":"c","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold3 (3.61 to YOU, 4.47 to F1) is far closer to both than Gold1 (18.25/12.17) or Gold2 (18.03/10.30)."},
+    {"questionId":"exp26-u18-009-q2","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold1 closer to F1 (5.10 vs 12.04); Gold2 closer to F2 (7.21 vs 11.18); Gold3-to-YOU=15.03 is far greater than Gold2-to-YOU=5.83, falsifying (c)."},
+    {"questionId":"exp26b-u18-001-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold2 perp. distance to F1-line=9.55 (t=0.659,valid) vs to F2-line=1.35 (t=0.631,valid), both segment-valid, no correction needed."},
+    {"questionId":"exp26b-u18-004-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Independently resolved the flagged shuffled id-to-label mapping by reading each actor's actual 'label' field before answering, not the id numbering: id=a4 carries label='A1' (Gold1, puck owner, matching puck.owner='a4' and the briefing's 'Gold 1 controls behind the goal line'); id=a5 carries label='A2' (Gold2); id=a3 carries label='A3' (Gold3); id=a2 carries label='A4'. With that resolved, Gold2 (id a5, (-24,5)) sits 1.41 units from YOU on YOU's own side of the puck, matching the drill's stated low-threat assignment, while Gold3 (id a3, (-18,-10)) is 14.87 units away on the puck side. Since 'no teammate has confirmed a coverage handoff,' YOU's original assignment (Gold2) stands regardless of Gold3 cutting inward -- matches the lead's conclusion exactly, reached independently before comparing."}
+  ],
+  "overallDisagreements": "None. All 5 blind answers match the authored after-solve key and the lead reviewer's blind/after-key findings. The specifically flagged actor id/label shuffle in exp26b-u18-004-q5 was resolved independently by reading the label field on every actor and cross-checking against puck.owner, not by trusting the lead's resolution -- it produces the identical mapping and the identical answer (Gold2).",
+  "limitsOnThisAgreement": [
+    "Same-model convergence (both reviewers are Claude Sonnet 5) is weaker independence than cross-model or human agreement.",
+    "No screenshot/live-app inspection this pass; cannot confirm the lead's interaction-test transcripts, only the underlying coordinate math and roster fields.",
+    "Neither reviewer is currently qualified to issue a trusted clearance; this packet's 'no defect found' is two unqualified, provisional passes that agree, not sign-off."
+  ]
+}
