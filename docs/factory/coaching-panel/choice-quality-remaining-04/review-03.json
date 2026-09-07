@@ -1,0 +1,178 @@
+{
+  "status": "advisory-first-pass",
+  "humanCoachApproval": false,
+  "limitations": [
+    "No rendered view inspected. Rule-dependent scene held pending verified primary source."
+  ],
+  "rows": [
+    {
+      "questionId": "exp26-u9-010-q5",
+      "scenarioVersion": 2,
+      "contentHash": "d091f8c311110101812ffdcf3f7cd97ff7c7aef6cd851061318beb3977a06be9",
+      "verdict": "retain",
+      "issueCategory": "introductory update",
+      "exactOffendingText": [],
+      "reason": "Explicit imagined direction change; noticing it before selecting a transition is sound, and feedback correctly defers physical execution.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Read the new direction",
+          "assessment": "supported within stated setup",
+          "reason": "Read the new direction without presuming a technique."
+        },
+        {
+          "optionId": "b",
+          "text": "Keep moving because the first plan never changes",
+          "assessment": "see reason",
+          "reason": "Never changes is an intentional beginner misconception."
+        },
+        {
+          "optionId": "c",
+          "text": "Assume Gold1 stopped",
+          "assessment": "see reason",
+          "reason": "A turn does not establish stopping."
+        }
+      ],
+      "repairDirection": "None required for basic U9 cue updating.",
+      "highRisk": false
+    },
+    {
+      "questionId": "exp26-u9-014-q8",
+      "scenarioVersion": 3,
+      "contentHash": "572c11887fc2b4567052d4f6a435e298b0ba128079ef6eaeb1eb512330635f2c",
+      "verdict": "hold",
+      "issueCategory": "unverified rule-dependent setup",
+      "exactOffendingText": [
+        "In the named Hockey Canada U9 half-ice model, a goalie-freeze whistle asks the attacking team to back off three metres and gives the defending team possession. The gold goalie already held the puck and the whistle happened. Gold1 now controls the restart puck near the crease; YOU are the closest navy attacker and are still about two metres away, inside that cushion. Earlier events are stated, not animated. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity."
+      ],
+      "reason": "Target advice is reasonable only within the named goalie-freeze retreat model. Three-metre restart rule in scene has not been verified in this pass; retain no rule endorsement without primary receipt.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Gold1’s restart with the puck",
+          "assessment": "supported within stated setup",
+          "reason": "Track named restart possessor, conditional on valid restart model."
+        },
+        {
+          "optionId": "b",
+          "text": "Navy2’s space so you do not both crowd the same route",
+          "assessment": "supported within stated setup",
+          "reason": "Maintain teammate spacing while retreating."
+        },
+        {
+          "optionId": "c",
+          "text": "The old shooting lane as if the whistle never happened",
+          "assessment": "see reason",
+          "reason": "Old shooting opportunity ended after the explicitly stated whistle."
+        }
+      ],
+      "repairDirection": "Verify current named Hockey Canada model and applicability from cited primary page; then likely retain target as introductory restart-awareness contrast.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u9-003-q5",
+      "scenarioVersion": 2,
+      "contentHash": "c7a1b389884fa8f810f057df64ab731bd0041d8640472a484a0746edcdc61b94",
+      "verdict": "revise",
+      "issueCategory": "possession giveaway",
+      "exactOffendingText": [
+        "Check who controls it and where Navy2 can help",
+        "Assume YOU still own it",
+        "Reach through Gold1 without looking"
+      ],
+      "reason": "YOU never owned this loose puck, so assume YOU still own it contradicts initial state. Key correctly separates arrival from control but two careless alternatives trivialize that read.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Check who controls it and where Navy2 can help",
+          "assessment": "partly supported; conditional",
+          "reason": "Correctly rechecks actual control instead of equating arrival with ownership."
+        },
+        {
+          "optionId": "b",
+          "text": "Assume YOU still own it",
+          "assessment": "see reason",
+          "reason": "Still own is false even before Gold1 arrives."
+        },
+        {
+          "optionId": "c",
+          "text": "Reach through Gold1 without looking",
+          "assessment": "see reason",
+          "reason": "Blind reaching through an opponent is an obvious poor/safety contrast, not a competing read."
+        }
+      ],
+      "repairDirection": "Replace with plausible observations of loose versus controlled puck and same-team support; explicitly conditionalize arrival as imagined next event.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u9-004-q5",
+      "scenarioVersion": 2,
+      "contentHash": "ab5a2bb67269ed9bd01f995913b0341378f091b2133f049b42ad2219d64f572a",
+      "verdict": "revise",
+      "issueCategory": "unconditional route adjustment",
+      "exactOffendingText": [
+        "Keep the carrier in view and adjust your lane",
+        "Follow Navy2 without checking Gold1",
+        "Stay on your old line"
+      ],
+      "reason": "A wide carrier does not necessarily require abandoning an already useful inside recovery line. Stay on your old line may be reasonable if it protects middle and teammate spacing; no new geometry establishes otherwise.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Keep the carrier in view and adjust your lane",
+          "assessment": "partly supported; conditional",
+          "reason": "Keeping carrier in view is sound; adjustment should depend on whether old line remains useful."
+        },
+        {
+          "optionId": "b",
+          "text": "Follow Navy2 without checking Gold1",
+          "assessment": "see reason",
+          "reason": "Following without checking is giveaway wording."
+        },
+        {
+          "optionId": "c",
+          "text": "Stay on your old line",
+          "assessment": "see reason",
+          "reason": "Existing inside line may remain appropriate when carrier goes wide."
+        }
+      ],
+      "repairDirection": "Ask what to reassess and preserve staying inside when useful, or define enough geometry to distinguish two actual recovery plans.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u9-005-q5",
+      "scenarioVersion": 1,
+      "contentHash": "d4395b6c61e63009da01a3809be78d4259aeb50cecd147c5287937cce1ad5cac",
+      "verdict": "revise",
+      "issueCategory": "unsupported directional prescription",
+      "exactOffendingText": [
+        "Turn your eyes and adjust toward the new puck",
+        "Keep watching the old spot",
+        "Sprint backward without looking"
+      ],
+      "reason": "A pass toward the side changes puck read but does not by itself require defender movement toward that puck; middle responsibility and Navy2 spacing may favor another line.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Turn your eyes and adjust toward the new puck",
+          "assessment": "partly supported; conditional",
+          "reason": "Track new puck, but adjust toward is not uniquely established."
+        },
+        {
+          "optionId": "b",
+          "text": "Keep watching the old spot",
+          "assessment": "see reason",
+          "reason": "Watching an obsolete spot ignores stated pass."
+        },
+        {
+          "optionId": "c",
+          "text": "Sprint backward without looking",
+          "assessment": "see reason",
+          "reason": "Blind backward sprint is an obvious giveaway, not another valid defensive choice."
+        }
+      ],
+      "repairDirection": "Separate locating new puck from selecting recovery direction; give matched plausible observation/support options and no unshown recipient assumption.",
+      "highRisk": true
+    }
+  ]
+}

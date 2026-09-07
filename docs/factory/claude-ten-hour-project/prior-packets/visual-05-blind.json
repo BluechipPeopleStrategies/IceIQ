@@ -1,0 +1,487 @@
+{
+  "packetId": "visual-05",
+  "scenes": [
+    {
+      "id": "exp26b-u11-019",
+      "version": 3,
+      "ageBand": "U11",
+      "title": "Change jobs after the turnover",
+      "family": "turnover-job-change",
+      "topic": "Transition",
+      "objective": "Switch from attacking support to defensive recovery when possession changes.",
+      "briefing": "Navy attacks the right net (+x). Gold D1 has won control, so gold now attacks the left net (-x). YOU and navy F1 must change from attacking support to defence. Gold F2 trails D1 on the other side of the middle.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 3,
+            "facing": -2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": 3.1
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 0,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "F2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -6,
+            "facing": 3.1
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0.0416
+          }
+        ],
+        "puck": {
+          "owner": "a1"
+        }
+      },
+      "focusActorId": "h1",
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-u11-pathway-2022",
+          "title": "Hockey Canada U11 Player Pathway",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+          "section": "U11 Skills Matrix, printed page 22 (PDF page 22)",
+          "use": "Age-topic support only; no approval of these answers."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u11-019-q5",
+          "type": "choice",
+          "prompt": "Suppose Navy F1 wins control back from D1. Which carrier-and-direction pairing now matches the play?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Navy F1 has the puck and attacks toward the right net"
+            },
+            {
+              "id": "b",
+              "text": "Navy F1 has the puck and attacks toward the left net"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u11-021",
+      "version": 3,
+      "ageBand": "U11",
+      "title": "Carry until the lane narrows",
+      "family": "two-on-one-carry-read",
+      "topic": "Attacking decisions",
+      "objective": "Read the defender and teammate before continuing a two-on-one carry.",
+      "briefing": "Navy attacks the right net (+x). YOU have the puck and F2 is across the middle. Gold D1 is farther toward the right goal line than both navy skaters, with a lateral position between your lanes. Recheck the defender and available space before carrying, passing or shooting.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": -5,
+            "facing": -0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 2,
+            "facing": 2.65
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "usah-skill-progressions-2018",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+          "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u11-021-q5",
+          "type": "choice",
+          "prompt": "YOU are comparing the cross-ice pass and the shot. Which direct line currently stays farther from D1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line from the puck to F2"
+            },
+            {
+              "id": "b",
+              "text": "The line from the puck to the net"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-009",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Arrive after the carrier’s delay",
+      "family": "entry-delay-timing",
+      "topic": "entry delay timing",
+      "objective": "Use timing to remain available when an entry slows.",
+      "briefing": "F1 has slowed in a wide attacking-zone lane to protect navy possession. YOU are arriving through the neutral zone. The exercise asks YOU to remain a passing option rather than overtake F1 immediately. Navy attacks the right net and defends the left net.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 0,
+            "facing": 0.7853981633974483
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 9,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 7,
+            "facing": 2.5535900500422257
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 22,
+            "y": -3,
+            "facing": 1.892546881191539
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 4,
+            "y": -5,
+            "facing": 0.7853981633974483
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "entry-delay-timing"
+      ],
+      "sources": [
+        {
+          "id": "hc-practice-2020",
+          "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+          "section": "Printed page 2, Entries — Delay",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Slower U13 adaptation; the carrier’s stated delay is context, not animation or a universal entry choice. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-009-q2",
+          "type": "multi",
+          "prompt": "Which two visible relationships help YOU judge how to arrive in support of F1’s delay?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU are still behind F1 toward Navy’s end"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1 is close to F1 on the side nearer the middle"
+            },
+            {
+              "id": "c",
+              "text": "D1 is farther toward the attacking net than F1"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-011",
+      "version": 4,
+      "ageBand": "U13",
+      "title": "The point shot has a blocker",
+      "family": "shooting-lane",
+      "topic": "shooting lane",
+      "objective": "Compare the current shooting lane with another angle.",
+      "briefing": "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": -8,
+            "facing": 1.695151321341658
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": 6,
+            "facing": -2.642245931909663
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "shooting-lane"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 18, Shooting",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "type": "multi",
+          "prompt": "Which two stated changes would directly change the position from which Navy could next shoot?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU carry the puck to a different position"
+            },
+            {
+              "id": "b",
+              "text": "D2 receives a pass and controls the puck at D2’s position"
+            },
+            {
+              "id": "c",
+              "text": "D2 moves while YOU keep the puck at its current spot"
+            }
+          ],
+          "basis": "coaching",
+          "id": "exp26-u13-011-q8"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-013",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Keep the puck away from nearby pressure",
+      "family": "puck-protection",
+      "topic": "puck protection",
+      "objective": "Notice which side of the carrier is pressured.",
+      "briefing": "YOU control the puck near the puck-side boards. Gold 1 approaches from the middle toward YOU. This exercise explores a protective turn while keeping the puck available; no body check is required. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": -9,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -3,
+            "facing": -2.158798930342464
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -5,
+            "facing": -1.8157749899217608
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": 1,
+            "facing": -2.3036114285814033
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "puck-protection"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-013-q2",
+          "type": "multi",
+          "prompt": "Which two current relationships belong in YOUR protection-and-outlet read?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 is closer to the puck than Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "F2 is farther up ice and nearer the middle than YOU"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is closer to YOU than F2 is"
+            }
+          ],
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-013-q5",
+          "type": "choice",
+          "prompt": "Before using F2 as an outlet, which opponent is nearer the direct line from YOUR puck to F2 in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    }
+  ]
+}

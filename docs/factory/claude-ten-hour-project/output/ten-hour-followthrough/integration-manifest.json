@@ -1,0 +1,1147 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-ten-hour-followthrough-integration-manifest",
+  "generatedAtUtc": "2026-09-07T07:44:52.111Z",
+  "worktree": "C:/Users/mtsli/IceIQ/.worktrees/claude-ten-hour-followthrough",
+  "branch": "claude/ten-hour-followthrough",
+  "baselineCommit": "899e96f7a6c35e16422e6c9a99a1f9914d2f6d45",
+  "finalCommit": "1fbe7ab9542fae69df7666f211729d99fe7c7c4f",
+  "fileCount": 136,
+  "changeClassCounts": {
+    "build-artifact": 3,
+    "code": 5,
+    "test": 1,
+    "evidence-copied-reference": 102,
+    "evidence-produced": 21,
+    "draft": 3,
+    "evidence-pointer": 1
+  },
+  "files": [
+    {
+      "path": "docs/factory/curriculum-map/README.md",
+      "changeClass": "build-artifact",
+      "beforeSha256": "a82bd32b538389be6e1a20377ce04fd6f12f9232c13196cf641d9ff9f50247e3",
+      "afterSha256": "4242fab2d0a7b70cfa618dfb6a17896ec562ed3172e85d0c7c8dcebd77d5993b",
+      "bytes": 5958,
+      "status": "modified"
+    },
+    {
+      "path": "docs/factory/curriculum-map/coverage.json",
+      "changeClass": "build-artifact",
+      "beforeSha256": "9cd251b44f5a6f3e35dc289e081524e6d586c9a7db2433a40d1f801aa655b21a",
+      "afterSha256": "60644491ac7d13663b4fd46dd408b0c96cba258aad585e9fcef327c55d88434a",
+      "bytes": 1110325,
+      "status": "modified"
+    },
+    {
+      "path": "docs/factory/curriculum-map/index.html",
+      "changeClass": "build-artifact",
+      "beforeSha256": "c6fe0cabff13bbbb47608875644254737c8cda943a33c83063b6ba77097f138d",
+      "afterSha256": "dc15d2e6669d4370bc3d49ea72af7ee0fc36f04ce4b25a5937d655a1d54dfb16",
+      "bytes": 775453,
+      "status": "modified"
+    },
+    {
+      "path": "tools/build-curriculum-coverage.mjs",
+      "changeClass": "code",
+      "beforeSha256": "d00d53b2149584a9efb1433adebab01b4105d3063d6cf93361f723e3a8d7512b",
+      "afterSha256": "7fcd85188cbd321af9b2e7799062d164b3ccdea8961c5e9d43ce304002346a1e",
+      "bytes": 44169,
+      "status": "modified"
+    },
+    {
+      "path": "tools/build-full-curriculum-matrix.mjs",
+      "changeClass": "code",
+      "beforeSha256": null,
+      "afterSha256": "4dd06a8b39f72a83c26829cdf9f0629ed634d602a744539fde9c30ed5548731c",
+      "bytes": 52274,
+      "status": "new"
+    },
+    {
+      "path": "tools/build-full-curriculum-matrix.test.mjs",
+      "changeClass": "test",
+      "beforeSha256": null,
+      "afterSha256": "63d538063aa2c8c04487f9d6b9a21d643a2cd3d5745edd1502a65056faeea45d",
+      "bytes": 11691,
+      "status": "new"
+    },
+    {
+      "path": "tools/lib/curriculum-changed-cue.mjs",
+      "changeClass": "code",
+      "beforeSha256": null,
+      "afterSha256": "11e1f0f23486ef53d35811976aedc829c1b38eff936cc085c8c67bad1326615b",
+      "bytes": 7054,
+      "status": "new"
+    },
+    {
+      "path": "tools/lib/curriculum-domain-signals.mjs",
+      "changeClass": "code",
+      "beforeSha256": null,
+      "afterSha256": "03543bf56ad3824c236d333b71c0556b4e153d1dd2e860655a975fffc1ba0ca2",
+      "bytes": 1713,
+      "status": "new"
+    },
+    {
+      "path": "tools/lib/curriculum-matrix-helpers.mjs",
+      "changeClass": "code",
+      "beforeSha256": null,
+      "afterSha256": "ba56b788820df55d7e3bc27ae5c66c5bd6dd444af0291f12e34a006d71df2090",
+      "bytes": 3116,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/assignment.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "bc43107eaf1db903811b62dad31ae35583f39160fc2754c80af657c33da7462a",
+      "bytes": 1171,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/adversarial-cross-check.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "3cd98e1118c2d623f67bc02ee2c6e5a94a4a619f5aa67868bcf30bc13bad9cfc",
+      "bytes": 32517,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-matrix.csv",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "55039b80819435e46336bc4f8d3631ff6550060737b1705061d5ba8abb9d3f63",
+      "bytes": 1543245,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-matrix.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "4bf56ec4869be5e5d2af134cce2aaf3deb2a9f7dad2890679c80873b803d2295",
+      "bytes": 3622400,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-report.html",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "8f3aeaffa713da723c57f1d8b57f96623ed23482932eb6601f1535e710887b6a",
+      "bytes": 2939097,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/draft-revisions.json",
+      "changeClass": "draft",
+      "beforeSha256": null,
+      "afterSha256": "eff8fed71e344ba4669063edde660ee20dd631cd7782208f40be341324389671",
+      "bytes": 130300,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/feedback-flow-report.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "5f4c6bd05afe92ab3cc3377fe96ac39f74879cea41fcf481284b0e3ec7d07cb5",
+      "bytes": 18856,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/geometry-verification.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "f68981880c307fca38e771a2c6a0e9752e6f4626db9242d04e3f939ac3389608",
+      "bytes": 7387,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/intake-verification.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "48a5e2c3e936e2753bc5f36e78cc0831f7bf10a5099a4cc21ab6b937dda2575d",
+      "bytes": 596287,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/next-authoring-queue.json",
+      "changeClass": "draft",
+      "beforeSha256": null,
+      "afterSha256": "faf2312f11a2c6b22e05d2675f526544d0ea28deda24c449f53e4a5bc86fd865",
+      "bytes": 15162,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/source-ledger.json",
+      "changeClass": "draft",
+      "beforeSha256": null,
+      "afterSha256": "6578169bba578ff8142ae12f2c4d1947b835ba8c03602f6f945b577e9828e27f",
+      "bytes": 9501,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/TASK-A-GEOMETRY-SUMMARY.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "065b1483f137246ee7bdd735fb5994ad6c6b9dee8b163b6ad49d01f3f3521f6b",
+      "bytes": 2259,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/TASK-A-SUMMARY.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "f571ade6b1cb420483af65ce60cb0a594cd0f89884d2532e962877e26f400fd7",
+      "bytes": 3017,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/TASK-B-SUMMARY.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "a8fad343ebc6650667d62b8d88af3b85b226317e1afd23afbac911006b861524",
+      "bytes": 4326,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/TASK-C-SUMMARY.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "c50382bab622d3459f4ec8167371aa6968c3eb9e2504acbf9b0267eb644f433e",
+      "bytes": 3626,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/disposition-changed-example.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "b9f56c5d04639e0acdc134e2e42734be7fc91ce013fcf6b0378b3b8967574074",
+      "bytes": 473,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/disposition-needs-context-example.json",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "3897e57a954bcc8551957177bba1a503157ec32d08848b386753d7822f4d3b8a",
+      "bytes": 272,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/feedback-e2e-test.mjs",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "9d59ace9a2df5aff4d00619ab06f0c8a5ac5979f86678cd00f3f105b8be69095",
+      "bytes": 4358,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/synthetic-dispositions-sample.jsonl",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "717647820264fc76d1068915c47f54ed4584750ec30ace63f190c4f7130bf14b",
+      "bytes": 1299,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/synthetic-inbox-sample.jsonl",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "47a7bbb875e9aac4361a9811375a97c07ddcb1069adbc95c88e49ac62d7685d1",
+      "bytes": 6060,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-e-evidence/task-b-independent-review.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "0665a8c7f3fdc4e20d389262fa9774b3790ce938f31cb3809031d78fd1bfdcc7",
+      "bytes": 24680,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-e-evidence/task-c-independent-review.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "69434b1ac50e9b094dbd9ebec0befa3ed1e97c13df6dd986ca735c0d76e0dbb1",
+      "bytes": 15682,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/TASK-E-SUMMARY.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "55ee6e142c43f36dced9f38730003dc7618e1ce9e73ca4d92b5cd17914beec41",
+      "bytes": 3338,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/verify-intake.mjs",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "076bf93a23d8cec8179376aa2005182f94b7b0de0c3be4538ca9d99734e70215",
+      "bytes": 26636,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/visual-inspection-log.md",
+      "changeClass": "evidence-produced",
+      "beforeSha256": null,
+      "afterSha256": "2602a4888971d7718140a283670377ae6706e0100e5b2f27fce2c7704abb7933",
+      "bytes": 3756,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/PRIOR-EVIDENCE-INVENTORY.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "7be52a68b80bdfc537ef9a470d7298ac723fc1c0503ce9eee35f8d6a42108477",
+      "bytes": 41274,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-01-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "160e7c01674bf1d74b61a750d458a7a741c0570a0a85422622a2ff101441f078",
+      "bytes": 39842,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-01-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "0ea5b1e67d06e64d91bc01a284b731e346ad320a92cadd85046f6c44c568be88",
+      "bytes": 16853,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-01-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "dfdc85667bc68431ad9b87c4675368d42de369d01139742d440630eb66fe6e7b",
+      "bytes": 1913,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-02-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "542019be343f1ff868dc8aa7011d2028336f08811c74210204e6d96d0ee97269",
+      "bytes": 39704,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-02-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "b775215180f83c70fa2f013e35b4f90553f57d2439bed645ae03870bd7706ebb",
+      "bytes": 15185,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-02-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "ef3c135a66658ebab583593004535c1c688bb90978d5eed9cc1b37c64cc9c2f5",
+      "bytes": 2291,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-03-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "40abb81825a1bc01474adb69c56fbd0722f831aa3d04ae022dfc3214429cd527",
+      "bytes": 43870,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-03-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "bd24f481beb633ff5a6c951a2b1c294a473dd4ce44d6075c158f2681d1116944",
+      "bytes": 14453,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-03-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "173e7073f11fc2c9bb4628b389080e4f53725c1f378758ddf104d1784920b061",
+      "bytes": 1931,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-04-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "c6b82ddb0feafef8636aa65998e5e52f185bd4bab0cc09a192838f3506a29918",
+      "bytes": 32321,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-04-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "5a18da7accda8d268b9df8e13fa2f2b23861d0edb6fd4628975b5c342db1f976",
+      "bytes": 14307,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-04-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "a37c0d8f7c643bac3cf2abfa74a2374f98d7bf25881f385440e9675ba00f65e4",
+      "bytes": 1951,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-05-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "775cc8c3a1dfd2eaec566f28e511a4b72bbe539ae7eee70fcacfdb1d4da3172a",
+      "bytes": 40587,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-05-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "30be80619da0114afed83ff8db361539d23223f73b2c56bc5489c25da2b00eb2",
+      "bytes": 15982,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-05-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "dd35134b1eba96624550e6cd9f5b89020a5fffdc68406654a87f7250a89a4b64",
+      "bytes": 2303,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-06-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "1a03b765570a252369fd60d6563e5b60834a52b1eaf482869543b48888bf8cca",
+      "bytes": 46115,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-06-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "5759c0299ea3079c19c00199a731cc2a7286bfdf729555765ddbb02e212083fb",
+      "bytes": 15788,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-06-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "7fe3dd7b7d9e8c424f933a445b67060081712f8347ecafa84015a293bb542d09",
+      "bytes": 1931,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-07-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "1bc5e27388d5aa6bfefd5a39385a1d8bdc4bbfc062ef9c4146d7b963661017a4",
+      "bytes": 38723,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-07-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4f589c61c89a45b6ee2d055941bcf6644388b8fa8b343a7bd3edb8f1536307a2",
+      "bytes": 17797,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-07-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "612b5a68f616f0f65f42439c260f541279f2700d7c9599bb2a8689a9a9dd135a",
+      "bytes": 1947,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-08-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d40d8d6dfc82967c3253fb1cd0bd31ae764070fa19fdcfbd91c8b3e6bced1d19",
+      "bytes": 47532,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-08-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "df3781d6044f65ae185dd4cd27d359ee9969c0cf20bcf4668889bc455d4308e4",
+      "bytes": 20429,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-08-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "7f066a31ebed3d5b978cd1348305f5dbc9d2f63745df0976a8cd3f84066ccc66",
+      "bytes": 2299,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-09-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "637c4df7410603083f2627a1df1b410dd81602b138b018eb4d6c6a14f27231e7",
+      "bytes": 41626,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-09-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "b149f8f5ff9dc661e2b93dc68316c0b4f43528fa014d724705acad6602eef6f7",
+      "bytes": 18607,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-09-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4857157770eb9c88ef685ac1c24bfdfe2559f989c3c6f0514130b9aac7f27381",
+      "bytes": 1943,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-10-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "c1d65b370afdd5c440b01af51b39d82a41cc539695ec1a288c5245af4ffb795d",
+      "bytes": 38264,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-10-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "46542a1488de7e3f65553cd9198f48c2cedce0626f01e7e56451592de32cf07e",
+      "bytes": 19084,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-10-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "17da9a7c64ea794d363832233a1b506d620a1ac8871b9a6d89bfe4633b1ce754",
+      "bytes": 2679,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-11-after-solve.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "0c482ab6e8b08a1b96b804f79607476f382109dbad2d425d6d25f063f5ee8b72",
+      "bytes": 45566,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-11-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "30ab6eb3a840eb80dbcd0d35901d71a4af6a2454454ce78106964d3c62215438",
+      "bytes": 20088,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-packets/visual-11-manifest.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4790b9c584cbb1d078ae92961a45d3e2d51b81f8e523237ceda1f28046533949",
+      "bytes": 1939,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/all-60-summary.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "8df2c1f8c602d97c910bd80ca5b30895ab935f873b94d21f981789e9efb796c5",
+      "bytes": 13122,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/calibration/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "a49d6f657176bd2f7deaf076e14f47e92131fe0c418435166fd53c92b149f9be",
+      "bytes": 6780,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/calibration/reconciliation.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "f8f282bd089e8b020d7c00a33030f7c74367461f03c4ce688494b8825eeb58d1",
+      "bytes": 6883,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/calibration/second-reviewer-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4c23453c19540aa057214e93bd6aeff116c1f0ebfd20dab538b932c67e9580f3",
+      "bytes": 6719,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/calibration/second-reviewer-reconciliation.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "41526971ceb44e27b09b2eb9645f5bb180e4e264800bc269808e408624c01fc6",
+      "bytes": 5573,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/curriculum-drafts.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "510081007e05d396dc150aae3500d3d9bac7aaa5c6a7e6cd23f81ad32ef0a191",
+      "bytes": 17154,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/curriculum-gap-plan.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "53c8318aabdfeb12f40329028e35990f8c0cc88c31b59a961562da15c1ee9781",
+      "bytes": 22292,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/feedback-flow-report.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4d65c949d12b62c0a3a365bec09203c1764325b758b5f6682a908ae069f126d8",
+      "bytes": 9436,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/hash-verification-result.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d92f53e4de3df5bb661bc2d3a3c1aa64320335bb2b82b6f21f8c7b1a6807eae0",
+      "bytes": 22236,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/REPORT-BACK-TO-CODEX.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "a1f2c0d6b7e737b1dcef16b79705fddb6fa47b41be8749fe4be2a534191cbcc5",
+      "bytes": 14274,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/RUN-STATE.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4543fe940a38d33acb11df5afe78e29580e2292f7ba69cad686c81394a3672f6",
+      "bytes": 4490,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-01/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "da94769ba53333a5ac4ef3842fc1c4a30b74c5a300df86e203012161734784b7",
+      "bytes": 4728,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-01/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "73339bb29c677d1c28e4449bddc02ac01536df9b09836f3d5731d8b56f6dc2a2",
+      "bytes": 3604,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-01/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "99d1290afd0cfb5c3bb17a12a90d67bd0738268a0dc26264b791d2faba562a74",
+      "bytes": 16198,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-01/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "05085a076c52406b90645bd89863870e89183032e4f898c6f72d331b7dffca38",
+      "bytes": 4889,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-01/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "fc653175ad274dbf76d79ba2f49d4aa360fdfc0ed5690a0785da3b0da9401f58",
+      "bytes": 7080,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-02/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "57669853444ededcb30316006dae6f9fe7ee14a63e049201e80880f8f91449b3",
+      "bytes": 4754,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-02/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "56b1270c56c1ad2169121e7ab035a2b73b73517549de8b7e3e5a68f0d7111995",
+      "bytes": 2427,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-02/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d61e82862c61f1139c00c42d437fef7f9423b24342355d186085be84cc68db84",
+      "bytes": 9194,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-02/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "7b698bdcbe8fd1a439200fd01503d9119bcd1cd14945d2222216822a53af25cf",
+      "bytes": 5529,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-02/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "2efa6629cf1020c830de2797320563bda671b4c6b491e2b5bbe0f30413d17416",
+      "bytes": 4790,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-03/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "49dd694e26dcc8a5dce34bfb04742cf594df1bca33bcafdee82d753cb671f484",
+      "bytes": 3598,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-03/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "5cd7755098f1ec7a08e638c599ecc92a5506442e9b1cd6961a102135bc3ccfc4",
+      "bytes": 2162,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-03/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "3f25a5620ad93c50a1152b1e29bb4851bd8f40c23eae34c0d84ac64856cad391",
+      "bytes": 8147,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-03/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "2da6c0599d05a0a42641dabecbe754c6f82a6f26c494500ef8853bb5ee0b2e15",
+      "bytes": 4086,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-03/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "ed11681744853c675a7abf5c98f58fbf028b4cddd25f64119d95e066686da79a",
+      "bytes": 3767,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-04/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "e308f216755a042f89336e03bf88f691d372e2b58469e2e440aa912b0bfbf2df",
+      "bytes": 3641,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-04/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "60932499d754e4144d12903aa64ef4c11dfa76e8e54dbb64d736e50e39ab2b99",
+      "bytes": 1713,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-04/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "b21e5701d7cc9f9c20e4f5d0e8a94bd27c406c2b223a92bea53f50792e2fd45d",
+      "bytes": 8125,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-04/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "bcaf8ee6f237dfae15495ac06d6ca061a7fc07b3dfdb8eb3384becc223696e66",
+      "bytes": 4188,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-04/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "cf843f4b02006f00ea797ec798250c3a1e263ee6c860b149aa1c8d941de002df",
+      "bytes": 3807,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-05/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "2a6e8a2f0c78cd7ff6f5309e55e9fa6a926d152d8a3957dbebe2bd926fc1090e",
+      "bytes": 5164,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-05/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "a3e8d0d32f635063a3a5a4b81d6a4bd060fccc95f4afeccc8db065a6a2010380",
+      "bytes": 2313,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-05/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "763204057f018cdd8baded4ebd4d75dc4df1560dc95f15c855a2689b8606e47e",
+      "bytes": 9754,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-05/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4611fc92bfd975b63178feefe79d032c77da5e738345807cdaec7ed288b13ddc",
+      "bytes": 4742,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-05/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "0e30abd1434a2201cea510227f01df6c146296f979f9a95c6f671c131d828ef7",
+      "bytes": 4819,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-06/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "b0e4c250d0a0c57a38f2a2562fd5280f20aefb37e55f8d6180093d7dc2a5d0b9",
+      "bytes": 3686,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-06/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "673e878ec89b2c8453ed04f91344d65a661267685ca492891abb6a8b74a19176",
+      "bytes": 1746,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-06/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d3bc03a024b1393bacf4bbcd8ca5f2ccfe15186199477329a90f5cb39fa263d5",
+      "bytes": 7537,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-06/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d0da625b74e1a93d10e058f6e2ee6f5c9bdceb728fb005e75b70d4f22aa4e6a8",
+      "bytes": 3492,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-06/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "369b69240ebb1d97413bbb697c32f07a4dd5d0ccde11e88e92e8d4f79ca7116a",
+      "bytes": 3438,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-07/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "709f51b1e4224caa99d21174aa0d57fb27d3065922f41b8638958a266180deaa",
+      "bytes": 4219,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-07/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "36fde4a98d628aa42e6d8c3056b2da1b4d0dd6a3bdf828d6f986a1440e36dc39",
+      "bytes": 2113,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-07/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "9dab48b303f2143f15de315fb5324d88a3f1668602f7185be41f07ac16dd4eb4",
+      "bytes": 7941,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-07/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "8441e039cd017e302f9be99d42507a763d377a3bb69e552207311e39bd819ca8",
+      "bytes": 3587,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-07/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "ec0822b6f386db91dd8247eba8fb3ab2b9dde8df2eca1381bf362a76f6ee8454",
+      "bytes": 4122,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-08/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "d1aa6c84f3517fc9c79b3fbb2888877dab011db2434e76b4edc8f4b60af5ed49",
+      "bytes": 4764,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-08/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "30655bb19064b1b7cc72cd8e8a25fc67b56d44c852443b4f52a0a6b057f735af",
+      "bytes": 2292,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-08/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "9727bfd109408834d475518ef7d93ea883bef915515894a5afb1c8607367aa70",
+      "bytes": 9931,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-08/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "163784d744142d6a754139ae6c3d67155897654a829b7a090fc953fcad6fffd7",
+      "bytes": 4406,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-08/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "fd084be0ad142af7a2b5a747dc515fd4936398ea86d97790644b5e526ebd408c",
+      "bytes": 5093,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-09/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "63667b5e38a53b37b93bc4af1d463358717206612559fdfb1a5b8c33dd926278",
+      "bytes": 3965,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-09/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "01857859942d82407f77723e878410515479d7535fc704d732732394ea477e34",
+      "bytes": 1859,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-09/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "7dc7090462435617e799065e5b0f296a83b8c19f5bcf1e1d7e63c5644c4c0515",
+      "bytes": 7860,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-09/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "ff6eacfb4a71e6775bdeb55e1b76d614baf2d3f44a9e06335f60deb06daea6cf",
+      "bytes": 4575,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-09/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "4d4ee0e30812dc5eb2c4cb6b403901ff4442a8f78728745e5bf4057b86721656",
+      "bytes": 4056,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-10/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "cb8628d937df57c00509061ddae9599955bd92f0d4f4bc64a4dd922a91317ef3",
+      "bytes": 4221,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-10/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "5a9221ccfbd3b659db4ebe06e4011e137f0bde7a3f7609549719acc42cc97cb1",
+      "bytes": 1936,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-10/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "73240128a14bf340f2c18841926847311e3c203b5acd656fb58409e33f67613e",
+      "bytes": 9846,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-10/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "fde00faec1df9aa90dba34f72f519804834355ae70c9f50079e5bc1269fcaa93",
+      "bytes": 4861,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-10/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "554137e421bcb9ee9aca7dbced415f33fe3a31bc07b4d947ab2f3606f583f863",
+      "bytes": 4519,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-11/blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "f50ef4f4176e9baf626c61fd599cf417a99cd2bf414d87735a602b513a058912",
+      "bytes": 4357,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-11/REPORT.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "03d5c9855a65b30adc166543283e81ca4e580a71e1fca63a7c9829756b709ff7",
+      "bytes": 3311,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-11/review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "fc9989fab98e2c8594355d9ea69d0046f07557518640d7937f8dde62d48159b5",
+      "bytes": 7919,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-11/second-review-blind.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "336fcfc2aa8345a5a0744d8ebc30a650adac01fab63b3a4768f36c7475e8e78a",
+      "bytes": 3890,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/prior-return/visual-11/second-review.json",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "398cf8b0dabdcfd6029b94da061e5eed21b31f1c1675e9ed0eee08bec5814bc7",
+      "bytes": 3639,
+      "status": "new"
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/START-HERE.md",
+      "changeClass": "evidence-copied-reference",
+      "beforeSha256": null,
+      "afterSha256": "646fba89338c473b86e95fb4eed74cb37484c74119a41afe857f0890561ea04d",
+      "bytes": 15670,
+      "status": "new"
+    },
+    {
+      "path": "output/ten-hour-followthrough/WHERE-IS-TASK-A.md",
+      "changeClass": "evidence-pointer",
+      "beforeSha256": null,
+      "afterSha256": "2a1bf7ef5db80c38e2a8c77a860f4fe0edf53996a238b0e7df3ac53acd5540de",
+      "bytes": 1363,
+      "status": "new"
+    }
+  ],
+  "tests": [
+    {
+      "command": "node --test tools/build-full-curriculum-matrix.test.mjs",
+      "exitCode": 0,
+      "passed": 19,
+      "failed": 0,
+      "notes": "New suite added by Task B; 2 regression tests added by Task E after fixing 2 real unknown-mapping bugs."
+    },
+    {
+      "command": "node --test tools/coaching-feedback-plugin.test.mjs",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "notes": "Pre-existing suite, unmodified, still passing after .gitignore fix."
+    }
+  ],
+  "recommendation": "ready-for-Codex-review",
+  "recommendationRationale": "All automated tests pass (22/22 total). No live-bank, production, or shared-inbox writes made. Content changes are draft-only (draft-revisions.json), never live. One code-level bug in Task D scope (server-side double-submit race) is known and explicitly left unfixed as out-of-scope-for-this-task rather than silently ignored. One false finding from this session (a claimed screenshot-mislabeling defect) was corrected in visual-inspection-log.md before this manifest was written.",
+  "knownOpenItems": [
+    {
+      "item": "Server-side double-submit race in feedback submission",
+      "severity": "low",
+      "status": "reproduced-not-fixed",
+      "reason": "Assessed by Task E as a defensible but not fully gate-compliant scope call; UI already guards the click path."
+    },
+    {
+      "item": "pov-questions.json (280 authored questions) is dead code, unreachable from the live app",
+      "severity": "medium",
+      "status": "reported-not-fixed",
+      "reason": "Fixing requires a product decision (wire it in vs. formally retire it), not a code fix this assignment is scoped to make unilaterally."
+    },
+    {
+      "item": "U15/U18 skating-movement content gap confirmed real across all 4 live catalogs",
+      "severity": "medium",
+      "status": "reported-not-authored",
+      "reason": "Task E next-authoring-queue.json includes ranked briefs for this; no new live content was authored (out of scope -- drafts only)."
+    }
+  ]
+}

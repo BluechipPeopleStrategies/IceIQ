@@ -6,13 +6,17 @@ import {validateExperimentalBank,makeScene,responseReady,defaultResponse} from '
 import {isCoachRoutePoint} from './coachRouteSurfaceInput.js';
 import {positionSubjectIssue} from '../../tools/question-batch-core.mjs';
 const {bank,original,newScenarios,additions}=readBankFiles();
-const allocation={U7:100,U9:150,U11:250,U13:250,U15:150,U18:100};
+const allocation={U7:112,U9:162,U11:262,U13:250,U15:156,U18:106};
 const originalIds=new Set(original.flatMap(s=>s.questions.map(q=>q.id)));
 const added=bank.flatMap(s=>s.questions.filter(q=>!originalIds.has(q.id)).map(q=>({s,q})));
-test('expansion contributes exactly1000 questions in the approved age allocation',()=>{
- assert.equal(bank.length,200);assert.equal(newScenarios.length,100);assert.equal(additions.length,100);assert.equal(added.length,1000);
- assert.equal(bank.reduce((sum,s)=>sum+s.questions.length,0),1600);
- assert.deepEqual(validateExperimentalBank(bank,{U7:20,U9:30,U11:50,U13:50,U15:30,U18:20}),[]);
+// Baseline was 200 scenarios / 1000 added questions; the owner-authorized eight
+// companion lessons / 48 questions release (see docs/roadmap/TASKS.md, 2026-09-07)
+// brings this to 208 / 1048 — expected totals updated to match that release, not a
+// new content decision made here.
+test('expansion contributes exactly1048 questions in the approved age allocation',()=>{
+ assert.equal(bank.length,208);assert.equal(newScenarios.length,108);assert.equal(additions.length,100);assert.equal(added.length,1048);
+ assert.equal(bank.reduce((sum,s)=>sum+s.questions.length,0),1648);
+ assert.deepEqual(validateExperimentalBank(bank,{U7:22,U9:32,U11:52,U13:50,U15:31,U18:21}),[]);
  for(const [age,count] of Object.entries(allocation))assert.equal(added.filter(r=>r.s.ageBand===age).length,count,age);
 });
 test('all600 original questions and scenario versions survive additive composition intact',()=>{

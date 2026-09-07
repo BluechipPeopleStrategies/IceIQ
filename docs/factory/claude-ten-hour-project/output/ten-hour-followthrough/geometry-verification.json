@@ -1,0 +1,92 @@
+[
+  {
+    "questionId": "exp26b-u9-010-q5",
+    "sceneId": "exp26b-u9-010",
+    "sourceFile": "docs/factory/claude-ten-hour-project/prior-packets/visual-02-after-solve.json",
+    "claim": "Navy2 is comparing two outlet passes; the marked-correct answer asserts the pass to YOU is shorter than the pass to Navy3.",
+    "geometryType": "point-to-point distance (no segment/line ambiguity applies)",
+    "actorCoordinatesUsed": {
+      "home-skater-2 (Navy2)": { "x": -25, "y": -3 },
+      "home-skater-1 (YOU)": { "x": -22, "y": -8 },
+      "home-skater-3 (Navy3)": { "x": -14, "y": 1 }
+    },
+    "computedDistance": {
+      "Navy2_to_YOU": 5.830951894845301,
+      "Navy2_to_Navy3": 11.704699910719626
+    },
+    "markedAnswer": "a (pass to YOU)",
+    "verdict": "consistent",
+    "notes": "Navy2-to-YOU (5.83) is shorter than Navy2-to-Navy3 (11.70). Marked answer 'a' is numerically correct. This is a plain point-to-point distance comparison; finite-segment-vs-infinite-line does not apply (neither option is a point-to-line/segment distance). Related sanity check: q2 in the same scene asserts 'Gold1 ahead of Navy2 along the rink' and 'Navy3 farther toward the neutral zone.' Navy attacks the +x end per the briefing, so 'ahead' = larger x. Gold1 x=-20 > Navy2 x=-25 (ahead, confirmed), and Navy3 x=-14 is farther toward +x than both Navy2 (-25) and Gold1 (-20) (farther toward neutral zone, confirmed). Both consistent with the scene's stated coordinates and orientation."
+  },
+  {
+    "questionId": "exp26b-u13-020-q5",
+    "sceneId": "exp26b-u13-020",
+    "sourceFile": "docs/factory/claude-ten-hour-project/prior-packets/visual-08-after-solve.json",
+    "claim": "If Gold1 wins control from F1, the marked-correct answer asserts Gold2 starts nearer YOU than Gold1 does.",
+    "geometryType": "point-to-point distance (no segment/line ambiguity applies)",
+    "actorCoordinatesUsed": {
+      "n1 (YOU)": { "x": 5, "y": 8 },
+      "g1 (Gold 1)": { "x": 20, "y": -5 },
+      "g2 (Gold 2)": { "x": 8, "y": 7 }
+    },
+    "computedDistance": {
+      "YOU_to_Gold1": 19.849433241279208,
+      "YOU_to_Gold2": 3.1622776601683795
+    },
+    "markedAnswer": "b (Gold 2)",
+    "verdict": "consistent",
+    "notes": "YOU-to-Gold2 (3.16) is far shorter than YOU-to-Gold1 (19.85). Marked answer 'b' (Gold 2) is numerically correct, by a wide margin. Plain point-to-point distance; finite-segment-vs-infinite-line does not apply. Related sanity check: q4 in the same scene is a position-placement prompt (move YOU toward the middle, reference (10,2)) with no marked distance claim to verify; not applicable for arithmetic verification."
+  },
+  {
+    "questionId": "exp26-u18-001-q5",
+    "sceneId": "exp26-u18-001",
+    "sourceFile": "docs/factory/claude-ten-hour-project/prior-packets/visual-10-after-solve.json",
+    "claim": "With the lead and 48 seconds left, the marked-correct answer asserts the direct pass line from YOU to F1 stays farther from Gold1 than the line from YOU to F2.",
+    "geometryType": "point-to-line / point-to-segment distance (both computed and compared)",
+    "actorCoordinatesUsed": {
+      "home-skater-1 (YOU)": { "x": 0, "y": -6 },
+      "home-skater-3 (F1)": { "x": 9, "y": -8 },
+      "home-skater-4 (F2)": { "x": 14, "y": 5 },
+      "away-skater-1 (Gold 1, per src/visuals/actorLabel.js team-prefix convention: away label \"A1\" displays as \"Gold 1\")": { "x": 4, "y": -4 }
+    },
+    "computedInfiniteLineResult": {
+      "Gold1_to_line_YOU_F1": 2.8200959516425304,
+      "Gold1_to_line_YOU_F2": 0.8986495300827686
+    },
+    "computedFiniteSegmentResult": {
+      "Gold1_to_segment_YOU_F1": 2.8200959516425304,
+      "projection_t_on_YOU_F1": 0.3764705882352941,
+      "Gold1_to_segment_YOU_F2": 0.8986495300827688,
+      "projection_t_on_YOU_F2": 0.24605678233438485
+    },
+    "markedAnswer": "a (the direct pass to F1 stays farther from Gold 1)",
+    "verdict": "consistent",
+    "notes": "For both candidate lines, the perpendicular foot from Gold1 falls strictly inside the segment (t between 0 and 1 in both cases: 0.376 and 0.246), so the finite-segment distance equals the infinite-line distance for both options here -- no divergence between the two measures in this particular scene. Under either interpretation, the YOU-F1 line (~2.82) is farther from Gold1 than the YOU-F2 line (~0.90), so the marked answer 'a' holds regardless of which distance definition the app actually implements. This is the question flagged as most likely to expose a segment-vs-line bug, and no discrepancy was found for it. Sanity check on a related question in the same scene, q7 ('Gold 1 is farther from the D2 line than the F3 line'): D2=(-9,1), F3=(5,1); infinite-line distances are 4.034 (D2) and 2.092 (F3), finite-segment distances are 4.472 (D2, because Gold1's projection falls just outside the segment at t=-0.169, clamping to the YOU endpoint) and 2.092 (F3, t=0.459, inside). Under both interpretations D2's line/segment is farther from Gold1 than F3's, so the marked answer 'a' (D2 farther) holds either way -- the one case in this batch where segment and line distance actually differ numerically still does not flip the correct choice, because the segment clamp only widens the gap here rather than narrowing or reversing it."
+  },
+  {
+    "questionId": "exp26b-u18-001-q5",
+    "sceneId": "exp26b-u18-001",
+    "sourceFile": "docs/factory/claude-ten-hour-project/prior-packets/visual-11-after-solve.json",
+    "claim": "With one minute left and a one-goal lead, the marked-correct answer asserts the direct line from YOU to F1 stays farther from Gold2 than the line from YOU to F2.",
+    "geometryType": "point-to-line / point-to-segment distance (both computed and compared)",
+    "actorCoordinatesUsed": {
+      "h1 (YOU)": { "x": 0, "y": -6 },
+      "h2 (F1)": { "x": 9, "y": -8 },
+      "h3 (F2)": { "x": 14, "y": 5 },
+      "a2 (Gold 2, per actorLabel.js convention: away label \"A2\" displays as \"Gold 2\")": { "x": 8, "y": 2 }
+    },
+    "computedInfiniteLineResult": {
+      "Gold2_to_line_YOU_F1": 9.544940144020872,
+      "Gold2_to_line_YOU_F2": 1.347974295124153
+    },
+    "computedFiniteSegmentResult": {
+      "Gold2_to_segment_YOU_F1": 9.54494014402087,
+      "projection_t_on_YOU_F1": 0.6588235294117647,
+      "Gold2_to_segment_YOU_F2": 1.3479742951241538,
+      "projection_t_on_YOU_F2": 0.6309148264984227
+    },
+    "markedAnswer": "a (the direct line from YOU to F1)",
+    "verdict": "consistent",
+    "notes": "Both projections fall well inside their segments (t = 0.659 and 0.631), so infinite-line and finite-segment distances match for both candidate lines. Under either measure, the YOU-F1 line (~9.54) stays far farther from Gold2 than the YOU-F2 line (~1.35); marked answer 'a' is correct under both interpretations. Note this scene reuses the same YOU/F1/F2 coordinates as exp26-u18-001 (a different away roster, Gold2 here at (8,2) versus Gold1 at (4,-4) in the other scene), so the two scenes are structurally parallel but not identical checks. Sanity check on the same scene's q4 (position prompt, move YOU to (1.5,-5) to compare routes toward F1 and F2, explanation claims the move is closer to F1, F2, and Gold1): distance YOU(0,-6)-to-Gold1(4,-4) = 4.472, new position (1.5,-5)-to-Gold1 = 2.693 (closer, confirmed); F1 and F2 distances also decrease from the new position, matching the stated explanation."
+  }
+]

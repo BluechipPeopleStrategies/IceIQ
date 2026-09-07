@@ -1,0 +1,16 @@
+# Task E: Adversarial cross-check summary
+
+Full detail: [`adversarial-cross-check.json`](./adversarial-cross-check.json), [`next-authoring-queue.json`](./next-authoring-queue.json).
+
+## Overall reliability of A-D
+
+**Mostly solid, with one real error and one overstated methodology claim, both now documented rather than hidden.**
+
+- **Task A:** its flagship finding -- a screenshot allegedly showing the wrong question -- is **wrong**. I read the actual PNG (desktop, phone-scene, phone-top) at the source path and every one matches its own filename (`exp26-u9-003-q3`), not the claimed `exp26b-u9-003-q5`. The cited byte size matches the file I read, ruling out a mix-up on my end. The naming-convention drift Task A also flagged (bare filenames in one packet, prefixed elsewhere) is real and harmless; the content-swap claim built on top of it is not. Task A's geometry sample (4 of 60) also covers only 2 of 23 questions matching its own targeted bug pattern, and zero from U15, the age band with the most such questions (10 of 23). The mechanical hash/count reconciliation (240 claims, calibration overlap) held up perfectly under re-check.
+- **Task B:** the pov-questions dead-code claim, U15/U18 skating-movement absence, and U11 53/400 reclassification all reproduced exactly. The "171 candidates, all hand-read" claim does not reproduce from any shipped code (max reproducible pool is 73); flagged, not silently edited, since an earlier discarded pass may have produced it honestly. Unknown/unmapped volume was far larger than the assignment anticipated; I traced two root causes to one-line code bugs and **fixed both directly** (a field-name mismatch for `pov-questions.format`, an unused-in-scope ledger lookup for `legacy-live-bank.learningObjective`), added regression tests (17 to 19, all passing), and regenerated the matrix outputs -- 542 unknown cells resolved with real evidence. Two remaining categories (`contextZone`, `pov-questions` concept mapping) are documented with exact code locations but not forced, since one needs at-scale validation and the other needs hockey-domain judgment.
+- **Task C:** held up well. I independently recomputed geometry for a 6th draft beyond the 5 already spot-checked, and freshly re-fetched two Hockey Canada pages myself, both confirmed verbatim. One judgment call (a position-to-choice fix that quietly drops a brief's stated delivery-variety goal) is disclosed in the data but undersold in the top-line summary.
+- **Task D:** the `.gitignore` fix is verified working with no side effects on tracked files. The double-submit gap is a genuinely reproduced, in-scope defect left unfixed by judgment, not by an external blocker -- defensible and disclosed, but not a clean fit for the gate's "fixed... or exact external blockers documented" bar.
+
+## Shape of the next-authoring queue
+
+15 briefs (well under the 24 cap), ranked by evidence strength: 4 high-confidence U15/U18 skating-movement scenes (zero content against a locked depth-R/M ledger target, the single strongest gap across all four tasks), a U11 mapping-then-content pilot, one schema-dependency-held item from my own Task C review, two mapping-only fixes, one infrastructure decision (pov-questions), and four low-confidence carried-forward items honestly labeled as not independently re-verified. No invented volume.

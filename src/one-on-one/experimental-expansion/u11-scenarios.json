@@ -187,7 +187,7 @@
   },
   {
     "id": "exp26b-u11-002",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Receive on the far shoulder",
     "family": "shoulder-reception",
@@ -285,27 +285,27 @@
       {
         "id": "exp26b-u11-002-q2",
         "type": "multi",
-        "prompt": "Which two observations shape a useful receiving spot?",
+        "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
         "options": [
           {
             "id": "a",
-            "text": "Whether D1 can close the inside shoulder"
+            "text": "F1 is behind YOU toward Navy’s defending end"
           },
           {
             "id": "b",
-            "text": "Whether F1 can reach the new spot cleanly"
+            "text": "D1 is ahead of YOU and nearer the middle"
           },
           {
             "id": "c",
-            "text": "Whether F2 is up ice regardless of the lane"
+            "text": "F2 is behind YOU on the same up-ice side as F1"
           }
         ],
         "answer": [
           "a",
           "b"
         ],
-        "basis": "coaching",
-        "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open."
+        "basis": "scene",
+        "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available."
       },
       {
         "id": "exp26b-u11-002-q3",
@@ -574,7 +574,7 @@
   },
   {
     "id": "exp26b-u11-004",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Support the carrier after a give-and-go look",
     "family": "support-after-pass",
@@ -735,26 +735,22 @@
       {
         "id": "exp26b-u11-004-q5",
         "type": "choice",
-        "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+        "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
         "options": [
           {
             "id": "a",
-            "text": "Adjust support relative to F2 and call the available lane"
+            "text": "The line from F2’s puck to YOU"
           },
           {
             "id": "b",
-            "text": "Follow F2’s route without checking D1’s new lane"
-          },
-          {
-            "id": "c",
-            "text": "Hold the old return point without checking F2’s route"
+            "text": "The line from F2’s puck to F1"
           }
         ],
         "answer": [
-          "a"
+          "b"
         ],
         "basis": "coaching",
-        "explanation": "Support follows the actual carrier. Update F2’s route and D1’s lane instead of chasing blindly or holding the old return point."
+        "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves."
       },
       {
         "id": "exp26b-u11-004-q6",
@@ -1900,7 +1896,7 @@
   },
   {
     "id": "exp26b-u11-011",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Bank the puck off the wall",
     "family": "wall-bounce-receive",
@@ -2070,26 +2066,22 @@
       {
         "id": "exp26b-u11-011-q5",
         "type": "choice",
-        "prompt": "D1 turns toward the boards before F1 releases. What should you revisit?",
+        "prompt": "Before F1 tries the wall option, which direct passing line is farther from D1 and worth comparing with it?",
         "options": [
           {
             "id": "a",
-            "text": "Whether the wall route or F2 lane is now more reachable"
+            "text": "The line from F1’s puck to YOU"
           },
           {
             "id": "b",
-            "text": "Bank the puck without looking because D1 moved"
-          },
-          {
-            "id": "c",
-            "text": "Pass through D1 to the original spot"
+            "text": "The line from F1’s puck to F2"
           }
         ],
         "answer": [
-          "a"
+          "b"
         ],
         "basis": "coaching",
-        "explanation": "D1 turning toward the boards is a cue to reassess, not proof that a route closed or opened. Compare the bank option with F2 and D2 before choosing."
+        "explanation": "The direct line to F2 stays farther from D1 than the direct line to YOU. F1 can compare it with a possible wall pass, while checking D2 near F2’s area. Neither a direct pass nor a board bounce is proven successful by this freeze."
       },
       {
         "id": "exp26b-u11-011-q6",
@@ -2297,7 +2289,7 @@
   },
   {
     "id": "exp26b-u11-013",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Open the shooting lane",
     "family": "slot-lane-change",
@@ -2458,26 +2450,22 @@
       {
         "id": "exp26b-u11-013-q5",
         "type": "choice",
-        "prompt": "D1 moves toward F2 and the direct lane opens. What deserves a new look?",
+        "prompt": "Imagine D1 moves onto the passing line to F2 and away from the shooting line. YOU still control the puck. Which option has gained space from D1?",
         "options": [
           {
             "id": "a",
-            "text": "Whether the open lane supports a shot or a pass now"
+            "text": "A shot toward the net"
           },
           {
             "id": "b",
-            "text": "Force a shot without checking the goalie or lane"
-          },
-          {
-            "id": "c",
-            "text": "Ignore F2 because D1 moved"
+            "text": "A direct pass to F2"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1's movement changes the lane, but the carrier still reads space and support before choosing."
+        "explanation": "In this stated change, D1 has moved away from the shot line and into the pass line. A shot is therefore worth reassessing, but control, the goalie and any further movement still matter. It is not a guaranteed goal, and another option may become useful if the picture changes."
       },
       {
         "id": "exp26b-u11-013-q6",
@@ -3261,7 +3249,7 @@
   },
   {
     "id": "exp26b-u11-018",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Backcheck the open runner",
     "family": "backcheck-open-runner",
@@ -3431,26 +3419,22 @@
       {
         "id": "exp26b-u11-018-q5",
         "type": "choice",
-        "prompt": "D1 cannot stay with F1 and calls for help. What should YOU reassess?",
+        "prompt": "If YOU consider helping D1 elsewhere, which attacker is currently on YOUR side of the middle and must stay in the read?",
         "options": [
           {
             "id": "a",
-            "text": "Whether to help pressure F1 while keeping track of F2"
+            "text": "F1"
           },
           {
             "id": "b",
-            "text": "Leave both attackers to chase the puck"
-          },
-          {
-            "id": "c",
-            "text": "Stay on F2 without checking F1"
+            "text": "F2"
           }
         ],
         "answer": [
-          "a"
+          "b"
         ],
-        "basis": "coaching",
-        "explanation": "F1 is an opponent who may now need defensive pressure, not attacking support. Recheck both attackers and communicate with D1 before changing jobs."
+        "basis": "scene",
+        "explanation": "YOU and F2 are on the same side of the middle; F1 is across it with the puck. YOU also start closer to the defended left net than F2. Account for that runner if discussing help with D1, rather than assuming a particular switch is required."
       },
       {
         "id": "exp26b-u11-018-q6",
@@ -3463,7 +3447,7 @@
   },
   {
     "id": "exp26b-u11-019",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Change jobs after the turnover",
     "family": "turnover-job-change",
@@ -3633,26 +3617,22 @@
       {
         "id": "exp26b-u11-019-q5",
         "type": "choice",
-        "prompt": "Navy F1 gains control back from D1 before gold F2 receives. What changes first?",
+        "prompt": "Suppose Navy F1 wins control back from D1. Which carrier-and-direction pairing now matches the play?",
         "options": [
           {
             "id": "a",
-            "text": "Re-check possession and return to an attacking support read"
+            "text": "Navy F1 has the puck and attacks toward the right net"
           },
           {
             "id": "b",
-            "text": "Continue backchecking F2 without looking"
-          },
-          {
-            "id": "c",
-            "text": "Assume F2 still controls the puck"
+            "text": "Navy F1 has the puck and attacks toward the left net"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "F1 is your navy teammate. Confirm that regain and look for attacking support toward the right net, while checking gold pressure."
+        "explanation": "F1 is YOUR Navy teammate, so the regain puts Navy back in possession attacking the right net. Locate F1’s current passing options and the gold pressure before supporting. The new possession does not prescribe one skating route or erase the risk of losing it again."
       },
       {
         "id": "exp26b-u11-019-q6",
@@ -3858,7 +3838,7 @@
   },
   {
     "id": "exp26b-u11-021",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Carry until the lane narrows",
     "family": "two-on-one-carry-read",
@@ -4019,26 +3999,22 @@
       {
         "id": "exp26b-u11-021-q5",
         "type": "choice",
-        "prompt": "D1 moves into your shooting line and F2 becomes clearly reachable. What deserves a new look?",
+        "prompt": "YOU are comparing the cross-ice pass and the shot. Which direct line currently stays farther from D1?",
         "options": [
           {
             "id": "a",
-            "text": "A cross-ice pass to F2"
+            "text": "The line from the puck to F2"
           },
           {
             "id": "b",
-            "text": "A shot through D1 without checking"
-          },
-          {
-            "id": "c",
-            "text": "Keep carrying toward the right net after D1 enters the shooting line"
+            "text": "The line from the puck to the net"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1 changed the shooting lane while F2 became more reachable, so the pass deserves a fresh read."
+        "explanation": "The pass line to F2 stays farther from D1 than the direct shooting line. It is an option to assess while the defender is between the attacking lanes. Recheck the receiver, goalie and pressure: distance from D1 alone does not prove the pass is best or will succeed."
       },
       {
         "id": "exp26b-u11-021-q6",

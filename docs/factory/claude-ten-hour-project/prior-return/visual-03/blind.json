@@ -1,0 +1,50 @@
+{
+  "packetId": "visual-03",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-03-manifest.json and packets/visual-03-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T01:50:00Z",
+  "questions": [
+    {
+      "questionId": "exp26-u11-007-q5",
+      "scenarioId": "exp26-u11-007",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(7,8), D1=(9,6). YOU is already nearer the boards (higher y) than D1, who approaches 'from the middle side' (lower y, per briefing). Moving further toward the boards (a) increases lateral separation from D1; moving toward the middle (b) closes that gap.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u11-008-q5",
+      "scenarioId": "exp26-u11-008",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU=(-7,-4), F2=(1,-6). Navy attacks +x (the stated attacking end). A straight +x carry moves YOU's x from -7 toward and past F2's x=1, so the x-gap (currently 8) shrinks as YOU advances -- e.g. at x=1 the gap is down to just the y-difference (~2). Matches (a): gap gets smaller.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u11-013-q5",
+      "scenarioId": "exp26-u11-013",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Puck=(16,0), D1=(20,0), net=(26,0), F2=(18,8). The puck-to-net line is the x-axis itself (y=0) and D1 sits exactly on it (y=0) -- zero clearance, matching the briefing's explicit 'D1 stands in the direct shooting line.' Perpendicular distance from D1 to the puck-to-F2 line computes to ~3.9 units -- clearly more space. Matches (a).",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u11-018-q5",
+      "scenarioId": "exp26-u11-018",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Roster: YOU=a1 (away/gold), D1=a2 (away/gold) already assigned to F1 (home/navy puck carrier); F2=h2 (home/navy) is the other attacker. If YOU abandons whatever coverage responsibility to double up with D1 on F1, F2 (currently unmarked by either named defender) is the one left with more room -- standard over-commit risk, not F1 (who'd have LESS room with two defenders on him). Matches (a); (b) reverses the actual tactical consequence.",
+      "note": "No defect found. Confirmed roster (both a1/a2 are the away/gold defending pair) before accepting the tactical claim, per the roster-first check."
+    },
+    {
+      "questionId": "exp26-u11-020-q5",
+      "scenarioId": "exp26-u11-020",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "D1(puck)=(20,7), D2=(8,-7) [both away/gold], YOU=(14,6), F2=(11,-2) [both home/navy]. Perpendicular distance from YOU to the D1-D2 line ~3.9; from F2 to that same line ~0.98. F2 sits much closer to Gold's outlet line than YOU. Matches (a) F2.",
+      "note": "No defect found. Will confirm blue-line/half-wall landmark placement against the render since this scenario's coordinate scale for 'point/just inside the blue line' wasn't independently verifiable from JSON alone."
+    }
+  ],
+  "grammarPass": "Read all five prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "Confirmed team field for every named actor (YOU, F2, D1, D2, F1, G) in all 5 scenes before accepting any positional claim; exp26-u11-018 and exp26-u11-020 both flip which side is 'YOU' (away/gold in both) -- checked explicitly rather than assuming home=YOU as in earlier packets."
+}

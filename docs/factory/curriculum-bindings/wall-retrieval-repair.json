@@ -1,0 +1,567 @@
+{
+  "createdAt": "2026-09-06T18:00:04.213Z",
+  "reason": "User screenshot showed the loose puck almost five metres from boards despite wall-side wording. Move it to 0.754 m from the straight side boards, face YOU toward it, and keep the approach reference 1.7 m inside the puck. Clarify Navy defensive-zone context and name the proposed pass to F2 instead of an undefined first escape. Reposition F2 example to (-16,-3.5) so D1 is outside the puck-to-receiver lane, and explain what to check in the learner position.",
+  "humanCoachApproval": false,
+  "before": {
+    "id": "exp26-u11-001",
+    "version": 2,
+    "ageBand": "U11",
+    "title": "Look beyond the loose puck",
+    "family": "retrieval-scan",
+    "topic": "Scanning",
+    "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+    "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are approaching a loose puck near the side wall. F2 is an outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -16,
+          "y": -6,
+          "facing": -2.356
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": -10,
+          "y": -1,
+          "facing": 3.14
+        },
+        {
+          "id": "a1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "x": -12,
+          "y": -6,
+          "facing": 3.14
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": -18,
+        "y": -8
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The puck is loose beside the wall.",
+      "F2 is away from the wall.",
+      "D1 approaches from the up-ice side."
+    ],
+    "tags": [
+      "retrieval-scan",
+      "scanning",
+      "experimental"
+    ],
+    "sources": [
+      {
+        "id": "hc-vision-2024",
+        "title": "7 Principles for Coaches: Vision & Scanning",
+        "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+        "use": "Supports checking teammates and pressure; answers are original scene analysis."
+      }
+    ],
+    "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
+    "questions": [
+      {
+        "id": "exp26-u11-001-q1",
+        "type": "choice",
+        "prompt": "What is true about possession at this freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU already control the puck"
+          },
+          {
+            "id": "b",
+            "text": "The puck is loose"
+          },
+          {
+            "id": "c",
+            "text": "D1 has made a pass"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The puck is drawn away from every blade and has no owner."
+      },
+      {
+        "id": "exp26-u11-001-q2",
+        "type": "multi",
+        "prompt": "Which two things would help YOU plan the pickup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Where F2 is available"
+          },
+          {
+            "id": "b",
+            "text": "The direction D1 approaches from"
+          },
+          {
+            "id": "c",
+            "text": "Only the loose puck, without checking the players"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "An outlet and the approaching pressure inform the next action; neither guarantees a successful pickup."
+      },
+      {
+        "id": "exp26-u11-001-q3",
+        "type": "sequence",
+        "prompt": "Arrange this suggested retrieval plan.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find the pressure and outlet"
+          },
+          {
+            "id": "b",
+            "text": "Approach and control the loose puck"
+          },
+          {
+            "id": "c",
+            "text": "Check whether the outlet is still available"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This is a simple discussion routine. Real scanning may repeat throughout the approach."
+      },
+      {
+        "id": "exp26-u11-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point that leaves a view toward F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": -18,
+          "y": -6.5
+        },
+        "basis": "coaching",
+        "explanation": "The example approaches on the middle side of the puck and short of the wall, with F2 in the wider scene. Other controlled approaches can preserve an outlet."
+      },
+      {
+        "id": "exp26-u11-001-q5",
+        "type": "choice",
+        "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Use the same middle pass regardless"
+          },
+          {
+            "id": "b",
+            "text": "Check another exit before committing"
+          },
+          {
+            "id": "c",
+            "text": "Assume F2 has already received"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure."
+      },
+      {
+        "id": "exp26-u11-001-q6",
+        "type": "explain",
+        "prompt": "What would you want to see again just before touching this puck?",
+        "basis": "coaching",
+        "explanation": "Name a change in D1 or F2 that could alter the plan. Saying where you would look is more useful than simply saying “scan.”"
+      },
+      {
+        "id": "exp26-u11-001-q7",
+        "type": "choice",
+        "prompt": "What should you say before reaching the wall-side puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 is farther up ice; F2 may be an outlet toward the middle"
+          },
+          {
+            "id": "b",
+            "text": "D1 is inside, so I will check the wall-side support"
+          },
+          {
+            "id": "c",
+            "text": "F2 has drifted behind D1, so I will wait for a safer lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Naming D1 and F2 connects the actual pressure and outlet to the approach. If either moves, update the plan."
+      },
+      {
+        "id": "exp26-u11-001-q8",
+        "type": "multi",
+        "prompt": "Which two changes would make the first escape less useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 closes the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "F2 is no longer reachable from control"
+          },
+          {
+            "id": "c",
+            "text": "The puck remains loose beside the wall"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Those named relationships remove the value of the first exit; protect the puck and find the next usable option."
+      },
+      {
+        "id": "exp26-u11-001-q9",
+        "type": "position",
+        "prompt": "Move F2 to a middle support point that gives YOU a visible inside lane.",
+        "actorId": "h2",
+        "reference": {
+          "x": -11,
+          "y": -3.5
+        },
+        "basis": "coaching",
+        "explanation": "This point moves F2 into a support relationship inside the wall-side retrieval; YOU can then check whether the lane is reachable."
+      },
+      {
+        "id": "exp26-u11-001-q10",
+        "type": "explain",
+        "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
+        "basis": "coaching",
+        "explanation": "Connect the new pressure and lost outlet to a protected touch or wall-side escape, then name what you would scan before committing."
+      }
+    ]
+  },
+  "after": {
+    "id": "exp26-u11-001",
+    "version": 3,
+    "ageBand": "U11",
+    "title": "Look beyond the loose puck",
+    "family": "retrieval-scan",
+    "topic": "Scanning",
+    "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+    "briefing": "You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -16,
+          "y": -6,
+          "facing": -1.88283844835743
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": -10,
+          "y": -1,
+          "facing": 3.14
+        },
+        {
+          "id": "a1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "x": -12,
+          "y": -6,
+          "facing": 3.14
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": -18,
+        "y": -12.2
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The puck is loose beside the wall.",
+      "F2 is away from the wall.",
+      "D1 approaches from the up-ice side."
+    ],
+    "tags": [
+      "retrieval-scan",
+      "scanning",
+      "experimental"
+    ],
+    "sources": [
+      {
+        "id": "hc-vision-2024",
+        "title": "7 Principles for Coaches: Vision & Scanning",
+        "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+        "use": "Supports checking teammates and pressure; answers are original scene analysis."
+      }
+    ],
+    "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
+    "questions": [
+      {
+        "id": "exp26-u11-001-q1",
+        "type": "choice",
+        "prompt": "What is true about possession at this freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU already control the puck"
+          },
+          {
+            "id": "b",
+            "text": "The puck is loose"
+          },
+          {
+            "id": "c",
+            "text": "D1 has made a pass"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The puck is drawn away from every blade and has no owner."
+      },
+      {
+        "id": "exp26-u11-001-q2",
+        "type": "multi",
+        "prompt": "Which two things would help YOU plan the pickup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Where F2 is available"
+          },
+          {
+            "id": "b",
+            "text": "The direction D1 approaches from"
+          },
+          {
+            "id": "c",
+            "text": "Only the loose puck, without checking the players"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "An outlet and the approaching pressure inform the next action; neither guarantees a successful pickup."
+      },
+      {
+        "id": "exp26-u11-001-q3",
+        "type": "sequence",
+        "prompt": "Arrange this suggested retrieval plan.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find the pressure and outlet"
+          },
+          {
+            "id": "b",
+            "text": "Approach and control the loose puck"
+          },
+          {
+            "id": "c",
+            "text": "Check whether the outlet is still available"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This is a simple discussion routine. Real scanning may repeat throughout the approach."
+      },
+      {
+        "id": "exp26-u11-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point that leaves a view toward F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": -18,
+          "y": -10.5
+        },
+        "basis": "coaching",
+        "explanation": "The example approaches on the middle side of the puck and short of the wall, with F2 in the wider scene. Other controlled approaches can preserve an outlet."
+      },
+      {
+        "id": "exp26-u11-001-q5",
+        "type": "choice",
+        "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Use the same middle pass regardless"
+          },
+          {
+            "id": "b",
+            "text": "Check another exit before committing"
+          },
+          {
+            "id": "c",
+            "text": "Assume F2 has already received"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure."
+      },
+      {
+        "id": "exp26-u11-001-q6",
+        "type": "explain",
+        "prompt": "What would you want to see again just before touching this puck?",
+        "basis": "coaching",
+        "explanation": "Name a change in D1 or F2 that could alter the plan. Saying where you would look is more useful than simply saying “scan.”"
+      },
+      {
+        "id": "exp26-u11-001-q7",
+        "type": "choice",
+        "prompt": "What should you say before reaching the wall-side puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 is farther up ice; F2 may be an outlet toward the middle"
+          },
+          {
+            "id": "b",
+            "text": "D1 is inside, so I will check the wall-side support"
+          },
+          {
+            "id": "c",
+            "text": "F2 has drifted behind D1, so I will wait for a safer lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Naming D1 and F2 connects the actual pressure and outlet to the approach. If either moves, update the plan."
+      },
+      {
+        "id": "exp26-u11-001-q8",
+        "type": "multi",
+        "prompt": "Suppose YOU recover the puck and plan to pass toward F2 in the middle. Which two changes would make that outlet less useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 closes the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "F2 is no longer reachable from control"
+          },
+          {
+            "id": "c",
+            "text": "The puck remains loose beside the wall"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 closing the inside lane or F2 becoming unreachable would weaken the planned pass to F2 after recovery. Recheck pressure and support before choosing another exit."
+      },
+      {
+        "id": "exp26-u11-001-q9",
+        "type": "position",
+        "prompt": "Move F2 toward the middle so YOU have a passing option after recovering the puck.",
+        "actorId": "h2",
+        "reference": {
+          "x": -16,
+          "y": -3.5
+        },
+        "basis": "coaching",
+        "explanation": "Check a line from the loose puck to F2: D1 should not sit between them. In the example, F2 is farther from the boards than the puck, and D1 is outside that line. For your spot, check both the lane and room from D1. Recheck after the pickup; a clear line now does not guarantee a completed pass."
+      },
+      {
+        "id": "exp26-u11-001-q10",
+        "type": "explain",
+        "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
+        "basis": "coaching",
+        "explanation": "Connect the new pressure and lost outlet to a protected touch or wall-side escape, then name what you would scan before committing."
+      }
+    ]
+  },
+  "hashes": [
+    {
+      "id": "exp26-u11-001-q1",
+      "before": "6a0c2c59c3bc2122bf984cb6e7f0e936422992c01d3367bfc7c6dc3df5309b25",
+      "after": "9442ea6f5fb5e1e135df35981b087650cc5c99ec93718352d4d8b9017d26ae6a"
+    },
+    {
+      "id": "exp26-u11-001-q2",
+      "before": "377721eaa80d20575686341d0f736a0ef38c915e667cf91ca6e23b3c3f51224d",
+      "after": "fe37a3d124147d482a67b23f60cb5d59161fa4883d79600410cf7fedcbe3eda4"
+    },
+    {
+      "id": "exp26-u11-001-q3",
+      "before": "8230de50438331e42da6e6b7f4b64c7fc331599ff28669b1dd371c1319fe7e82",
+      "after": "0cdc46438d9d2bad1528b0973b14eb4a68c9f636e07b92888303a0d23416fa15"
+    },
+    {
+      "id": "exp26-u11-001-q4",
+      "before": "3717d9cee0cafe721f07e91e14ce6ec32a7a1632815536e838cc7488fa92741c",
+      "after": "1c4fb989cc431a80536c27af589a34314cee291372b8646cb68544f5acef335b"
+    },
+    {
+      "id": "exp26-u11-001-q5",
+      "before": "1d53a4fa1d78a2443333adb59decc3edd92b0895405b8d7b92b347827534dc08",
+      "after": "67cb025a0e5e028f89be36a35ef254f351be285f77e26656409efa584be1f0d1"
+    },
+    {
+      "id": "exp26-u11-001-q6",
+      "before": "a164e235f4df9054ffa8f9711d1f337ab1ff7b573748c474a356e730349d1631",
+      "after": "ca3d94c47ca7ed453c47b145ef0f16cd3b35e0f5872164d77d287600bd274f7b"
+    },
+    {
+      "id": "exp26-u11-001-q7",
+      "before": "2296e3eeb0282c614c2b8d83cdfda518d78124457bc2203becf4aabea711b522",
+      "after": "e715052e8d17bce97c8066f8860565914f2aea362e0ca68dabf1ad1d3dc43d0f"
+    },
+    {
+      "id": "exp26-u11-001-q8",
+      "before": "685c99741f94e4d2abf0f8ce65eb53fed5e21a0ea91b226fa89ef5dd05405475",
+      "after": "8f9ea58098e3ada80113bfcc71779d7a37df289d49a8bb2cbe1fceabd371524f"
+    },
+    {
+      "id": "exp26-u11-001-q9",
+      "before": "cbc0466b87a33589020df093d36013542bfc65930ba2da455777728ddd1ac564",
+      "after": "96c3230f13776292641523aa8c08f171414d9a49b44c484c57bfdf7623fb4159"
+    },
+    {
+      "id": "exp26-u11-001-q10",
+      "before": "2751b1ae60775bee4280ee1761ad321007392f3009b53936b7ee1d9ace709a1d",
+      "after": "825b36213b7f597efb27f8a698e6a0ebd3fe1f667693e979614fa6b02597cb5a"
+    }
+  ]
+}

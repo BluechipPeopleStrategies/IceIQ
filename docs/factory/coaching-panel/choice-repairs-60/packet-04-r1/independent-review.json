@@ -1,0 +1,237 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "candidateSha256": "2b7b1cd608a2c8909de58e7a864d9883846daf9efd50c01b0b6b980c7b6cc587",
+  "rows": [
+    {
+      "questionId": "exp26b-u9-010-q5",
+      "contentHash": "061dff769e251cd123f738023fa78648e7c19216bc755946e3b6bf648e082c2b",
+      "verdict": "approve",
+      "issue": null,
+      "sceneEvidence": {
+        "puck": [
+          -24.1590019537153,
+          -2.11528406471607
+        ],
+        "passYOU": 6.268266991372584,
+        "passNavy3": 10.625926571337917
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Shorter YOU pass6.268m is actual teammate outlet, feedback still checks pressure."
+        },
+        {
+          "optionId": "b",
+          "assessment": "matched alternative to assess",
+          "reason": "Navy3 pass10.626m longer, not tactically invalid; alternative kept."
+        }
+      ],
+      "proposedRepair": null,
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    },
+    {
+      "questionId": "exp26b-u9-014-q5",
+      "contentHash": "2809fe7e0c0e3c68479c88d4e88cc351ef382fda868b0185c5829b508df917a0",
+      "verdict": "approve",
+      "issue": null,
+      "sceneEvidence": {
+        "puck": [
+          19.709930394299615,
+          -5.814310485899103
+        ],
+        "Gold1GapNavy2": 4.376944170643178,
+        "Gold1GapNet": 0.9017988249445933
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Gold1 gap4.377m fromNavy2 line."
+        },
+        {
+          "optionId": "b",
+          "assessment": "matched alternative to assess",
+          "reason": "Gold1 gap.902m from canonical net line; real shot option but less clearance."
+        }
+      ],
+      "proposedRepair": null,
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    },
+    {
+      "questionId": "exp26-u11-001-q5",
+      "contentHash": "6c344c2f4277c7a2fd8f12caa6b337e1c141b886c7c5abd6805b2abb3ddf32de",
+      "verdict": "approve",
+      "issue": null,
+      "sceneEvidence": {
+        "puck": [
+          -18,
+          -12.2
+        ]
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "D1x-12/F2x-10 both up ice of loose puckx-18, no pickup assumed."
+        },
+        {
+          "optionId": "b",
+          "assessment": "matched alternative to assess",
+          "reason": "D1 is not net-side; matching pressure/outlet relationship diagnostic."
+        }
+      ],
+      "proposedRepair": null,
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    },
+    {
+      "questionId": "exp26-u11-003-q5",
+      "contentHash": "59c2809409419afe0f5d97a38f7f92c3a9a5ae662688a57975f84d81f53ed156",
+      "verdict": "revise",
+      "issue": "Small hypothetical precision: staying close does not prove separation unchanged, so b can technically describe a benefit while still close. State unchanged distance. Also remove return-pass implication; no prior YOU-toF1 pass stated.",
+      "sceneEvidence": {
+        "puck": [
+          11.0,
+          -4.3
+        ],
+        "D1GapYOU": 0.31162478434014274,
+        "D1GapF2": 1.3967943855712535
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Drawing D1 away could free carrier; no guaranteed carry success."
+        },
+        {
+          "optionId": "b",
+          "assessment": "matched alternative to assess",
+          "reason": "Staying close does not strictly exclude increased separation: from1m to2m still close. Tighten scenario to unchanged gap to make comparison robust."
+        }
+      ],
+      "proposedRepair": {
+        "id": "exp26-u11-003-q5",
+        "type": "choice",
+        "prompt": "Imagine D1 follows YOU farther from F1, keeping the same distance from YOU. What benefit could that create while F1 still has the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "More room for F1 to assess a carry"
+          },
+          {
+            "id": "b",
+            "text": "More separation from D1 for YOU to receive"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Drawing D1 farther from F1 can give the carrier more room to assess a carry, even when YOU remain closely followed. It does not make a pass to YOU clear. F1 should still check F2 and the space ahead before choosing."
+      },
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    },
+    {
+      "questionId": "exp26-u11-003-q7",
+      "contentHash": "84f40e4d620bb45b7b36b956703d6270c031348b9bb610c8ac3b772a492fd0d3",
+      "verdict": "revise",
+      "issue": "Remove my return line: no prior pass fromYOUtoF1 established. Current-line description carries intended learning with no invented history.",
+      "sceneEvidence": {
+        "puck": [
+          11.0,
+          -4.3
+        ],
+        "D1GapYOU": 0.31162478434014274,
+        "D1GapF2": 1.3967943855712535
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Correct nearYOU versus acrossF2, but return line implies prior pass absent from scene."
+        },
+        {
+          "optionId": "b",
+          "assessment": "matched alternative to assess",
+          "reason": "Reverses nearby/diagonal support identity; legitimate false description."
+        }
+      ],
+      "proposedRepair": {
+        "id": "exp26-u11-003-q7",
+        "type": "choice",
+        "prompt": "Which call best describes the two support options F1 can see in this freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2 has a different angle across the ice; D1 is close to the line to me"
+          },
+          {
+            "id": "b",
+            "text": "I have the different angle across the ice; D1 is close to F2\u2019s line"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "YOU are near F1 with D1 close to that direct line; F2 is across the ice at another angle. The call shares the current picture with F1, who must still assess the actual pass. It does not promise that either receiver is open."
+      },
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    },
+    {
+      "questionId": "exp26-u11-004-q2",
+      "contentHash": "2ef28d63d4bdb2a81801518ec399f3f32556818a70d29695c02adae18d28c10d",
+      "verdict": "approve",
+      "issue": null,
+      "sceneEvidence": {
+        "puck": [
+          15.0,
+          -2.3
+        ],
+        "D1GapReturn": 0.6092247023727294,
+        "widths": {
+          "D1": 0.5,
+          "YOU": 4,
+          "F2": 3
+        }
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "F2y-3/ YOUy4 acrossmiddle."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "D1gap.6092m near actual return line, prior pass explicit here."
+        },
+        {
+          "optionId": "c",
+          "assessment": "matched alternative to assess",
+          "reason": "D1absY.5 vsNavy4/3: closer middle, not boards."
+        }
+      ],
+      "proposedRepair": null,
+      "limitations": [
+        "AI content review only; no source/render/human approval.",
+        "Prior original knowledge disclosed; stripped candidate solved before keys."
+      ]
+    }
+  ]
+}

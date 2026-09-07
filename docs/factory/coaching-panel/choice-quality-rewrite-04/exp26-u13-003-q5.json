@@ -1,0 +1,141 @@
+{
+  "scenarioId": "exp26-u13-003",
+  "questionId": "exp26-u13-003-q5",
+  "status": "draft",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "before": {
+    "id": "exp26-u13-003-q5",
+    "type": "choice",
+    "prompt": "If Gold 1 follows your inward move, which response could help?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call for a pass without looking at Gold 1"
+      },
+      {
+        "id": "b",
+        "text": "Reoffer elsewhere or make room for C"
+      },
+      {
+        "id": "c",
+        "text": "Remain still because your first move should have worked"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-003-q5",
+    "type": "choice",
+    "prompt": "D1 is comparing the two Navy receivers. Looking at both gold defenders, which direct passing line has more room around it in this view?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The pass from D1 to YOU"
+      },
+      {
+        "id": "b",
+        "text": "The pass from D1 to C"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "The line from D1 to C has more space from the nearest gold defender. Gold 1 sits much nearer the line to YOU. C is an option for D1 to assess while YOU continue offering support; YOU do not have to receive the next pass. This still frame does not prove either pass will succeed. The line to YOU may become useful as the players move.",
+    "basis": "coaching"
+  },
+  "beforeHash": "b2cc07aa7cfc6290a35adf23c03a9f5001d0d44a4bbdb3619729966b7885670c",
+  "afterHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+  "supersededDraft03Hash": "b072a948914a2ae7695ace5bc8bf9d3cd39352d3a10cddc15bc184f240b036d6",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "YOU are a real teammate and viable future support option, but Gold1 lies very close to the direct puck-to-YOU line. The visible line has less space from its nearest defender than C’s line."
+    },
+    {
+      "optionId": "b",
+      "reason": "C is a real teammate. The minimum gap from either shown gold skater to the direct line is larger than the corresponding minimum for YOU. The comparison does not prove safety or demand a pass."
+    }
+  ],
+  "geometry": {
+    "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+    "units": "metres",
+    "puck": [
+      -21,
+      7.7
+    ],
+    "ownerId": "home-skater-2",
+    "actors": {
+      "YOU": [
+        -7,
+        9
+      ],
+      "D1": [
+        -22,
+        7
+      ],
+      "C": [
+        -13,
+        1
+      ],
+      "A1": [
+        -14,
+        8
+      ],
+      "A2": [
+        -5,
+        -2
+      ]
+    },
+    "options": [
+      {
+        "optionId": "a",
+        "receiver": "YOU",
+        "passLength": 14.060227594174995,
+        "defenderPointGaps": {
+          "A1": 0.3485007598333631,
+          "A2": 11.180339887498947
+        },
+        "minimumDefenderPointGap": 0.3485007598333631
+      },
+      {
+        "optionId": "b",
+        "receiver": "C",
+        "passLength": 10.435037134576953,
+        "defenderPointGaps": {
+          "A1": 4.724468093806996,
+          "A2": 8.54400374531753
+        },
+        "minimumDefenderPointGap": 4.724468093806996
+      }
+    ]
+  },
+  "duplicateAudit": {
+    "questionsInspected": [
+      "exp26-u13-003-q1",
+      "exp26-u13-003-q2",
+      "exp26-u13-003-q3",
+      "exp26-u13-003-q4",
+      "exp26-u13-003-q5",
+      "exp26-u13-003-q6",
+      "exp26-u13-003-q7",
+      "exp26-u13-003-q8",
+      "exp26-u13-003-q9",
+      "exp26-u13-003-q10"
+    ],
+    "distinction": "q7 identifies Gold1 near YOUR line; new q5 compares two genuine receiving options and considers both defenders. q6/q10 discuss helping C but do not perform this line comparison."
+  },
+  "limits": [
+    "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+    "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+    "No scene setup or actor moved; no hypothetical event presented as visible.",
+    "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+    "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+    "Author remains advisory-only; no human approval, no source application."
+  ],
+  "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons."
+}

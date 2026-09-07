@@ -1,0 +1,77 @@
+{
+  "packetId": "visual-06",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u13-014", "questionId": "exp26-u13-014-q8", "scenarioVersion": 4,
+      "contentHash": "417c492375c3338e5210517275d810700fcfd6623e241832e314c5bc45b5c232", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms C and Gold2 on opposite sides of the middle, and C farther from net than Gold1. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-014-q8_desktop-1365x900.png","sha256":"881cc0fd50c2d5fb57886bed7c62510e9c6c36223c5d8fda017522b919706b58"},
+        {"viewport":"390x844","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-014-q8_phone-390x844_scene.png","sha256":"6999973eb42cad2b21c5e727688af83a5b13d7358f55b1fa22efc248a71f8625"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["Gold 2 is a separate attacker on the other side of the middle from C","C is still farther from Navy's net than Gold 1"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u13-015", "questionId": "exp26-u13-015-q5", "scenarioVersion": 3,
+      "contentHash": "d68ce5190247952a5466b4340bdbcf099098e72690c977ed7c6da607420a23a3", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (hypothetical new carrier)",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 clustered near the hypothetical Gold2 position, YOU well separated. Interactively tested live: selecting 'D1' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-015-q5_desktop-1365x900.png","sha256":"8e1c456bacfa105e3be5d6e5d724ff3d8be86ce7cd18758529efcaa2313c4172"},
+        {"viewport":"390x844","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-015-q5_phone-390x844_scene.png","sha256":"d05233eed557159cc73094902df585736c6a6dc5e3ea3e922049cb27bb75f333"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "D1", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u13-016", "questionId": "exp26-u13-016-q5", "scenarioVersion": 3,
+      "contentHash": "24991bc39d33d1eee492bd312a473ef84c5151545deef40b8a015debae771cc9", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry to own net",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms Gold2 visibly closer to the net/goalie than YOU. Interactively tested live: selecting the matching option returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-016-q5_desktop-1365x900.png","sha256":"fd00a6ba4d30fcae28b5d7ac5ddd1ec68434f5fea26dd489a80c965680cc2352"},
+        {"viewport":"390x844","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-016-q5_phone-390x844_scene.png","sha256":"900a4d4fc801854930fab654881d3843162ef4e584b0baf3dbfa362b14479eea"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "Gold 2 is closer to Navy's net than YOU are", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u13-017", "questionId": "exp26-u13-017-q2", "scenarioVersion": 3,
+      "contentHash": "c9d9b4a258e0ec7f8ed9a079a42b4959749bfb07fb5ff33f80ec6040ab4e4e54", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry, deliberate contradiction pair (a) vs (c)",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms YOU is the farthest-back skater on screen, D1 close to Gold1. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim, correctly excluding (c) which directly contradicts (a) using the same coordinates.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-017-q2_desktop-1365x900.png","sha256":"d6b2803078a4ef545d0224ea49b3414f32902db6558be649e1a9167136dc483a"},
+        {"viewport":"390x844","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-017-q2_phone-390x844_scene.png","sha256":"07ed3532c0c95a0f99f81826bb271619fa984e54c527ff64228ca9939d4c385d"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["YOU are farther from Navy's end along the rink than both gold attackers","D1 is closer to Gold 1 than YOU are"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u13-020", "questionId": "exp26-u13-020-q2", "scenarioVersion": 3,
+      "contentHash": "616e068fd9f1994bf30e1bda8336380c67240cf63819a430f17438ef63811e86", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (two separate defender-attacker pairings)",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 tight on Gold1 in the corner, YOU nearer Gold2 in the slot. Interactively tested live: selecting a+b returned 'Yep, you got it.' matching the key verbatim, correctly excluding (c) since Gold2's y is actually more central than either defender's.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-020-q2_desktop-1365x900.png","sha256":"59dcbada34a1e0f41e847edeafd20283f01c4612411cc78e79d0f42672044920"},
+        {"viewport":"390x844","screenshotPath":"output/visual-06/screenshots/v06_exp26-u13-020-q2_phone-390x844_scene.png","sha256":"9d13bde8deff83cd17b2b5c308fe025cdd04853ccb72c11bea5109029a68cb61"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D1 is nearer Gold 1 than YOU are","YOU are nearer Gold 2 than D1 is"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-06-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "milestone": "This packet completes 32/60 targets, past the halfway point of the assignment. All 5 targets interactively tested live."
+}

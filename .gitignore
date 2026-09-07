@@ -88,6 +88,13 @@ docs/feedback-shots/
 # Daily Tracker backup directory (local-only runtime artifacts)
 docs/roadmap/.tracker-backups/
 
+# Local coaching-feedback dev inbox (tools/coaching-feedback-plugin.mjs writes
+# receipts + dispositions here; never a production/Supabase path, but was
+# untracked-and-unignored, one `git add -A`/`git add .` away from committing
+# real player feedback text to the repo). Ignoring does not affect any file
+# already tracked; nothing under tmp/ was ever committed (verified 2026-09-07).
+/tmp/coaching-feedback/
+
 # Scraper working files: raw third-party transcripts stay off git (retained
 # in Google Drive per the evidence-library plan, not committed here); the
 # Python cache is a pure build artifact.

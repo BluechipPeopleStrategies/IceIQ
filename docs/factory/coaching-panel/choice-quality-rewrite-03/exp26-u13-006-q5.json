@@ -1,0 +1,150 @@
+{
+  "scenarioId": "exp26-u13-006",
+  "questionId": "exp26-u13-006-q5",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "status": "draft",
+  "before": {
+    "id": "exp26-u13-006-q5",
+    "type": "choice",
+    "prompt": "Gold 1 moves directly onto your new lane. What might you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Rush beside F1 and remove the deeper option"
+      },
+      {
+        "id": "b",
+        "text": "Change the angle again or help clear F1’s route"
+      },
+      {
+        "id": "c",
+        "text": "Demand the same pass regardless"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "An option should be re-created when the marker moves.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-006-q5",
+    "type": "choice",
+    "prompt": "Gold 1 is near the pass from D1 to YOU. To begin offering deeper middle support, which direction changes your passing angle more than skating straight toward D1?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Take a few strides toward F1"
+      },
+      {
+        "id": "b",
+        "text": "Take a few strides toward D1"
+      },
+      {
+        "id": "c",
+        "text": "Take a few strides toward the centre faceoff dot"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "Moving toward the centre faceoff dot takes YOU back and inward while changing the angle of the line from D1 to YOU. Moving straight toward D1 mainly shortens that same line near Gold 1; moving toward F1 takes YOU farther up ice and wider. Gold 1 is nearby, can move and may still reach the new line. Check again; a changed angle does not establish an open or completed pass.",
+    "basis": "coaching"
+  },
+  "beforeHash": "4bffece872b6f3065799089446fb21b91f6a7fec2932769db2310fd7160b4d90",
+  "afterHash": "8a24b41ce421f260e72b75536c4d9786c0ee18ff40f04c33fb4dea7767798b7b",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "F1 is farther up ice and wider; high support is plausible but not deeper-middle."
+    },
+    {
+      "optionId": "b",
+      "reason": "Directly toward D1 preserves actor-centre line bearing. May shorten support but not substantially change the alignment."
+    },
+    {
+      "optionId": "c",
+      "reason": "Centre dot(0,0) is back and inward from YOU(2,6); direction changes D1-to-YOU bearing. No clearance guarantee."
+    }
+  ],
+  "limitations": [
+    "Advisory author; not reviewed, approved or applied.",
+    "No motion, reach, timing, gaze, collision or completed pass simulated.",
+    "Render/mobile legibility and U13 challenge require independent assessment.",
+    "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+    "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author."
+  ],
+  "geometry": {
+    "units": "metres; source x/y; angle in degrees",
+    "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+    "actors": {
+      "YOU": [
+        2,
+        6
+      ],
+      "D1": [
+        -9,
+        -2
+      ],
+      "F1": [
+        4,
+        9
+      ],
+      "A1": [
+        -1,
+        4
+      ],
+      "A2": [
+        8,
+        -4
+      ]
+    },
+    "renderedPuck": [
+      -8,
+      -1.3
+    ],
+    "ownerId": "home-skater-2",
+    "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+    "before": {
+      "Gold1Gap": 0.15346052825872353,
+      "passBearing": 36.12944414324086
+    },
+    "options": {
+      "F1": {
+        "trialPosition": [
+          2.554700196225229,
+          6.832050294337844
+        ],
+        "advanceX": 0.5547001962252289,
+        "width": 6.832050294337844,
+        "Gold1Gap": 0.07388417947736863,
+        "passBearing": 37.61307224864277,
+        "bearingChange": 1.4836281054019125
+      },
+      "D1": {
+        "trialPosition": [
+          1.1912639156968114,
+          5.411828302324954
+        ],
+        "advanceX": -0.8087360843031886,
+        "width": 5.411828302324954,
+        "Gold1Gap": 0.15208639146915842,
+        "passBearing": 36.13841263328637,
+        "bearingChange": 0.008968490045511146
+      },
+      "centreDot": {
+        "trialPosition": [
+          1.683772233983162,
+          5.051316701949486
+        ],
+        "advanceX": -0.316227766016838,
+        "width": 5.051316701949486,
+        "Gold1Gap": 0.5927727431168285,
+        "passBearing": 33.25975385375464,
+        "bearingChange": 2.869690289486222
+      }
+    }
+  },
+  "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+}

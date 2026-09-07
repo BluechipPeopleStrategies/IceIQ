@@ -1,0 +1,134 @@
+{
+  "scenarioId": "exp26-u13-002",
+  "questionId": "exp26-u13-002-q5",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "status": "draft",
+  "before": {
+    "id": "exp26-u13-002-q5",
+    "type": "choice",
+    "prompt": "If D2 is closely marked before you release, what is sensible?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Reverse automatically because it was the original plan"
+      },
+      {
+        "id": "b",
+        "text": "Pass through D2’s marker without checking"
+      },
+      {
+        "id": "c",
+        "text": "Reassess a hold or another outlet"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-002-q5",
+    "type": "choice",
+    "prompt": "YOU want to advance as far toward centre ice as these outlets allow, without sending the puck farther toward the side boards. Which pass would you assess?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pass to W"
+      },
+      {
+        "id": "b",
+        "text": "Pass to C"
+      },
+      {
+        "id": "c",
+        "text": "Pass to D2"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "C gives more progress toward centre ice than D2 while receiving nearer the middle than the puck is now. W offers more forward distance but is wider. Check the passing line before release: this identifies an option to assess, not a guaranteed safe pass. A reverse to D2 or a wider pass to W may suit a different aim or a changed picture.",
+    "basis": "coaching"
+  },
+  "beforeHash": "a8c0f933a7cee4ca3182196b07a0517c60bcb7074481e2d83f87bf73b614747c",
+  "afterHash": "42933a5c518df84848eba3fab8f647ce58a4d03a2fc004897cda03e39ecebfb3",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "W advances 12 m from rendered puck x=-24 but widens |y|6.7 to9; plausible forward width outlet, fails no-wider condition."
+    },
+    {
+      "optionId": "b",
+      "reason": "C advances 9 m from rendered puck and reduces |y|6.7 to2; more advance than D2 without widening."
+    },
+    {
+      "optionId": "c",
+      "reason": "D2 x=-24 gives zero advance from rendered puck, with |y|6.7 to6. A reverse is plausible but less advance than C."
+    }
+  ],
+  "limitations": [
+    "Advisory author; not reviewed, approved or applied.",
+    "No motion, reach, timing, gaze, collision or completed pass simulated.",
+    "Render/mobile legibility and U13 challenge require independent assessment.",
+    "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+    "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author."
+  ],
+  "geometry": {
+    "units": "metres; source x/y; angle in degrees",
+    "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+    "actors": {
+      "YOU": [
+        -25,
+        6
+      ],
+      "D2": [
+        -24,
+        -6
+      ],
+      "W": [
+        -12,
+        9
+      ],
+      "A1": [
+        -18,
+        8
+      ],
+      "C": [
+        -15,
+        -2
+      ]
+    },
+    "renderedPuck": [
+      -24,
+      6.7
+    ],
+    "ownerId": "home-skater-1",
+    "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+    "options": {
+      "W": {
+        "length": 12.218428704215611,
+        "advanceX": 12,
+        "receiverWidth": 9,
+        "puckWidth": 6.7,
+        "Gold1PointGap": 0.14731845178905567
+      },
+      "C": {
+        "length": 12.517587627015038,
+        "advanceX": 9,
+        "receiverWidth": 2,
+        "puckWidth": 6.7,
+        "Gold1PointGap": 5.104817469948695
+      },
+      "D2": {
+        "length": 12.7,
+        "advanceX": 0,
+        "receiverWidth": 6,
+        "puckWidth": 6.7,
+        "Gold1PointGap": 6.139218191268331
+      }
+    }
+  },
+  "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+}

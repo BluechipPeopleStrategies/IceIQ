@@ -13,8 +13,11 @@ const snapshots = loadHistoricalQuestionSnapshots(join(reviewRoot, "repairs"));
 test("all historical follow-ups resolve to exact archived or current content", () => {
   const resolved = rows.map(row => resolveHistoricalQuestion(row, source.get(row.questionId), snapshots));
   assert.equal(resolved.length, 55);
-  // Packets 37–40 changed five more originals; all 55 historical versions remain receipted.
-  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 25);
+  // The later U11 retrieval q3 repair adds one archived version after packets 37–40.
+  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 26);
+  const retrieval = resolved[rows.findIndex(row => row.questionId === "exp26-u11-001-q3")];
+  assert.equal(retrieval.matchesCurrent, false);
+  assert.ok(retrieval.receipt);
   resolved.forEach((result, index) => {
     assert.equal(result.contentHash, rows[index].contentHash);
     assert.equal(result.question.id, rows[index].questionId);

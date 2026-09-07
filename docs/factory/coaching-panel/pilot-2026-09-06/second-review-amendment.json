@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "Sol independent",
+  "status": "post-review-arithmetic-correction",
+  "supersedes": {
+    "file": "second-review.json",
+    "questionIds": ["cal26-u9-wall-turn-001-q1"]
+  },
+  "rows": [
+    {
+      "questionId": "cal26-u9-wall-turn-001-q1",
+      "contentHash": "560fac293eef2c1772e32d0f55b87db7274ab43d215092d71395906453b80b33",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "YOU are (-17,10.5). Gold1 (-9,6) has delta (8,-4.5), distance sqrt(64+20.25)=sqrt(84.25)=9.1788 m. Navy2 (-10,1) has delta (7,-9.5), distance sqrt(49+90.25)=sqrt(139.25)=11.8004 m. Gold2 (-5,-3) has delta (12,-13.5), distance sqrt(144+182.25)=sqrt(326.25)=18.0624 m. Gold1 is uniquely closest.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Gold1 is 9.1788 m away, the smallest distance."},
+        {"optionId": "b", "assessment": "unsupported", "reason": "Navy2 is 11.8004 m away."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "Gold2 is 18.0624 m away."}
+      ],
+      "reason": "The original independent row contained an arithmetic error and its repair verdict is withdrawn. Coordinates support the existing key and wording.",
+      "proposedRepair": null,
+      "limitations": ["Euclidean position comparison only; it does not predict arrival order or pressure success."]
+    }
+  ],
+  "effectiveIndependentTotals": {"retain": 29, "repair": 5, "hold": 0},
+  "reconciliationCorrection": "The cal26-u9-wall-turn-001-q1 disagreement in independent-lead-reconciliation.json is withdrawn. The lead's exact Navy2 and Gold2 distances remain inaccurate, but its retain verdict and Gold1 selection are correct.",
+  "cause": "The original blind and second-review rows incorrectly used 9.18 m for Navy2 by omitting part of the 9.5 m y displacement. Root identified the error during adjudication."
+}

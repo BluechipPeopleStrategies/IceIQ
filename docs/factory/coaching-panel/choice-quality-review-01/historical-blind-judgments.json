@@ -1,0 +1,60 @@
+{
+  "reviewer": "choice-quality-review-01",
+  "reviewType": "historical-blind-calibration",
+  "proceduralSequence": [
+    "Read OPERATING-CHARTER.md and START-NEXT-RUN.md.",
+    "Read pilot-2026-09-06/historical-cases.json.",
+    "Saved this file before opening historical-answer-key.json."
+  ],
+  "caseCountObserved": 8,
+  "judgments": [
+    {
+      "questionId": "exp26-u11-006-q7",
+      "blindVerdict": "defect",
+      "severity": "material",
+      "reason": "The keyed option asserts two spatial facts that are not supported by the coordinates. The puck is at (23,5), and D1 at (22,1) is not on the puck-to-net segment from (23,5) to (26,0). 'Below the circle' is also orientation-dependent and not established by the supplied coordinate description. The call should report only a clearly visible puck location and pressure relationship."
+    },
+    {
+      "questionId": "exp26-u11-006-q9",
+      "blindVerdict": "defect",
+      "severity": "material",
+      "reason": "The reference moves YOU from (19,-2) to (22.2,-4.2), farther from the loose puck at (23,5): distance grows from about 8.06 to 9.23. It therefore does not satisfy 'toward the loose puck.' A static point also cannot guarantee that both D1 and the net remain in view."
+    },
+    {
+      "questionId": "exp26-u11-006-q10",
+      "blindVerdict": "retain",
+      "severity": "none",
+      "reason": "The hypothetical explicitly changes possession availability. Re-reading puck ownership, pressure, and support is age-appropriate and avoids promising the next outcome."
+    },
+    {
+      "questionId": "exp26-u11-011-q8",
+      "blindVerdict": "defect",
+      "severity": "material",
+      "reason": "Where YOU can receive a rebound is relevant, but D2's availability at an 'opposite point' does not determine the bank point in the described F1-to-YOU wall pass. D2 is not identified as a point player and the scene gives no wall contact point, rebound model, or alternative route involving D2. The keyed pair mixes a primary geometric cue with a speculative team option."
+    },
+    {
+      "questionId": "exp26-u11-012-q7",
+      "blindVerdict": "repair",
+      "severity": "minor",
+      "reason": "Option a is the only useful answer, but 'below me' depends on screen orientation and 'before recovering' can imply a fixed sequence when puck and pressure should be scanned together. Replace it with a plain call naming the loose puck toward the boards and D1 inside."
+    },
+    {
+      "questionId": "exp26-u11-012-q5",
+      "blindVerdict": "retain",
+      "severity": "none",
+      "reason": "If D1 reaches the puck first, possession has changed and the learner must transition to defending or regaining it. The other choices falsely preserve or replay the intended pass."
+    },
+    {
+      "questionId": "exp26-u11-016-q1",
+      "blindVerdict": "repair",
+      "severity": "minor",
+      "reason": "The geometric answer is unambiguous: abs(y) is 2 for YOU and 7 for F1, so YOU is closer to centre. The prompt has a conspicuous grammar defect ('does YOU') and should say 'do YOU.'"
+    },
+    {
+      "questionId": "exp26-u11-016-q7",
+      "blindVerdict": "defect",
+      "severity": "material",
+      "reason": "YOU is the defender and F1 is the opposing puck carrier, so asking what YOU should tell F1 teaches the defender to announce the tactical intent to an opponent. The keyed statement is also more like internal recognition than useful on-ice communication. Ask what YOU should recognize or communicate to a teammate instead."
+    }
+  ]
+}

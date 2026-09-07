@@ -1,0 +1,825 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "authorQualification": "advisory-only preserved",
+  "humanCoachApproval": false,
+  "applied": false,
+  "scope": "Only q003/q011 revision04; revision03 files remain frozen",
+  "changes": [
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q5",
+      "status": "draft",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 follows your inward move, which response could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call for a pass without looking at Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Reoffer elsewhere or make room for C"
+          },
+          {
+            "id": "c",
+            "text": "Remain still because your first move should have worked"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "D1 is comparing the two Navy receivers. Looking at both gold defenders, which direct passing line has more room around it in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The pass from D1 to YOU"
+          },
+          {
+            "id": "b",
+            "text": "The pass from D1 to C"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "The line from D1 to C has more space from the nearest gold defender. Gold 1 sits much nearer the line to YOU. C is an option for D1 to assess while YOU continue offering support; YOU do not have to receive the next pass. This still frame does not prove either pass will succeed. The line to YOU may become useful as the players move.",
+        "basis": "coaching"
+      },
+      "beforeHash": "b2cc07aa7cfc6290a35adf23c03a9f5001d0d44a4bbdb3619729966b7885670c",
+      "afterHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+      "supersededDraft03Hash": "b072a948914a2ae7695ace5bc8bf9d3cd39352d3a10cddc15bc184f240b036d6",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "YOU are a real teammate and viable future support option, but Gold1 lies very close to the direct puck-to-YOU line. The visible line has less space from its nearest defender than C’s line."
+        },
+        {
+          "optionId": "b",
+          "reason": "C is a real teammate. The minimum gap from either shown gold skater to the direct line is larger than the corresponding minimum for YOU. The comparison does not prove safety or demand a pass."
+        }
+      ],
+      "geometry": {
+        "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+        "units": "metres",
+        "puck": [
+          -21,
+          7.7
+        ],
+        "ownerId": "home-skater-2",
+        "actors": {
+          "YOU": [
+            -7,
+            9
+          ],
+          "D1": [
+            -22,
+            7
+          ],
+          "C": [
+            -13,
+            1
+          ],
+          "A1": [
+            -14,
+            8
+          ],
+          "A2": [
+            -5,
+            -2
+          ]
+        },
+        "options": [
+          {
+            "optionId": "a",
+            "receiver": "YOU",
+            "passLength": 14.060227594174995,
+            "defenderPointGaps": {
+              "A1": 0.3485007598333631,
+              "A2": 11.180339887498947
+            },
+            "minimumDefenderPointGap": 0.3485007598333631
+          },
+          {
+            "optionId": "b",
+            "receiver": "C",
+            "passLength": 10.435037134576953,
+            "defenderPointGaps": {
+              "A1": 4.724468093806996,
+              "A2": 8.54400374531753
+            },
+            "minimumDefenderPointGap": 4.724468093806996
+          }
+        ]
+      },
+      "duplicateAudit": {
+        "questionsInspected": [
+          "exp26-u13-003-q1",
+          "exp26-u13-003-q2",
+          "exp26-u13-003-q3",
+          "exp26-u13-003-q4",
+          "exp26-u13-003-q5",
+          "exp26-u13-003-q6",
+          "exp26-u13-003-q7",
+          "exp26-u13-003-q8",
+          "exp26-u13-003-q9",
+          "exp26-u13-003-q10"
+        ],
+        "distinction": "q7 identifies Gold1 near YOUR line; new q5 compares two genuine receiving options and considers both defenders. q6/q10 discuss helping C but do not perform this line comparison."
+      },
+      "limits": [
+        "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+        "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+        "No scene setup or actor moved; no hypothetical event presented as visible.",
+        "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+        "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+        "Author remains advisory-only; no human approval, no source application."
+      ],
+      "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons."
+    },
+    {
+      "scenarioId": "exp26-u13-011",
+      "questionId": "exp26-u13-011-q5",
+      "status": "draft",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-011-q5",
+        "type": "choice",
+        "prompt": "Suppose Gold 1 follows your lateral move. What deserves another look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The original shot as though Gold 1 had stayed still"
+          },
+          {
+            "id": "b",
+            "text": "A shot without checking the blocker"
+          },
+          {
+            "id": "c",
+            "text": "A pass to D2 or another change of angle"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A moving defender can close the new lane, so alternatives remain relevant.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-011-q5",
+        "type": "choice",
+        "prompt": "YOU are weighing the two teammate passes before another shot. Which direct passing line stays farther from Gold 1 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The pass from YOU to D2"
+          },
+          {
+            "id": "b",
+            "text": "The pass from YOU to F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The line to D2 stays farther from Gold 1 than the line to F1. That makes D2 an option to assess around the current blocker. F1 is farther toward the net and may offer a useful attacking option if that lane remains available. More distance from one defender does not guarantee reception or make D2 the best play in every situation.",
+        "basis": "coaching"
+      },
+      "beforeHash": "0f227ae5b386c1f54709c08870b57dc7ce18ceb5359ae7df88bd9f18ffac5a04",
+      "afterHash": "d9d229b0023a4841460469cd215b04212cd312b8501dca57af488cdc29d46a15",
+      "supersededDraft03Hash": "d2a23e78a517ea69b2a05f04c9b7b25cc3613d440086ba81e6e16a70fe92d716",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D2 is a real teammate. The direct puck-to-D2 segment stays farther from Gold1 than the puck-to-F1 segment. D2 may change the angle but a completed pass/next shot is unproven."
+        },
+        {
+          "optionId": "b",
+          "reason": "F1 is a real advanced teammate. Its direct segment has less separation from Gold1 but still several metres of point separation; do not call it blocked or wrong generally. It offers a different attacking tradeoff."
+        }
+      ],
+      "geometry": {
+        "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+        "units": "metres",
+        "puck": [
+          13,
+          0.7
+        ],
+        "ownerId": "home-skater-1",
+        "actors": {
+          "YOU": [
+            12,
+            0
+          ],
+          "D2": [
+            13,
+            -8
+          ],
+          "F1": [
+            23,
+            6
+          ],
+          "A1": [
+            18,
+            0
+          ],
+          "G": [
+            26,
+            0
+          ]
+        },
+        "options": [
+          {
+            "optionId": "a",
+            "receiver": "D2",
+            "passLength": 8.7,
+            "defenderPointGaps": {
+              "A1": 5
+            },
+            "minimumDefenderPointGap": 5
+          },
+          {
+            "optionId": "b",
+            "receiver": "F1",
+            "passLength": 11.317685275708985,
+            "defenderPointGaps": {
+              "A1": 2.9599692148977357
+            },
+            "minimumDefenderPointGap": 2.9599692148977357
+          }
+        ]
+      },
+      "duplicateAudit": {
+        "questionsInspected": [
+          "exp26-u13-011-q1",
+          "exp26-u13-011-q2",
+          "exp26-u13-011-q3",
+          "exp26-u13-011-q4",
+          "exp26-u13-011-q5",
+          "exp26-u13-011-q6",
+          "exp26-u13-011-q7",
+          "exp26-u13-011-q8",
+          "exp26-u13-011-q9",
+          "exp26-u13-011-q10"
+        ],
+        "distinction": "q7 identifies D2 against an opponent/goalie; new q5 compares D2 with actual advanced teammate F1, preserves F1’s conditional value and measures the direct lines."
+      },
+      "limits": [
+        "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+        "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+        "No scene setup or actor moved; no hypothetical event presented as visible.",
+        "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+        "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+        "Author remains advisory-only; no human approval, no source application."
+      ],
+      "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u13-003",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Step out of the forechecker’s shadow",
+      "family": "wall-outlet-support",
+      "topic": "wall outlet support",
+      "objective": "Create a visible receiving option for a defender.",
+      "briefing": "Navy D1 has the puck. YOU are a wide support player near the blue line. Gold 1 is close to the direct passing route. Navy C is closer to the defended left net and nearer the middle. Reoffer support if a usable lane is available.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": 9,
+            "facing": -3.0090411212931194
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": 7,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-3",
+            "label": "C",
+            "team": "home",
+            "role": "skater",
+            "x": -13,
+            "y": 1,
+            "facing": 2.5535900500422257
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -14,
+            "y": 8,
+            "facing": -3.017237659043032
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": -2,
+            "facing": 2.654693421778524
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "D1 owns the puck.",
+        "Gold 1 is close to the direct route to YOU.",
+        "C is a navy inside support option."
+      ],
+      "tags": [
+        "wall-outlet-support"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-003-q1",
+          "type": "choice",
+          "prompt": "Who currently owns the puck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            },
+            {
+              "id": "c",
+              "text": "C"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "The puck is assigned to D1, so this question is about support without possession.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-003-q2",
+          "type": "multi",
+          "prompt": "Which two changes might make your support more useful?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Stay hidden behind Gold 1 until the pass arrives"
+            },
+            {
+              "id": "b",
+              "text": "Show a ready stick after scanning"
+            },
+            {
+              "id": "c",
+              "text": "Adjust the receiving angle"
+            }
+          ],
+          "answer": [
+            "b",
+            "c"
+          ],
+          "explanation": "Moving and preparing can help D1 see an option; any new location still needs a lane check.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-003-q3",
+          "type": "sequence",
+          "prompt": "Arrange a way to reoffer along this wall.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Assess Gold 1 near the passing route"
+            },
+            {
+              "id": "b",
+              "text": "Move to change the passing angle"
+            },
+            {
+              "id": "c",
+              "text": "Look back and prepare to receive"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The order is a suggested support routine rather than a fixed skating pattern."
+        },
+        {
+          "id": "exp26-u13-003-q4",
+          "type": "position",
+          "prompt": "Move YOU to a different receiving angle from D1.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -10,
+            "y": 5
+          },
+          "basis": "coaching",
+          "explanation": "Coming off the boards can separate the passing route from Gold 1. Check C’s space rather than crowding it."
+        },
+        {
+          "id": "exp26-u13-003-q5",
+          "type": "choice",
+          "prompt": "D1 is comparing the two Navy receivers. Looking at both gold defenders, which direct passing line has more room around it in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The pass from D1 to YOU"
+            },
+            {
+              "id": "b",
+              "text": "The pass from D1 to C"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "The line from D1 to C has more space from the nearest gold defender. Gold 1 sits much nearer the line to YOU. C is an option for D1 to assess while YOU continue offering support; YOU do not have to receive the next pass. This still frame does not prove either pass will succeed. The line to YOU may become useful as the players move.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-003-q6",
+          "type": "explain",
+          "prompt": "How can your movement help D1 even if D1 passes to C?",
+          "basis": "coaching",
+          "explanation": "Explain how moving Gold 1 or clearing a route can help another teammate. Receiving the puck is not the only useful outcome."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which passing route is Gold 1 closest to?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The lane between D1 and YOU"
+            },
+            {
+              "id": "b",
+              "text": "The route from C to Navy’s net"
+            },
+            {
+              "id": "c",
+              "text": "The far blue-line exit"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 1 is close to the D1-to-YOU route. An angle change may help, but the new lane still needs checking.",
+          "id": "exp26-u13-003-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two calls help D1 use your movement?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Say when you are clear of the shadow"
+            },
+            {
+              "id": "b",
+              "text": "Identify C’s inside support"
+            },
+            {
+              "id": "c",
+              "text": "Call “I’m open” and leave D1 to guess your new angle"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Communicate actual availability and C’s support position. A short clear call can work; it must match the current lane.",
+          "id": "exp26-u13-003-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU toward the middle to compare a receiving angle from D1.",
+          "basis": "coaching",
+          "explanation": "The example moves YOU inward and changes the passing angle. It does not prove visibility or reception; recheck Gold 1 and C.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -9,
+            "y": 7
+          },
+          "id": "exp26-u13-003-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "How can movement help D1 even if the puck goes to C?",
+          "basis": "coaching",
+          "explanation": "Stepping off the direct lane can pull Gold 1 and open C or D1’s next route; if the defender ignores you, D1 can use the space you created.",
+          "id": "exp26-u13-003-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-011",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "The point shot has a blocker",
+      "family": "shooting-lane",
+      "topic": "shooting lane",
+      "objective": "Compare the current shooting lane with another angle.",
+      "briefing": "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": -8,
+            "facing": 1.695151321341658
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": 6,
+            "facing": -2.642245931909663
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 1 shares the centre lane between the puck and the attacking net.",
+        "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side."
+      ],
+      "tags": [
+        "shooting-lane"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 18, Shooting",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-011-q1",
+          "type": "choice",
+          "prompt": "Who stands on the straight line from YOU toward the net?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1"
+            },
+            {
+              "id": "c",
+              "text": "D2"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "Gold 1 shares the centre lane between the puck and the attacking net.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-011-q2",
+          "type": "multi",
+          "prompt": "Choose two ways to investigate a different shooting opportunity.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look for a lateral angle"
+            },
+            {
+              "id": "b",
+              "text": "Assume the puck must go through Gold 1"
+            },
+            {
+              "id": "c",
+              "text": "Check whether D2 has a usable connection"
+            }
+          ],
+          "answer": [
+            "a",
+            "c"
+          ],
+          "explanation": "Moving or passing may change the lane; this picture alone does not prove a shot will reach the net.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-011-q3",
+          "type": "sequence",
+          "prompt": "Order one response to the blocked point lane.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice Gold 1 in the lane"
+            },
+            {
+              "id": "b",
+              "text": "Check movement and passing options"
+            },
+            {
+              "id": "c",
+              "text": "Use the option that remains available"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "A player may choose a pass, carry or shot depending on the next cue."
+        },
+        {
+          "id": "exp26-u13-011-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare a lateral shooting angle.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 13,
+            "y": 4
+          },
+          "basis": "coaching",
+          "explanation": "A small lateral change shifts the line to the net. Check whether Gold 1 can follow before treating it as open."
+        },
+        {
+          "id": "exp26-u13-011-q5",
+          "type": "choice",
+          "prompt": "YOU are weighing the two teammate passes before another shot. Which direct passing line stays farther from Gold 1 in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The pass from YOU to D2"
+            },
+            {
+              "id": "b",
+              "text": "The pass from YOU to F1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "The line to D2 stays farther from Gold 1 than the line to F1. That makes D2 an option to assess around the current blocker. F1 is farther toward the net and may offer a useful attacking option if that lane remains available. More distance from one defender does not guarantee reception or make D2 the best play in every situation.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-011-q6",
+          "type": "explain",
+          "prompt": "Why does “move sideways” not guarantee a clear shot?",
+          "basis": "coaching",
+          "explanation": "Explain that the blocker, other players and goalie can also adjust."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which teammate can give YOU a lateral puck option if Gold 1 stays in the shooting line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D2"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1"
+            },
+            {
+              "id": "c",
+              "text": "The goalie"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "D2 is a Navy teammate at a different lateral angle. Check the route and receiver before passing; Gold 1 may adjust.",
+          "id": "exp26-u13-011-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two changes could alter the shooting picture?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D2 moves laterally"
+            },
+            {
+              "id": "b",
+              "text": "YOU change the puck’s angle to the net"
+            },
+            {
+              "id": "c",
+              "text": "Shoot without checking the blocker"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Moving the carrier or finding a lateral pass can change the shooting line. Recheck the blocker and goalie before choosing.",
+          "id": "exp26-u13-011-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to compare another puck angle toward the net.",
+          "basis": "coaching",
+          "explanation": "YOU carry the puck to the example point. It shifts the shooting line slightly and moves closer to Gold 1; neither a clear shot nor a pass to D2 is guaranteed.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 15,
+            "y": 1
+          },
+          "id": "exp26-u13-011-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why does a blocker make the read about geometry rather than simply shooting harder?",
+          "basis": "coaching",
+          "explanation": "Gold 1 occupies the direct line, so angle, screen and support determine what is visible; if those do not change, more force does not create a lane.",
+          "id": "exp26-u13-011-q10"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "schemaErrors": [],
+    "setupChanges": false
+  }
+}

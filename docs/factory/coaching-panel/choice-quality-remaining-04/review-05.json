@@ -1,0 +1,176 @@
+{
+  "status": "advisory-first-pass",
+  "humanCoachApproval": false,
+  "limitations": [
+    "Static setup inspected; all changes are verbal hypotheticals, no movement/reach proof or render review."
+  ],
+  "rows": [
+    {
+      "questionId": "exp26-u11-007-q5",
+      "scenarioVersion": 1,
+      "contentHash": "4b19e7144395402f9b72a7fae4a18c8842fe601046d4af730265e453cb4a14f3",
+      "verdict": "revise",
+      "issueCategory": "prompt announces key; noncompetitive alternatives",
+      "exactOffendingText": [
+        "Whether an inside pass is now usable",
+        "Whether staying at the boards is always required",
+        "Whether F2’s earlier position still guarantees an outlet"
+      ],
+      "reason": "F2 lane opens directly announces checking inside pass; other choices invoke always or guarantees rather than actual competing puck decisions.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Whether an inside pass is now usable",
+          "assessment": "supported within hypothetical",
+          "reason": "Correct conditional check of actual inside outlet."
+        },
+        {
+          "optionId": "b",
+          "text": "Whether staying at the boards is always required",
+          "assessment": "see reason",
+          "reason": "Always required at boards is not a plausible universal principle."
+        },
+        {
+          "optionId": "c",
+          "text": "Whether F2’s earlier position still guarantees an outlet",
+          "assessment": "see reason",
+          "reason": "Earlier position cannot guarantee availability now."
+        }
+      ],
+      "repairDirection": "Compare real inside/wall options using shown geometry, or remove universals and give matched conditional action alternatives.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26-u11-008-q5",
+      "scenarioVersion": 1,
+      "contentHash": "fff785aed1f075143bb17734280c4f7e11185662d11b63711df12b54de7d7d78",
+      "verdict": "revise",
+      "issueCategory": "generic umbrella key",
+      "exactOffendingText": [
+        "Keep the route because it was open earlier",
+        "Reconsider pace, direction or F2’s outlet",
+        "Assume F2 will remain available without checking"
+      ],
+      "reason": "Reconsider pace, direction or outlet includes nearly every sensible action. Other options demand outdated information or unchecked availability, so no U11 scene-based comparison is needed.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Keep the route because it was open earlier",
+          "assessment": "see reason",
+          "reason": "Earlier openness alone does not justify continuing, though route may reopen."
+        },
+        {
+          "optionId": "b",
+          "text": "Reconsider pace, direction or F2’s outlet",
+          "assessment": "supported within hypothetical",
+          "reason": "Broad reconsideration is reasonable but does not discriminate a read."
+        },
+        {
+          "optionId": "c",
+          "text": "Assume F2 will remain available without checking",
+          "assessment": "see reason",
+          "reason": "Unchecked assumption is obvious wrong wording."
+        }
+      ],
+      "repairDirection": "Ask which shown cue distinguishes two specific carries/outlets; preserve uncertainty in future timing.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26-u11-009-q5",
+      "scenarioVersion": 2,
+      "contentHash": "2ee575232d2bf1496359ce21c554f9582e857725ed88138191fb62c80fc3402f",
+      "verdict": "retain",
+      "issueCategory": "traffic and control awareness",
+      "exactOffendingText": [],
+      "reason": "Changed teammate traffic is expressly hypothetical. Rechecking and slowing or rerouting is a legitimate collision-avoidance/control principle; no fixed turn direction or successful execution promised.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Keep the planned turn without another look",
+          "assessment": "see reason",
+          "reason": "Without another look neglects teammate entering route."
+        },
+        {
+          "optionId": "b",
+          "text": "Reassess space and slow or choose another route",
+          "assessment": "supported within hypothetical",
+          "reason": "Reassess and slow or reroute preserves alternatives rather than guaranteed maneuver."
+        },
+        {
+          "optionId": "c",
+          "text": "Aim at F2’s original empty spot without checking D1",
+          "assessment": "see reason",
+          "reason": "Newly vacated F2 spot might be useful only after checking D1; unchecked aiming is poor."
+        }
+      ],
+      "repairDirection": "None required for introductory traffic awareness; optional harder lane comparison later.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26-u11-013-q5",
+      "scenarioVersion": 1,
+      "contentHash": "45c2b6a7904a379685f84e1e1aab7ba82da86724dc952d94972d9f7f72934356",
+      "verdict": "revise",
+      "issueCategory": "same action distinguished by diligence",
+      "exactOffendingText": [
+        "A controlled shot through the newly available lane",
+        "Only a pass to the same half-wall spot",
+        "Shooting without checking the changed pressure"
+      ],
+      "reason": "The new clear lane makes shot reconsideration plausible, but c duplicates shooting with without checking and b uses only to exclude alternatives. Answer is supplied by stem plus sensible wording.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "A controlled shot through the newly available lane",
+          "assessment": "supported within hypothetical",
+          "reason": "Controlled shot reconsideration is conditional, not promised goal."
+        },
+        {
+          "optionId": "b",
+          "text": "Only a pass to the same half-wall spot",
+          "assessment": "see reason",
+          "reason": "Half-wall pass can remain useful; only makes it falsely mandatory."
+        },
+        {
+          "optionId": "c",
+          "text": "Shooting without checking the changed pressure",
+          "assessment": "see reason",
+          "reason": "Same shooting action as key stripped of checking; weak distractor."
+        }
+      ],
+      "repairDirection": "Use matched actual shot/pass comparisons with scene cue; retain control/goalie uncertainty.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26-u11-015-q5",
+      "scenarioVersion": 2,
+      "contentHash": "2bd777849c8a8656d377ff5b290bbc1cbfd57ba704ef7658c68247f0c11ffc8e",
+      "verdict": "retain",
+      "issueCategory": "dynamic gap misconception",
+      "exactOffendingText": [],
+      "reason": "Explicit acceleration/gets-beside hypothetical supports reconsidering recovery toward defended right goal. Fixed distance and ignoring carrier are meaningful beginner defensive misconceptions; no exact turn mandated.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "How to recover while protecting the route to goal",
+          "assessment": "supported within hypothetical",
+          "reason": "Recovery protecting goal is appropriately bounded."
+        },
+        {
+          "optionId": "b",
+          "text": "Whether the original distance must remain fixed",
+          "assessment": "see reason",
+          "reason": "Universal fixed gap ignores changed speed."
+        },
+        {
+          "optionId": "c",
+          "text": "Whether YOU should follow F2 regardless of the carrier",
+          "assessment": "see reason",
+          "reason": "F2 is opposing receiver, but following regardless of carrier ignores primary changed threat."
+        }
+      ],
+      "repairDirection": "None for introductory gap reasoning; no technique or timing assessed.",
+      "highRisk": true
+    }
+  ]
+}

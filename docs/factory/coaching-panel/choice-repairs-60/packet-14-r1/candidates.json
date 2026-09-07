@@ -1,0 +1,3119 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "author": "/root/choice_review_strong",
+  "authorQualification": "advisory-only preserved",
+  "humanCoachApproval": false,
+  "applied": false,
+  "packet": "14",
+  "changes": [
+    {
+      "scenarioId": "exp26-u18-005",
+      "questionId": "exp26-u18-005-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u18-005-q5",
+        "type": "choice",
+        "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The old activation regardless of possession"
+          },
+          {
+            "id": "b",
+            "text": "A belief that D2 can cover every possible turnover alone"
+          },
+          {
+            "id": "c",
+            "text": "Whether to hold or recover instead of continuing up ice"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-005-q5",
+        "type": "choice",
+        "prompt": "Imagine F1 bobbles the puck before YOU join the second wave. Which Gold player is currently closest to both YOU and F1, making that pressure especially relevant to the hold-or-join decision?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "Gold 3 is near both the supporting defender and F1. Check the actual puck contest and D2’s cover before continuing the activation; a bobble alone does not establish Gold possession.",
+        "basis": "scene"
+      },
+      "beforeHash": "bb22b037a318a698468c1bc6ae8fd6875a9236c7112455353ff231dd17f04712",
+      "afterHash": "644b13601611fd026a29e2090b475dd253af645e20d9af682451e8d6f360cc48",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 1 is 18.25 m from YOU and 12.17 m from F1."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 2 is 18.03 m from YOU and 10.30 m from F1."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold 3 is 3.61 m from YOU and 4.47 m from F1, the nearest in both comparisons."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-3",
+          "x": 4,
+          "y": 0.7
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 5,
+            "facing": -0.6947382761967031
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -11,
+            "y": -2,
+            "facing": 0.14189705460416394
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -7,
+            "facing": 2.4227626539681686
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 7,
+            "facing": -2.191045812777718
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 2,
+            "facing": -2.976443976175166
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -5,
+            "facing": 2.6344941491974563
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -1,
+            "y": 2,
+            "facing": -0.4636476090008061
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 10.63014581273465
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 18.439088914585774
+          },
+          {
+            "a": "YOU",
+            "b": "F3",
+            "distance": 11.180339887498947
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 18.248287590894655
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 18.027756377319946
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 3.6055512754639896
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 14.142135623730951
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 22.561028345356952
+          },
+          {
+            "a": "D2",
+            "b": "F3",
+            "distance": 21.02379604162864
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 26.305892875931807
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 23.194827009486403
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 10.77032961426901
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 10.63014581273465
+          },
+          {
+            "a": "F1",
+            "b": "F3",
+            "distance": 8.602325267042627
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 12.165525060596437
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 4.47213595499958
+          },
+          {
+            "a": "F2",
+            "b": "F3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 2.23606797749979
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 15
+          },
+          {
+            "a": "F3",
+            "b": "A1",
+            "distance": 8.602325267042627
+          },
+          {
+            "a": "F3",
+            "b": "A2",
+            "distance": 12.649110640673518
+          },
+          {
+            "a": "F3",
+            "b": "A3",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 16
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 14.7648230602334
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 8.21522975941635,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 10.63014581273465
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.406248123122953
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 11.076551810017413
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.822932352408827
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 1.5093917471738438
+              }
+            ]
+          },
+          {
+            "receiver": "D2",
+            "distance": 15.241062955056645,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 5.472059281293745
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.406248123122953
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 11.076551810017413
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.822932352408827
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 2.1652033127421295
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 10.406248123122953,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.21522975941635
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 15.241062955056645
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 9.013815439550587
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 2.0852856613885686
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5.166236541235795
+              }
+            ]
+          },
+          {
+            "receiver": "F3",
+            "distance": 7.462573282722254,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.21522975941635
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 15.241062955056645
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.406248123122953
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 8.58953039006099
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.822932352408827
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5.166236541235795
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 11.076551810017413,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.21522975941635
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 15.241062955056645
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8.46833939016736
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.786999519293472
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.59952675289162
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5.166236541235795
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 9.822932352408827,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.21522975941635
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 15.241062955056645
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 2.23606797749979
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 7.441769664846982
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5.166236541235795
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 5.166236541235795,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.6055512754639896
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 10.77032961426901
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.406248123122953
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 11.076551810017413
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.822932352408827
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Tests which actual opponent makes the possession-quality change consequential; does not infer turnover or require an automatic retreat.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u18-005-q1",
+          "prompt": "Which defender has the explicitly stated deeper-cover role?"
+        },
+        {
+          "id": "exp26-u18-005-q2",
+          "prompt": "Choose two checks for joining the attack."
+        },
+        {
+          "id": "exp26-u18-005-q3",
+          "prompt": "Arrange an activation assessment."
+        },
+        {
+          "id": "exp26-u18-005-q4",
+          "prompt": "Move YOU to compare a second-wave supporting lane."
+        },
+        {
+          "id": "exp26-u18-005-q6",
+          "prompt": "What distinguishes a useful second wave from leaving the play without cover?"
+        },
+        {
+          "id": "exp26-u18-005-q7",
+          "prompt": "What should YOU communicate before joining the second wave?"
+        },
+        {
+          "id": "exp26-u18-005-q8",
+          "prompt": "Which two changes require reassessing the activation?"
+        },
+        {
+          "id": "exp26-u18-005-q9",
+          "prompt": "Move YOU to a second-wave lane behind F1, separate from F3."
+        },
+        {
+          "id": "exp26-u18-005-q10",
+          "prompt": "Gold 3 accelerates as F1 bobbles. What is your new priority?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u18-009",
+      "questionId": "exp26-u18-009-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u18-009-q2",
+        "type": "multi",
+        "prompt": "Which two cues should affect the first-touch option?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A requirement to pass first-time regardless"
+          },
+          {
+            "id": "b",
+            "text": "Whether Gold 1 closes F1’s route"
+          },
+          {
+            "id": "c",
+            "text": "The arriving pass quality"
+          }
+        ],
+        "answer": [
+          "b",
+          "c"
+        ],
+        "explanation": "Preparation enables an early option, but a changed route or difficult reception can require another action.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-009-q2",
+        "type": "multi",
+        "prompt": "While D1’s pass is still travelling toward YOU, which two current receiver-pressure relationships belong in the pre-scan?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is closer to F1 than Gold 2 is"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2 is closer to F2 than Gold 1 is"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3 is closer to YOU than Gold 2 is"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "F1 has Gold 1 nearby, and F2 has Gold 2 nearby. Prepare alternatives using those pressures, then update the arriving puck quality and passing lines before choosing a redirect or a controlling touch.",
+        "basis": "scene"
+      },
+      "beforeHash": "118713b99a9c28286b10ab0071e39649b888d3d24df73940e477ea926474da32",
+      "afterHash": "0577ab7a0473c98fef0e35d4d06dde41348eea671cd1a2a8d80d67e897ec5725",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 1 to F1 is 5.10 m; Gold 2 to F1 is 12.04 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 2 to F2 is 7.21 m; Gold 1 to F2 is 11.18 m."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold 3 to YOU is 15.03 m; Gold 2 to YOU is 5.83 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": null,
+          "x": -3,
+          "y": -1
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": 1,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -4,
+            "facing": 0.40489178628508343
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": 7,
+            "facing": -1.0121970114513341
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": 4,
+            "facing": -2.838707785214822
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -8,
+            "facing": 2.647651284670212
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 3,
+            "facing": -2.7928216500058864
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": 2.7367008673047097
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 0,
+            "facing": -3.0890095919788516
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 12.08304597359457
+          },
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 10.816653826391969
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 12.36931687685298
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 7.280109889280519
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 5.8309518948453
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 15.03329637837291
+          },
+          {
+            "a": "D1",
+            "b": "D2",
+            "distance": 11.180339887498947
+          },
+          {
+            "a": "D1",
+            "b": "F1",
+            "distance": 24.351591323771842
+          },
+          {
+            "a": "D1",
+            "b": "F2",
+            "distance": 20.39607805437114
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 19.313207915827967
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 14
+          },
+          {
+            "a": "D1",
+            "b": "A3",
+            "distance": 26.305892875931807
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 21.213203435596427
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 23.430749027719965
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 16.492422502470642
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 16.278820596099706
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 25
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 12.36931687685298
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 12.041594578792296
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 5
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 11.180339887498947
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 10
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 8.06225774829855
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 8.54400374531753
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 12.649110640673518
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 4.47213595499958,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 12.36931687685298
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.727922061357857
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 7.280109889280519
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.8309518948453
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 15.03329637837291
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 7.615773105863909,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.47213595499958
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.3227567330403
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 16.76305461424021
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 14.7648230602334
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 11.704699910719626
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 19.026297590440446
+              }
+            ]
+          },
+          {
+            "receiver": "D2",
+            "distance": 9.433981132056603,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.47213595499958
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.525984948045155
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 16.76305461424021
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 14.7648230602334
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 11.704699910719626
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 19.026297590440446
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 16.76305461424021,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 0.7158599835262722
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.558934757012517
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.5368949876447043
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.951364886056717
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 14.7648230602334,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.6573414919844205
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.987952668171156
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 8.736982453073892
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 0.6772854614785963
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 11.704699910719626,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 0.5126145946300565
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 11.021213784546216
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.211581712072242
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 8.54400374531753
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 7.615773105863909,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.4139672543527864
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 12.041594578792296
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 8.06225774829855
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 12.649110640673518
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 19.026297590440446,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 1.7870003261739646
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.433981132056603
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.15214781669833
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.673589635923495
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.4163241529796387
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 3.3637653198568747
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Current receiver pressure is observable before reception, without using current loose puck as the origin of an already-controlled next pass or implying the pass arrived.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u18-009-q1",
+          "prompt": "What is the puck doing according to the briefing?"
+        },
+        {
+          "id": "exp26-u18-009-q3",
+          "prompt": "Arrange a prepared-reception routine."
+        },
+        {
+          "id": "exp26-u18-009-q4",
+          "prompt": "Move YOU to compare a different receiving angle toward F1 and F2."
+        },
+        {
+          "id": "exp26-u18-009-q5",
+          "prompt": "Gold 1 closes F1 completely as the pass arrives. What might be appropriate?"
+        },
+        {
+          "id": "exp26-u18-009-q6",
+          "prompt": "How can a player prepare early without committing too early?"
+        },
+        {
+          "id": "exp26-u18-009-q7",
+          "prompt": "What should YOU communicate before the loose pass arrives?"
+        },
+        {
+          "id": "exp26-u18-009-q8",
+          "prompt": "Which two changes affect the first touch?"
+        },
+        {
+          "id": "exp26-u18-009-q9",
+          "prompt": "Move YOU to compare another approach to the arriving pass."
+        },
+        {
+          "id": "exp26-u18-009-q10",
+          "prompt": "Gold closes F1 completely as the puck arrives. Explain your branch."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u18-001",
+      "questionId": "exp26b-u18-001-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u18-001-q5",
+        "type": "choice",
+        "prompt": "F1 opens with room to retain the puck. What changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A controlled pass may reduce pressure while keeping possession"
+          },
+          {
+            "id": "b",
+            "text": "Force a shot because the lead is close"
+          },
+          {
+            "id": "c",
+            "text": "Dump without checking support"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F1 becoming reachable changes the safe-possession branch; the clock does not make one action automatic."
+      },
+      "after": {
+        "id": "exp26b-u18-001-q5",
+        "type": "choice",
+        "prompt": "With one minute left and a one-goal lead, which current forward passing line stays farther from Gold 2?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The direct line from YOU to F1"
+          },
+          {
+            "id": "b",
+            "text": "The direct line from YOU to F2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 2 is much nearer the F2 line than the F1 line. That favours examining F1 as a controlled outlet, but Gold 1, Gold 3 and F1’s receiving space still need checking before a pass."
+      },
+      "beforeHash": "7b02d231042631a86645ab680b59ffd0c8eeefb57571001dfac18e5fd3724879",
+      "afterHash": "3d88ff7067496cd7b02cfa29872650744adc8377d0ee2efeff014a04f6122d07",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Canonical puck (1,-5.3) to F1 (9,-8): Gold 2 clearance 9.16 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Puck to F2 (14,5): Gold 2 clearance 1.37 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 1,
+          "y": -5.3
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": -6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -8,
+            "facing": 2.9
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 5,
+            "facing": -2.5
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": -2.7
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": -2.4
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": -2.9
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 9.219544457292889
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 17.804493814764854
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 4.47213595499958
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 11.313708498984761
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 13.92838827718412
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 13.453624047073712
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 8
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 7.810249675906656
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F1",
+            "distance": 8.443340571124677,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.92838827718412
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.1910758951578977
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.15514414571381
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.0710678118654755
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 16.585837331892535,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.084357433921163
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.8440936517012452
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.3746668041991696
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.270409984066392
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.269556544854363,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.4031242374328485
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.453624047073712
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10.04987562112089
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 10.113851887386922,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.6429831938118005
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.708203932499369
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.265591007513468
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.810249675906656
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 13.201893803541974,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.052448898327476
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.7574670837995279
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.9688406203402815
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Meaningful relative passing pressure supports risk evaluation; no claim that the clock bans forward play or that F1 is guaranteed open.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u18-001-q1",
+          "prompt": "What lead and remaining time does the briefing state?"
+        },
+        {
+          "id": "exp26b-u18-001-q2",
+          "prompt": "Which two cues affect the possession objective?"
+        },
+        {
+          "id": "exp26b-u18-001-q3",
+          "prompt": "Arrange a late-possession read."
+        },
+        {
+          "id": "exp26b-u18-001-q4",
+          "prompt": "Move YOU to compare routes toward F1 and F2."
+        },
+        {
+          "id": "exp26b-u18-001-q6",
+          "prompt": "Explain a sensible risk tradeoff without saying “never attack with a lead.”"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u18-004",
+      "questionId": "exp26b-u18-004-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u18-004-q5",
+        "type": "choice",
+        "prompt": "Gold 2 receives below the line and Gold 3 cuts inward. What needs updating?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The low exchange and inside coverage"
+          },
+          {
+            "id": "b",
+            "text": "Stay on the original Gold 2 spot"
+          },
+          {
+            "id": "c",
+            "text": "Follow the puck without checking the slot"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Two attacker routes changed, so update who protects the inside and backdoor."
+      },
+      "after": {
+        "id": "exp26b-u18-004-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold 3 cuts inward while Gold 2 stays at the shown spot. No teammate has confirmed a coverage handoff. Under this drill’s assignment, which attacker remains YOUR low responsibility as YOU call out the new threat?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 2"
+          },
+          {
+            "id": "b",
+            "text": "Gold 3"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Keep responsibility for Gold 2 until a teammate confirms the exchange, while communicating Gold 3’s new threat. If the handoff is confirmed or the attack changes again, update the coverage; this drill condition does not prescribe one skating route."
+      },
+      "beforeHash": "13572dfe8493cc73cc97381ffbbe64270456d47e4af57017e81187d7eb0c16d9",
+      "afterHash": "d939cac2ca29203552ca8bdc8fbbb8416cfd656f4a1f0b2ae1ef7b75c7416ea4",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 2 is the low threat assigned to YOU until a teammate confirms coverage; the hypothetical explicitly says no confirmation."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 3 is a new threat to communicate, but the cut alone does not transfer the assigned Gold 2 responsibility to a teammate."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "a4",
+          "x": -26.786819561086688,
+          "y": -3.865117745280942
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": 4,
+            "facing": -1.2
+          },
+          {
+            "id": "h2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": -5,
+            "facing": -0.9
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -15,
+            "y": -4,
+            "facing": -2
+          },
+          {
+            "id": "a2",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": -15,
+            "y": 4,
+            "facing": -1.8
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -18,
+            "y": -10,
+            "facing": 3.1
+          },
+          {
+            "id": "a4",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -28,
+            "y": -4,
+            "facing": -0.5
+          },
+          {
+            "id": "a5",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -24,
+            "y": 5,
+            "facing": -1.2
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 9.055385138137417
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 11.313708498984761
+          },
+          {
+            "a": "YOU",
+            "b": "A4",
+            "distance": 8
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 14.866068747318506
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 9.433981132056603
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 1.4142135623730951
+          },
+          {
+            "a": "D1",
+            "b": "F1",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "D1",
+            "b": "A4",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "D1",
+            "b": "A3",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 10.19803902718557
+          },
+          {
+            "a": "F1",
+            "b": "A4",
+            "distance": 8
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 13
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "A4",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "A4",
+            "b": "A1",
+            "distance": 15.264337522473749
+          },
+          {
+            "a": "A4",
+            "b": "A2",
+            "distance": 9.055385138137417
+          },
+          {
+            "a": "A3",
+            "b": "A1",
+            "distance": 11.6619037896906
+          },
+          {
+            "a": "A3",
+            "b": "A2",
+            "distance": 16.155494421403514
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 9.848857801796104
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 8.729265692792374,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 4.805271745789079
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 10.678503980914188
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 8
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10.716574932242226
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.4142135623730951
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 4.919512093945736,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.52655568154475
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.0710678118654755
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 11.40175425099138
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.4031242374328485
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.268892977729456
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 11.787591297133348,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 7.907934377875006
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 1.0800336577003795
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 7.99947623834101
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.033935376430508
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 8.896426175109381
+              }
+            ]
+          },
+          {
+            "receiver": "A4",
+            "distance": 14.170010321547016,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.440430213841801
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 3.6009537519689587
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.654515723627142
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 9.980241186156821
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.827298456025419
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 10.716574932242226,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.729265692792374
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 1.809773076676401
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.636967928688362
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 13.196391712233522
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.292829273356443
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 9.292829273356443,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 1.2538632706591315
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 4.90684050681577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.284769435932182
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 9.055385138137417
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10.716574932242226
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Uses explicit local drill handoff condition, not an unverified universal penalty-kill rule. Distinct from q1 identifying an attacker: tests whether a changed second threat supplies the required exchange confirmation.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u18-004-q1",
+          "prompt": "Which attacker is across the low slot from Gold 1?"
+        },
+        {
+          "id": "exp26b-u18-004-q2",
+          "prompt": "Which two checks belong before exchanging low responsibility?"
+        },
+        {
+          "id": "exp26b-u18-004-q3",
+          "prompt": "Arrange a coverage handoff."
+        },
+        {
+          "id": "exp26b-u18-004-q4",
+          "prompt": "Compare a position closer to Navy’s net than Gold 2, opposite the puck side."
+        },
+        {
+          "id": "exp26b-u18-004-q6",
+          "prompt": "Which low-slot passing threat should YOU track before exchanging coverage?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u18-005",
+      "version": 3,
+      "ageBand": "U18",
+      "title": "Join the second wave only after checking possession",
+      "family": "defender-activation",
+      "topic": "Transition support",
+      "objective": "Assess an offensive activation while keeping a stated covering defender.",
+      "briefing": "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 5,
+            "facing": -0.6947382761967031
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -11,
+            "y": -2,
+            "facing": 0.14189705460416394
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -7,
+            "facing": 2.4227626539681686
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 7,
+            "facing": -2.191045812777718
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 2,
+            "facing": -2.976443976175166
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -5,
+            "facing": 2.6344941491974563
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -1,
+            "y": 2,
+            "facing": -0.4636476090008061
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-3"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The briefing assigns deeper cover to D2 before the activation is considered.",
+        "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked."
+      ],
+      "tags": [
+        "defender-activation"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 15, Neutral Zone Regroups: second wave and game situation",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u18-005-q1",
+          "type": "choice",
+          "prompt": "Which defender has the explicitly stated deeper-cover role?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 3"
+            },
+            {
+              "id": "b",
+              "text": "D2"
+            },
+            {
+              "id": "c",
+              "text": "YOU"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "The briefing assigns deeper cover to D2 before the activation is considered.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u18-005-q2",
+          "type": "multi",
+          "prompt": "Choose two checks for joining the attack.",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1’s quality of possession"
+            },
+            {
+              "id": "b",
+              "text": "The idea that every recovery requires both defenders to go"
+            },
+            {
+              "id": "c",
+              "text": "Whether D2 and recovering pressure support the decision"
+            }
+          ],
+          "answer": [
+            "a",
+            "c"
+          ],
+          "explanation": "Activation is a conditional choice; the source principle does not erase risk.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u18-005-q3",
+          "type": "sequence",
+          "prompt": "Arrange an activation assessment.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Confirm controlled possession"
+            },
+            {
+              "id": "b",
+              "text": "Check covering support and Gold 3"
+            },
+            {
+              "id": "c",
+              "text": "Join or hold according to the updated picture"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Confirming controlled possession and checking covering support/Gold 3 can overlap as YOU skate; only joining or holding has to come last, once both reads are in. The routine assumes the stated cover plan and still needs realistic timing."
+        },
+        {
+          "id": "exp26-u18-005-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare a second-wave supporting lane.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 4,
+            "y": 5
+          },
+          "basis": "coaching",
+          "explanation": "The example is behind F2 and F3 but slightly ahead of carrier F1, in a different lane. Recheck D2’s cover and Gold 3; arrival timing and a passing window are not established."
+        },
+        {
+          "id": "exp26-u18-005-q5",
+          "type": "choice",
+          "prompt": "Imagine F1 bobbles the puck before YOU join the second wave. Which Gold player is currently closest to both YOU and F1, making that pressure especially relevant to the hold-or-join decision?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2"
+            },
+            {
+              "id": "c",
+              "text": "Gold 3"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "Gold 3 is near both the supporting defender and F1. Check the actual puck contest and D2’s cover before continuing the activation; a bobble alone does not establish Gold possession.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u18-005-q6",
+          "type": "explain",
+          "prompt": "What distinguishes a useful second wave from leaving the play without cover?",
+          "basis": "coaching",
+          "explanation": "Discuss secure possession, D2’s role, pressure and a reachable support lane."
+        },
+        {
+          "id": "exp26-u18-005-q7",
+          "type": "choice",
+          "prompt": "What should YOU communicate before joining the second wave?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1 has control and D2 is behind me; call if either changes"
+            },
+            {
+              "id": "b",
+              "text": "The attack makes cover unnecessary"
+            },
+            {
+              "id": "c",
+              "text": "F2 owns the puck"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The message names carrier and cover, the two conditions for activation."
+        },
+        {
+          "id": "exp26-u18-005-q8",
+          "type": "multi",
+          "prompt": "Which two changes require reassessing the activation?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1 loses control"
+            },
+            {
+              "id": "b",
+              "text": "D2 leaves the deeper cover"
+            },
+            {
+              "id": "c",
+              "text": "F2 stays wide"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Possession and cover determine whether the second wave remains responsible."
+        },
+        {
+          "id": "exp26-u18-005-q9",
+          "type": "position",
+          "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 0,
+            "y": 4.5
+          },
+          "basis": "coaching",
+          "explanation": "The example stays behind F1 and separate from F3. Check D2’s deeper cover and Gold 3’s recovery before continuing; no open pass is guaranteed."
+        },
+        {
+          "id": "exp26-u18-005-q10",
+          "type": "explain",
+          "prompt": "Gold 3 accelerates as F1 bobbles. What is your new priority?",
+          "basis": "coaching",
+          "explanation": "Recover or hold the cover first, then re-read F1 and F2. The earlier activation plan is stale."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u18-009",
+      "version": 3,
+      "ageBand": "U18",
+      "title": "Prepare the first touch but keep a second option",
+      "family": "receiving-under-fast-pressure",
+      "topic": "Receiving and scanning",
+      "objective": "Compare a prepared first-touch play with the need to update a changed lane.",
+      "briefing": "D1 has released a firm pass toward YOU in the neutral zone. The puck is in transit. F1 is the prepared forward option, but Gold 1 is closing that route. The coach asks YOU to scan before reception; a one-touch pass is permitted, not required. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": 1,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -4,
+            "facing": 0.40489178628508343
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": 7,
+            "facing": -1.0121970114513341
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": 4,
+            "facing": -2.838707785214822
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -8,
+            "facing": 2.647651284670212
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 3,
+            "facing": -2.7928216500058864
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": 2.7367008673047097
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 0,
+            "facing": -3.0890095919788516
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -3,
+          "y": -1
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The loose marker represents the explicitly stated pass in transit.",
+        "D1 has released a firm pass toward YOU in the neutral zone. The puck is in transit. F1 is the prepared forward option, but Gold 1 is closing that route. The coach asks YOU to scan before reception; a one-touch pass is permitted, not required."
+      ],
+      "tags": [
+        "receiving-under-fast-pressure"
+      ],
+      "sources": [
+        {
+          "id": "iihf-norway-2023",
+          "title": "Norway’s junior program on upswing",
+          "url": "https://www.iihf.com/en/events/2024/wm20/news/56949/norway_s_junior_program_on_upswing",
+          "section": "Nylund on faster opponents and reducing touches",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "International U20 coach observation adapted to U18. The source does not validate a universal one-touch rule or this original pass geometry. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u18-009-q1",
+          "type": "choice",
+          "prompt": "What is the puck doing according to the briefing?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Travelling from D1 toward YOU"
+            },
+            {
+              "id": "b",
+              "text": "Already controlled by F1"
+            },
+            {
+              "id": "c",
+              "text": "Already sitting still at YOUR feet"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "The loose marker represents the explicitly stated pass in transit.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u18-009-q2",
+          "type": "multi",
+          "prompt": "While D1’s pass is still travelling toward YOU, which two current receiver-pressure relationships belong in the pre-scan?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 is closer to F1 than Gold 2 is"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2 is closer to F2 than Gold 1 is"
+            },
+            {
+              "id": "c",
+              "text": "Gold 3 is closer to YOU than Gold 2 is"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "F1 has Gold 1 nearby, and F2 has Gold 2 nearby. Prepare alternatives using those pressures, then update the arriving puck quality and passing lines before choosing a redirect or a controlling touch.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u18-009-q3",
+          "type": "sequence",
+          "prompt": "Arrange a prepared-reception routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan the forward option before arrival"
+            },
+            {
+              "id": "b",
+              "text": "Update the lane and puck quality"
+            },
+            {
+              "id": "c",
+              "text": "Redirect or control according to what remains available"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Repeated scans can overlap with receiving; extra control is not automatically an error."
+        },
+        {
+          "id": "exp26-u18-009-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare a different receiving angle toward F1 and F2.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 2,
+            "y": -1
+          },
+          "basis": "coaching",
+          "explanation": "The example changes both forward routes and moves farther from the current loose puck. Whether the pass reaches this new point in time is not established; YOU do not yet control it."
+        },
+        {
+          "id": "exp26-u18-009-q5",
+          "type": "choice",
+          "prompt": "Gold 1 closes F1 completely as the pass arrives. What might be appropriate?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Pretend the pre-scan picture cannot change"
+            },
+            {
+              "id": "b",
+              "text": "Control or use another checked option"
+            },
+            {
+              "id": "c",
+              "text": "One-touch into F1’s closed lane by rule"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "The latest cue should override a stale preplanned pass.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u18-009-q6",
+          "type": "explain",
+          "prompt": "How can a player prepare early without committing too early?",
+          "basis": "coaching",
+          "explanation": "Describe a provisional option, renewed scanning and an alternative if pressure or the arriving puck changes."
+        },
+        {
+          "id": "exp26-u18-009-q7",
+          "type": "choice",
+          "prompt": "What should YOU communicate before the loose pass arrives?",
+          "options": [
+            {
+              "id": "a",
+              "text": "I am preparing a touch; call if F1 or F2 becomes covered"
+            },
+            {
+              "id": "b",
+              "text": "The planned spot guarantees the reception"
+            },
+            {
+              "id": "c",
+              "text": "Both support lanes remain available after Gold closes one route"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The message prepares early while leaving the first touch conditional."
+        },
+        {
+          "id": "exp26-u18-009-q8",
+          "type": "multi",
+          "prompt": "Which two changes affect the first touch?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 closes F1"
+            },
+            {
+              "id": "b",
+              "text": "F2 remains reachable"
+            },
+            {
+              "id": "c",
+              "text": "The intended puck spot stays current after it drifts"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Pressure and support affect the actual loose puck; the intended spot is no longer enough."
+        },
+        {
+          "id": "exp26-u18-009-q9",
+          "type": "position",
+          "prompt": "Move YOU to compare another approach to the arriving pass.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 2.5,
+            "y": 2.5
+          },
+          "basis": "coaching",
+          "explanation": "The example moves farther from the current puck and closer to Gold 1. Recheck the pass trajectory and pressure before trying this point; it does not guarantee reception or an open outlet."
+        },
+        {
+          "id": "exp26-u18-009-q10",
+          "type": "explain",
+          "prompt": "Gold closes F1 completely as the puck arrives. Explain your branch.",
+          "basis": "coaching",
+          "explanation": "Protect the first touch and check F2 or a reset. Do not treat the covered target as the only continuation."
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u18-001",
+      "version": 3,
+      "ageBand": "U18",
+      "title": "Manage a lead in the final minute",
+      "family": "late-lead-possession",
+      "topic": "Clock and risk",
+      "objective": "Use the stated clock and score to weigh controlled possession against a safe reset.",
+      "briefing": "Navy leads 3–2 with one minute left. Navy attacks the Gold net. YOU own the puck near centre; F1 is wide support, F2 is higher, and Gold pressures from both sides. The score and clock are explicit practice conditions.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": -6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -8,
+            "facing": 2.9
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 5,
+            "facing": -2.5
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": -2.7
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": -2.4
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": -2.9
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "Navy leads 3–2 with one minute left.",
+        "YOU own the puck.",
+        "F1 and F2 are visible support options."
+      ],
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 15, Neutral Zone Regroups: risk and game situation",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u18-001-q1",
+          "type": "choice",
+          "prompt": "What lead and remaining time does the briefing state?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Navy trails 2–3"
+            },
+            {
+              "id": "b",
+              "text": "Navy leads 3–2 with one minute left"
+            },
+            {
+              "id": "c",
+              "text": "The clock is not stated"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The briefing states a one-goal Navy lead with one minute remaining."
+        },
+        {
+          "id": "exp26b-u18-001-q2",
+          "type": "multi",
+          "prompt": "Which two cues affect the possession objective?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The stated lead and clock"
+            },
+            {
+              "id": "b",
+              "text": "F1 and F2's reachable support"
+            },
+            {
+              "id": "c",
+              "text": "The lead means every forward option is wrong"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The score and time shape risk, while support determines whether possession can be kept."
+        },
+        {
+          "id": "exp26b-u18-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange a late-possession read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan pressure and support"
+            },
+            {
+              "id": "b",
+              "text": "Protect or move the puck to a reachable option"
+            },
+            {
+              "id": "c",
+              "text": "Re-check whether the next lane remains safe"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The lead informs risk, but the actual support and pressure still decide the next action."
+        },
+        {
+          "id": "exp26b-u18-001-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare routes toward F1 and F2.",
+          "actorId": "h1",
+          "reference": {
+            "x": 1.5,
+            "y": -5
+          },
+          "basis": "coaching",
+          "explanation": "The example moves closer to F1 and F2, but also closer to Gold 1. Check pressure and both routes before treating either as a controlled outlet."
+        },
+        {
+          "id": "exp26b-u18-001-q5",
+          "type": "choice",
+          "prompt": "With one minute left and a one-goal lead, which current forward passing line stays farther from Gold 2?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The direct line from YOU to F1"
+            },
+            {
+              "id": "b",
+              "text": "The direct line from YOU to F2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 2 is much nearer the F2 line than the F1 line. That favours examining F1 as a controlled outlet, but Gold 1, Gold 3 and F1’s receiving space still need checking before a pass."
+        },
+        {
+          "id": "exp26b-u18-001-q6",
+          "type": "explain",
+          "prompt": "Explain a sensible risk tradeoff without saying “never attack with a lead.”",
+          "basis": "coaching",
+          "explanation": "With a one-goal lead and one minute, value possession and support, but use a forward lane when it is clearly reachable and pressure leaves it available."
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u18-004",
+      "version": 3,
+      "ageBand": "U18",
+      "title": "Protect the backdoor during rotation",
+      "family": "pk-backdoor-rotate",
+      "topic": "Special-teams rotation",
+      "objective": "Exchange a low defensive responsibility while keeping the backdoor lane covered.",
+      "briefing": "Gold attacks Navy’s left net with four skaters against three in this penalty-kill example. Gold 1 controls behind the goal line and Gold 2 is across the low slot. YOU are on the side opposite the puck; D1 is on the puck side. The drill assigns YOU the low threat until a teammate confirms coverage. Gold 3 may cut inward in a later hypothetical.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": 4,
+            "facing": -1.2
+          },
+          {
+            "id": "h2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": -5,
+            "facing": -0.9
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -15,
+            "y": -4,
+            "facing": -2
+          },
+          {
+            "id": "a2",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": -15,
+            "y": 4,
+            "facing": -1.8
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -18,
+            "y": -10,
+            "facing": 3.1
+          },
+          {
+            "id": "a4",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -28,
+            "y": -4,
+            "facing": -0.5
+          },
+          {
+            "id": "a5",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -24,
+            "y": 5,
+            "facing": -1.2
+          }
+        ],
+        "puck": {
+          "owner": "a4"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "Gold 1 has the puck below the line.",
+        "Gold 2 is across the low slot.",
+        "YOU and D1 share a changing inside responsibility."
+      ],
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "usa-special-teams-2015",
+          "title": "Special Teams Tactics with Mike Guentzel",
+          "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+          "section": "Penalty-kill discussion / options opponents remove",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u18-004-q1",
+          "type": "choice",
+          "prompt": "Which attacker is across the low slot from Gold 1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "YOU"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 2 is the attacking player across the low slot from Gold 1."
+        },
+        {
+          "id": "exp26b-u18-004-q2",
+          "type": "multi",
+          "prompt": "Which two checks belong before exchanging low responsibility?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1's net-side position"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2's route to the backdoor"
+            },
+            {
+              "id": "c",
+              "text": "The puck side fixes coverage forever"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Net-side support and the attacker route define the exchange; the rotation changes as Gold moves."
+        },
+        {
+          "id": "exp26b-u18-004-q3",
+          "type": "sequence",
+          "prompt": "Arrange a coverage handoff.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Identify puck and backdoor threat"
+            },
+            {
+              "id": "b",
+              "text": "Communicate the low exchange"
+            },
+            {
+              "id": "c",
+              "text": "Re-check the slot and net-side lane"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The handoff preserves the most dangerous lane and then updates after movement."
+        },
+        {
+          "id": "exp26b-u18-004-q4",
+          "type": "position",
+          "prompt": "Compare a position closer to Navy’s net than Gold 2, opposite the puck side.",
+          "actorId": "h1",
+          "reference": {
+            "x": -25,
+            "y": 3
+          },
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy’s net than Gold 2 and opposite Gold 1. Check the low passing threat and D1 before assuming coverage is complete."
+        },
+        {
+          "id": "exp26b-u18-004-q5",
+          "type": "choice",
+          "prompt": "Imagine Gold 3 cuts inward while Gold 2 stays at the shown spot. No teammate has confirmed a coverage handoff. Under this drill’s assignment, which attacker remains YOUR low responsibility as YOU call out the new threat?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "Gold 3"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Keep responsibility for Gold 2 until a teammate confirms the exchange, while communicating Gold 3’s new threat. If the handoff is confirmed or the attack changes again, update the coverage; this drill condition does not prescribe one skating route."
+        },
+        {
+          "id": "exp26b-u18-004-q6",
+          "type": "explain",
+          "prompt": "Which low-slot passing threat should YOU track before exchanging coverage?",
+          "basis": "coaching",
+          "explanation": "Gold 2 starts across the low slot from carrier Gold 1. If Gold 3 cuts inward, update the threats and confirm the teammate exchange; a pass or coverage outcome is not guaranteed."
+        }
+      ]
+    }
+  ]
+}

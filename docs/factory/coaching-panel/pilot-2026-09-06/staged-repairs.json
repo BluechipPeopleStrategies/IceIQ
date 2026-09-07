@@ -1,0 +1,803 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-repairs-not-applied",
+  "humanCoachApproval": false,
+  "sourceSnapshot": "snapshot.json",
+  "directChanges": [
+    {
+      "questionId": "cal26-u13-pace-change-001-q5",
+      "scenarioId": "cal26-u13-pace-change-001",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "beforeHash": "2db9d7506dade81a9d50ab4bb028e1bf3a6e5ccb8b369e9daf957181a2b0f38c",
+      "afterHash": "9ce2116fffe4156f6f13ef577439b28d2b0556d7dc602ec93635ef5b8b1066fb",
+      "before": {
+        "id": "cal26-u13-pace-change-001-q5",
+        "type": "choice",
+        "prompt": "If Gold2 covers Navy2, what could you consider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Compare Navy3 and available carrying space before choosing"
+          },
+          {
+            "id": "b",
+            "text": "Send the planned pass to Navy2 through Gold2"
+          },
+          {
+            "id": "c",
+            "text": "Change pace toward Gold1 without checking the gap"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The support cue changed, so recheck for another support or space before choosing. The freeze does not establish that any one alternative succeeds."
+      },
+      "after": {
+        "id": "cal26-u13-pace-change-001-q5",
+        "type": "choice",
+        "prompt": "Gold2 moves into the direct line to Navy2. Which planned option needs to be reconsidered first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A pass to Navy3"
+          },
+          {
+            "id": "b",
+            "text": "A pass to Navy2"
+          },
+          {
+            "id": "c",
+            "text": "A carry into open space"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold2 now occupies the direct line to Navy2, so reassess that pass. Navy3 and carrying space are alternatives to compare, with Gold1 and the new pressure checked before committing. Neither alternative is guaranteed to work."
+      }
+    },
+    {
+      "questionId": "exp26-u11-001-q4",
+      "scenarioId": "exp26-u11-001",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "beforeHash": "1c4fb989cc431a80536c27af589a34314cee291372b8646cb68544f5acef335b",
+      "afterHash": "f955c778d81d105b2849fab65a05d62246b0e7c5a52b4560c057156033ba4062",
+      "before": {
+        "id": "exp26-u11-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point that leaves a view toward F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": -18,
+          "y": -10.5
+        },
+        "basis": "coaching",
+        "explanation": "The example approaches on the middle side of the puck and short of the wall, with F2 in the wider scene. Other controlled approaches can preserve an outlet."
+      },
+      "after": {
+        "id": "exp26-u11-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point on the middle side of the wall-side puck.",
+        "actorId": "h1",
+        "reference": {
+          "x": -18,
+          "y": -10.5
+        },
+        "basis": "coaching",
+        "explanation": "The example is 1.70 m from the puck and closer to rink middle than the puck. Recheck F2 and D1 before the touch; the marker does not prove where YOU look or whether possession is gained."
+      }
+    },
+    {
+      "questionId": "exp26-u11-001-q8",
+      "scenarioId": "exp26-u11-001",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "beforeHash": "8f9ea58098e3ada80113bfcc71779d7a37df289d49a8bb2cbe1fceabd371524f",
+      "afterHash": "334e648eaa4250dfc7215f4778ede8470acfdf313c2deff50652b502d74c761c",
+      "before": {
+        "id": "exp26-u11-001-q8",
+        "type": "multi",
+        "prompt": "Suppose YOU recover the puck and plan to pass toward F2 in the middle. Which two changes would make that outlet less useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 closes the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "F2 is no longer reachable from control"
+          },
+          {
+            "id": "c",
+            "text": "The puck remains loose beside the wall"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 closing the inside lane or F2 becoming unreachable would weaken the planned pass to F2 after recovery. Recheck pressure and support before choosing another exit."
+      },
+      "after": {
+        "id": "exp26-u11-001-q8",
+        "type": "multi",
+        "prompt": "Suppose YOU recover the puck and plan to pass toward F2 in the middle. Which two changes would make that outlet less useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 closes the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "F2 is no longer reachable from control"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays reachable and the inside lane remains clear"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 closing the inside lane or F2 becoming unreachable weakens the planned pass after recovery. If F2 stays reachable and the lane remains clear, those two observations do not by themselves weaken it."
+      }
+    },
+    {
+      "questionId": "exp26-u11-001-q9",
+      "scenarioId": "exp26-u11-001",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "beforeHash": "96c3230f13776292641523aa8c08f171414d9a49b44c484c57bfdf7623fb4159",
+      "afterHash": "4cbbdb8dc215a2500a82e57e4e9e4300ae16738d05a2c4d30ec3b5d80e7157ce",
+      "before": {
+        "id": "exp26-u11-001-q9",
+        "type": "position",
+        "prompt": "Move F2 toward the middle so YOU have a passing option after recovering the puck.",
+        "actorId": "h2",
+        "reference": {
+          "x": -16,
+          "y": -3.5
+        },
+        "basis": "coaching",
+        "explanation": "Check a line from the loose puck to F2: D1 should not sit between them. In the example, F2 is farther from the boards than the puck, and D1 is outside that line. For your spot, check both the lane and room from D1. Recheck after the pickup; a clear line now does not guarantee a completed pass."
+      },
+      "after": {
+        "id": "exp26-u11-001-q9",
+        "type": "position",
+        "prompt": "Move F2 toward the middle so YOU have a passing option after recovering the puck.",
+        "actorId": "h2",
+        "reference": {
+          "x": -16,
+          "y": 0
+        },
+        "basis": "coaching",
+        "explanation": "The example brings F2 closer to the middle of the rink and leaves D1 outside the straight line from the loose puck to F2. Compare those relationships at your chosen spot. Recheck after recovery; the picture does not guarantee a completed pass."
+      }
+    },
+    {
+      "questionId": "exp26-u11-001-q10",
+      "scenarioId": "exp26-u11-001",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "beforeHash": "825b36213b7f597efb27f8a698e6a0ebd3fe1f667693e979614fa6b02597cb5a",
+      "afterHash": "356d68938e394950507e8f4acfe460c57a9438df7a8110e566723074cf7f6677",
+      "before": {
+        "id": "exp26-u11-001-q10",
+        "type": "explain",
+        "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
+        "basis": "coaching",
+        "explanation": "Connect the new pressure and lost outlet to a protected touch or wall-side escape, then name what you would scan before committing."
+      },
+      "after": {
+        "id": "exp26-u11-001-q10",
+        "type": "explain",
+        "prompt": "D1 closes on the loose puck while F2 moves behind the defender. How could YOUR approach to the puck change?",
+        "basis": "coaching",
+        "explanation": "The middle outlet has weakened. Name how you would recheck D1, puck control and another exit before committing; a protected touch or wall-side option is only a possibility if the new picture leaves it available."
+      }
+    }
+  ],
+  "affectedQuestionVersions": [
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q1",
+      "contentHash": "11011f44fe270a05bedca7072a6f2d29207fd5e2994247b8c11458deb7703a44"
+    },
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q2",
+      "contentHash": "de85a6de32428fb054b1e88304666f707e1cca6b5a4a2320a7d2a8011775ee1b"
+    },
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q3",
+      "contentHash": "5553de24e90698599c58ed7ec32c2c7763ac0dfcd29d3c02324bd499c09abffe"
+    },
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q4",
+      "contentHash": "e08613f53266c5945c0a4d0e7c5c08f223d8ac6814303ef2c631b22cc4eb19e1"
+    },
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q5",
+      "contentHash": "9ce2116fffe4156f6f13ef577439b28d2b0556d7dc602ec93635ef5b8b1066fb"
+    },
+    {
+      "scenarioId": "cal26-u13-pace-change-001",
+      "scenarioVersion": 2,
+      "questionId": "cal26-u13-pace-change-001-q6",
+      "contentHash": "597ead2e1b073f87cc89913b8899ccf605c313e4454826e7298ef974d3463158"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q1",
+      "contentHash": "9442ea6f5fb5e1e135df35981b087650cc5c99ec93718352d4d8b9017d26ae6a"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q2",
+      "contentHash": "fe37a3d124147d482a67b23f60cb5d59161fa4883d79600410cf7fedcbe3eda4"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q3",
+      "contentHash": "0cdc46438d9d2bad1528b0973b14eb4a68c9f636e07b92888303a0d23416fa15"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q4",
+      "contentHash": "f955c778d81d105b2849fab65a05d62246b0e7c5a52b4560c057156033ba4062"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q5",
+      "contentHash": "67cb025a0e5e028f89be36a35ef254f351be285f77e26656409efa584be1f0d1"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q6",
+      "contentHash": "ca3d94c47ca7ed453c47b145ef0f16cd3b35e0f5872164d77d287600bd274f7b"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q7",
+      "contentHash": "e715052e8d17bce97c8066f8860565914f2aea362e0ca68dabf1ad1d3dc43d0f"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q8",
+      "contentHash": "334e648eaa4250dfc7215f4778ede8470acfdf313c2deff50652b502d74c761c"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q9",
+      "contentHash": "4cbbdb8dc215a2500a82e57e4e9e4300ae16738d05a2c4d30ec3b5d80e7157ce"
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 4,
+      "questionId": "exp26-u11-001-q10",
+      "contentHash": "356d68938e394950507e8f4acfe460c57a9438df7a8110e566723074cf7f6677"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "cal26-u13-pace-change-001",
+      "version": 2,
+      "ageBand": "U13",
+      "title": "Change pace into space",
+      "family": "pace-change-decision",
+      "topic": "Skating decisions",
+      "objective": "Use defender distance, support and open ice as observations when discussing a pace change before a turn.",
+      "briefing": "Navy attacks the right net. YOU have the puck and face back toward the left net. Gold1 is the nearest opponent ahead of the way YOU face. Navy2 is toward the nearby side boards; Navy3 is across the ice. Compare room to turn or change pace. No speed, acceleration or route outcome is shown.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -4,
+            "facing": 3.14
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -8,
+            "facing": 0.2
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -4,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-2",
+            "label": "Gold2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 5,
+            "facing": 3.5
+          },
+          {
+            "id": "home-skater-3",
+            "label": "Navy3",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 7,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold1 is the nearest pressure player ahead of YOU.",
+        "Navy2 offers a visible support relationship toward the side boards.",
+        "Gold2 is across the play; Navy3 is separate from the puck carrier."
+      ],
+      "tags": [
+        "pace-change-decision",
+        "turning-decision",
+        "support-space",
+        "experimental",
+        "coach-calibration"
+      ],
+      "sources": [
+        {
+          "id": "hc-skating-pathway",
+          "title": "Hockey Canada: Skill Development | Skating",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+          "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+          "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+        },
+        {
+          "id": "usah-12u-learn-to-train",
+          "title": "USA Hockey: American Development Model — Learn to Train Stage",
+          "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/12u_learn_to_train_stage-adm.pdf",
+          "section": "Learn to Train Stage: refined coordination, skating and puck-control skills; transfer from practice to games is a development goal, not a static-scene measurement",
+          "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+        }
+      ],
+      "limits": "Static 3D scene candidate for coach calibration. The freeze shows locations, puck ownership and stated context only. It does not assess speed, acceleration, edge technique, stopping quality, turning or pivot execution, scanning behaviour, puck control, success, safety or transfer to live ice. Position answers are discussion starting points; multiple clear spaces may be reasonable. Coaching answers are suggestions, not a certified tactical key.",
+      "questions": [
+        {
+          "id": "cal26-u13-pace-change-001-q1",
+          "type": "choice",
+          "prompt": "Which player is the nearest pressure player ahead of YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1"
+            },
+            {
+              "id": "b",
+              "text": "Gold2"
+            },
+            {
+              "id": "c",
+              "text": "Navy3"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 is nearest and directly ahead of the way YOU face. Distance alone does not predict arrival or successful pressure."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q2",
+          "type": "multi",
+          "prompt": "Which observations could guide a pace-change discussion?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1's distance and lane"
+            },
+            {
+              "id": "b",
+              "text": "Navy2's support location"
+            },
+            {
+              "id": "c",
+              "text": "YOUR measured acceleration"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The visible Gold1 relationship, Navy2 support and open spaces are useful observations. A still image cannot tell us YOUR exact speed or acceleration."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange a suggested pace-change decision routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan pressure and support"
+            },
+            {
+              "id": "b",
+              "text": "Identify a space for a change of pace or turn"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the picture before committing"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The sequence emphasizes scanning and rechecking while choosing a movement idea. It does not claim that a particular pace or edge technique will beat Gold1."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q4",
+          "type": "position",
+          "prompt": "Move YOU toward Navy2’s side to compare the space between pressure and support.",
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy2 but also slightly closer to Gold1. Compare that tradeoff and the pass lane; the marker does not demonstrate a change of pace.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 10,
+            "y": -8
+          }
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q5",
+          "type": "choice",
+          "prompt": "Gold2 moves into the direct line to Navy2. Which planned option needs to be reconsidered first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A pass to Navy3"
+            },
+            {
+              "id": "b",
+              "text": "A pass to Navy2"
+            },
+            {
+              "id": "c",
+              "text": "A carry into open space"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Gold2 now occupies the direct line to Navy2, so reassess that pass. Navy3 and carrying space are alternatives to compare, with Gold1 and the new pressure checked before committing. Neither alternative is guaranteed to work."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q6",
+          "type": "explain",
+          "prompt": "Which two visible relationships would you compare before a pace-change idea?",
+          "basis": "coaching",
+          "explanation": "Accept any grounded pair such as Gold1 with Navy2, Gold1 with open ice, or Gold2 with Navy2. This records reasoning and does not assess speed or mechanics."
+        }
+      ],
+      "metadata": {
+        "status": "draft-awaiting-coach-calibration",
+        "conceptIds": [
+          "time-and-space",
+          "scanning"
+        ],
+        "teachingClaim": "U13 players can compare pressure, support and open ice before discussing a pace-change or turn decision.",
+        "visibleEvidence": [
+          "Gold1 is the nearest pressure player ahead of YOU.",
+          "Navy2 offers a visible support relationship toward the side boards.",
+          "Gold2 is across the play; Navy3 is separate from the puck carrier."
+        ],
+        "notAssessed": [
+          "straight-line speed",
+          "acceleration rate",
+          "edge technique",
+          "stop or pivot execution",
+          "whether a player actually scanned",
+          "puck-control quality",
+          "whether any choice succeeds on live ice"
+        ],
+        "reviewQuestions": [
+          "Is the nearest-player wording visibly defensible from the coordinates?",
+          "Does the scene invite a decision without implying acceleration or successful evasion?"
+        ],
+        "intendedSkatingConcept": "deception-with-feet",
+        "admissionLimit": "Movement decision observation only. Does not close the skating-technique assessment gap."
+      }
+    },
+    {
+      "id": "exp26-u11-001",
+      "version": 4,
+      "ageBand": "U11",
+      "title": "Look beyond the loose puck",
+      "family": "retrieval-scan",
+      "topic": "Scanning",
+      "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+      "briefing": "You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -16,
+            "y": -6,
+            "facing": -1.88283844835743
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -1,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -12,
+            "y": -6,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -18,
+          "y": -12.2
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "The puck is loose beside the wall.",
+        "F2 is away from the wall.",
+        "D1 approaches from the up-ice side."
+      ],
+      "tags": [
+        "retrieval-scan",
+        "scanning",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-2024",
+          "title": "7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-001-q1",
+          "type": "choice",
+          "prompt": "What is true about possession at this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU already control the puck"
+            },
+            {
+              "id": "b",
+              "text": "The puck is loose"
+            },
+            {
+              "id": "c",
+              "text": "D1 has made a pass"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The puck is drawn away from every blade and has no owner."
+        },
+        {
+          "id": "exp26-u11-001-q2",
+          "type": "multi",
+          "prompt": "Which two things would help YOU plan the pickup?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Where F2 is available"
+            },
+            {
+              "id": "b",
+              "text": "The direction D1 approaches from"
+            },
+            {
+              "id": "c",
+              "text": "Only the loose puck, without checking the players"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "An outlet and the approaching pressure inform the next action; neither guarantees a successful pickup."
+        },
+        {
+          "id": "exp26-u11-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested retrieval plan.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find the pressure and outlet"
+            },
+            {
+              "id": "b",
+              "text": "Approach and control the loose puck"
+            },
+            {
+              "id": "c",
+              "text": "Check whether the outlet is still available"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a simple discussion routine. Real scanning may repeat throughout the approach."
+        },
+        {
+          "id": "exp26-u11-001-q4",
+          "type": "position",
+          "prompt": "Move YOU to an approach point on the middle side of the wall-side puck.",
+          "actorId": "h1",
+          "reference": {
+            "x": -18,
+            "y": -10.5
+          },
+          "basis": "coaching",
+          "explanation": "The example is 1.70 m from the puck and closer to rink middle than the puck. Recheck F2 and D1 before the touch; the marker does not prove where YOU look or whether possession is gained."
+        },
+        {
+          "id": "exp26-u11-001-q5",
+          "type": "choice",
+          "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Use the same middle pass regardless"
+            },
+            {
+              "id": "b",
+              "text": "Check another exit before committing"
+            },
+            {
+              "id": "c",
+              "text": "Assume F2 has already received"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure."
+        },
+        {
+          "id": "exp26-u11-001-q6",
+          "type": "explain",
+          "prompt": "What would you want to see again just before touching this puck?",
+          "basis": "coaching",
+          "explanation": "Name a change in D1 or F2 that could alter the plan. Saying where you would look is more useful than simply saying “scan.”"
+        },
+        {
+          "id": "exp26-u11-001-q7",
+          "type": "choice",
+          "prompt": "What should you say before reaching the wall-side puck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 is farther up ice; F2 may be an outlet toward the middle"
+            },
+            {
+              "id": "b",
+              "text": "D1 is inside, so I will check the wall-side support"
+            },
+            {
+              "id": "c",
+              "text": "F2 has drifted behind D1, so I will wait for a safer lane"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Naming D1 and F2 connects the actual pressure and outlet to the approach. If either moves, update the plan."
+        },
+        {
+          "id": "exp26-u11-001-q8",
+          "type": "multi",
+          "prompt": "Suppose YOU recover the puck and plan to pass toward F2 in the middle. Which two changes would make that outlet less useful?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 closes the inside lane"
+            },
+            {
+              "id": "b",
+              "text": "F2 is no longer reachable from control"
+            },
+            {
+              "id": "c",
+              "text": "F2 stays reachable and the inside lane remains clear"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1 closing the inside lane or F2 becoming unreachable weakens the planned pass after recovery. If F2 stays reachable and the lane remains clear, those two observations do not by themselves weaken it."
+        },
+        {
+          "id": "exp26-u11-001-q9",
+          "type": "position",
+          "prompt": "Move F2 toward the middle so YOU have a passing option after recovering the puck.",
+          "actorId": "h2",
+          "reference": {
+            "x": -16,
+            "y": 0
+          },
+          "basis": "coaching",
+          "explanation": "The example brings F2 closer to the middle of the rink and leaves D1 outside the straight line from the loose puck to F2. Compare those relationships at your chosen spot. Recheck after recovery; the picture does not guarantee a completed pass."
+        },
+        {
+          "id": "exp26-u11-001-q10",
+          "type": "explain",
+          "prompt": "D1 closes on the loose puck while F2 moves behind the defender. How could YOUR approach to the puck change?",
+          "basis": "coaching",
+          "explanation": "The middle outlet has weakened. Name how you would recheck D1, puck control and another exit before committing; a protected touch or wall-side option is only a possibility if the new picture leaves it available."
+        }
+      ]
+    }
+  ]
+}

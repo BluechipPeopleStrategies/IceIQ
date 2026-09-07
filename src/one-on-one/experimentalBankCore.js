@@ -95,9 +95,13 @@ export function responseReady(q,value){
 }
 export function reviewResponse(q,value){
  if(!responseReady(q,value))return null;
- const objective=q.basis==='scene'&&['choice','multi','sequence'].includes(q.type);
- const matched=objective?(q.type==='sequence'?same(value,q.answer):same([...value].sort(),[...q.answer].sort())):null;
- return {matched,heading:objective?(matched?'You read the scene.':'Look at the scene again.'):'A coaching suggestion',explanation:q.explanation};
+ const keyed=['choice','multi','sequence'].includes(q.type)&&Array.isArray(q.answer);
+ const objective=q.basis==='scene'&&keyed;
+ const answerMatches=keyed?(q.type==='sequence'?same(value,q.answer):same([...value].sort(),[...q.answer].sort())):null;
+ // Coaching agreement is feedback, not an objective correctness or mastery signal.
+ const matched=objective?answerMatches:null;
+ const heading=objective?(matched?'Yep, you got it.':'Not quite. Look at the scene again.'):keyed?(answerMatches?(q.type==='sequence'?'Yep, you got it. That matches the suggested plan.':'Yep, that matches the suggested approach.'):'Your answer differs from the suggestion. Compare the cues below.'):'A coaching suggestion';
+ return {matched,suggestionMatched:!objective?answerMatches:null,heading:q.type==='position'?'What to check in your position':heading,explanation:q.explanation};
 }
 export function updateAttempt(records,scenario,q,value,reviewed=false){
  if(!responseReady(q,value))throw new TypeError('Invalid response.');

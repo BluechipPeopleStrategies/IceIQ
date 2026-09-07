@@ -1,0 +1,82 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "candidateSha256": "4e92a5d001e99d838c9f664f6b7ce85bf2e242922e4d2a060593fd77d3bcbbf3",
+  "freezeMatches": true,
+  "rows": [
+    {
+      "questionId": "exp26-u9-003-q3",
+      "contentHash": "94e32a2e6887e3ae087cfe9616046191e6ddb27a186c8717b4bf0d97974eb1dc",
+      "verdict": "revise",
+      "issue": "Small but meaningful precision repair: away from Gold1 implies relief from pressure beyond evidence. Gold1 point gaps only .431m vs .712m; author calls difference substantially greater but both are close. Feedback specifically shifts checking to Gold2, risking neglect of Gold1.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Gold1 .43095m from puck-toN2 line."
+        },
+        {
+          "optionId": "b",
+          "assessment": "revise precision",
+          "reason": "Different diagonal true, but away language may imply open route although Gold1 .71182m away. Use across middle description instead."
+        },
+        {
+          "optionId": "c",
+          "assessment": "valid false scene comparison",
+          "reason": "N2 y4 versusN3 y-5 give different bearings; both same line false."
+        }
+      ],
+      "proposedRepair": {
+        "type": "multi",
+        "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is close to the passing line to Navy 2"
+          },
+          {
+            "id": "b",
+            "text": "Navy 3 offers a different passing angle across the middle"
+          },
+          {
+            "id": "c",
+            "text": "Both teammates lie on the same passing line behind Gold 1"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle, so the nearer teammate is not the only option to assess. Check both Gold 1 and Gold 2: Gold 1 is still close to the other passing line, and a different angle does not guarantee a completed pass.",
+        "id": "exp26-u9-003-q3"
+      },
+      "limitations": [
+        "AI review only; no rendered/source/human approval.",
+        "Original packet familiarity disclosed in blind receipt; candidate key read after provisional solve."
+      ]
+    },
+    {
+      "questionId": "exp26-u9-007-q5",
+      "contentHash": "878d2bb8f28f8f7b249e02c7c339fcbc4bed2037569cf0e11ab2487eb09674a0",
+      "verdict": "approve",
+      "issue": "No material defect. Conditional reception explicit, actual forward-board teammate contrasted with actual backward passer; both retain legitimate use.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Navy3 x23,y-9 ahead of YOU18,-10 near same boards."
+        },
+        {
+          "optionId": "b",
+          "assessment": "legitimate return option, fails forward comparison",
+          "reason": "Navy2 x10,y-5 behind YOU; feedback preserves availability after checking."
+        }
+      ],
+      "proposedRepair": null,
+      "limitations": [
+        "AI review only; no rendered/source/human approval.",
+        "Original packet familiarity disclosed in blind receipt; candidate key read after provisional solve."
+      ]
+    }
+  ]
+}

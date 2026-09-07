@@ -1,0 +1,422 @@
+[
+  {
+    "scene": {
+      "id": "exp26b-u13-007",
+      "ageBand": "U13",
+      "objective": "Recognize a blocker and create a different lane before selecting a shot or pass",
+      "briefing": "Navy attacks the right net. D2 has the puck in a wide position near the blue line. Gold 1 is near the direct shooting line. YOU are nearer the net and middle, with W in a separate wide lane. No stick reach or shot outcome is established.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 22,
+            "y": 0,
+            "facing": 3
+          },
+          {
+            "id": "n2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": 8,
+            "facing": 2.8
+          },
+          {
+            "id": "n3",
+            "label": "W",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": -7,
+            "facing": 2.7
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 3,
+            "facing": 2.8
+          },
+          {
+            "id": "ga",
+            "label": "Gold goalie",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": 13.823285954222207,
+          "y": 7.675432511687844
+        }
+      },
+      "cues": [
+        "D2 has the puck in a wide position near the blue line.",
+        "Gold 1 is near the direct shooting line.",
+        "YOU are nearer the net and middle, with W in a separate wide lane."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two current relationships help YOU compare support around D2\u2019s point possession?",
+      "options": [
+        {
+          "id": "a",
+          "text": "W offers width on the opposite side of the middle from D2"
+        },
+        {
+          "id": "b",
+          "text": "YOU are nearer the net and nearer the middle than D2"
+        },
+        {
+          "id": "c",
+          "text": "Gold 1 is farther from the middle than D2"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26b-u13-007-q2"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u13-012",
+      "ageBand": "U13",
+      "objective": "Recover through the middle so the most dangerous attacker stays in view",
+      "briefing": "Navy defends the left net. Gold 1 carries from the right-hand zone toward Navy\u2019s end, with Gold 2 in the middle. YOU are a recovering forward already closer to Navy\u2019s net than both attackers; D1 is nearer the carrier. Coordinate which threat each player can cover.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 9,
+            "facing": 2.9
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 2,
+            "facing": 3.1
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 5,
+            "facing": 3
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": 0,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "g1",
+          "x": 18.911,
+          "y": 4.448
+        }
+      },
+      "cues": [
+        "Gold 1 carries from the right-hand zone toward Navy\u2019s end, with Gold 2 in the middle.",
+        "YOU are a recovering forward already closer to Navy\u2019s net than both attackers; D1 is nearer the carrier.",
+        "Coordinate which threat each player can cover."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two starting relationships should YOU use when coordinating the backcheck with D1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "YOU are already closer to Navy\u2019s net than both gold attackers"
+        },
+        {
+          "id": "b",
+          "text": "D1 is closer to Gold 1 than YOU are"
+        },
+        {
+          "id": "c",
+          "text": "Gold 2 is farther toward the side boards than Gold 1"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26b-u13-012-q2"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u13-014",
+      "ageBand": "U13",
+      "objective": "Separate the first rebound player from the supporting defender\u2019s job",
+      "briefing": "Navy defends the left net. After Gold 1\u2019s shot, a rebound is loose near the crease. D1 is the closest shown skater, while the goalie is closer still. YOU are nearer Navy\u2019s net than Gold 2. No skater controls the rebound.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -24,
+            "y": 2,
+            "facing": 0.14159265358979312
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -26,
+            "y": -1,
+            "facing": 0.04159265358979303
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": -20,
+            "y": 7,
+            "facing": 0.2415926535897932
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": -22,
+            "y": -5,
+            "facing": 0.14159265358979312
+          },
+          {
+            "id": "nga",
+            "label": "Navy goalie",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -26,
+          "y": 0.6
+        }
+      },
+      "cues": [
+        "After Gold 1\u2019s shot, a rebound is loose near the crease.",
+        "D1 is the closest shown skater, while the goalie is closer still.",
+        "YOU are nearer Navy\u2019s net than Gold 2."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two relationships matter before YOU choose a second rebound job?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The goalie is closer to the loose puck than D1 is"
+        },
+        {
+          "id": "b",
+          "text": "YOU are nearer Navy\u2019s net than Gold 2 is"
+        },
+        {
+          "id": "c",
+          "text": "Gold 2 is closer to the loose puck than YOU are"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26b-u13-014-q2"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u13-019",
+      "ageBand": "U13",
+      "objective": "Become support when the goalie\u2019s outlet changes the puck side",
+      "briefing": "Navy defends the left net. The goalie passed to D1 near one corner, and D1 now controls the puck. YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks. The goalie remains behind the net, outside the mesh on D1\u2019s side.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -20,
+            "y": 6,
+            "facing": 2.5
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -26,
+            "y": -7,
+            "facing": 0.2
+          },
+          {
+            "id": "n3",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -19,
+            "y": 2,
+            "facing": 0.4
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": -23,
+            "y": -2,
+            "facing": 2.9
+          },
+          {
+            "id": "ng",
+            "label": "Navy goalie",
+            "team": "home",
+            "role": "goalie",
+            "x": -28.8,
+            "y": -2,
+            "facing": -1.0603080048781208
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": -25.1590019537153,
+          "y": -6.11528406471607
+        }
+      },
+      "cues": [
+        "The goalie passed to D1 near one corner, and D1 now controls the puck.",
+        "YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two relationships should YOU include before offering support for D1\u2019s new possession?",
+      "options": [
+        {
+          "id": "a",
+          "text": "D1 has the puck across the middle from YOU"
+        },
+        {
+          "id": "b",
+          "text": "D2 is closer to D1\u2019s puck than YOU are"
+        },
+        {
+          "id": "c",
+          "text": "Gold 1 is farther from D1\u2019s puck than YOU are"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26b-u13-019-q2"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u13-020",
+      "ageBand": "U13",
+      "objective": "Choose a third-player height that supports rush and recovery",
+      "briefing": "Navy attacks Gold\u2019s net and defends Navy\u2019s net. F1 carries up the left side with W inside. YOU are the third Navy player, Gold 1 defends the carrier, and Gold 2 is high.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 8,
+            "facing": 2.9
+          },
+          {
+            "id": "n2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -7,
+            "facing": 2.9
+          },
+          {
+            "id": "n3",
+            "label": "W",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 3
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": -5,
+            "facing": 3
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 7,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": 16.862,
+          "y": -7.44
+        }
+      },
+      "cues": [
+        "F1 carries up the left side with W inside.",
+        "YOU are the third Navy player, Gold 1 defends the carrier, and Gold 2 is high."
+      ]
+    },
+    "question": {
+      "type": "choice",
+      "prompt": "If Gold 1 wins control from F1, which gold attacker starts nearest YOU to account for during recovery?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gold 1"
+        },
+        {
+          "id": "b",
+          "text": "Gold 2"
+        }
+      ],
+      "basis": "coaching",
+      "id": "exp26b-u13-020-q5"
+    }
+  }
+]

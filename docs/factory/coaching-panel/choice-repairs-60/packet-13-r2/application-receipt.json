@@ -1,0 +1,4461 @@
+{
+  "appliedAt": "2026-09-06T22:32:16.796Z",
+  "humanCoachApproval": false,
+  "packet": "adjudicated-packet.json",
+  "changes": [
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q5",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "before": {
+        "id": "exp26b-u15-009-q5",
+        "type": "choice",
+        "prompt": "Gold 1 leaves the slot to pressure the puck. What should YOU weigh?",
+        "options": [
+          {
+            "id": "a",
+            "text": "An inside connection if F1 can reach it, or hold high if Gold 2 covers"
+          },
+          {
+            "id": "b",
+            "text": "Drop beside F2 without checking the slot"
+          },
+          {
+            "id": "c",
+            "text": "Shoot because the slot defender moved"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 1 leaving can open an inside branch, but F1’s passing route and Gold 2’s coverage still need a scan."
+      },
+      "after": {
+        "id": "exp26b-u15-009-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold 1 leaves the slot to pressure F1. With the other skaters at their shown spots, which remaining defender is closer to YOU and needs checking before an inside reoffer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 2"
+          },
+          {
+            "id": "b",
+            "text": "Gold 3"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 2 is close to YOU on the high side. Gold 1 leaving the slot does not remove that pressure; check Gold 2 and the new line from F1 before moving or asking for the puck."
+      },
+      "beforeHash": "03bf3a0b61359bf3ce5acf099abc93dd6636bdd668a4178ec504342a6dafccda",
+      "afterHash": "d31e18a8643bfe7a23dab662b726768ba8840b0de8b5a3c553d75b15fafd357f",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 2 (14,4) is 3.16 m from YOU (15,7)."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 3 (24,3) is 9.85 m from YOU; still relevant nearer the net but not the nearest remaining pressure."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h2",
+          "x": 26.782260286356028,
+          "y": -5.084320755536799
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": 7,
+            "facing": -1.4
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 28,
+            "y": -5,
+            "facing": 2.6
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 22,
+            "y": -8,
+            "facing": 2.4
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 1,
+            "facing": 2.1
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": 4,
+            "facing": 2.5
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 24,
+            "y": 3,
+            "facing": 2.9
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 17.69180601295413
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 16.55294535724685
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 8.485281374238571
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 3.1622776601683795
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 9.219544457292887
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 16.64331697709324
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 8.94427190999916
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 9.055385138137417
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 14.422205101855958
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 11.180339887498947
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 3.6055512754639896
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 10.04987562112089
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 16.87757285803086,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.4595325869227755
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.10738290572523013
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 2.8103034727553102
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 3.6515822608392265
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 5.600999812805883,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 16.45128764259366
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 8.204967569646334
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 14.422205101855958
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 8.549690893794759
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 8.39365790793418,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 8.485281374238571
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.4750887307698255
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 3.5523824256808485
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 15.681551632974053,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.1622776601683795
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.146975202521497
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.6097555280568887
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 4.977884146672767
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 8.549690893794759,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.600999812805883
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.4875509781252503
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 10.04987562112089
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Preserves changed coverage topic, focuses on actual remaining pressure instead of prescribing an inside cut.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u15-009-q1",
+          "prompt": "Which Navy forward controls the puck behind Gold’s goal line?"
+        },
+        {
+          "id": "exp26b-u15-009-q2",
+          "prompt": "Which two details support a high outlet?"
+        },
+        {
+          "id": "exp26b-u15-009-q3",
+          "prompt": "Arrange a high-outlet read."
+        },
+        {
+          "id": "exp26b-u15-009-q4",
+          "prompt": "Move YOU to compare a high support point separate from F2."
+        },
+        {
+          "id": "exp26b-u15-009-q6",
+          "prompt": "How does a high outlet help a low cycle?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u15-014",
+      "questionId": "exp26b-u15-014-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u15-014-q2",
+        "type": "multi",
+        "prompt": "Which two checks matter with one support option missing?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D2's reset connection"
+          },
+          {
+            "id": "b",
+            "text": "F1 or F2's reachable route"
+          },
+          {
+            "id": "c",
+            "text": "The change requires a dump regardless of pressure"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A reset and a forward route preserve choices while the line change reduces one support option."
+      },
+      "after": {
+        "id": "exp26b-u15-014-q2",
+        "type": "multi",
+        "prompt": "With F3 unavailable, which two pressure comparisons match the current forward passing lines?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is nearer the line to F1 than the line to F2"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2 is nearer the line to F2 than the line to F1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3 is nearer the line to F2 than Gold 2 is"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is nearer F1’s direct line, while Gold 2 is nearer F2’s. Compare those pressures with the reset toward D2; the line change does not select a pass by itself."
+      },
+      "beforeHash": "4d3f550348b008bcfa2347b9554ec0ce88397f52c2efc615fd299ab6ae224ef0",
+      "afterHash": "8af4ea6d8f582de439c3d54fb857262d53e139bbcace9aab9bb9b708ff7fb911",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Canonical carried-puck gaps: Gold 1 to F1 line 1.14 m, to F2 line 3.62 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 2 to F2 line 1.98 m, to F1 line 3.69 m."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold 3 to F2 line 7.88 m, farther than Gold 2 at 1.98 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": -0.1590019537153012,
+          "y": -1.1152840647160696
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": -2,
+            "facing": 0.2
+          },
+          {
+            "id": "h2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 5,
+            "facing": 2.7
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": 6,
+            "facing": 2.9
+          },
+          {
+            "id": "h4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -5,
+            "facing": 2.6
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 2,
+            "y": 2,
+            "facing": 2.8
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -1,
+            "facing": 2.5
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -4,
+            "y": -8,
+            "facing": 2.9
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 12.806248474865697
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 13.341664064126334
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 5
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 19.026297590440446
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 24.16609194718914
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 12.36931687685298
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 17.08800749063506
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 8.06225774829855
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 19.1049731745428
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 12.206555615733702
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 16.278820596099706
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 5
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 11.6619037896906
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 12.206555615733702
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "D2",
+            "distance": 11.586282481415234,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.59804225331858
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.764495540690255
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.7902881473603514
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.160080801535509
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 11.59804225331858,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.527196833593287
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.1356210255556392
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 3.6874466007072724
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 12.764495540690255,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 9.56519380619519
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.624573660250261
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.9842313487766707
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.7902881473603514,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.06225774829855
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.206421391837575
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.996491396887375
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 6.160080801535509,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.211102550927977
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.074333394342736
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 7.8836907284035025,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.59804225331858
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.764495540690255
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.7902881473603514
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.160080801535509
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Three matched pressure observations with two supported; highlights how missing support narrows actual options.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u15-014-q1",
+          "prompt": "Which teammate is unavailable during this rep?"
+        },
+        {
+          "id": "exp26b-u15-014-q3",
+          "prompt": "Arrange a possession read during the change."
+        },
+        {
+          "id": "exp26b-u15-014-q4",
+          "prompt": "Move YOU to compare a reset toward D2 with a forward route toward F1."
+        },
+        {
+          "id": "exp26b-u15-014-q5",
+          "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?"
+        },
+        {
+          "id": "exp26b-u15-014-q6",
+          "prompt": "Why does a line change call for a possession read rather than one fixed action?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u15-014",
+      "questionId": "exp26b-u15-014-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u15-014-q5",
+        "type": "choice",
+        "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A middle connection if pressure and support make it reachable"
+          },
+          {
+            "id": "b",
+            "text": "Leave the puck without checking the new lane"
+          },
+          {
+            "id": "c",
+            "text": "Assume the change makes every route safe"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The new player changes the support picture, but the carrier still checks access and pressure."
+      },
+      "after": {
+        "id": "exp26b-u15-014-q5",
+        "type": "choice",
+        "prompt": "Before an arriving replacement offers support behind YOU toward Navy’s net, which Gold defender is already on that side of YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 3 is behind YOU toward Navy’s net. Check that pressure as well as D2 and the passing line before using a new deeper outlet; the replacement’s exact arrival point and reachability are not shown."
+      },
+      "beforeHash": "2d9d961db78cbdd8198480d3affc92b7a20ade44a81de69c2b26240c827ed079",
+      "afterHash": "b627f15985334026a27f097e3bea312d8ccc41646a9a22fb795400b943cf5672",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 1 x2 is ahead of YOU x-1 toward Gold’s net."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 2 x6 is ahead of YOU toward Gold’s net."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold 3 x-4 is behind YOU toward Navy’s net, on the deeper-support side."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": -0.1590019537153012,
+          "y": -1.1152840647160696
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": -2,
+            "facing": 0.2
+          },
+          {
+            "id": "h2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 5,
+            "facing": 2.7
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": 6,
+            "facing": 2.9
+          },
+          {
+            "id": "h4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -5,
+            "facing": 2.6
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 2,
+            "y": 2,
+            "facing": 2.8
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -1,
+            "facing": 2.5
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": -4,
+            "y": -8,
+            "facing": 2.9
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 12.806248474865697
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 13.341664064126334
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 5
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 19.026297590440446
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 24.16609194718914
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 12.36931687685298
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 17.08800749063506
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 8.06225774829855
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 19.1049731745428
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 12.206555615733702
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 16.278820596099706
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 5
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 11.6619037896906
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 12.206555615733702
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "D2",
+            "distance": 11.586282481415234,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.59804225331858
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.764495540690255
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.7902881473603514
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.160080801535509
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 11.59804225331858,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 10.527196833593287
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.1356210255556392
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 3.6874466007072724
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 12.764495540690255,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 9.56519380619519
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.624573660250261
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.9842313487766707
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.7902881473603514,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.06225774829855
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.206421391837575
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.996491396887375
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 6.160080801535509,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.615773105863909
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.211102550927977
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.074333394342736
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.8836907284035025
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 7.8836907284035025,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.586282481415234
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.59804225331858
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 12.764495540690255
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.7902881473603514
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.160080801535509
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Camera-independent pressure orientation before replacement support arrives. Current Gold 3 constrains a possible deeper option without specifying an arbitrary unseen coordinate, crowding F2, or guaranteeing access. Gold 3 y-8 differs from D2 y5, so this is an area-pressure cue rather than proof the D2 line is blocked.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u15-014-q1",
+          "prompt": "Which teammate is unavailable during this rep?"
+        },
+        {
+          "id": "exp26b-u15-014-q2",
+          "prompt": "Which two checks matter with one support option missing?"
+        },
+        {
+          "id": "exp26b-u15-014-q3",
+          "prompt": "Arrange a possession read during the change."
+        },
+        {
+          "id": "exp26b-u15-014-q4",
+          "prompt": "Move YOU to compare a reset toward D2 with a forward route toward F1."
+        },
+        {
+          "id": "exp26b-u15-014-q6",
+          "prompt": "Why does a line change call for a possession read rather than one fixed action?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q5",
+      "fromVersion": 3,
+      "toVersion": 4,
+      "before": {
+        "id": "exp26b-u15-015-q5",
+        "type": "choice",
+        "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A quick F2 connection if the slot remains reachable, or F1 support"
+          },
+          {
+            "id": "b",
+            "text": "Force F2 because the defender moved"
+          },
+          {
+            "id": "c",
+            "text": "Send the puck low without checking F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice."
+      },
+      "after": {
+        "id": "exp26b-u15-015-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold 1 leaves F2 to pressure YOU. With Gold 2 staying shown, which current direct passing line is nearer Gold 2?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line to F1 below the goal line"
+          },
+          {
+            "id": "b",
+            "text": "The line to F2 inside"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 2 is close to the direct low line toward F1 and farther from the line to F2. That gives YOU a reason to compare F2 again, while checking the new Gold 1 position and the receiving space before passing."
+      },
+      "beforeHash": "d3102383b8418f617df6fedabd29b2448ba4b39412ae938eee81b8b7c256e6c2",
+      "afterHash": "cb124f2e45dd9ef1c794a52e8ced5748bb7218bfb05e4aa157e0dd132d127979",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Puck (21,9.7) to F1 (28,-5): Gold 2 gap 1.03 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Puck to F2 (19,3): Gold 2 gap 5.39 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 21,
+          "y": 9.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 20,
+            "y": 9,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 28,
+            "y": -5,
+            "facing": 2.5
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 19,
+            "y": 3,
+            "facing": 1.9
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 4,
+            "facing": 2.6
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 24,
+            "y": 1,
+            "facing": 2.8
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 2.2
+          },
+          {
+            "id": "h4",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 7,
+            "facing": 0
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 16.1245154965971
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 5
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 8.94427190999916
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 8.54400374531753
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 10.19803902718557
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 12.041594578792296
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 12.041594578792296
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 19.4164878389476
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 21.633307652783937
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 1.4142135623730951
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 5.385164807134505
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 5
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 8.246211251235321
+          },
+          {
+            "a": "A1",
+            "b": "D1",
+            "distance": 10.44030650891055
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 13
+          },
+          {
+            "a": "A2",
+            "b": "D1",
+            "distance": 15.231546211727817
+          },
+          {
+            "a": "A3",
+            "b": "D1",
+            "distance": 2.23606797749979
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F1",
+            "distance": 16.281584689458207,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 4.68627602627659
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.353481927060312
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.0318405929416343
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 9.730878685915265
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 11.326517558367177
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 6.992138442565334,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 12.041594578792296
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.6721834870128264
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.385164807134505
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.565639672974151
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 9.768113226165113
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 5.787054518492114,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 12.041594578792296
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 1.4142135623730951
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 8.225255153186763
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 10.367968680487515
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 9.202716990106781,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 4.074883541492552
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.803519876546876
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 9.714522362918245
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 11.326517558367177
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 9.730878685915265,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 16.281584689458207
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.436302486903765
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 4.891644581788643
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.187248437224888
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 2.23606797749979
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 11.326517558367177,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 16.281584689458207
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.030097039804179
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 5.297303402463409
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.202716990106781
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 1.4479295966733317
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Different remaining defender constrains low versus inside branch; no guarantee after Gold 1 movement.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u15-015-q1",
+          "prompt": "Which Navy teammate is positioned behind Gold’s goal line?"
+        },
+        {
+          "id": "exp26b-u15-015-q2",
+          "prompt": "Which two details support a reset?"
+        },
+        {
+          "id": "exp26b-u15-015-q3",
+          "prompt": "Arrange a connected reset."
+        },
+        {
+          "id": "exp26b-u15-015-q4",
+          "prompt": "Move YOU nearer the middle to compare the routes toward F1, F2 and D1."
+        },
+        {
+          "id": "exp26b-u15-015-q6",
+          "prompt": "Name two support areas in this reset and explain their different value."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u18-001-q5",
+        "type": "choice",
+        "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A controlled forward pass may now fit the objective"
+          },
+          {
+            "id": "b",
+            "text": "The clock makes every forward pass automatically wrong"
+          },
+          {
+            "id": "c",
+            "text": "D2 must receive regardless of the open route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-001-q5",
+        "type": "choice",
+        "prompt": "With the lead and 48 seconds left, compare the current forward lines to F1 and F2. Which line stays farther from Gold 1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The direct pass to F1"
+          },
+          {
+            "id": "b",
+            "text": "The direct pass to F2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The F1 line passes farther from Gold 1 than the F2 line does. That is one useful pressure check for a controlled forward option; receiving pressure, other Gold players and defensive support still matter.",
+        "basis": "scene"
+      },
+      "beforeHash": "9b7dc5a2137d737a3bc7c54c2b87d7c9e7a563d8392724bd120335f0f811c065",
+      "afterHash": "f11a04fb5a7a432410dc1e44cbe9110617c6e3934658d2fd71783b46134631aa",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Canonical puck (1,-5.3): Gold 1 clearance to F1 is 2.19 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 1 clearance to F2 is 0.84 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-1",
+          "x": 1,
+          "y": -5.3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": -6,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -9,
+            "y": 1,
+            "facing": -0.6610431688506869
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -8,
+            "facing": 2.922923707715851
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 5,
+            "facing": -2.4756234162106834
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 1,
+            "facing": -2.191045812777718
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": -2.356194490192345
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": -2.930499320367047
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": 19,
+            "y": 6,
+            "facing": -2.578276392097825
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 7,
+            "facing": -1.4181469983996315
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 9.219544457292889
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 17.804493814764854
+          },
+          {
+            "a": "YOU",
+            "b": "F3",
+            "distance": 8.602325267042627
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 4.47213595499958
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 11.313708498984761
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "YOU",
+            "b": "A4",
+            "distance": 22.47220505424423
+          },
+          {
+            "a": "YOU",
+            "b": "A5",
+            "distance": 13.152946437965904
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 20.12461179749811
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 23.345235059857504
+          },
+          {
+            "a": "D2",
+            "b": "F3",
+            "distance": 14
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 13.92838827718412
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 17.029386365926403
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 23.345235059857504
+          },
+          {
+            "a": "D2",
+            "b": "A4",
+            "distance": 28.442925306655788
+          },
+          {
+            "a": "D2",
+            "b": "A5",
+            "distance": 9.219544457292887
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 13.92838827718412
+          },
+          {
+            "a": "F1",
+            "b": "F3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "F1",
+            "b": "A4",
+            "distance": 17.204650534085253
+          },
+          {
+            "a": "F1",
+            "b": "A5",
+            "distance": 18.60107523773827
+          },
+          {
+            "a": "F2",
+            "b": "F3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 13.453624047073712
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 8
+          },
+          {
+            "a": "F2",
+            "b": "A4",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F2",
+            "b": "A5",
+            "distance": 16.1245154965971
+          },
+          {
+            "a": "F3",
+            "b": "A1",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F3",
+            "b": "A2",
+            "distance": 3.1622776601683795
+          },
+          {
+            "a": "F3",
+            "b": "A3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F3",
+            "b": "A4",
+            "distance": 14.866068747318506
+          },
+          {
+            "a": "F3",
+            "b": "A5",
+            "distance": 9.219544457292887
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "A1",
+            "b": "A4",
+            "distance": 18.027756377319946
+          },
+          {
+            "a": "A1",
+            "b": "A5",
+            "distance": 12.529964086141668
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "A2",
+            "b": "A4",
+            "distance": 11.704699910719626
+          },
+          {
+            "a": "A2",
+            "b": "A5",
+            "distance": 11.180339887498949
+          },
+          {
+            "a": "A3",
+            "b": "A4",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "A3",
+            "b": "A5",
+            "distance": 18.867962264113206
+          },
+          {
+            "a": "A4",
+            "b": "A5",
+            "distance": 21.023796041628636
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "D2",
+            "distance": 11.81905241548577,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.443340571124677
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 16.585837331892535
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.269556544854363
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 10.113851887386922
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 13.201893803541974
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 21.252999788265186
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 8.807812702785228
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 8.443340571124677,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.92838827718412
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.248315934252072
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.1910758951578977
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.15514414571381
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.0710678118654755
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 17.204650534085253
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.660568707605517
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 16.585837331892535,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.084357433921163
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 2.4539008303029046
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.8440936517012452
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.3746668041991696
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.270409984066392
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 11.50379062461411
+              }
+            ]
+          },
+          {
+            "receiver": "F3",
+            "distance": 7.462573282722254,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.200924490978666
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.8358278680785576
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 3.1622776601683795
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 14.866068747318506
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 9.219544457292889
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.269556544854363,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.4031242374328485
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.453624047073712
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10.04987562112089
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 18.027756377319946
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.478756504214966
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 10.113851887386922,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.6429831938118005
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.708203932499369
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 1.4732270321836458
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.265591007513468
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.810249675906656
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 11.704699910719626
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 10.678424125894884
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 13.201893803541974,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.052448898327476
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.506785699222569
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.7574670837995279
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.9688406203402815
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 10.295630140987
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.660568707605517
+              }
+            ]
+          },
+          {
+            "receiver": "A4",
+            "distance": 21.252999788265186,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.540253205890901
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 1.8115089814877665
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 3.2089587672069015
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.49404790404211857
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 2.4608290839431226
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 4.964005131089857
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.01242189542408
+              }
+            ]
+          },
+          {
+            "receiver": "A5",
+            "distance": 12.660568707605517,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 8.222379452627951
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.443340571124677
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 15.070413060148061
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.378905290335863
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.222604050597698
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 8.530422486876262
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 13.201893803541974
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 20.16497093425472
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Real forward alternatives under clock context, without categorical ban or hypothetical claim that one pass is guaranteed controlled.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u18-001-q1",
+          "prompt": "What score-and-clock situation is explicitly given?"
+        },
+        {
+          "id": "exp26-u18-001-q2",
+          "prompt": "Which two cues affect the stated possession objective?"
+        },
+        {
+          "id": "exp26-u18-001-q3",
+          "prompt": "Arrange a read for this late-game possession."
+        },
+        {
+          "id": "exp26-u18-001-q4",
+          "prompt": "Move YOU to compare the routes toward D2 and F3."
+        },
+        {
+          "id": "exp26-u18-001-q6",
+          "prompt": "How would YOU explain a sensible risk tradeoff without reducing it to “never attack with a lead”?"
+        },
+        {
+          "id": "exp26-u18-001-q7",
+          "prompt": "What should YOU communicate with 48 seconds left?"
+        },
+        {
+          "id": "exp26-u18-001-q8",
+          "prompt": "Which two events change the late-game risk?"
+        },
+        {
+          "id": "exp26-u18-001-q9",
+          "prompt": "Move YOU to compare forward routes toward F1 and F2."
+        },
+        {
+          "id": "exp26-u18-001-q10",
+          "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q7",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate with 48 seconds left?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We value possession, but I will use a clear forward lane"
+          },
+          {
+            "id": "b",
+            "text": "The lead removes every forward option"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the first outlet regardless of the pressure route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message balances the stated lead with a conditional forward choice."
+      },
+      "after": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "Which call accurately compares Gold 1’s pressure on the two support lines to D2 and F3?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is farther from the D2 line than the F3 line; check the reset"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1 is farther from the F3 line than the D2 line; check the middle"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is closer to the F3 line. The D2 reset deserves comparison with the forward options, while the lead, receiver pressure and next defensive support remain part of the decision."
+      },
+      "beforeHash": "1a1cebf9de92447ca59a832ec6d39e3885cef94c315ad170c40dbbc1a67a9f16",
+      "afterHash": "e0006032007c5987f796b5664d0c69214ddd8a4a9ba12cde7b2d8653f90c8d0c",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 1 to D2 segment 3.27 m versus F3 segment 1.84 m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Reverses those clearances; F3 remains a potential branch if live conditions permit."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-1",
+          "x": 1,
+          "y": -5.3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": -6,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -9,
+            "y": 1,
+            "facing": -0.6610431688506869
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -8,
+            "facing": 2.922923707715851
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 5,
+            "facing": -2.4756234162106834
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 1,
+            "facing": -2.191045812777718
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": -2.356194490192345
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": -2.930499320367047
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": 19,
+            "y": 6,
+            "facing": -2.578276392097825
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 7,
+            "facing": -1.4181469983996315
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 9.219544457292889
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 17.804493814764854
+          },
+          {
+            "a": "YOU",
+            "b": "F3",
+            "distance": 8.602325267042627
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 4.47213595499958
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 11.313708498984761
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "YOU",
+            "b": "A4",
+            "distance": 22.47220505424423
+          },
+          {
+            "a": "YOU",
+            "b": "A5",
+            "distance": 13.152946437965904
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 20.12461179749811
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 23.345235059857504
+          },
+          {
+            "a": "D2",
+            "b": "F3",
+            "distance": 14
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 13.92838827718412
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 17.029386365926403
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 23.345235059857504
+          },
+          {
+            "a": "D2",
+            "b": "A4",
+            "distance": 28.442925306655788
+          },
+          {
+            "a": "D2",
+            "b": "A5",
+            "distance": 9.219544457292887
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 13.92838827718412
+          },
+          {
+            "a": "F1",
+            "b": "F3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "F1",
+            "b": "A4",
+            "distance": 17.204650534085253
+          },
+          {
+            "a": "F1",
+            "b": "A5",
+            "distance": 18.60107523773827
+          },
+          {
+            "a": "F2",
+            "b": "F3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 13.453624047073712
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 8
+          },
+          {
+            "a": "F2",
+            "b": "A4",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F2",
+            "b": "A5",
+            "distance": 16.1245154965971
+          },
+          {
+            "a": "F3",
+            "b": "A1",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F3",
+            "b": "A2",
+            "distance": 3.1622776601683795
+          },
+          {
+            "a": "F3",
+            "b": "A3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "F3",
+            "b": "A4",
+            "distance": 14.866068747318506
+          },
+          {
+            "a": "F3",
+            "b": "A5",
+            "distance": 9.219544457292887
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 10.04987562112089
+          },
+          {
+            "a": "A1",
+            "b": "A4",
+            "distance": 18.027756377319946
+          },
+          {
+            "a": "A1",
+            "b": "A5",
+            "distance": 12.529964086141668
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "A2",
+            "b": "A4",
+            "distance": 11.704699910719626
+          },
+          {
+            "a": "A2",
+            "b": "A5",
+            "distance": 11.180339887498949
+          },
+          {
+            "a": "A3",
+            "b": "A4",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "A3",
+            "b": "A5",
+            "distance": 18.867962264113206
+          },
+          {
+            "a": "A4",
+            "b": "A5",
+            "distance": 21.023796041628636
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "D2",
+            "distance": 11.81905241548577,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.443340571124677
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 16.585837331892535
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.462573282722254
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.269556544854363
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 10.113851887386922
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 13.201893803541974
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 21.252999788265186
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 8.807812702785228
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 8.443340571124677,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.92838827718412
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 7.248315934252072
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.1910758951578977
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.15514414571381
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.0710678118654755
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 17.204650534085253
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.660568707605517
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 16.585837331892535,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.084357433921163
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 2.4539008303029046
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.8440936517012452
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.3746668041991696
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.270409984066392
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 11.50379062461411
+              }
+            ]
+          },
+          {
+            "receiver": "F3",
+            "distance": 7.462573282722254,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.200924490978666
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.8358278680785576
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 3.1622776601683795
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 14.866068747318506
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 9.219544457292889
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.269556544854363,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.4031242374328485
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 13.453624047073712
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 10.04987562112089
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 18.027756377319946
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.478756504214966
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 10.113851887386922,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.6429831938118005
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.708203932499369
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 1.4732270321836458
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.265591007513468
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 7.810249675906656
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 11.704699910719626
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 10.678424125894884
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 13.201893803541974,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.052448898327476
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.506785699222569
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.7574670837995279
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.9688406203402815
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 10.295630140987
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.660568707605517
+              }
+            ]
+          },
+          {
+            "receiver": "A4",
+            "distance": 21.252999788265186,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.81905241548577
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.540253205890901
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 1.8115089814877665
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 3.2089587672069015
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.49404790404211857
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 2.4608290839431226
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 4.964005131089857
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.01242189542408
+              }
+            ]
+          },
+          {
+            "receiver": "A5",
+            "distance": 12.660568707605517,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 8.222379452627951
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.443340571124677
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 15.070413060148061
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 5.378905290335863
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.222604050597698
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 8.530422486876262
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 13.201893803541974
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 20.16497093425472
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Communication adds concrete pressure information beyond generic possession advice; distinct support pair from q5.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u18-001-q1",
+          "prompt": "What score-and-clock situation is explicitly given?"
+        },
+        {
+          "id": "exp26-u18-001-q2",
+          "prompt": "Which two cues affect the stated possession objective?"
+        },
+        {
+          "id": "exp26-u18-001-q3",
+          "prompt": "Arrange a read for this late-game possession."
+        },
+        {
+          "id": "exp26-u18-001-q4",
+          "prompt": "Move YOU to compare the routes toward D2 and F3."
+        },
+        {
+          "id": "exp26-u18-001-q5",
+          "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?"
+        },
+        {
+          "id": "exp26-u18-001-q6",
+          "prompt": "How would YOU explain a sensible risk tradeoff without reducing it to “never attack with a lead”?"
+        },
+        {
+          "id": "exp26-u18-001-q8",
+          "prompt": "Which two events change the late-game risk?"
+        },
+        {
+          "id": "exp26-u18-001-q9",
+          "prompt": "Move YOU to compare forward routes toward F1 and F2."
+        },
+        {
+          "id": "exp26-u18-001-q10",
+          "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u18-002-q2",
+        "type": "multi",
+        "prompt": "Choose two considerations for generating a remaining chance.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether a shot can reach useful traffic"
+          },
+          {
+            "id": "b",
+            "text": "A certainty that shooting from the point always scores"
+          },
+          {
+            "id": "c",
+            "text": "Whether a pass would create a clearer attempt in time"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-002-q2",
+        "type": "multi",
+        "prompt": "With 32 seconds left, which two current pressure relationships matter when comparing F1 near the net and F2 across the high slot?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is nearer the direct line to F1 than the line to F2"
+          },
+          {
+            "id": "b",
+            "text": "Gold 3 is nearer the direct line to F2 than the line to F1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 5 is closer to F1 than Gold 2 is"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "The two connections face different defenders: Gold 1 near the F1 line and Gold 3 near the F2 line. Check whether either connection can create a feasible attempt in the remaining time; the static picture does not establish pass or shot timing.",
+        "basis": "scene"
+      },
+      "beforeHash": "fd4f0a55ccf37fd3b8d5c0c56819107d5cb18fb99b2037d6be68eadc7ee8105a",
+      "afterHash": "c7574074fdcba9f06a7ee1b973a10deb879acc1dee41847015bb8c161e757d70",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold 1 gap 0.41 m to F1 line versus 2.33 m to F2 line."
+        },
+        {
+          "optionId": "b",
+          "reason": "Gold 3 gap 1.37 m to F2 line versus 4.67 m to F1 line."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold 5 (13,-7) is 13.60 m from F1 (24,1), farther than Gold 2 (22,0) at 2.24 m."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-1",
+          "x": 12,
+          "y": 7.7
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 7,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -6,
+            "facing": 1.5707963267948966
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 24,
+            "y": 1,
+            "facing": 2.7091848780192556
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -4,
+            "facing": 2.137525544318403
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 25,
+            "y": -8,
+            "facing": 2.321725389192837
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 5,
+            "facing": 2.761086276477428
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 22,
+            "y": 0,
+            "facing": 2.5748634360662868
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": -1,
+            "facing": 2.289626326416521
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": 24,
+            "y": -5,
+            "facing": 2.396173177315635
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "role": "skater",
+            "x": 13,
+            "y": -7,
+            "facing": 1.7126933813990606
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 13
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 13.038404810405298
+          },
+          {
+            "a": "YOU",
+            "b": "F3",
+            "distance": 20.518284528683193
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 5.385164807134505
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 13.038404810405298
+          },
+          {
+            "a": "YOU",
+            "b": "A3",
+            "distance": 10.63014581273465
+          },
+          {
+            "a": "YOU",
+            "b": "A4",
+            "distance": 17.69180601295413
+          },
+          {
+            "a": "YOU",
+            "b": "A5",
+            "distance": 14.142135623730951
+          },
+          {
+            "a": "D2",
+            "b": "F1",
+            "distance": 14.7648230602334
+          },
+          {
+            "a": "D2",
+            "b": "F2",
+            "distance": 7.280109889280519
+          },
+          {
+            "a": "D2",
+            "b": "F3",
+            "distance": 14.142135623730951
+          },
+          {
+            "a": "D2",
+            "b": "A1",
+            "distance": 12.08304597359457
+          },
+          {
+            "a": "D2",
+            "b": "A2",
+            "distance": 12.529964086141668
+          },
+          {
+            "a": "D2",
+            "b": "A3",
+            "distance": 8.602325267042627
+          },
+          {
+            "a": "D2",
+            "b": "A4",
+            "distance": 13.038404810405298
+          },
+          {
+            "a": "D2",
+            "b": "A5",
+            "distance": 2.23606797749979
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "F1",
+            "b": "F3",
+            "distance": 9.055385138137417
+          },
+          {
+            "a": "F1",
+            "b": "A1",
+            "distance": 8.94427190999916
+          },
+          {
+            "a": "F1",
+            "b": "A2",
+            "distance": 2.23606797749979
+          },
+          {
+            "a": "F1",
+            "b": "A3",
+            "distance": 6.324555320336759
+          },
+          {
+            "a": "F1",
+            "b": "A4",
+            "distance": 6
+          },
+          {
+            "a": "F1",
+            "b": "A5",
+            "distance": 13.601470508735444
+          },
+          {
+            "a": "F2",
+            "b": "F3",
+            "distance": 8.06225774829855
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 9.219544457292889
+          },
+          {
+            "a": "F2",
+            "b": "A2",
+            "distance": 5.656854249492381
+          },
+          {
+            "a": "F2",
+            "b": "A3",
+            "distance": 3
+          },
+          {
+            "a": "F2",
+            "b": "A4",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "F2",
+            "b": "A5",
+            "distance": 5.8309518948453
+          },
+          {
+            "a": "F3",
+            "b": "A1",
+            "distance": 15.811388300841896
+          },
+          {
+            "a": "F3",
+            "b": "A2",
+            "distance": 8.54400374531753
+          },
+          {
+            "a": "F3",
+            "b": "A3",
+            "distance": 9.899494936611665
+          },
+          {
+            "a": "F3",
+            "b": "A4",
+            "distance": 3.1622776601683795
+          },
+          {
+            "a": "F3",
+            "b": "A5",
+            "distance": 12.041594578792294
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "A1",
+            "b": "A3",
+            "distance": 6.324555320336759
+          },
+          {
+            "a": "A1",
+            "b": "A4",
+            "distance": 12.806248474865697
+          },
+          {
+            "a": "A1",
+            "b": "A5",
+            "distance": 12.36931687685298
+          },
+          {
+            "a": "A2",
+            "b": "A3",
+            "distance": 4.123105625617661
+          },
+          {
+            "a": "A2",
+            "b": "A4",
+            "distance": 5.385164807134505
+          },
+          {
+            "a": "A2",
+            "b": "A5",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "A3",
+            "b": "A4",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "A3",
+            "b": "A5",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "A4",
+            "b": "A5",
+            "distance": 11.180339887498947
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "D2",
+            "distance": 13.736447866897759,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 12.455913032096065
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.835828367702049
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 14.142135623730951
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 4.18594388863544
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 10.534018794531272
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.617431295251504
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 12.892707176997154
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 2.23606797749979
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 13.743725841270262,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 12.44931701753053
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.290599445684156
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 9.055385138137417
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.407458651655003
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.8481160271494772
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 4.671222399330566
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 5.999999999999999
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.34745235461678
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 13.148764200486676,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 7.1413555348817095
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.6204880148577985
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 8.06225774829855
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.3272149027410043
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.38453644163605
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 1.368949942788826
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 6.0827625302982185
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 5.8309518948453
+              }
+            ]
+          },
+          {
+            "receiver": "F3",
+            "distance": 20.383571816538925,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 9.507656545392773
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.969688380022125
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 2.84052277594552
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.358937493846129
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 2.7914636606442147
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 0.9272172791946509
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 1.1430773865203914
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 8.604968823848775
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 4.825971404805461,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 12.08304597359457
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.94427190999916
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.219544457292889
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 15.811388300841896
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.810249675906656
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 6.324555320336758
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 12.806248474865697
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 12.36931687685298
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 12.621014222319854,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 11.465005700104731
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 2.23606797749979
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.609691800742328
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 8.544003745317529
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.301085153147187
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 3.232703749580325
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 5.385164807134504
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 11.03714785089557
+              }
+            ]
+          },
+          {
+            "receiver": "A3",
+            "distance": 10.56834897228512,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 8.602325267042627
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 6.324555320336758
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 3
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 9.899494936611665
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.7599721629913445
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.123105625617661
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 7.211102550927979
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 7.810249675906656
+              }
+            ]
+          },
+          {
+            "receiver": "A4",
+            "distance": 17.472549899771355,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 10.135898939531288
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 4.12074942770329
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 3.674334906368768
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 3.1622776601683795
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 1.0530804093019515
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 1.980249030535193
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 1.6139601925171219
+              },
+              {
+                "actor": "A5",
+                "team": "away",
+                "gap": 9.368981684930953
+              }
+            ]
+          },
+          {
+            "receiver": "A5",
+            "distance": 14.733974345029925,
+            "otherSkaterGaps": [
+              {
+                "actor": "D2",
+                "team": "home",
+                "gap": 1.9275179483110687
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 11.51759844466156
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.1920817973872095
+              },
+              {
+                "actor": "F3",
+                "team": "home",
+                "gap": 12.041594578792294
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.807526651417287
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.454339795765208
+              },
+              {
+                "actor": "A3",
+                "team": "away",
+                "gap": 5.395692848265139
+              },
+              {
+                "actor": "A4",
+                "team": "away",
+                "gap": 11.110376342905703
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Matched lane/receiving pressure observations ground the late chance read, with no scoring guarantee or arbitrary mandatory shot.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u18-002-q1",
+          "prompt": "Is an extra attacker part of this stated setup?"
+        },
+        {
+          "id": "exp26-u18-002-q3",
+          "prompt": "Arrange a time-aware attacking read."
+        },
+        {
+          "id": "exp26-u18-002-q4",
+          "prompt": "Move YOU to compare a more central point angle."
+        },
+        {
+          "id": "exp26-u18-002-q5",
+          "prompt": "Gold 1 lunges into the shot lane and F2 becomes visible. What should be considered?"
+        },
+        {
+          "id": "exp26-u18-002-q6",
+          "prompt": "Why is “get a shot” incomplete feedback in this final-minute scene?"
+        },
+        {
+          "id": "exp26-u18-002-q7",
+          "prompt": "What should YOU communicate while trailing late?"
+        },
+        {
+          "id": "exp26-u18-002-q8",
+          "prompt": "Which two updates support a remaining chance?"
+        },
+        {
+          "id": "exp26-u18-002-q9",
+          "prompt": "Move YOU to compare a more central point angle toward F2."
+        },
+        {
+          "id": "exp26-u18-002-q10",
+          "prompt": "Gold blocks F2 but leaves F3 wide. Explain your next read."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "adjudications": [
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u15-009-q5",
+      "afterHash": "d31e18a8643bfe7a23dab662b726768ba8840b0de8b5a3c553d75b15fafd357f",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u15-009-q5",
+      "afterHash": "d31e18a8643bfe7a23dab662b726768ba8840b0de8b5a3c553d75b15fafd357f",
+      "verdict": "approve",
+      "reason": "Holding remaining skaters fixed leaves Gold 2 nearer the selected player; moving Gold 1 does not erase that pressure.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u15-014-q2",
+      "afterHash": "8af4ea6d8f582de439c3d54fb857262d53e139bbcace9aab9bb9b708ff7fb911",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u15-014-q2",
+      "afterHash": "8af4ea6d8f582de439c3d54fb857262d53e139bbcace9aab9bb9b708ff7fb911",
+      "verdict": "approve",
+      "reason": "The two forward lines face distinct nearest named defenders, with Gold 3 farther from the F2 line than Gold 2.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u15-014-q5",
+      "afterHash": "b627f15985334026a27f097e3bea312d8ccc41646a9a22fb795400b943cf5672",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u15-014-q5",
+      "afterHash": "b627f15985334026a27f097e3bea312d8ccc41646a9a22fb795400b943cf5672",
+      "verdict": "approve",
+      "reason": "The replacement question uses the existing Gold 3 position toward the defended end instead of a camera-dependent imagined coordinate; no arrival point is invented.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u15-015-q5",
+      "afterHash": "cb124f2e45dd9ef1c794a52e8ced5748bb7218bfb05e4aa157e0dd132d127979",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u15-015-q5",
+      "afterHash": "cb124f2e45dd9ef1c794a52e8ced5748bb7218bfb05e4aa157e0dd132d127979",
+      "verdict": "approve",
+      "reason": "Gold 2 lies nearer the low passing line; Gold 1 movement is explicitly hypothetical and its new position still needs checking.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u18-001-q5",
+      "afterHash": "f11a04fb5a7a432410dc1e44cbe9110617c6e3934658d2fd71783b46134631aa",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u18-001-q5",
+      "afterHash": "f11a04fb5a7a432410dc1e44cbe9110617c6e3934658d2fd71783b46134631aa",
+      "verdict": "approve",
+      "reason": "The forward F1 line has more space from Gold 1 without treating a lead as a mandate for any one pass.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u18-001-q7",
+      "afterHash": "e0006032007c5987f796b5664d0c69214ddd8a4a9ba12cde7b2d8653f90c8d0c",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u18-001-q7",
+      "afterHash": "e0006032007c5987f796b5664d0c69214ddd8a4a9ba12cde7b2d8653f90c8d0c",
+      "verdict": "approve",
+      "reason": "Matched support calls accurately contrast reset and middle line distances from Gold 1; all remaining pressure still matters.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u18-002-q2",
+      "afterHash": "c7574074fdcba9f06a7ee1b973a10deb879acc1dee41847015bb8c161e757d70",
+      "verdict": "approve",
+      "reason": "Exact option and scene findings are recorded in the linked review.",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u18-002-q2",
+      "afterHash": "c7574074fdcba9f06a7ee1b973a10deb879acc1dee41847015bb8c161e757d70",
+      "verdict": "approve",
+      "reason": "Different defenders shade the two receiver lines; the clock context does not claim unvalidated pass or shot timing.",
+      "evidence": "root-review.json"
+    }
+  ]
+}

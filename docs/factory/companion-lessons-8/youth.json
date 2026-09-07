@@ -1,0 +1,1096 @@
+{
+  "scenes": [
+    {
+      "id": "draft26-u7-vocab-001",
+      "version": 2,
+      "ageBand": "U7",
+      "title": "Name the blue line",
+      "family": "rink-vocabulary",
+      "topic": "Rink Landmarks",
+      "objective": "Name a visible blue line.",
+      "briefing": "Find YOU next to a nearby line. Name that ice marking.",
+      "setup": {
+        "actors": [
+          {
+            "id": "you",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 6.5,
+            "y": -9,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": "you"
+        }
+      },
+      "focusActorId": "you",
+      "cues": [
+        "Find YOU next to a nearby line. Name that ice marking."
+      ],
+      "tags": [
+        "rink-vocabulary",
+        "u7-foundations",
+        "experimental-draft"
+      ],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [
+        {
+          "id": "hc-u7-landmarks",
+          "title": "Hockey Canada U7 FAQ",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+          "section": "Cross-ice setup",
+          "use": "Age and setup context only. Landmark positions checked against src/scenario-engine/rinkFrame.js and actual renderer."
+        }
+      ],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which line is beside YOU?",
+          "options": [
+            {
+              "id": "c",
+              "text": "The goal line"
+            },
+            {
+              "id": "a",
+              "text": "The blue line"
+            },
+            {
+              "id": "b",
+              "text": "The centre red line"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Yes, the blue line is beside YOU. The centre red line is farther toward the middle of the rink.",
+          "id": "draft26-u7-vocab-001-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two clues match the marking beside YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It is painted blue"
+            },
+            {
+              "id": "b",
+              "text": "It runs straight across the rink"
+            },
+            {
+              "id": "c",
+              "text": "It is a round circle"
+            },
+            {
+              "id": "d",
+              "text": "It runs around the centre dot"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The nearby marking is blue and straight. A circle and a net are different rink landmarks.",
+          "id": "draft26-u7-vocab-001-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "What could you do first, next, and last to name this marking?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look at the marking beside YOU"
+            },
+            {
+              "id": "b",
+              "text": "Notice its colour and shape"
+            },
+            {
+              "id": "c",
+              "text": "Say the landmark name"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is one simple observation routine: look, notice, then name. It is a suggested routine, not the only acceptable order for a young player.",
+          "id": "draft26-u7-vocab-001-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to another spot beside the same blue line.",
+          "actorId": "you",
+          "reference": {
+            "x": 7,
+            "y": -5
+          },
+          "basis": "coaching",
+          "explanation": "The example stays close to the same blue line and moves along it. Other spots beside that line also work.",
+          "id": "draft26-u7-vocab-001-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Which marking is farther toward the middle of the rink than the blue line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The centre red line"
+            },
+            {
+              "id": "b",
+              "text": "The goal line"
+            },
+            {
+              "id": "c",
+              "text": "The nearby blue line"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The centre red line is farther toward the middle than this blue line. This compares rink landmarks in the freeze; it does not describe movement.",
+          "id": "draft26-u7-vocab-001-q5"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two markings are between the two blue lines?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The centre line"
+            },
+            {
+              "id": "b",
+              "text": "The centre circle"
+            },
+            {
+              "id": "c",
+              "text": "An end-zone faceoff circle"
+            },
+            {
+              "id": "d",
+              "text": "A goal line"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The centre line and centre circle sit between the blue lines. The goal lines and end-zone circles are beyond them.",
+          "id": "draft26-u7-vocab-001-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u7-vocab-002",
+      "version": 2,
+      "ageBand": "U7",
+      "title": "Name the faceoff circle",
+      "family": "rink-vocabulary",
+      "topic": "Rink Landmarks",
+      "objective": "Name a visible faceoff circle.",
+      "briefing": "Find YOU near one end of the rink. Look at the marking around YOU.",
+      "setup": {
+        "actors": [
+          {
+            "id": "you",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 21.03,
+            "y": -6.25,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": "you"
+        }
+      },
+      "focusActorId": "you",
+      "cues": [
+        "Find YOU near one end of the rink. Look at the red marking around YOU."
+      ],
+      "tags": [
+        "rink-vocabulary",
+        "u7-foundations",
+        "experimental-draft"
+      ],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [
+        {
+          "id": "hc-u7-landmarks",
+          "title": "Hockey Canada U7 FAQ",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+          "section": "Cross-ice setup",
+          "use": "Age and setup context only. Landmark positions checked against src/scenario-engine/rinkFrame.js and actual renderer."
+        }
+      ],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "What is the round marking around YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A faceoff circle"
+            },
+            {
+              "id": "b",
+              "text": "The centre red line"
+            },
+            {
+              "id": "c",
+              "text": "A blue line"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Yes, YOU are inside a faceoff circle. The other choices are straight lines.",
+          "id": "draft26-u7-vocab-002-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two clues help name the marking around YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It is round"
+            },
+            {
+              "id": "b",
+              "text": "It has a dot inside it"
+            },
+            {
+              "id": "c",
+              "text": "It is a straight blue line"
+            },
+            {
+              "id": "d",
+              "text": "It is the straight centre line"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "This faceoff circle is round and has a dot inside. The straight lines are different markings.",
+          "id": "draft26-u7-vocab-002-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "What could you do first, next, and last to name this marking?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look at the marking around YOU"
+            },
+            {
+              "id": "b",
+              "text": "Notice its round shape and the dot inside"
+            },
+            {
+              "id": "c",
+              "text": "Say the landmark name"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Look, notice, then name is one suggested routine for this freeze. Young players may use another sensible observation order.",
+          "id": "draft26-u7-vocab-002-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Place YOU at another spot clearly outside the circle where you could still look back at it.",
+          "actorId": "you",
+          "reference": {
+            "x": 28,
+            "y": -6
+          },
+          "basis": "coaching",
+          "explanation": "More than one nearby spot could support this practice. The example is outside the circle and is not a uniquely correct placement.",
+          "id": "draft26-u7-vocab-002-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Which landmark is a straight line rather than the round marking around YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The centre red line"
+            },
+            {
+              "id": "b",
+              "text": "The faceoff circle around YOU"
+            },
+            {
+              "id": "c",
+              "text": "Another end-zone faceoff circle"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The centre red line is straight. The faceoff circle around YOU and another faceoff circle are round markings.",
+          "id": "draft26-u7-vocab-002-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "What do you notice first about the marking around YOU, and what name would you try?",
+          "basis": "coaching",
+          "explanation": "A useful answer notices the round red marking and suggests faceoff circle. This is a simple orientation prompt; it does not claim a unique verbal response or assess skating.",
+          "optional": true,
+          "id": "draft26-u7-vocab-002-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u9-receive-001",
+      "version": 2,
+      "ageBand": "U9",
+      "title": "Receive and move it away from pressure",
+      "family": "receiving-in-motion",
+      "topic": "Passing & Receiving",
+      "objective": "Scan for available space before the next action after receiving.",
+      "briefing": "Navy attacks the +x net. YOU have passed toward teammate 1. The puck has not arrived yet. F1 is gold and stands on the line from 1 toward that net. The question starts after 1 has controlled the pass.",
+      "setup": {
+        "actors": [
+          {
+            "id": "you",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": 0,
+            "facing": 0.291
+          },
+          {
+            "id": "gold1",
+            "label": "Navy 1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 3,
+            "facing": -2.85
+          },
+          {
+            "id": "f1",
+            "label": "F1",
+            "team": "away",
+            "role": "skater",
+            "x": 13,
+            "y": 2.47,
+            "facing": 2.554
+          }
+        ],
+        "puck": {
+          "x": 8,
+          "y": 2.4
+        }
+      },
+      "focusActorId": "gold1",
+      "cues": [
+        "Navy attacks the +x net. YOU have passed toward teammate 1. The puck has not arrived yet. F1 is gold and stands on the line from 1 toward that net. The question starts after 1 has controlled the pass."
+      ],
+      "tags": [
+        "receiving-in-motion",
+        "u9-fundamentals",
+        "experimental-draft"
+      ],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [
+        {
+          "id": "hc-u9-skills",
+          "title": "Hockey Canada U9 Fundamental Skill Development",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/coaches/skills",
+          "section": "Moving Passing and Receiving",
+          "use": "Developmental theme only; exact keys and geometry checked separately."
+        }
+      ],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Once 1 controls the pass, which space should 1 check next?",
+          "options": [
+            {
+              "id": "b",
+              "text": "The netward lane where F1 is standing"
+            },
+            {
+              "id": "c",
+              "text": "Space beyond F1 that requires going through F1 first"
+            },
+            {
+              "id": "a",
+              "text": "Space away from F1, including a pass back to YOU"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Check the space away from F1 before choosing the next move. A pass back to YOU can be useful if that lane stays open. Going toward the net is not automatically better when a defender occupies that route.",
+          "id": "draft26-u9-receive-001-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two things can you see before 1 receives the pass?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The puck is between YOU and 1"
+            },
+            {
+              "id": "b",
+              "text": "F1 is beyond 1 toward the right-hand net"
+            },
+            {
+              "id": "c",
+              "text": "F1 is between YOU and 1"
+            },
+            {
+              "id": "d",
+              "text": "1 already has the puck on their stick"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The puck has not reached 1. F1 is farther toward the right-hand net, beyond the receiver. Those are the current positions, before anyone makes the next move.",
+          "id": "draft26-u9-receive-001-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Put this suggested scan-and-choose routine in order after 1 controls the pass.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate the pressure at F1"
+            },
+            {
+              "id": "b",
+              "text": "Check support and an open route"
+            },
+            {
+              "id": "c",
+              "text": "Choose whether to carry, pass or keep the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is one suggested routine for a young player: locate pressure, check support and route, then choose. The scene does not make this order a universal rule or promise that one action will work.",
+          "id": "draft26-u9-receive-001-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move 1 closer to YOU and farther from F1.",
+          "actorId": "gold1",
+          "reference": {
+            "x": 7,
+            "y": 3
+          },
+          "basis": "coaching",
+          "explanation": "The example moves 1 toward YOU while increasing the gap from F1. Other nearby receiving spots can meet both aims; the puck remains loose in this exercise.",
+          "id": "draft26-u9-receive-001-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Who could be a teammate for a return pass from 1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU"
+            },
+            {
+              "id": "b",
+              "text": "F1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "YOU wear Navy like 1. F1 wears Gold. Recognizing your teammate gives you an option to check, not a promise the pass is open.",
+          "id": "draft26-u9-receive-001-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "What would you check before choosing between a pass back to YOU and keeping the puck?",
+          "basis": "coaching",
+          "explanation": "A useful answer names the current pressure, open space and support, while allowing either action if its lane is available. The freeze cannot establish speed, gaze or a guaranteed outcome.",
+          "optional": true,
+          "id": "draft26-u9-receive-001-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u9-receive-002",
+      "version": 2,
+      "ageBand": "U9",
+      "title": "Compare the support options",
+      "family": "receiving-in-motion",
+      "topic": "Passing & Receiving",
+      "objective": "Compare defender proximity before choosing a passing option.",
+      "briefing": "Teammate 2 is approaching a loose puck. Teammates 1 and 3 are options to look for after 2 gains control. F2 is gold.",
+      "setup": {
+        "actors": [
+          {
+            "id": "gold1",
+            "label": "Navy 1",
+            "team": "home",
+            "role": "skater",
+            "x": -6,
+            "y": 8,
+            "facing": -0.644
+          },
+          {
+            "id": "gold2",
+            "label": "Navy 2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": 2,
+            "facing": -0.381
+          },
+          {
+            "id": "gold3",
+            "label": "Navy 3",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -3,
+            "facing": 2.521
+          },
+          {
+            "id": "f2",
+            "label": "F2",
+            "team": "away",
+            "role": "skater",
+            "x": 9.5,
+            "y": -3.5,
+            "facing": 2.356
+          }
+        ],
+        "puck": {
+          "x": 2.5,
+          "y": 1.8
+        }
+      },
+      "focusActorId": "gold2",
+      "cues": [
+        "Teammate 2 is approaching a loose puck. Teammates 1 and 3 are options to look for after 2 gains control. F2 is gold."
+      ],
+      "tags": [
+        "receiving-in-motion",
+        "u9-fundamentals",
+        "experimental-draft"
+      ],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [
+        {
+          "id": "hc-u9-skills",
+          "title": "Hockey Canada U9 Fundamental Skill Development",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/coaches/skills",
+          "section": "Moving Passing and Receiving",
+          "use": "Developmental theme only; exact keys and geometry checked separately."
+        }
+      ],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Once 2 controls the puck, which teammate is farther from F2?",
+          "options": [
+            {
+              "id": "b",
+              "text": "Teammate 3"
+            },
+            {
+              "id": "a",
+              "text": "Teammate 1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Teammate 1 is much farther from F2. F2 is close to teammate 3. That is a cue to check the lane to 1; distance alone does not guarantee a safe pass.",
+          "id": "draft26-u9-receive-002-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two statements match the freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 is close to teammate 3"
+            },
+            {
+              "id": "b",
+              "text": "Teammate 1 is farther from F2 than teammate 3"
+            },
+            {
+              "id": "c",
+              "text": "F2 is close to teammate 1"
+            },
+            {
+              "id": "d",
+              "text": "Teammate 3 is farther from F2 than teammate 1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "F2 is close to 3 and farther from 1. Compare that spacing before deciding which passing lane to check.",
+          "id": "draft26-u9-receive-002-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Put this suggested receiving routine in order for teammate 2.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan for teammates and the defender"
+            },
+            {
+              "id": "b",
+              "text": "Compare which support is under less pressure"
+            },
+            {
+              "id": "c",
+              "text": "Choose a next action that fits the space"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Scan, compare, then choose is one suggested routine. It does not guarantee that the farther teammate is always the correct pass.",
+          "id": "draft26-u9-receive-002-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move 3 farther from F2 while staying near 2.",
+          "actorId": "gold3",
+          "reference": {
+            "x": 6,
+            "y": -2
+          },
+          "basis": "coaching",
+          "explanation": "The example increases the gap from F2 and shortens the distance to 2. Other positions can do that too; recheck the passing lane rather than relying on distance alone.",
+          "id": "draft26-u9-receive-002-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Which teammate is nearer the right-hand net on the overhead board?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Teammate 3"
+            },
+            {
+              "id": "b",
+              "text": "Teammate 1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "3 is nearer the right-hand net than 1. The full rink is an orientation picture for this exercise, not a full-ice game rule.",
+          "id": "draft26-u9-receive-002-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "In a small-area orientation exercise, what would you check before choosing the lane to teammate 1?",
+          "basis": "coaching",
+          "explanation": "A useful answer checks the lane, F2's pressure and the support around 2 before choosing. This is a small-area orientation exercise, not a full-rink offside test or a guarantee that 1 is the pass.",
+          "optional": true,
+          "id": "draft26-u9-receive-002-q6"
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "questionId": "draft26-u7-vocab-001-q2",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Visible blue marking."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Line is straight in the scene."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "No circle around YOU."
+        },
+        {
+          "optionId": "d",
+          "assessment": "irrelevant",
+          "reason": "A net is not the adjacent marking."
+        }
+      ],
+      "evidence": "Static setup and cue identify the nearby blue line.",
+      "limitations": "Does not assess movement, gaze or recognition beyond this freeze."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q3",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Observation begins with the visible marking."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Colour and shape are visible cues."
+        },
+        {
+          "optionId": "c",
+          "assessment": "supported",
+          "reason": "Naming follows the suggested routine."
+        }
+      ],
+      "evidence": "Routine is explicitly framed as suggested.",
+      "limitations": "Order is not universal and is not an objective hockey judgment."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q4",
+      "optionReviews": [],
+      "evidence": "Reference moves YOU to another valid ice point.",
+      "limitations": "Placement has multiple valid answers and is coaching practice only."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q5",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Centre red line is toward the middle."
+        },
+        {
+          "optionId": "b",
+          "assessment": "unsupported",
+          "reason": "Goal line is toward the end."
+        },
+        {
+          "optionId": "c",
+          "assessment": "irrelevant",
+          "reason": "Repeats the nearby line."
+        }
+      ],
+      "evidence": "Landmark relation follows the stated freeze.",
+      "limitations": "No movement or distance estimate is inferred."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q6",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Adjacent marking is straight."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Adjacent marking is blue."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "No circle is shown around YOU."
+        },
+        {
+          "optionId": "d",
+          "assessment": "unsupported",
+          "reason": "Adjacent marking is not the goal line."
+        }
+      ],
+      "evidence": "Scene geometry and cue support the two selected properties.",
+      "limitations": "Static visual classification only."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q2",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "The marking is round."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "The marking curves around YOU."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "It is not a straight blue line."
+        },
+        {
+          "optionId": "d",
+          "assessment": "unsupported",
+          "reason": "It is not the straight centre line."
+        }
+      ],
+      "evidence": "Cue and geometry identify the round marking around YOU.",
+      "limitations": "Does not assess skating or rule knowledge."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q3",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Start with the visible marking."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Shape and colour are visible."
+        },
+        {
+          "optionId": "c",
+          "assessment": "supported",
+          "reason": "Name follows observation."
+        }
+      ],
+      "evidence": "Suggested routine is stated in the explanation.",
+      "limitations": "Alternative sensible orders remain possible."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q4",
+      "optionReviews": [],
+      "evidence": "Reference is a distinct valid ice point.",
+      "limitations": "Multiple placements are acceptable; no unique position key is claimed."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q5",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "The centre red line is straight."
+        },
+        {
+          "optionId": "b",
+          "assessment": "unsupported",
+          "reason": "The faceoff circle is round."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "A faceoff circle is round."
+        }
+      ],
+      "evidence": "The scene contrasts a straight centre line with round faceoff markings.",
+      "limitations": "Static landmark question only."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q6",
+      "optionReviews": [],
+      "evidence": "Setup and cue identify the round red marking around YOU.",
+      "limitations": "Optional explanation is a coaching reflection; it has no unique keyed wording and does not assess movement or gaze."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q2",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Open space away from F1 is the stated cue."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "YOU is named as a possible support option."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "F1 remains visible in the freeze."
+        },
+        {
+          "optionId": "d",
+          "assessment": "unsupported",
+          "reason": "No future result is shown."
+        }
+      ],
+      "evidence": "Briefing and cue specify defender pressure and support.",
+      "limitations": "No speed, gaze or pass success is observed."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q3",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Locating F1 identifies the immediate pressure."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Support and route are the relevant next cues."
+        },
+        {
+          "optionId": "c",
+          "assessment": "supported",
+          "reason": "Choice follows the scan."
+        }
+      ],
+      "evidence": "Explanation qualifies this as one suggested routine.",
+      "limitations": "Not a universal sequence or objective execution assessment."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q4",
+      "optionReviews": [],
+      "evidence": "Reference is a distinct valid point away from F1.",
+      "limitations": "Multiple support spots could be valid; placement is coaching practice."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q5",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "conditionally reasonable",
+          "reason": "Check the open support lane when F1 occupies netward space."
+        },
+        {
+          "optionId": "b",
+          "assessment": "conditionally reasonable",
+          "reason": "A carry could be considered if a different route opens."
+        },
+        {
+          "optionId": "c",
+          "assessment": "conditionally reasonable",
+          "reason": "It names the occupied lane, which should be checked rather than assumed open."
+        }
+      ],
+      "evidence": "F1 is stated on the netward lane.",
+      "limitations": "Choice remains conditional on the live lane being open."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q6",
+      "optionReviews": [],
+      "evidence": "Prompt asks for pressure, space and support checks.",
+      "limitations": "Free response cannot be objectively keyed from the static frame; no speed or gaze claim."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q2",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "F2 is visibly close to teammate 3."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Teammate 1 is visibly farther from F2."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "Geometry shows the opposite comparison."
+        },
+        {
+          "optionId": "d",
+          "assessment": "unsupported",
+          "reason": "Puck is loose in setup."
+        }
+      ],
+      "evidence": "Actor coordinates and loose puck state support the selections.",
+      "limitations": "Does not infer control or a completed pass."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q3",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Scanning is a suggested receiving habit."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Pressure comparison uses visible defender distance."
+        },
+        {
+          "optionId": "c",
+          "assessment": "supported",
+          "reason": "Action follows the scan."
+        }
+      ],
+      "evidence": "Explanation explicitly keeps this as a suggested routine.",
+      "limitations": "Farther support is not automatically the correct pass."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q4",
+      "optionReviews": [],
+      "evidence": "Reference moves Navy 2 to another valid point.",
+      "limitations": "Many locations can be reasonable; no unique placement key."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q5",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "conditionally reasonable",
+          "reason": "Teammate 1 has more visible space from F2."
+        },
+        {
+          "optionId": "b",
+          "assessment": "misleading",
+          "reason": "Closeness to F2 is pressure, not a reason to prefer the lane."
+        },
+        {
+          "optionId": "c",
+          "assessment": "unsupported",
+          "reason": "The scene contains two named options."
+        }
+      ],
+      "evidence": "Geometry shows F2 closer to 3 than 1.",
+      "limitations": "The lane must be rescanned before passing."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q6",
+      "optionReviews": [],
+      "evidence": "Setup shows a loose puck, three teammates and F2; the prompt keeps the exercise small-area and orientation-only.",
+      "limitations": "Optional explanation has no unique keyed wording and does not test full-rink offside, speed, gaze or future success."
+    }
+  ],
+  "rootCorrections": "Corrected weak distractors, repeated questions, grammar, non-specific placement and a conditionally defensible alternative. Earlier author review rows remain historical; final reviewer must use final payloads."
+}

@@ -1,0 +1,782 @@
+{
+  "appliedAt": "2026-09-06T21:46:13.998Z",
+  "humanCoachApproval": false,
+  "packet": "adjudicated-packet.json",
+  "changes": [
+    {
+      "scenarioId": "exp26-u13-002",
+      "questionId": "exp26-u13-002-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "status": "draft",
+      "before": {
+        "id": "exp26-u13-002-q5",
+        "type": "choice",
+        "prompt": "If D2 is closely marked before you release, what is sensible?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reverse automatically because it was the original plan"
+          },
+          {
+            "id": "b",
+            "text": "Pass through D2’s marker without checking"
+          },
+          {
+            "id": "c",
+            "text": "Reassess a hold or another outlet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A closed second option means another read is needed; holding may be useful if possession can be protected.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-002-q5",
+        "type": "choice",
+        "prompt": "YOU want to advance as far toward centre ice as these outlets allow, without sending the puck farther toward the side boards. Which pass would you assess?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Pass to W"
+          },
+          {
+            "id": "b",
+            "text": "Pass to C"
+          },
+          {
+            "id": "c",
+            "text": "Pass to D2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "C gives more progress toward centre ice than D2 while receiving nearer the middle than the puck is now. W offers more forward distance but is wider. Check the passing line before release: this identifies an option to assess, not a guaranteed safe pass. A reverse to D2 or a wider pass to W may suit a different aim or a changed picture.",
+        "basis": "coaching"
+      },
+      "beforeHash": "a8c0f933a7cee4ca3182196b07a0517c60bcb7074481e2d83f87bf73b614747c",
+      "afterHash": "42933a5c518df84848eba3fab8f647ce58a4d03a2fc004897cda03e39ecebfb3",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "W advances 12 m from rendered puck x=-24 but widens |y|6.7 to9; plausible forward width outlet, fails no-wider condition."
+        },
+        {
+          "optionId": "b",
+          "reason": "C advances 9 m from rendered puck and reduces |y|6.7 to2; more advance than D2 without widening."
+        },
+        {
+          "optionId": "c",
+          "reason": "D2 x=-24 gives zero advance from rendered puck, with |y|6.7 to6. A reverse is plausible but less advance than C."
+        }
+      ],
+      "limitations": [
+        "Advisory author; not reviewed, approved or applied.",
+        "No motion, reach, timing, gaze, collision or completed pass simulated.",
+        "Render/mobile legibility and U13 challenge require independent assessment.",
+        "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+        "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author."
+      ],
+      "geometry": {
+        "units": "metres; source x/y; angle in degrees",
+        "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+        "actors": {
+          "YOU": [
+            -25,
+            6
+          ],
+          "D2": [
+            -24,
+            -6
+          ],
+          "W": [
+            -12,
+            9
+          ],
+          "A1": [
+            -18,
+            8
+          ],
+          "C": [
+            -15,
+            -2
+          ]
+        },
+        "renderedPuck": [
+          -24,
+          6.7
+        ],
+        "ownerId": "home-skater-1",
+        "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+        "options": {
+          "W": {
+            "length": 12.218428704215611,
+            "advanceX": 12,
+            "receiverWidth": 9,
+            "puckWidth": 6.7,
+            "Gold1PointGap": 0.14731845178905567
+          },
+          "C": {
+            "length": 12.517587627015038,
+            "advanceX": 9,
+            "receiverWidth": 2,
+            "puckWidth": 6.7,
+            "Gold1PointGap": 5.104817469948695
+          },
+          "D2": {
+            "length": 12.7,
+            "advanceX": 0,
+            "receiverWidth": 6,
+            "puckWidth": 6.7,
+            "Gold1PointGap": 6.139218191268331
+          }
+        }
+      },
+      "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+    },
+    {
+      "scenarioId": "exp26-u13-003",
+      "questionId": "exp26-u13-003-q5",
+      "status": "draft",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 follows your inward move, which response could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call for a pass without looking at Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Reoffer elsewhere or make room for C"
+          },
+          {
+            "id": "c",
+            "text": "Remain still because your first move should have worked"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-003-q5",
+        "type": "choice",
+        "prompt": "D1 is comparing the two Navy receivers. Looking at both gold defenders, which direct passing line has more room around it in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The pass from D1 to YOU"
+          },
+          {
+            "id": "b",
+            "text": "The pass from D1 to C"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "The line from D1 to C has more space from the nearest gold defender. Gold 1 sits much nearer the line to YOU. C is an option for D1 to assess while YOU continue offering support; YOU do not have to receive the next pass. This still frame does not prove either pass will succeed. The line to YOU may become useful as the players move.",
+        "basis": "coaching"
+      },
+      "beforeHash": "b2cc07aa7cfc6290a35adf23c03a9f5001d0d44a4bbdb3619729966b7885670c",
+      "afterHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+      "supersededDraft03Hash": "b072a948914a2ae7695ace5bc8bf9d3cd39352d3a10cddc15bc184f240b036d6",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "YOU are a real teammate and viable future support option, but Gold1 lies very close to the direct puck-to-YOU line. The visible line has less space from its nearest defender than C’s line."
+        },
+        {
+          "optionId": "b",
+          "reason": "C is a real teammate. The minimum gap from either shown gold skater to the direct line is larger than the corresponding minimum for YOU. The comparison does not prove safety or demand a pass."
+        }
+      ],
+      "geometry": {
+        "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+        "units": "metres",
+        "puck": [
+          -21,
+          7.7
+        ],
+        "ownerId": "home-skater-2",
+        "actors": {
+          "YOU": [
+            -7,
+            9
+          ],
+          "D1": [
+            -22,
+            7
+          ],
+          "C": [
+            -13,
+            1
+          ],
+          "A1": [
+            -14,
+            8
+          ],
+          "A2": [
+            -5,
+            -2
+          ]
+        },
+        "options": [
+          {
+            "optionId": "a",
+            "receiver": "YOU",
+            "passLength": 14.060227594174995,
+            "defenderPointGaps": {
+              "A1": 0.3485007598333631,
+              "A2": 11.180339887498947
+            },
+            "minimumDefenderPointGap": 0.3485007598333631
+          },
+          {
+            "optionId": "b",
+            "receiver": "C",
+            "passLength": 10.435037134576953,
+            "defenderPointGaps": {
+              "A1": 4.724468093806996,
+              "A2": 8.54400374531753
+            },
+            "minimumDefenderPointGap": 4.724468093806996
+          }
+        ]
+      },
+      "duplicateAudit": {
+        "questionsInspected": [
+          "exp26-u13-003-q1",
+          "exp26-u13-003-q2",
+          "exp26-u13-003-q3",
+          "exp26-u13-003-q4",
+          "exp26-u13-003-q5",
+          "exp26-u13-003-q6",
+          "exp26-u13-003-q7",
+          "exp26-u13-003-q8",
+          "exp26-u13-003-q9",
+          "exp26-u13-003-q10"
+        ],
+        "distinction": "q7 identifies Gold1 near YOUR line; new q5 compares two genuine receiving options and considers both defenders. q6/q10 discuss helping C but do not perform this line comparison."
+      },
+      "limits": [
+        "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+        "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+        "No scene setup or actor moved; no hypothetical event presented as visible.",
+        "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+        "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+        "Author remains advisory-only; no human approval, no source application."
+      ],
+      "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons."
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "status": "draft",
+      "before": {
+        "id": "exp26-u13-006-q5",
+        "type": "choice",
+        "prompt": "Gold 1 moves directly onto your new lane. What might you do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Rush beside F1 and remove the deeper option"
+          },
+          {
+            "id": "b",
+            "text": "Change the angle again or help clear F1’s route"
+          },
+          {
+            "id": "c",
+            "text": "Demand the same pass regardless"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "An option should be re-created when the marker moves.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-006-q5",
+        "type": "choice",
+        "prompt": "Gold 1 is near the pass from D1 to YOU. To begin offering deeper middle support, which direction changes your passing angle more than skating straight toward D1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Take a few strides toward F1"
+          },
+          {
+            "id": "b",
+            "text": "Take a few strides toward D1"
+          },
+          {
+            "id": "c",
+            "text": "Take a few strides toward the centre faceoff dot"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "Moving toward the centre faceoff dot takes YOU back and inward while changing the angle of the line from D1 to YOU. Moving straight toward D1 mainly shortens that same line near Gold 1; moving toward F1 takes YOU farther up ice and wider. Gold 1 is nearby, can move and may still reach the new line. Check again; a changed angle does not establish an open or completed pass.",
+        "basis": "coaching"
+      },
+      "beforeHash": "4bffece872b6f3065799089446fb21b91f6a7fec2932769db2310fd7160b4d90",
+      "afterHash": "8a24b41ce421f260e72b75536c4d9786c0ee18ff40f04c33fb4dea7767798b7b",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F1 is farther up ice and wider; high support is plausible but not deeper-middle."
+        },
+        {
+          "optionId": "b",
+          "reason": "Directly toward D1 preserves actor-centre line bearing. May shorten support but not substantially change the alignment."
+        },
+        {
+          "optionId": "c",
+          "reason": "Centre dot(0,0) is back and inward from YOU(2,6); direction changes D1-to-YOU bearing. No clearance guarantee."
+        }
+      ],
+      "limitations": [
+        "Advisory author; not reviewed, approved or applied.",
+        "No motion, reach, timing, gaze, collision or completed pass simulated.",
+        "Render/mobile legibility and U13 challenge require independent assessment.",
+        "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+        "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author."
+      ],
+      "geometry": {
+        "units": "metres; source x/y; angle in degrees",
+        "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+        "actors": {
+          "YOU": [
+            2,
+            6
+          ],
+          "D1": [
+            -9,
+            -2
+          ],
+          "F1": [
+            4,
+            9
+          ],
+          "A1": [
+            -1,
+            4
+          ],
+          "A2": [
+            8,
+            -4
+          ]
+        },
+        "renderedPuck": [
+          -8,
+          -1.3
+        ],
+        "ownerId": "home-skater-2",
+        "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+        "before": {
+          "Gold1Gap": 0.15346052825872353,
+          "passBearing": 36.12944414324086
+        },
+        "options": {
+          "F1": {
+            "trialPosition": [
+              2.554700196225229,
+              6.832050294337844
+            ],
+            "advanceX": 0.5547001962252289,
+            "width": 6.832050294337844,
+            "Gold1Gap": 0.07388417947736863,
+            "passBearing": 37.61307224864277,
+            "bearingChange": 1.4836281054019125
+          },
+          "D1": {
+            "trialPosition": [
+              1.1912639156968114,
+              5.411828302324954
+            ],
+            "advanceX": -0.8087360843031886,
+            "width": 5.411828302324954,
+            "Gold1Gap": 0.15208639146915842,
+            "passBearing": 36.13841263328637,
+            "bearingChange": 0.008968490045511146
+          },
+          "centreDot": {
+            "trialPosition": [
+              1.683772233983162,
+              5.051316701949486
+            ],
+            "advanceX": -0.316227766016838,
+            "width": 5.051316701949486,
+            "Gold1Gap": 0.5927727431168285,
+            "passBearing": 33.25975385375464,
+            "bearingChange": 2.869690289486222
+          }
+        }
+      },
+      "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+    },
+    {
+      "scenarioId": "exp26-u13-011",
+      "questionId": "exp26-u13-011-q5",
+      "status": "draft",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-011-q5",
+        "type": "choice",
+        "prompt": "Suppose Gold 1 follows your lateral move. What deserves another look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The original shot as though Gold 1 had stayed still"
+          },
+          {
+            "id": "b",
+            "text": "A shot without checking the blocker"
+          },
+          {
+            "id": "c",
+            "text": "A pass to D2 or another change of angle"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A moving defender can close the new lane, so alternatives remain relevant.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-011-q5",
+        "type": "choice",
+        "prompt": "YOU are weighing the two teammate passes. Which direct passing line stays farther from Gold 1 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The pass from YOU to D2"
+          },
+          {
+            "id": "b",
+            "text": "The pass from YOU to F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The line to D2 stays farther from Gold 1 than the line to F1. That makes D2 an option to assess around the current blocker. F1 is farther toward the net and may offer a useful attacking option if that lane remains available. More distance from one defender does not guarantee reception or make D2 the best play in every situation.",
+        "basis": "coaching"
+      },
+      "beforeHash": "0f227ae5b386c1f54709c08870b57dc7ce18ceb5359ae7df88bd9f18ffac5a04",
+      "afterHash": "cff8d1a4b75ffaef952ec342818e78f49448629e126ed5e9be8ba28e7bcdb557",
+      "supersededDraft03Hash": "d2a23e78a517ea69b2a05f04c9b7b25cc3613d440086ba81e6e16a70fe92d716",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D2 is a real teammate. The direct puck-to-D2 segment stays farther from Gold1 than the puck-to-F1 segment. D2 may change the angle but a completed pass/next shot is unproven."
+        },
+        {
+          "optionId": "b",
+          "reason": "F1 is a real advanced teammate. Its direct segment has less separation from Gold1 but still several metres of point separation; do not call it blocked or wrong generally. It offers a different attacking tradeoff."
+        }
+      ],
+      "geometry": {
+        "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+        "units": "metres",
+        "puck": [
+          13,
+          0.7
+        ],
+        "ownerId": "home-skater-1",
+        "actors": {
+          "YOU": [
+            12,
+            0
+          ],
+          "D2": [
+            13,
+            -8
+          ],
+          "F1": [
+            23,
+            6
+          ],
+          "A1": [
+            18,
+            0
+          ],
+          "G": [
+            26,
+            0
+          ]
+        },
+        "options": [
+          {
+            "optionId": "a",
+            "receiver": "D2",
+            "passLength": 8.7,
+            "defenderPointGaps": {
+              "A1": 5
+            },
+            "minimumDefenderPointGap": 5
+          },
+          {
+            "optionId": "b",
+            "receiver": "F1",
+            "passLength": 11.317685275708985,
+            "defenderPointGaps": {
+              "A1": 2.9599692148977357
+            },
+            "minimumDefenderPointGap": 2.9599692148977357
+          }
+        ]
+      },
+      "duplicateAudit": {
+        "questionsInspected": [
+          "exp26-u13-011-q1",
+          "exp26-u13-011-q2",
+          "exp26-u13-011-q3",
+          "exp26-u13-011-q4",
+          "exp26-u13-011-q5",
+          "exp26-u13-011-q6",
+          "exp26-u13-011-q7",
+          "exp26-u13-011-q8",
+          "exp26-u13-011-q9",
+          "exp26-u13-011-q10"
+        ],
+        "distinction": "q7 identifies D2 against an opponent/goalie; new q5 compares D2 with actual advanced teammate F1, preserves F1’s conditional value and measures the direct lines."
+      },
+      "limits": [
+        "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+        "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+        "No scene setup or actor moved; no hypothetical event presented as visible.",
+        "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+        "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+        "Author remains advisory-only; no human approval, no source application."
+      ],
+      "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons.",
+      "supersededDraft04Hash": "d9d229b0023a4841460469cd215b04212cd312b8501dca57af488cdc29d46a15",
+      "revisionReason": "Removed unstated prior shot implication; all other after payload fields identical to revision04."
+    },
+    {
+      "scenarioId": "exp26-u13-012",
+      "questionId": "exp26-u13-012-q5",
+      "status": "draft",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-012-q5",
+        "type": "choice",
+        "prompt": "If Gold 2 moves into your new route, what could you do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Follow the route without looking"
+          },
+          {
+            "id": "b",
+            "text": "Change direction or stay as another support option"
+          },
+          {
+            "id": "c",
+            "text": "Insist on the return pass anyway"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "The pass does not obligate the receiver to return it; another support action may be better.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-012-q5",
+        "type": "choice",
+        "prompt": "Before offering an inside option, which description matches the two gold defenders in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is closer to F2; Gold 2 is farther toward the attacking net and nearer the middle"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2 is closer to F2; Gold 1 is farther toward the attacking net and nearer the middle"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "Gold 1 is close to F2, while Gold 2 is farther toward Gold’s net and nearer the middle across the rink. Account for both the opponent near the carrier and the opponent in the inside space ahead of YOU. Their positions do not prove who will move, which line will stay available or whether F2 will return the puck.",
+        "basis": "scene"
+      },
+      "beforeHash": "69b8ec27bd116b66f6a0bc26d722750b1b3522397f173a5bd23db3aa655f0063",
+      "afterHash": "13069d0386ada38244466a8db7128bc2bef90530dec15fcbb0b5e0de4689911d",
+      "supersededDraft03Hash": "5b052ceb4f30ed3dacd54a09da2185933cdb964dd6eb0bd201be53661402b1d3",
+      "revisionReason": "Replaces unnecessary retreat with observation of the two actual defender relationships. No route or prior movement invented.",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold1 is closer to F2, Gold2 has greater attacking x and smaller |y|; all three comparisons agree with this frame. These are spatial cues, not claimed defensive assignments."
+        },
+        {
+          "optionId": "b",
+          "reason": "Reverses all three observed comparisons. Both named players are actual opponents, and this arrangement could exist elsewhere, but is not the shown setup."
+        }
+      ],
+      "geometry": {
+        "units": "metres, actual source rink coordinates",
+        "method": "Euclidean actor distances for stated player relationships; x advances toward attacked right net; |y| measures distance from middle across rink width. makeScene confirms current puck, though this question does not compare puck lanes.",
+        "actors": {
+          "YOU": [
+            11,
+            1
+          ],
+          "F2": [
+            15,
+            8
+          ],
+          "A1": [
+            18,
+            7
+          ],
+          "A2": [
+            22,
+            -2
+          ]
+        },
+        "renderedPuck": [
+          16,
+          8.7
+        ],
+        "ownerId": "home-skater-2",
+        "Gold1": {
+          "distanceF2": 3.1622776601683795,
+          "x": 18,
+          "distanceMiddle": 7,
+          "distanceAttackingNet": 10.63014581273465
+        },
+        "Gold2": {
+          "distanceF2": 12.206555615733702,
+          "x": 22,
+          "distanceMiddle": 2,
+          "distanceAttackingNet": 4.47213595499958
+        }
+      },
+      "duplicateAudit": {
+        "questionsInspected": [
+          "exp26-u13-012-q1",
+          "exp26-u13-012-q2",
+          "exp26-u13-012-q3",
+          "exp26-u13-012-q4",
+          "exp26-u13-012-q5",
+          "exp26-u13-012-q6",
+          "exp26-u13-012-q7",
+          "exp26-u13-012-q8",
+          "exp26-u13-012-q9",
+          "exp26-u13-012-q10"
+        ],
+        "distinction": "q1 identifies F2 possession; q8 mentions Gold1 facing F2. This question compares Gold1/Gold2 locations, including Gold2 inside/up-ice position; it does not repeat possession, prescribe q4/q9 movement, or ask generic reoffer effectiveness from q6/q10."
+      },
+      "limits": [
+        "Advisory author; no independent/human approval claimed.",
+        "Only two matched spatial accounts; random chance 50%, not mastery evidence.",
+        "No actual movement, attention, intended marking assignment, reach, timing or successful pass inferred.",
+        "No setup edits. No rendered/mobile check by author.",
+        "Spatial reading is introductory; challenge and instructional usefulness require independent review."
+      ],
+      "imageDependency": "Prompt and options do not announce which defender occupies each location; player labels and relative positions must be resolved from scene. Briefing provides partial context but does not fully supply Gold2 comparisons."
+    }
+  ],
+  "adjudications": [
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u13-002-q5",
+      "afterHash": "42933a5c518df84848eba3fab8f647ce58a4d03a2fc004897cda03e39ecebfb3",
+      "verdict": "approve",
+      "evidence": "choice-quality-rewrite-independent-03/independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u13-002-q5",
+      "afterHash": "42933a5c518df84848eba3fab8f647ce58a4d03a2fc004897cda03e39ecebfb3",
+      "verdict": "approve",
+      "reason": "Progress and width comparison agrees with canonical puck and shown outlet positions; the inside option has useful clearance but feedback requires recheck."
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u13-003-q5",
+      "afterHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+      "verdict": "approve",
+      "evidence": "choice-quality-rewrite-independent-03/independent-review-04.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u13-003-q5",
+      "afterHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+      "verdict": "approve",
+      "reason": "Compares real receivers and both defenders instead of steering into the forechecker shadow; nearest-defender segment gaps independently agree."
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u13-006-q5",
+      "afterHash": "8a24b41ce421f260e72b75536c4d9786c0ee18ff40f04c33fb4dea7767798b7b",
+      "verdict": "approve",
+      "evidence": "choice-quality-rewrite-independent-03/independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u13-006-q5",
+      "afterHash": "8a24b41ce421f260e72b75536c4d9786c0ee18ff40f04c33fb4dea7767798b7b",
+      "verdict": "approve",
+      "reason": "The initial deeper-middle movement changes the passing angle and improves blocker-line separation; feedback retains nearby reach/movement limits."
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u13-011-q5",
+      "afterHash": "cff8d1a4b75ffaef952ec342818e78f49448629e126ed5e9be8ba28e7bcdb557",
+      "verdict": "approve",
+      "evidence": "choice-quality-rewrite-independent-03/independent-review-05.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u13-011-q5",
+      "afterHash": "cff8d1a4b75ffaef952ec342818e78f49448629e126ed5e9be8ba28e7bcdb557",
+      "verdict": "approve",
+      "reason": "Compares both teammate passes around the visible blocker. No unstated previous shot and no universal best-play claim."
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u13-012-q5",
+      "afterHash": "13069d0386ada38244466a8db7128bc2bef90530dec15fcbb0b5e0de4689911d",
+      "verdict": "approve",
+      "evidence": "choice-quality-rewrite-independent-03/independent-review-05.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u13-012-q5",
+      "afterHash": "13069d0386ada38244466a8db7128bc2bef90530dec15fcbb0b5e0de4689911d",
+      "verdict": "approve",
+      "reason": "Correctly distinguishes defender near the carrier from defender farther ahead inside. Does not impose unnecessary retreat."
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-09-07",
+  "scope": "At most 24 briefs, derived only from proven gaps surfaced by Tasks A-D's actual findings plus this session's own independent verification -- not invented. Ranked by evidence strength (high -> low). Every brief is draft-not-reviewed/provisional; none carries mastery credit or automatic promotion. No hockey-content judgment calls were made -- briefs describe WHERE a gap is and WHAT evidence supports it, not the specific tactical answer key.",
+  "totalBriefs": 15,
+  "briefs": [
+    {
+      "rank": 1,
+      "id": "brief-u15-skating-refinement-scene-a",
+      "type": "new-content",
+      "ageBand": "U15",
+      "domain": "skating-movement",
+      "concepts": ["edges-balance", "agility-mobility"],
+      "confidence": "high",
+      "evidenceGapDescription": "Zero genuine skating-movement questions exist for U15 in any of the 3 reachable live catalogs (experimental-bank, legacy-live-bank, scenario-engine-seed), confirmed by a full manual text sweep (skate/edge/pivot/crossover/stride/agility/footwork terms) beyond the narrower keyword list Task B's own coverage tool uses. src/data/curriculum-ledger.json's node u15.edges-balance and u15.agility-mobility are both locked at depth 'R' (refinement, at speed under random/opposed conditions) -- the curriculum design explicitly expects this content to exist at U15, not just I/D-level basics.",
+      "recommendedShape": "One new U15 scene pairing an edge-control/agility cue with the bank's existing geometry-comparison question pattern (e.g. two escape routes of differing tightness/turn radius under pressure), 6-10 questions, >=4 question types per the schema's own validation rule.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 1; independently re-verified this session against curriculum-ledger.json nodes directly."
+    },
+    {
+      "rank": 2,
+      "id": "brief-u15-skating-refinement-scene-b",
+      "type": "new-content",
+      "ageBand": "U15",
+      "domain": "skating-movement",
+      "concepts": ["backward-transitions", "deception-with-feet"],
+      "confidence": "high",
+      "evidenceGapDescription": "Same absence-of-content finding as rank 1. backward-transitions is locked at depth 'R' for U15; deception-with-feet is locked at depth 'M' (mastery) for U15 -- note this is one depth level below 'R', a small correction to a prior pass that stated all four concepts were at 'R' for both ages (verified directly against curriculum-ledger.json nodes in this pass).",
+      "recommendedShape": "One new U15 scene pairing a backward-skating/transition read with a deceptive-footwork cue (e.g. a defender committing to a fake), 6-10 questions.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 1; depth correction from this session's own ledger read."
+    },
+    {
+      "rank": 3,
+      "id": "brief-u18-skating-refinement-scene-a",
+      "type": "new-content",
+      "ageBand": "U18",
+      "domain": "skating-movement",
+      "concepts": ["edges-balance", "agility-mobility"],
+      "confidence": "high",
+      "evidenceGapDescription": "Identical zero-content finding at U18. All four skating-movement concepts are locked at depth 'R' for U18 with no exception (verified directly against curriculum-ledger.json nodes).",
+      "recommendedShape": "One new U18 scene, same pattern as rank 1 but scaled to U18 game speed/pressure norms.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 1."
+    },
+    {
+      "rank": 4,
+      "id": "brief-u18-skating-refinement-scene-b",
+      "type": "new-content",
+      "ageBand": "U18",
+      "domain": "skating-movement",
+      "concepts": ["backward-transitions", "deception-with-feet"],
+      "confidence": "high",
+      "evidenceGapDescription": "Identical zero-content finding at U18; both concepts locked at depth 'R' for U18.",
+      "recommendedShape": "One new U18 scene, same pattern as rank 2 but scaled to U18.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 1."
+    },
+    {
+      "rank": 5,
+      "id": "brief-u11-name-changed-cue-family",
+      "type": "mapping-fix-not-new-content",
+      "ageBand": "U11",
+      "domain": "cause-and-effect / tactical-reasoning",
+      "confidence": "medium-high",
+      "evidenceGapDescription": "53 of 400 U11 questions (13.3%) already satisfy the genuine changed-cue rule in tools/lib/curriculum-changed-cue.mjs, almost 4x the naive 14/400 Imagine/Suppose keyword count -- independently re-derived in this session (change-marker matches=60, update-ask matches=51, intersection=38 auto + 15 manual-override-only = 53). This is a real, existing pattern that is scattered across many scenes' q5/q10 slots with no shared name/tag anywhere in the metadata, not a content gap.",
+      "recommendedShape": "Do NOT author new content first. Tag 3-5 already-existing U11 scenes' objective/tags fields with an explicit family name (e.g. 'read-the-change') so the pattern becomes navigable and gets exposed in coach/parent-facing views.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 2; independently reproduced 53/400 and the 73-candidate ceiling in this session via tools/lib/curriculum-changed-cue.mjs."
+    },
+    {
+      "rank": 6,
+      "id": "brief-u11-changed-cue-new-scene-a",
+      "type": "new-content",
+      "ageBand": "U11",
+      "domain": "cause-and-effect / tactical-reasoning",
+      "confidence": "medium-high",
+      "evidenceGapDescription": "Contingent on rank 5's tagging pilot: once the 'read-the-change' family is named and visible, 2-3 new scenes explicitly built around it would extend a proven-working pattern rather than guess at a new one.",
+      "recommendedShape": "One new U11 scene using the same narrated-state-change + read-update-ask structure already validated in the 53 existing questions.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 2 recommendedSmallPilot."
+    },
+    {
+      "rank": 7,
+      "id": "brief-u11-changed-cue-new-scene-b",
+      "type": "new-content",
+      "ageBand": "U11",
+      "domain": "cause-and-effect / tactical-reasoning",
+      "confidence": "medium-high",
+      "evidenceGapDescription": "Same as rank 6, second scene of the small pilot Task B itself recommended (2-3 total, not volume).",
+      "recommendedShape": "One new U11 scene, same pattern as rank 6, different game situation (e.g. defensive-zone coverage change rather than offensive-zone).",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 2 recommendedSmallPilot."
+    },
+    {
+      "rank": 8,
+      "id": "brief-u7-vocab-landmark-tap-delivery-format",
+      "type": "schema-dependency-held",
+      "ageBand": "U7",
+      "domain": "rink-vocabulary",
+      "confidence": "medium",
+      "evidenceGapDescription": "draft26-u7-vocab-002-q1's original premise ('tap a rink landmark using a position-type interaction') is schema-impossible: src/one-on-one/experimentalBankCore.js requires a position-type question to reference an existing actor (line 48-52) and forces basis!=='coaching' to fail, so it can never express a landmark-only tap. Task C's fix (changing the type to 'choice') is correct and disclosed, but it means the u7-vocab pairing's originally-intended second delivery FORMAT (a different interaction style for the same concept, not just a paraphrase) no longer exists anywhere in the pair.",
+      "recommendedShape": "Not authorable as-is. This is a schema/engine capability question first: does a landmark-only-tap interaction belong in the position-type schema at all, or should the U7 pairing's 'second delivery style' goal be met with a different existing type (e.g. sequence)? Needs an engineering/design decision before a replacement question can be drafted.",
+      "sourceOfGap": "This session's independent Task C review (draft-revisions.json drafts[u7-vocab-002-q1].lossOfDeliveryVariety field, cross-checked against experimentalBankCore.js lines 48-52)."
+    },
+    {
+      "rank": 9,
+      "id": "brief-scenario-seed-nodeid-cleanup",
+      "type": "mapping-fix-not-new-content",
+      "ageBand": "U9 / U11 / U13",
+      "domain": "cross-cutting",
+      "confidence": "medium",
+      "evidenceGapDescription": "5 scenario-engine-seed rows carry a nodeId that does not resolve to any id in src/data/curriculum-ledger.json (u13.cycle, u13.offensive-zone-play, u9.support-the-puck, u11.defensive-zone-coverage, and one more) -- the content likely exists and is fine, the binding is stale or was authored against a concept id the locked ledger never had.",
+      "recommendedShape": "Not new content. Either correct the 5 nodeId strings to a real ledger concept id, or add the missing concept to the ledger if the content genuinely represents a new concept.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 4."
+    },
+    {
+      "rank": 10,
+      "id": "brief-pov-questions-orphaned-catalog-decision",
+      "type": "infrastructure-decision-not-content",
+      "ageBand": "U7 / U9 / U11 / U13",
+      "domain": "cross-cutting",
+      "confidence": "high",
+      "evidenceGapDescription": "src/data/povQuestions.json holds 280 already-authored questions across 24 images (U7/U9/U11/U13 only) that are completely unreachable by any player or coach -- independently re-confirmed this session via a full, non-scoped repo grep for every runtime load mechanism the app actually uses. This is 280 questions of existing, non-live inventory, not a content gap to author into -- surfacing it here so it isn't lost, not as a new-authoring brief.",
+      "recommendedShape": "Codex/Thomas decision, not a content decision: either wire src/data/povQuestions.json into a live route (after reviewing whether its content still matches current schema/standards), or formally retire the file. No new authoring until that decision is made.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 3; independently re-verified this session."
+    },
+    {
+      "rank": 11,
+      "id": "brief-u7-rink-vocabulary-label",
+      "type": "new-content",
+      "ageBand": "U7",
+      "domain": "rink-vocabulary",
+      "confidence": "low",
+      "evidenceGapDescription": "Carried forward from docs/factory/curriculum-map backlogCandidates and prior-return/curriculum-gap-plan.json rank 2. Task B's own matrix explicitly discloses this was NOT independently re-verified in its pass; this session did not re-verify it either given time budget. Included at low confidence, honestly labeled, rather than silently dropped or silently upgraded.",
+      "recommendedShape": "2 new U7 scenes (4 questions) using the existing 'choice' type identifying a rink landmark, per START-HERE.md's own U7/U9 explore-the-rink-basics guidance.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 5 (carried forward, not independently re-verified)."
+    },
+    {
+      "rank": 12,
+      "id": "brief-u9-receive-on-the-move",
+      "type": "new-content",
+      "ageBand": "U9",
+      "domain": "puck-management",
+      "confidence": "low",
+      "evidenceGapDescription": "Carried forward, not independently re-verified this pass (same caveat as rank 11). Somewhat corroborated in spirit by this session's own verified draft26-u9-receive-001-q1 spot-check, which confirms 'Moving Passing and Receiving' is a real, named U9 Hockey Canada skill -- but that specific gap is already covered by an existing Task C draft, so this backlog item likely needs re-scoping to a distinct scene, not a duplicate.",
+      "recommendedShape": "2 new U9 scenes (4 questions) freezing a receiver just before the puck arrives -- check first against draft26-u9-receive-001-q1 and draft26-u9-receive-002-q1 to avoid duplicating what Task C already drafted.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 6 (carried forward, not independently re-verified)."
+    },
+    {
+      "rank": 13,
+      "id": "brief-u13-coverage-match",
+      "type": "new-content",
+      "ageBand": "U13",
+      "domain": "defensive-play",
+      "confidence": "low",
+      "evidenceGapDescription": "Carried forward, not independently re-verified this pass (same caveat as rank 11).",
+      "recommendedShape": "2 new U13 scenes (4 questions) with an explicit mid-scene coverage handoff/switch cue.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 7 (carried forward, not independently re-verified)."
+    },
+    {
+      "rank": 14,
+      "id": "brief-u15-u13-line-distance-audit-before-authoring",
+      "type": "qa-prerequisite-not-content",
+      "ageBand": "U15 / U11 / U13",
+      "domain": "cross-cutting geometry QA",
+      "confidence": "medium",
+      "evidenceGapDescription": "This session's own re-analysis of Task A's geometry sample found that Task A checked only 2 of 23 identified 'distance from a defender to a passing line' candidate questions across the reviewed 60, and zero of the 10 such candidates at U15 specifically (the largest concentration of any age band). This is not a content gap, but it is a proven, evidenced hole in QA coverage that should be closed before treating any U15/U11/U13 passing-lane content as geometry-verified.",
+      "recommendedShape": "Not a content brief. Run the same finite-segment-vs-infinite-line hand check already applied to the 4 Task-A-checked questions against at least the 10 identified U15 candidates (exp26-u15-002-q7, u15-007-q5, u15-009-q5, u15-015-q7, exp26b-u15-002-q2, u15-005-q2, u15-007-q5, u15-014-q2, u15-014-q5, u15-015-q5) before authoring more content in this pattern at that age.",
+      "sourceOfGap": "This session's independent Task A geometry-sample representativeness analysis."
+    },
+    {
+      "rank": 15,
+      "id": "brief-goalie-observation-track-source-first",
+      "type": "research-prerequisite-not-content",
+      "ageBand": "U9 / U11 / U13 / U15 / U18",
+      "domain": "goaltending",
+      "confidence": "low",
+      "evidenceGapDescription": "Carried forward, lowest confidence by design -- needs a goaltending-specific primary source review before any scene is authored. Not independently re-verified this pass.",
+      "recommendedShape": "Do not draft content yet. Identify and vet a specific reviewed goaltending source (Hockey Canada or USA Hockey goaltending-specific material) first, following the same primary-source discipline Task C used for its 10 drafts.",
+      "sourceOfGap": "Task B curriculum-matrix.json gapBacklog rank 8 (carried forward, not independently re-verified)."
+    }
+  ],
+  "explicitlyExcludedFromQueue": [
+    "The 10 drafts Task C already produced (draft26-*) -- these already exist as provisional drafts, not a 'next' authoring need. See draft-revisions.json.",
+    "contextZone and pov-questions conceptId unknown/unmapped resolution -- these are matrix-tooling/mapping fixes, not content-authoring briefs; documented in adversarial-cross-check.json's unknownMappingResolutions instead.",
+    "Any resumption of the paused Hockey Authority qualification/calibration stream, 3D/animation/first-person work, or mastery/progression-lock mechanics -- explicitly out of scope per START-HERE.md."
+  ]
+}

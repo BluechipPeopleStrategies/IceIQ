@@ -1,0 +1,463 @@
+[
+  {
+    "scene": {
+      "id": "exp26b-u11-021",
+      "ageBand": "U11",
+      "objective": "Read the defender and teammate before continuing a two-on-one carry.",
+      "briefing": "Navy attacks the right net (+x). YOU have the puck and F2 is across the middle. Gold D1 is farther toward the right goal line than both navy skaters, with a lateral position between your lanes. Recheck the defender and available space before carrying, passing or shooting.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": -5,
+            "facing": -0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 2,
+            "facing": 2.65
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "cues": [
+        "D1 is the only gold skater shown, closer to the right goal line than both attackers.",
+        "F2 is across the middle of the rink.",
+        "The next choice depends on D1 and the available lanes."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-021-q5",
+      "type": "choice",
+      "prompt": "YOU are comparing the cross-ice pass and the shot. Which direct line currently stays farther from D1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The line from the puck to F2"
+        },
+        {
+          "id": "b",
+          "text": "The line from the puck to the net"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u13-009",
+      "ageBand": "U13",
+      "objective": "Use timing to remain available when an entry slows.",
+      "briefing": "F1 has slowed in a wide attacking-zone lane to protect navy possession. YOU are arriving through the neutral zone. The exercise asks YOU to remain a passing option rather than overtake F1 immediately. Navy attacks the right net and defends the left net.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 0,
+            "facing": 0.7853981633974483
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 9,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 7,
+            "facing": 2.5535900500422257
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 22,
+            "y": -3,
+            "facing": 1.892546881191539
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 4,
+            "y": -5,
+            "facing": 0.7853981633974483
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "cues": [
+        "F1 has slowed and still owns the puck.",
+        "Arrival timing depends on current pressure and lane access."
+      ]
+    },
+    "question": {
+      "id": "exp26-u13-009-q2",
+      "type": "multi",
+      "prompt": "Which two visible relationships help YOU judge how to arrive in support of F1\u2019s delay?",
+      "options": [
+        {
+          "id": "a",
+          "text": "YOU are still behind F1 toward Navy\u2019s end"
+        },
+        {
+          "id": "b",
+          "text": "Gold 1 is close to F1 on the side nearer the middle"
+        },
+        {
+          "id": "c",
+          "text": "D1 is farther toward the attacking net than F1"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u13-011",
+      "ageBand": "U13",
+      "objective": "Compare the current shooting lane with another angle.",
+      "briefing": "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": -8,
+            "facing": 1.695151321341658
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": 6,
+            "facing": -2.642245931909663
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "cues": [
+        "Gold 1 shares the centre lane between the puck and the attacking net.",
+        "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two stated changes would directly change the position from which Navy could next shoot?",
+      "options": [
+        {
+          "id": "a",
+          "text": "YOU carry the puck to a different position"
+        },
+        {
+          "id": "b",
+          "text": "D2 receives a pass and controls the puck at D2\u2019s position"
+        },
+        {
+          "id": "c",
+          "text": "D2 moves while YOU keep the puck at its current spot"
+        }
+      ],
+      "basis": "coaching",
+      "id": "exp26-u13-011-q8"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u13-013",
+      "ageBand": "U13",
+      "objective": "Notice which side of the carrier is pressured.",
+      "briefing": "YOU control the puck near the puck-side boards. Gold 1 approaches from the middle toward YOU. This exercise explores a protective turn while keeping the puck available; no body check is required. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": -9,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -3,
+            "facing": -2.158798930342464
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -5,
+            "facing": -1.8157749899217608
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": 1,
+            "facing": -2.3036114285814033
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "cues": [
+        "Gold 1 is nearer the middle than YOU.",
+        "The briefing states that Gold 1 approaches; the still picture does not establish speed."
+      ]
+    },
+    "question": {
+      "id": "exp26-u13-013-q2",
+      "type": "multi",
+      "prompt": "Which two current relationships belong in YOUR protection-and-outlet read?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gold 1 is closer to the puck than Gold 2"
+        },
+        {
+          "id": "b",
+          "text": "F2 is farther up ice and nearer the middle than YOU"
+        },
+        {
+          "id": "c",
+          "text": "Gold 2 is closer to YOU than F2 is"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u13-013",
+      "ageBand": "U13",
+      "objective": "Notice which side of the carrier is pressured.",
+      "briefing": "YOU control the puck near the puck-side boards. Gold 1 approaches from the middle toward YOU. This exercise explores a protective turn while keeping the puck available; no body check is required. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": -9,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": -3,
+            "facing": -2.158798930342464
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -5,
+            "facing": -1.8157749899217608
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": 1,
+            "facing": -2.3036114285814033
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "cues": [
+        "Gold 1 is nearer the middle than YOU.",
+        "The briefing states that Gold 1 approaches; the still picture does not establish speed."
+      ]
+    },
+    "question": {
+      "id": "exp26-u13-013-q5",
+      "type": "choice",
+      "prompt": "Before using F2 as an outlet, which opponent is nearer the direct line from YOUR puck to F2 in this view?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gold 1"
+        },
+        {
+          "id": "b",
+          "text": "Gold 2"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u13-014",
+      "ageBand": "U13",
+      "objective": "Read a defender\u2019s space and support against an approaching carrier.",
+      "briefing": "Gold 1 carries toward your Navy net. YOU are the defender between Gold 1 and that net. C is recovering through the middle; no closing speed is specified. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -9,
+            "y": 0,
+            "facing": 0.14189705460416394
+          },
+          {
+            "id": "home-skater-2",
+            "label": "C",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": -4,
+            "facing": 1.7681918866447774
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 1,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 7,
+            "facing": -2.356194490192345
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "cues": [
+        "YOU are closer to Navy\u2019s net than Gold 1 and are the closest shown defender to that net.",
+        "Gold 1 carries toward your Navy net. YOU are the defender between Gold 1 and that net. C is recovering through the middle; no closing speed is specified."
+      ]
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two positions should YOU account for before deciding whether recovering help changes your gap?",
+      "options": [
+        {
+          "id": "a",
+          "text": "C is still farther from Navy\u2019s net than Gold 1"
+        },
+        {
+          "id": "b",
+          "text": "Gold 2 is a separate attacker on the other side of the middle from C"
+        },
+        {
+          "id": "c",
+          "text": "Gold 2 is nearer Navy\u2019s net than Gold 1"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26-u13-014-q8"
+    }
+  }
+]

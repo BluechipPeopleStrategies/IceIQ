@@ -1,0 +1,155 @@
+{
+  "scenarioId": "exp26-u13-011",
+  "questionId": "exp26-u13-011-q5",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "status": "draft",
+  "before": {
+    "id": "exp26-u13-011-q5",
+    "type": "choice",
+    "prompt": "Suppose Gold 1 follows your lateral move. What deserves another look?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The original shot as though Gold 1 had stayed still"
+      },
+      {
+        "id": "b",
+        "text": "A shot without checking the blocker"
+      },
+      {
+        "id": "c",
+        "text": "A pass to D2 or another change of angle"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "A moving defender can close the new lane, so alternatives remain relevant.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-011-q5",
+    "type": "choice",
+    "prompt": "YOU want to explore a different shooting angle while moving away from the side where F1 is waiting. Which short carry fits that plan in this view?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Carry sideways toward F1’s side"
+      },
+      {
+        "id": "b",
+        "text": "Carry straight toward Gold 1"
+      },
+      {
+        "id": "c",
+        "text": "Carry sideways toward D2’s side"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "A sideways carry toward D2’s side moves the puck away from F1’s side and changes the shot line. The opposite sideways carry also changes the shot line but heads toward F1’s side. Carrying straight toward Gold 1 keeps the same centre alignment of the players. Gold 1 can adjust: recheck before shooting. Passing, protecting the puck or changing direction may become preferable.",
+    "basis": "coaching"
+  },
+  "beforeHash": "0f227ae5b386c1f54709c08870b57dc7ce18ceb5359ae7df88bd9f18ffac5a04",
+  "afterHash": "d2a23e78a517ea69b2a05f04c9b7b25cc3613d440086ba81e6e16a70fe92d716",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "Sideways positive-y carry changes shot angle but goes toward F1 side."
+    },
+    {
+      "optionId": "b",
+      "reason": "Advance toward Gold 1 may draw pressure but keeps actor centre y=0 alignment; no lateral change."
+    },
+    {
+      "optionId": "c",
+      "reason": "D2 negative-y side is opposite F1 positive-y side. Carried puck must move with YOU; a changed line is not reach clearance."
+    }
+  ],
+  "limitations": [
+    "Advisory author; not reviewed, approved or applied.",
+    "No motion, reach, timing, gaze, collision or completed pass simulated.",
+    "Render/mobile legibility and U13 challenge require independent assessment.",
+    "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+    "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author.",
+    "The first one-metre D2-side carry decreases blocker point clearance from 0.430 m to 0.185 m due to carried-puck offset. This candidate only tests moving away from F1 with a different angle, not a more open shot. Independent reviewer should assess whether the constrained goal is useful hockey teaching."
+  ],
+  "geometry": {
+    "units": "metres; source x/y; angle in degrees",
+    "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+    "actors": {
+      "YOU": [
+        12,
+        0
+      ],
+      "D2": [
+        13,
+        -8
+      ],
+      "F1": [
+        23,
+        6
+      ],
+      "A1": [
+        18,
+        0
+      ],
+      "G": [
+        26,
+        0
+      ]
+    },
+    "renderedPuck": [
+      13,
+      0.7
+    ],
+    "ownerId": "home-skater-1",
+    "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+    "before": {
+      "Gold1GapToGoalieLocation": 0.4301460975424361,
+      "distanceF1": 12.529964086141668
+    },
+    "options": {
+      "F1side": {
+        "trialCarrier": [
+          12,
+          1
+        ],
+        "carriedPuck": [
+          13,
+          1.7
+        ],
+        "distanceF1": 12.08304597359457,
+        "Gold1GapToGoalieLocation": 1.037322033125315
+      },
+      "Gold1": {
+        "trialCarrier": [
+          13,
+          0
+        ],
+        "carriedPuck": [
+          14,
+          0.7
+        ],
+        "distanceF1": 11.6619037896906,
+        "Gold1GapToGoalieLocation": 0.4658747057632534
+      },
+      "D2side": {
+        "trialCarrier": [
+          12,
+          -1
+        ],
+        "carriedPuck": [
+          13,
+          -0.30000000000000004
+        ],
+        "distanceF1": 13.038404810405298,
+        "Gold1GapToGoalieLocation": 0.1845662462981158
+      }
+    },
+    "caution": "Straight advance changes exact puck-to-goalie line slightly because of stick offset, despite unchanged y=0 player alignment. Candidate explanation intentionally refers only to player alignment."
+  },
+  "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+}

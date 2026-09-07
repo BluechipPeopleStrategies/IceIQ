@@ -1,0 +1,1894 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "author": "/root/choice_review_strong",
+  "authorQualification": "advisory-only preserved",
+  "humanCoachApproval": false,
+  "applied": false,
+  "packet": "06",
+  "changes": [
+    {
+      "scenarioId": "exp26-u11-018",
+      "questionId": "exp26-u11-018-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-018-q5",
+        "type": "choice",
+        "prompt": "If D1 falls behind F1 and calls for help, how should YOU respond?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keep the original assignment without looking again."
+          },
+          {
+            "id": "b",
+            "text": "Recheck the immediate net threat and communicate who can cover F2."
+          },
+          {
+            "id": "c",
+            "text": "Automatically skate to the far corner."
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "New pressure information can change the responsibilities. Helping on the carrier may be needed, but F2’s route should remain part of the decision rather than disappearing from the read."
+      },
+      "after": {
+        "id": "exp26-u11-018-q5",
+        "type": "choice",
+        "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2 could have more room away from the two defenders"
+          },
+          {
+            "id": "b",
+            "text": "F1 could have more room away from the two defenders"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Putting both defenders near F1 can leave the separate runner F2 with less attention. Help may still be needed on F1, but communicate who will account for F2. Being close to the carrier does not prove that either defender wins the puck."
+      },
+      "beforeHash": "2410c936fdfe3a0542ccc352a6c4bead0a149f5e42bf86837eb7accfc35bc310",
+      "afterHash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F2 is the separate opponent away from the stated two-defender pressure; possible risk, not certain free pass."
+        },
+        {
+          "optionId": "b",
+          "reason": "Hypothetical explicitly keeps both defenders close toF1, so this is not the separation created by switching."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 13,
+          "y": 6.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "YOU",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -2,
+            "facing": 0.1
+          },
+          {
+            "id": "a2",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 3,
+            "facing": 2.5
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "F1",
+            "b": "YOU",
+            "distance": 8
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 5
+          },
+          {
+            "a": "F1",
+            "b": "G",
+            "distance": 15.231546211727817
+          },
+          {
+            "a": "F2",
+            "b": "YOU",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "F2",
+            "b": "G",
+            "distance": 9.486832980505138
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "YOU",
+            "b": "G",
+            "distance": 14.142135623730951
+          },
+          {
+            "a": "D1",
+            "b": "G",
+            "distance": 10.44030650891055
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F2",
+            "distance": 10.492378186092987,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 4.241173851222982
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 1.3628940690446885
+              }
+            ]
+          },
+          {
+            "receiver": "YOU",
+            "distance": 8.75728268357257,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.40288204420997
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 4.763402145525822,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.082762530298218
+              },
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 6.403124237432848
+              }
+            ]
+          },
+          {
+            "receiver": "G",
+            "distance": 14.624978632463023,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.78975350976473
+              },
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 8.191464959414045
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 1.9145327117161377
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Compares consequences of a defined defensive allocation, retaining flexible help rather than fixed assignment or random far-corner action.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-018-q1",
+          "prompt": "Who is already assigned to the carrier in this practice rep?"
+        },
+        {
+          "id": "exp26-u11-018-q2",
+          "prompt": "Before choosing your backcheck route, what information belongs in the read?"
+        },
+        {
+          "id": "exp26-u11-018-q3",
+          "prompt": "Arrange this suggested backcheck check-in."
+        },
+        {
+          "id": "exp26-u11-018-q4",
+          "prompt": "Move YOU toward a useful defensive relationship with F2 and the right net. Multiple recovery spots may work."
+        },
+        {
+          "id": "exp26-u11-018-q6",
+          "prompt": "What would make your backcheck different from simply skating toward the puck?"
+        },
+        {
+          "id": "exp26-u11-018-q7",
+          "prompt": "What should YOU communicate on the backcheck?"
+        },
+        {
+          "id": "exp26-u11-018-q8",
+          "prompt": "Which two events can change your backcheck?"
+        },
+        {
+          "id": "exp26-u11-018-q9",
+          "prompt": "Move YOU between F2 and the right net."
+        },
+        {
+          "id": "exp26-u11-018-q10",
+          "prompt": "D1 calls for help after falling behind F1. How do you choose?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u11-020",
+      "questionId": "exp26-u11-020-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-020-q5",
+        "type": "choice",
+        "prompt": "If D1 turns away from D2 and carries down toward the corner, what should YOU do with the original approach?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Skate to D2’s old location without looking."
+          },
+          {
+            "id": "b",
+            "text": "Keep charging the exact original line."
+          },
+          {
+            "id": "c",
+            "text": "Recheck D1’s new route and adjust while keeping support in view."
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The carrier’s turn changes the useful angle. Depending on speed and team support, YOU might follow under control or let a teammate take over; the original point-pass cue is no longer the only cue."
+      },
+      "after": {
+        "id": "exp26-u11-020-q5",
+        "type": "choice",
+        "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1’s puck to D2 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F2 is closer to the illustrated outlet line than YOU. That is useful information to communicate while YOU assess D1’s approach angle. It does not prove F2 can intercept the pass or require a particular team system; the carrier and both support players can move."
+      },
+      "beforeHash": "68fabcc9fd8410bca336e587df655eb997c3c4d24d1f8379534ef72068bc8523",
+      "afterHash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F2(11,-2) lies nearer canonical D1-puck toD2(8,-7) segment."
+        },
+        {
+          "optionId": "b",
+          "reason": "YOU(14,6) is nearer carrier side but farther from that outlet segment; valid carrier pressure role."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "a1",
+          "x": 19,
+          "y": 6.3
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 6,
+            "facing": 0.15
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -2,
+            "facing": 0.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 7,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "D2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": -7,
+            "facing": 0.8
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 8.54400374531753
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "F2",
+            "b": "D2",
+            "distance": 5.8309518948453
+          },
+          {
+            "a": "D1",
+            "b": "D2",
+            "distance": 18.439088914585774
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 5.008991914547277,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8.54400374531753
+              },
+              {
+                "actor": "D2",
+                "team": "away",
+                "gap": 14.317821063276352
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 11.527792503337315,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.3918028962336444
+              },
+              {
+                "actor": "D2",
+                "team": "away",
+                "gap": 5.8309518948453
+              }
+            ]
+          },
+          {
+            "receiver": "D2",
+            "distance": 17.259490143106778,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.66175359040031
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 0.8748810002380482
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Adds teammate/outlet relationship without mandating a route after a turn; no inferred interception or role from F label.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-020-q1",
+          "prompt": "Which gold player is the possible outlet near the point, close to the blue line?"
+        },
+        {
+          "id": "exp26-u11-020-q2",
+          "prompt": "What should YOU check before accelerating at D1?"
+        },
+        {
+          "id": "exp26-u11-020-q3",
+          "prompt": "Arrange this suggested forecheck read."
+        },
+        {
+          "id": "exp26-u11-020-q4",
+          "prompt": "Move YOU to an example approach position between D1’s half-wall possession and D2’s point outlet."
+        },
+        {
+          "id": "exp26-u11-020-q6",
+          "prompt": "How does naming “half wall” and “point” help explain this forecheck?"
+        },
+        {
+          "id": "exp26-u11-020-q7",
+          "prompt": "What should YOU call before closing D1?"
+        },
+        {
+          "id": "exp26-u11-020-q8",
+          "prompt": "Which lane checks keep this forecheck approach honest?"
+        },
+        {
+          "id": "exp26-u11-020-q9",
+          "prompt": "Move YOU toward D1 while keeping D2 visible."
+        },
+        {
+          "id": "exp26-u11-020-q10",
+          "prompt": "D1 turns away from D2. How should your approach change?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u11-002-q2",
+        "type": "multi",
+        "prompt": "Which two observations shape a useful receiving spot?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 can close the inside shoulder"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 can reach the new spot cleanly"
+          },
+          {
+            "id": "c",
+            "text": "Whether F2 is up ice regardless of the lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open."
+      },
+      "after": {
+        "id": "exp26b-u11-002-q2",
+        "type": "multi",
+        "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 is behind YOU toward Navy’s defending end"
+          },
+          {
+            "id": "b",
+            "text": "D1 is ahead of YOU and nearer the middle"
+          },
+          {
+            "id": "c",
+            "text": "F2 is behind YOU on the same up-ice side as F1"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available."
+      },
+      "beforeHash": "6226023c8e8f73fe8b1b9dc61141c903f9c00df00a07e43b4c053ae38b7899e3",
+      "afterHash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F1x-14 versusYOU-7 is farther towarddefendedleftend."
+        },
+        {
+          "optionId": "b",
+          "reason": "D1x-5 is ahead and|y|1<YOU4 is nearer middle."
+        },
+        {
+          "optionId": "c",
+          "reason": "F2x2 is ahead, opposite longitudinal relationship fromF1; genuine alternate spatial account but false in frame."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h2",
+          "x": -13,
+          "y": 1.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": 4,
+            "facing": 2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": 7,
+            "facing": 0.2
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": 1,
+            "facing": 3
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 9.486832980505138
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 3.6055512754639896
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 17.08800749063506
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 9
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 9.219544457292887
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 6.4257295305669375,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.486832980505138
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.6055512754639896
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 15.908802594790094,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 0.16971736143637928
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.325203118512766
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 8.030566605165541,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 2.814247251926519
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.219544457292887
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Three matched visible relationships replace disqualifying a legitimate F2 cue via regardless wording.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u11-002-q1",
+          "prompt": "Who owns the puck before F1 releases it?"
+        },
+        {
+          "id": "exp26b-u11-002-q3",
+          "prompt": "Arrange this receiving decision."
+        },
+        {
+          "id": "exp26b-u11-002-q4",
+          "prompt": "Move YOU to a receiving point with more separation from D1 and a visible lane from F1."
+        },
+        {
+          "id": "exp26b-u11-002-q5",
+          "prompt": "D1 steps into your inside shoulder as F1 releases. Which reception fits the changed cue?"
+        },
+        {
+          "id": "exp26b-u11-002-q6",
+          "prompt": "Why can a wider receiving angle help here, and what would make you change it?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u11-004",
+      "questionId": "exp26b-u11-004-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Adjust support relative to F2 and call the available lane"
+          },
+          {
+            "id": "b",
+            "text": "Follow F2’s route without checking D1’s new lane"
+          },
+          {
+            "id": "c",
+            "text": "Hold the old return point without checking F2’s route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Support follows the actual carrier. Update F2’s route and D1’s lane instead of chasing blindly or holding the old return point."
+      },
+      "after": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line from F2’s puck to YOU"
+          },
+          {
+            "id": "b",
+            "text": "The line from F2’s puck to F1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves."
+      },
+      "beforeHash": "cebce1ea791f3100a5f505fc429d5cb3fa4079c898cf0559cf4f72dd2f675018",
+      "afterHash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D1 is near canonical F2-puck toYOU segment, matching shaded old return picture."
+        },
+        {
+          "optionId": "b",
+          "reason": "F1 is opposite-side support with greater D1 segment separation; actual same-team receiver."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h2",
+          "x": 17.8409980462847,
+          "y": -0.11528406471606967
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 0.2
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -6,
+            "facing": 0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 1,
+            "facing": 2.8
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 10
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 4.242640687119286
+          },
+          {
+            "a": "F2",
+            "b": "F1",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 2.8284271247461903
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 7.615773105863909
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 7.145125688888033,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.174800977075199
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 0.7245697514820884
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 8.291389498490968,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 7.044655238241746
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 2.802044038863387
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 3.052069534595023,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.242640687119286
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.615773105863909
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Compares the real alternate teammate rather than forcing follower/holder behavior after unspecified carrier motion.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u11-004-q1",
+          "prompt": "What changed when the pass reached F2?"
+        },
+        {
+          "id": "exp26b-u11-004-q2",
+          "prompt": "Which two details should shape your next support spot?"
+        },
+        {
+          "id": "exp26b-u11-004-q3",
+          "prompt": "Arrange this post-pass support read."
+        },
+        {
+          "id": "exp26b-u11-004-q4",
+          "prompt": "Move YOU toward the side boards to offer a new angle to F2."
+        },
+        {
+          "id": "exp26b-u11-004-q6",
+          "prompt": "What can your support accomplish when F2 keeps the puck?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u11-018",
+      "version": 2,
+      "ageBand": "U11",
+      "title": "Backcheck the uncovered runner",
+      "family": "backcheck-assignment",
+      "topic": "Backchecking",
+      "objective": "Separate the carrier’s pressure from a second attacker’s route.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are gold, returning toward the right net. The coach has assigned gold D1 to the navy puck carrier F1 for this rep. Navy F2 is moving through the other side of the middle; this movement is stated rather than animated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "YOU",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -2,
+            "facing": 0.1
+          },
+          {
+            "id": "a2",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 3,
+            "facing": 2.5
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "a1",
+      "cues": [
+        "D1 has the carrier assignment for this rep.",
+        "F2 is a separate navy runner.",
+        "YOU defend the right net."
+      ],
+      "tags": [
+        "backcheck-assignment",
+        "backchecking",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "usah-skill-progressions-2018",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+          "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. The manual names backchecking and defensive positioning. This two-defender assignment is an original drill constraint, not a universal system. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-018-q1",
+          "type": "choice",
+          "prompt": "Who is already assigned to the carrier in this practice rep?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold D1"
+            },
+            {
+              "id": "b",
+              "text": "Gold YOU"
+            },
+            {
+              "id": "c",
+              "text": "Navy F2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The briefing explicitly assigns gold D1 to navy F1, who owns the puck. That assignment creates a separate support decision for YOU."
+        },
+        {
+          "id": "exp26-u11-018-q2",
+          "type": "multi",
+          "prompt": "Before choosing your backcheck route, what information belongs in the read?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether F2 can receive toward the middle"
+            },
+            {
+              "id": "b",
+              "text": "Whether D1 still has pressure on F1"
+            },
+            {
+              "id": "c",
+              "text": "Whether YOU can see both the runner and puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "These three cues connect your responsibility to the live play. The initial assignment may need to change if D1 loses the carrier."
+        },
+        {
+          "id": "exp26-u11-018-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested backcheck check-in.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Identify who is pressuring the carrier."
+            },
+            {
+              "id": "b",
+              "text": "Find the separate runner and choose an inside recovery route."
+            },
+            {
+              "id": "c",
+              "text": "Keep checking for a pass or a changed assignment."
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The routine helps avoid two defenders following the puck while another attacker is available. It is not a command to ignore a reachable puck."
+        },
+        {
+          "id": "exp26-u11-018-q4",
+          "type": "position",
+          "prompt": "Move YOU toward a useful defensive relationship with F2 and the right net. Multiple recovery spots may work.",
+          "actorId": "a1",
+          "reference": {
+            "x": 19,
+            "y": -2
+          },
+          "basis": "coaching",
+          "explanation": "The reference places YOU nearer the right net than F2 and close to the runner’s route. This illustrates a goal-side relationship; it does not prove interception timing or prescribe a fixed gap."
+        },
+        {
+          "id": "exp26-u11-018-q5",
+          "type": "choice",
+          "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 could have more room away from the two defenders"
+            },
+            {
+              "id": "b",
+              "text": "F1 could have more room away from the two defenders"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Putting both defenders near F1 can leave the separate runner F2 with less attention. Help may still be needed on F1, but communicate who will account for F2. Being close to the carrier does not prove that either defender wins the puck."
+        },
+        {
+          "id": "exp26-u11-018-q6",
+          "type": "explain",
+          "prompt": "What would make your backcheck different from simply skating toward the puck?",
+          "basis": "coaching",
+          "explanation": "Describe the teammate already applying pressure, the uncovered runner, and your route toward the defended net. A strong explanation also states what new cue would make you switch responsibilities."
+        },
+        {
+          "id": "exp26-u11-018-q7",
+          "type": "choice",
+          "prompt": "What should YOU communicate on the backcheck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 has F1; I am tracking F2 toward the right net"
+            },
+            {
+              "id": "b",
+              "text": "I am chasing the puck only"
+            },
+            {
+              "id": "c",
+              "text": "F2 does not receive"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call identifies the uncovered runner and the teammate pressure."
+        },
+        {
+          "id": "exp26-u11-018-q8",
+          "type": "multi",
+          "prompt": "Which two events can change your backcheck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 cuts toward the net"
+            },
+            {
+              "id": "b",
+              "text": "D1 loses contact with F1"
+            },
+            {
+              "id": "c",
+              "text": "The puck stays with F1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The runner route and teammate pressure determine whether the backcheck job shifts."
+        },
+        {
+          "id": "exp26-u11-018-q9",
+          "type": "position",
+          "prompt": "Move YOU between F2 and the right net.",
+          "actorId": "a1",
+          "reference": {
+            "x": 19,
+            "y": -1.6
+          },
+          "basis": "coaching",
+          "explanation": "This point places YOU on the defended net-side of F2 and keeps F1 visible; the recovery route remains conditional on F2’s movement."
+        },
+        {
+          "id": "exp26-u11-018-q10",
+          "type": "explain",
+          "prompt": "D1 calls for help after falling behind F1. How do you choose?",
+          "basis": "coaching",
+          "explanation": "Re-scan F1 and F2, then support the more dangerous reachable lane without losing sight of the second attacker."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-020",
+      "version": 2,
+      "ageBand": "U11",
+      "title": "Forecheck with the outlet in view",
+      "family": "forecheck-outlet",
+      "topic": "Angling",
+      "objective": "Use a carrier-and-outlet read to choose an approach instead of following the puck alone.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are navy, approaching gold D1 near the half wall in the right end. Gold D2 waits near the point on the opposite side, just inside the blue line. Gold is trying to leave this end toward the left. The coach asks for a controlled, no-contact approach.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 6,
+            "facing": 0.15
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -2,
+            "facing": 0.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 7,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "D2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": -7,
+            "facing": 0.8
+          }
+        ],
+        "puck": {
+          "owner": "a1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "Gold D1 owns the puck near the half wall.",
+        "Gold D2 is a possible outlet near the opposite point.",
+        "YOU approach from inside the rink."
+      ],
+      "tags": [
+        "forecheck-outlet",
+        "angling",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-angling-2024",
+          "title": "7 Principles for Coaches: Angling",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-angling-2024-ncw",
+          "section": "Limiting Opponent Options; Anticipation & Body Positioning",
+          "use": "Supports steering through position; no fixed distance or guaranteed turnover."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. Angling principles support considering options and body position. This authored outlet and route are illustrative; a line on the board is not a measured blocked pass. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-020-q1",
+          "type": "choice",
+          "prompt": "Which gold player is the possible outlet near the point, close to the blue line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 with the puck at the half wall"
+            },
+            {
+              "id": "b",
+              "text": "D2 on the opposite side"
+            },
+            {
+              "id": "c",
+              "text": "Navy F2 in the middle"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "D2 is at x = 8 near the right blue line and toward the opposite side. D1 is farther down the right end near the half wall."
+        },
+        {
+          "id": "exp26-u11-020-q2",
+          "type": "multi",
+          "prompt": "What should YOU check before accelerating at D1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1’s current puck position and body direction"
+            },
+            {
+              "id": "b",
+              "text": "The passing route toward D2 at the point"
+            },
+            {
+              "id": "c",
+              "text": "Where navy F2 could support the forecheck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "A useful approach considers the carrier’s exit options and your teammate. Looking only at D1’s jersey can miss a pass toward the point."
+        },
+        {
+          "id": "exp26-u11-020-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested forecheck read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate the carrier and the likely outlet."
+            },
+            {
+              "id": "b",
+              "text": "Choose an approach that considers the inside passing route."
+            },
+            {
+              "id": "c",
+              "text": "Adjust as the carrier turns or moves the puck."
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The approach should respond to what D1 can do. This routine does not guarantee that YOU can close both the carrier and the point outlet."
+        },
+        {
+          "id": "exp26-u11-020-q4",
+          "type": "position",
+          "prompt": "Move YOU to an example approach position between D1’s half-wall possession and D2’s point outlet.",
+          "actorId": "h1",
+          "reference": {
+            "x": 18,
+            "y": 5
+          },
+          "basis": "coaching",
+          "explanation": "The reference approaches D1 from inside and comes near the diagonal outlet route. It is a discussion point for steering and stick positioning, not proof that the pass is blocked or that contact is appropriate."
+        },
+        {
+          "id": "exp26-u11-020-q5",
+          "type": "choice",
+          "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1’s puck to D2 in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "F2 is closer to the illustrated outlet line than YOU. That is useful information to communicate while YOU assess D1’s approach angle. It does not prove F2 can intercept the pass or require a particular team system; the carrier and both support players can move."
+        },
+        {
+          "id": "exp26-u11-020-q6",
+          "type": "explain",
+          "prompt": "How does naming “half wall” and “point” help explain this forecheck?",
+          "basis": "coaching",
+          "explanation": "The names identify the carrier’s space and a possible outlet space. They make the discussion clearer, but the actual positions, passing lane and changing pressure still determine which approach is useful."
+        },
+        {
+          "id": "exp26-u11-020-q7",
+          "type": "choice",
+          "prompt": "What should YOU call before closing D1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D2 is the outlet near the blue line; I am reading D1's facing"
+            },
+            {
+              "id": "b",
+              "text": "D1 must pass to D2"
+            },
+            {
+              "id": "c",
+              "text": "The approach will intercept"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call connects the carrier and outlet without promising an interception."
+        },
+        {
+          "id": "exp26-u11-020-q8",
+          "type": "multi",
+          "prompt": "Which lane checks keep this forecheck approach honest?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1's current route"
+            },
+            {
+              "id": "b",
+              "text": "D2's outlet lane"
+            },
+            {
+              "id": "c",
+              "text": "That D1 must pass to D2"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Carrier direction and outlet movement change the approach; the outlet is a possibility, not a required pass."
+        },
+        {
+          "id": "exp26-u11-020-q9",
+          "type": "position",
+          "prompt": "Move YOU toward D1 while keeping D2 visible.",
+          "actorId": "h1",
+          "reference": {
+            "x": 16.2,
+            "y": 3.4
+          },
+          "basis": "coaching",
+          "explanation": "This point approaches the half wall from inside and preserves the outlet scan."
+        },
+        {
+          "id": "exp26-u11-020-q10",
+          "type": "explain",
+          "prompt": "D1 turns away from D2. How should your approach change?",
+          "basis": "coaching",
+          "explanation": "Match D1's new route, keep D2 in the scan, and avoid claiming a takeaway from the static picture."
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u11-002",
+      "version": 3,
+      "ageBand": "U11",
+      "title": "Receive on the far shoulder",
+      "family": "shoulder-reception",
+      "topic": "Receiving",
+      "objective": "Receive away from pressure while keeping both the passer and next option available.",
+      "briefing": "Navy attacks the right net (+x). F1 has the puck in the left defensive zone and is preparing a pass. YOU are near the left blue line, farther up ice than F1 and closer to the side boards than D1. F2 is farther up ice as a possible next option.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": 4,
+            "facing": 2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": 7,
+            "facing": 0.2
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": 1,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "F1 has the puck and is preparing a pass.",
+        "D1 is farther up ice than YOU and closer to the middle.",
+        "F2 is farther up ice as a possible next option."
+      ],
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-2024",
+          "title": "7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u11-002-q1",
+          "type": "choice",
+          "prompt": "Who owns the puck before F1 releases it?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            },
+            {
+              "id": "c",
+              "text": "D1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The puck owner is stated as F1; the receiving picture does not transfer possession early."
+        },
+        {
+          "id": "exp26b-u11-002-q2",
+          "type": "multi",
+          "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1 is behind YOU toward Navy’s defending end"
+            },
+            {
+              "id": "b",
+              "text": "D1 is ahead of YOU and nearer the middle"
+            },
+            {
+              "id": "c",
+              "text": "F2 is behind YOU on the same up-ice side as F1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available."
+        },
+        {
+          "id": "exp26b-u11-002-q3",
+          "type": "sequence",
+          "prompt": "Arrange this receiving decision.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan behind and inside"
+            },
+            {
+              "id": "b",
+              "text": "Present a reachable target to F1"
+            },
+            {
+              "id": "c",
+              "text": "Receive under control and choose the next option"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The scan informs the target, then the touch can be adjusted to the pressure and the available continuation."
+        },
+        {
+          "id": "exp26b-u11-002-q4",
+          "type": "position",
+          "prompt": "Move YOU to a receiving point with more separation from D1 and a visible lane from F1.",
+          "actorId": "h1",
+          "reference": {
+            "x": -6,
+            "y": 5.5
+          },
+          "basis": "coaching",
+          "explanation": "This point changes the angle from F1 and gives D1 a different relationship; the pass still needs to be reachable."
+        },
+        {
+          "id": "exp26b-u11-002-q5",
+          "type": "choice",
+          "prompt": "D1 steps into your inside shoulder as F1 releases. Which reception fits the changed cue?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Open your body to protect the puck and keep a return option"
+            },
+            {
+              "id": "b",
+              "text": "Turn fully up ice before the puck arrives"
+            },
+            {
+              "id": "c",
+              "text": "Demand the same forward turn even if the lane is covered"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "D1 has removed the easy inside turn, so a protected touch and a conditional return preserve more choices."
+        },
+        {
+          "id": "exp26b-u11-002-q6",
+          "type": "explain",
+          "prompt": "Why can a wider receiving angle help here, and what would make you change it?",
+          "basis": "coaching",
+          "explanation": "A wider angle can separate YOU from D1 while preserving F1's lane. Change it if D1 follows or F1 loses a clean route, then re-offer a reachable option."
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u11-004",
+      "version": 3,
+      "ageBand": "U11",
+      "title": "Support the carrier after a give-and-go look",
+      "family": "support-after-pass",
+      "topic": "Passing support",
+      "objective": "Keep supporting when the first pass changes the puck carrier and the return lane is shaded.",
+      "briefing": "Navy attacks the right net (+x). YOU have just passed to F2; D1 is on the direct return line between you. F1 is on the other side of the middle of the rink and may offer another option.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 0.2
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -6,
+            "facing": 0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 1,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "F2 now owns the puck.",
+        "D1 shades the old return line.",
+        "F1 is a visible alternate support player."
+      ],
+      "tags": [
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-u11-pathway-2022",
+          "title": "Hockey Canada U11 Player Pathway",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+          "section": "U11 Skills Matrix, printed page 22 (PDF page 22)",
+          "use": "Age-topic support only; no approval of these answers."
+        }
+      ],
+      "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+      "questions": [
+        {
+          "id": "exp26b-u11-004-q1",
+          "type": "choice",
+          "prompt": "What changed when the pass reached F2?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 became the puck carrier"
+            },
+            {
+              "id": "b",
+              "text": "YOU became the puck carrier again"
+            },
+            {
+              "id": "c",
+              "text": "D1 became a teammate"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The setup assigns the puck to F2, so your job is now support and scanning."
+        },
+        {
+          "id": "exp26b-u11-004-q2",
+          "type": "multi",
+          "prompt": "Which two details should shape your next support spot?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2's current puck position"
+            },
+            {
+              "id": "b",
+              "text": "D1's relationship to the old return line"
+            },
+            {
+              "id": "c",
+              "text": "Where the earlier pass started, without checking the new carrier"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "F2 and D1 help you judge whether to change your support angle. Recheck the available space; a return pass is only one possible continuation."
+        },
+        {
+          "id": "exp26b-u11-004-q3",
+          "type": "sequence",
+          "prompt": "Arrange this post-pass support read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find F2 and the shaded line"
+            },
+            {
+              "id": "b",
+              "text": "Look for a new support angle with separation"
+            },
+            {
+              "id": "c",
+              "text": "Re-check F2, D1 and F1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Read the carrier and coverage before changing your angle, then recheck. F1 may offer another option if a lane is available."
+        },
+        {
+          "id": "exp26b-u11-004-q4",
+          "type": "position",
+          "prompt": "Move YOU toward the side boards to offer a new angle to F2.",
+          "actorId": "h1",
+          "reference": {
+            "x": 12,
+            "y": 6.2
+          },
+          "basis": "coaching",
+          "explanation": "The example adds width and moves the direct return line away from D1. Recheck the passing lane and F1; the new angle does not guarantee an available pass."
+        },
+        {
+          "id": "exp26b-u11-004-q5",
+          "type": "choice",
+          "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line from F2’s puck to YOU"
+            },
+            {
+              "id": "b",
+              "text": "The line from F2’s puck to F1"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves."
+        },
+        {
+          "id": "exp26b-u11-004-q6",
+          "type": "explain",
+          "prompt": "What can your support accomplish when F2 keeps the puck?",
+          "basis": "coaching",
+          "explanation": "It can pull D1, offer a second lane, or protect F2's next option. Describe the named space and make the benefit conditional on D1's response."
+        }
+      ]
+    }
+  ]
+}

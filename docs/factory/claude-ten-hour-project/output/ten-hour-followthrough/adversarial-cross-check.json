@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-09-07",
+  "author": "Task E, this session, working solo (no sub-agents, no delegation) inside C:/Users/mtsli/IceIQ/.worktrees/claude-ten-hour-followthrough",
+  "method": "For each of A-D: raw evidence (source code, JSON data files, screenshots, live curl/WebFetch fetches, re-run test suites) was read and an independent conclusion formed BEFORE re-reading that task's own summary, then compared. Two prior-session artifacts already existed in task-e-evidence/ (task-b-independent-review.md, task-c-independent-review.md), produced earlier in this same Task E attempt before it stalled; their specific factual claims (line numbers, computed geometry, reproduced counts) were spot-verified against the actual source in this session before being relied on, rather than trusted at face value.",
+  "taskA": {
+    "originalClaims": [
+      "Mislabeled screenshot: exp26-u9-003-q3_phone-390x844_top.png actually displays a different question, exp26b-u9-003-q5 (visual-inspection-log.md, 'One confirmed defect').",
+      "Geometry check on 4 of 60 questions (finite-segment vs infinite-line distance), 0 discrepancies found (TASK-A-GEOMETRY-SUMMARY.md).",
+      "240 claims checked across 60 questions: 180 verified, 60 partial (screenshot-evidence, capped by design), 0 contradicted, 0 unavailable (TASK-A-SUMMARY.md).",
+      "Naming-convention drift in visual-01 (bare filenames vs later vNN_/full-visual-NN_ prefixes) -- flagged as cosmetic, not data-integrity.",
+      "Both reviewers missed 4/8 historical calibration cases each; 3 of those 4 overlap between them."
+    ],
+    "independentFindings": [
+      {
+        "claim": "Mislabeled screenshot (exp26-u9-003-q3_phone-390x844_top.png actually shows exp26b-u9-003-q5)",
+        "finding": "FALSE. Read all three exp26-u9-003-q3 screenshots directly (desktop-1365x900, phone-390x844_scene, phone-390x844_top) at C:/Users/mtsli/IceIQ/docs/factory/claude-project/claude-output/visual-review-60/visual-01/screenshots/. All three show 'U9 / Passing / exp26-u9-003', title 'Look beyond the nearest jersey', Question 3 of 9 highlighted, with content ('Which two observations explain why YOU should compare both teammate passes here?', options about Navy3/Gold1's passing line) that is internally consistent with exp26-u9-003-q3's own known prompt text -- not with exp26b-u9-003-q5 ('Imagine Gold 1 arrives beside the loose puck first...'), which I also read directly and confirmed shows genuinely different, correctly-filed content. Byte size of the _top file (193,494 bytes) matches exactly what visual-inspection-log.md itself cited, ruling out a wrong-file mixup on my end. The claimed content-swap defect does not exist; the file is correctly labeled.",
+        "evidence": [
+          "C:/Users/mtsli/IceIQ/docs/factory/claude-project/claude-output/visual-review-60/visual-01/screenshots/exp26-u9-003-q3_phone-390x844_top.png (read directly)",
+          "C:/Users/mtsli/IceIQ/docs/factory/claude-project/claude-output/visual-review-60/visual-01/screenshots/exp26-u9-003-q3_phone-390x844_scene.png (read directly)",
+          "C:/Users/mtsli/IceIQ/docs/factory/claude-project/claude-output/visual-review-60/visual-01/screenshots/exp26-u9-003-q3_desktop-1365x900.png (read directly)",
+          "C:/Users/mtsli/IceIQ/docs/factory/claude-project/claude-output/visual-review-60/visual-01/screenshots/visual-01_exp26b-u9-003-q5_phone-390x844_scene.png (read directly, confirmed genuinely different content)"
+        ],
+        "verdict": "error-found"
+      },
+      {
+        "claim": "Naming-convention drift in visual-01 (bare filenames vs prefixed elsewhere) is real and cosmetic",
+        "finding": "CONFIRMED. The three 'no-prefix' files and 8 'full-visual-NN_' files I read are exactly the exp26-u9-003-q3 set (no prefix) versus the visual-01_exp26-u9-007-q5 / visual-01_exp26b-u9-003-q5 sets (full prefix) -- a real, harmless filename-convention drift, distinct from the (refuted) content-mismatch claim that got attached to the same file in a later pass.",
+        "evidence": ["intake-verification.json duplicateScreenshotDetection.namingConventionObservation, cross-checked against actual filenames on disk"],
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "Geometry sample (4 of 60) adequately covers the finite-segment-vs-infinite-line bug class it was hunting for",
+        "finding": "UNDERSTATED / not representative. Classified all 60 reviewed questions' prompt+explanation text by geometry-claim type: 23 of 60 are genuine 'compare distance from a defender to a passing LINE' candidates (the exact bug class TASK-A-GEOMETRY-SUMMARY.md targeted), split U15:10, U11:6, U18:4, U13:2, U9:1. Task A's 4-question sample checked only 2 of these 23 candidates (both U18: exp26-u18-001-q5, exp26b-u18-001-q5), plus 2 simple point-to-point distance questions (U9, U13) that are not even in the target bug class. Zero U15 line-distance questions were checked despite U15 holding the largest concentration (10/23, 43%) of the exact candidate type. 8 additional angle/gap/cone-type questions and 5 board/wall-distance questions (other geometry-sensitive classes referenced elsewhere in this same project, e.g. Task C's wall-distance audits) were not sampled at all. TASK-A-GEOMETRY-SUMMARY.md itself is honest that this is 'a sample, not exhaustive' and states its negative result narrowly ('these four questions... does not clear the questions on coaching quality'), so this is not a false claim, but the practical coverage is much thinner than '4 checked, 0 found' suggests, and the highest-density age band for this bug class was never touched.",
+        "evidence": [
+          "Classification script run against /tmp/q60.json (extracted from all 60 questionIds in prior-return/all-60-summary.json, resolved against src/one-on-one/experimental-bank/*.json and experimental-expansion/*.json)",
+          "23 line-distance candidates identified: exp26-u11-013-q5, exp26-u11-020-q5, exp26-u13-013-q5, exp26-u13-023-q5, exp26-u15-002-q7, exp26-u15-007-q5, exp26-u15-009-q5, exp26-u15-015-q7, exp26-u18-001-q5, exp26-u18-002-q2, exp26-u18-009-q2, exp26b-u11-004-q5, exp26b-u11-011-q5, exp26b-u11-013-q5, exp26b-u11-021-q5, exp26b-u15-002-q2, exp26b-u15-005-q2, exp26b-u15-007-q5, exp26b-u15-014-q2, exp26b-u15-014-q5, exp26b-u15-015-q5, exp26b-u18-001-q5, exp26b-u9-014-q5",
+          "geometry-verification.json only covers exp26b-u9-010-q5, exp26b-u13-020-q5, exp26-u18-001-q5, exp26b-u18-001-q5"
+        ],
+        "verdict": "understated",
+        "recommendation": "Follow-up (QA, not authoring): run the same finite-segment-vs-infinite-line check against at minimum the 10 U15 candidates before any claim of general confidence in this bug class across ages."
+      },
+      {
+        "claim": "240/180/60/0/0 claim counts, calibration overlap (3/4 missed cases shared), duplicate-hash screenshot check",
+        "finding": "CONFIRMED. Re-read intake-verification.json directly: statusTotals reproduces exactly (240/180/60/0/0); calibrationSummary reproduces exactly (lead missed exp26-u11-006-q10/011-q8/012-q5/016-q1, second missed 006-q9 instead of 006-q10, 3 of 4 overlap); duplicateScreenshotDetection shows zero duplicate sha256 hashes across all 122 inventory entries.",
+        "evidence": ["intake-verification.json statusTotals, calibrationSummary, duplicateScreenshotDetection fields read directly"],
+        "verdict": "confirmed"
+      }
+    ]
+  },
+  "taskB": {
+    "originalClaims": [
+      "pov-questions (src/data/povQuestions.json, 280 questions) is completely unused/unreachable dead code.",
+      "U11 changed-cue reclassification: 53/400 genuine vs 14/400 naive Imagine/Suppose keyword count; disclosed as 'EXHAUSTIVE... 171 candidates found, every one read by hand'.",
+      "U15/U18 Skating & Movement domain: zero genuine content across every live catalog, despite ledger depth-R target.",
+      "unknown/unmapped cells reflect genuine absence of evidence (implicit framing; not directly quantified or root-caused in TASK-B-SUMMARY.md)."
+    ],
+    "independentFindings": [
+      {
+        "claim": "pov-questions is completely unused/unreachable dead code",
+        "finding": "CONFIRMED. Ran grep -rl \"povQuestions\" across the entire repo (not scoped to src/): every hit resolves to either Task B's own new tool (which reads the file to build the matrix, not a pre-existing consumer), scripts/archive/notion-sync/ (explicitly retired), _retired_* package.json script stubs, or docs that independently record the same dead-code fact on earlier dates (docs/manual-playtest/audits/2026-08-03-language-standards.md, docs/superpowers/specs/2026-06-11-rinkreads-coach-agents-design.md). Checked every runtime load mechanism the app actually uses (experimentalBank.js's two import.meta.glob patterns, qbLoader.js's seed glob, ScenarioPlayground.jsx's seed glob, PracticeLibrary.jsx's markdown glob) -- none match src/data/*.json.",
+        "evidence": ["grep -rl \"povQuestions\" . (repo-wide, non-extension-scoped)", "src/one-on-one/experimentalBank.js:3,6-7", "src/qbLoader.js:9", "src/scenario/ScenarioPlayground.jsx:14"],
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "U11 changed-cue 53/400 (vs naive 14/400), rule applied consistently",
+        "finding": "CONFIRMED on the headline numbers and rule-consistency; ERROR-FOUND on the '171 candidates, all hand-read' audit-trail claim. Wrote and ran an independent script importing the actual shipped hasNarratedStateChange/hasReadUpdateAsk functions from tools/lib/curriculum-changed-cue.mjs against the real 400 U11 prompts (composed from src/one-on-one/experimental-bank/u11.json + experimental-expansion/u11-*.json): change-marker matches=60, update-ask matches=51, union(either)=73, intersection(both)=38 (matches the disclosed autoGenuineCount), manual override entries=64, naive-anchored ('opens with' Imagine/Suppose)=14 (matches naiveImagineSupposeKeywordCount exactly), naive-anywhere (whole-word, any position)=15. There is no combination of the shipped detector logic that produces 171 -- the maximum reproducible candidate pool from the code actually in the repo is 73 (or 74 unioned with the override list). The final 53/400 is fully reproducible and I additionally spot-read 4 TRUE and verified 1 additional draft's geometry from Task C's overlapping U11 material; all classifications I checked matched the stated rule.",
+        "evidence": [
+          "Independent script (scratchpad/verify_u11.mjs) importing tools/lib/curriculum-changed-cue.mjs directly, run against real bank data: total prompts 400, change-marker 60, update-ask 51, union 73, intersection 38, manual overrides 64, naive-anchored 14, naive-anywhere 15",
+          "curriculum-matrix.json meta.u11ChangedCue.disclosure text: 'a two-pass regex swept all 400 U11 experimental-bank prompts for candidate hypothetical/state-change markers (171 candidates found)' -- not reproducible from any function actually shipped in tools/lib/curriculum-changed-cue.mjs"
+        ],
+        "verdict": "overstated",
+        "note": "Not edited in the deliverable file: it is genuinely unclear whether '171' reflects a real intermediate/broader regex pass that was later simplified into the shipped code (in which case the number could be accurate but undocumented as to method) or is simply wrong. Flagging rather than silently rewriting Task B's own methodology claim -- Codex/Thomas should decide whether to soften the 'EXHAUSTIVE' framing or supply the missing intermediate-pass evidence."
+      },
+      {
+        "claim": "U15/U18 Skating & Movement: zero genuine content, ledger targets depth R for both ages across all 4 skating-movement concepts",
+        "finding": "CONFIRMED on zero content (independently re-verified via curriculum-ledger.json + a manual text sweep of experimental-bank/legacy-bank/scenario-seeds for skate/edge/pivot/crossover/stride/agility terms, zero genuine hits). MINOR CORRECTION on the depth claim: read src/data/curriculum-ledger.json's nodes array directly -- 7 of the 8 (concept x age) combinations are depth 'R' (edges-balance, agility-mobility, backward-transitions at both U15 and U18, plus deception-with-feet at U18), but u15.deception-with-feet is depth 'M' (mastery), not 'R'. The 'all four concepts targeted at depth R for both ages' framing (repeated in task-e-evidence/task-b-independent-review.md) is very slightly imprecise; the substantive gap-severity conclusion (advanced-depth content expected, none exists) is unaffected since M is still well past the 'not expected yet' threshold.",
+        "evidence": ["src/data/curriculum-ledger.json nodes array, filtered for conceptId in the 4 skating-movement concepts and ageId in (U15,U18): u15.edges-balance=R, u18.edges-balance=R, u15.agility-mobility=R, u18.agility-mobility=R, u15.backward-transitions=R, u18.backward-transitions=R, u15.deception-with-feet=M, u18.deception-with-feet=R"],
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "unknown/unmapped cells (implicitly framed as genuine evidence absence)",
+        "finding": "UNDERSTATED. See unknownMappingResolutions section below for the full breakdown and the two fixes applied.",
+        "verdict": "understated"
+      }
+    ]
+  },
+  "taskC": {
+    "originalClaims": [
+      "All 10 drafts (curriculum-drafts.json's own totalDraftCount metadata claims 12, but the array has 10) were revised; none withdrawn.",
+      "3 of 10 had off-rink coordinates, fixed against NHL_200X85_PROFILE bounds.",
+      "6 sources verified + 2 exclusions justified, all with exact quotes."
+    ],
+    "independentFindings": [
+      {
+        "claim": "10-vs-12 count defect",
+        "finding": "CONFIRMED. Loaded prior-return/curriculum-drafts.json directly: totalDraftCount.questionDrafts=12, actual questionDrafts array length=10.",
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "Revised all 10, withdrew none -- plausibility and payload quality",
+        "finding": "CONFIRMED, with one disclosed-but-underweighted point. Spot-checked 6 of the 10 drafts' before/after payloads directly (u15-skate-001-q1, both u7-vocab drafts, both u11-cause-002 drafts via a prior pass in this same task; independently added u9-receive-001-q1 in this session). For u9-receive-001-q1: recomputed the perpendicular-foot geometry by hand from the stated coordinates (YOU[0,0], Gold1[10,3], F1[13,1]) -- t=133/109=1.22, clamps to t=1, closest point = Gold1, distance F1-to-Gold1 = sqrt(9+4) = 3.606m -- exactly matches the file's '3.61m' and 'clamps to t=1 / closest point is Gold1's own position' claims. Citation (hc-u9-skills 'Moving Passing and Receiving / Moving forehand pass / Moving backhand pass / Pass and Follow') independently re-fetched fresh via curl+browser-UA in this session and found verbatim on the live page. Of the two candidates most plausibly worth withdrawing instead of revising, draft26-u7-vocab-002-q1's position-to-choice type change is real and disclosed (lossOfDeliveryVariety field) but stated as a routine fix in TASK-C-SUMMARY.md's one-line summary rather than surfaced as a closer withdrawal call.",
+        "evidence": [
+          "draft-revisions.json drafts[u9-receive-001-q1].geometryAudit.passingSegmentCheck, independently recomputed by hand",
+          "Fresh curl+browser-UA fetch of https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/coaches/skills in this session, saved to scratchpad/u9skills-fresh.html, confirmed 'Moving Passing and Receiving Moving forehand pass Moving backhand pass Pass and Follow' present verbatim"
+        ],
+        "verdict": "mostly confirmed, one point understated (u7-vocab-002 delivery-variety loss undersold in the top-level summary)"
+      },
+      {
+        "claim": "Schema claims (position-type constraints, puck mandatory, 6-10 questions/>=4 types, explain has no grading) and affected-question closure",
+        "finding": "CONFIRMED against the actual source. Read src/one-on-one/experimentalBankCore.js directly: line 30 requires Number.isFinite(a.facing) (single static angle, matches the 'facing-is-single-static-angle' finding); line 36 requires 6-10 questions; line 52 requires q.basis==='coaching' to fail for position-type (position questions can never claim objective grading, confirming u7-vocab-002's original premise really was schema-impossible); line 55 requires >=4 distinct question types. All line numbers matched exactly what the underlying review (task-e-evidence/task-c-independent-review.md, produced earlier in this same Task E attempt) had cited, independently re-checked in this session with a fresh grep rather than trusted at face value.",
+        "evidence": ["src/one-on-one/experimentalBankCore.js lines 30, 36, 52, 55 (grepped and read directly in this session)"],
+        "verdict": "confirmed"
+      }
+    ]
+  },
+  "taskD": {
+    "originalClaims": [
+      ".gitignore gap for tmp/coaching-feedback/ confirmed and fixed.",
+      "Feedback flow tested at the HTTP/request level (not full browser, Playwright lock held by another session); 11/11 existing unit tests + 485 broader practice tests pass.",
+      "Double-submit: server allows duplicate entries (no dedup); left unfixed as an accepted, low-severity gap because the real UI's disabled-while-busy Send button blocks the click path."
+    ],
+    "independentFindings": [
+      {
+        "claim": ".gitignore fix actually works and doesn't affect tracked files",
+        "finding": "CONFIRMED, independently re-verified. Created tmp/coaching-feedback/test-receipt.json myself and ran git check-ignore -v: matched .gitignore:96 /tmp/coaching-feedback/ exactly as claimed. git status --short showed nothing for that path (correctly ignored). git log --all --oneline -- tmp/coaching-feedback/ returned empty (never committed). git ls-files tmp/ returned empty (no tracked file under tmp/ at all, so the new ignore rule cannot have hidden a previously-tracked file). Test artifact removed afterward (non-recursive rm + rmdir, no destructive commands used).",
+        "evidence": ["git check-ignore -v tmp/coaching-feedback/test-receipt.json -> '.gitignore:96:/tmp/coaching-feedback/\ttmp/coaching-feedback/test-receipt.json'", "git log --all --oneline -- tmp/coaching-feedback/ (empty)", "git ls-files tmp/ (empty)"],
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "Existing feedback unit tests pass (11/11)",
+        "finding": "CONFIRMED. Re-ran node --test tools/coaching-feedback-plugin.test.mjs tools/coaching-feedback-context.test.mjs tools/coaching-feedback-views.test.mjs myself: 11 tests, 11 pass, 0 fail.",
+        "evidence": ["node --test output: tests 11, pass 11, fail 0"],
+        "verdict": "confirmed"
+      },
+      {
+        "claim": "Double-submit left unfixed is an acceptable scope call",
+        "finding": "DEFENSIBLE BUT NOT CLEARLY WITHIN GATE D'S OWN LANGUAGE. Read task-d-evidence/feedback-e2e-test.mjs directly: the double-submit test really does fire two identical POSTs concurrently via Promise.all and both succeed with distinct IDs, which is a genuinely reproduced defect (not a hypothetical). The report's reasoning (real UI's disabled={busy||!note.trim()} Send button blocks the click path; only reachable via direct concurrent API calls) is honest and technically sound, and a server-side dedup add would not be a 'large UI overhaul' the assignment excludes -- it would be a small, low-risk addition to tools/coaching-feedback-plugin.mjs, which is dev-only and already excluded from production builds per the release-boundary check. START-HERE.md's own Gate D language is 'reproduced in-scope defects fixed and affected checks passing, OR exact external blockers documented' -- this is a reproduced, in-scope defect with no external blocker (unlike the Playwright browser lock, which is a genuine external blocker); leaving it unfixed is a judgment call about severity/reachability, not a blocked-dependency case. The call is reasonable and was disclosed plainly rather than hidden, but it sits closer to 'chose not to fix' than to the gate's literal 'or exact external blockers documented' escape hatch.",
+        "evidence": ["docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/task-d-evidence/feedback-e2e-test.mjs lines 70-74 (Promise.all double POST)", "feedback-flow-report.md row 12"],
+        "verdict": "understated",
+        "recommendation": "Not fixed in this pass (Task D's own remit, and re-opening another task's code decision without being asked risks scope creep) -- flagging for Codex/Thomas: a minimal fix (reject an identical {owner, scenarioId, questionId, note} submission within a short window, e.g. 2s) would close this cleanly without touching the UI."
+      }
+    ]
+  },
+  "sourceReceiptSpotChecks": {
+    "method": "WebFetch was attempted first on all URLs (matches Task C's own disclosed method); it returned HTTP 403 for hockeycanada.ca exactly as Task C's source-ledger.json predicted. Followed with curl using a browser User-Agent (same method Task C used), fetched fresh in this session (not reusing any cached file from an earlier pass), and grepped the raw extracted text for the exact quoted string.",
+    "checks": [
+      {
+        "sourceId": "hc-skating-pathway",
+        "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+        "webFetchResult": "HTTP 403 (confirms disclosed WebFetch limitation)",
+        "curlResult": "HTTP 200",
+        "quoteChecked": "\"Tactical play can then be incorporated, such as gap control, angling, reading and reacting\" and the Introduce/Develop/Refine staging language",
+        "verdict": "verified verbatim on the live page"
+      },
+      {
+        "sourceId": "hc-vision-scanning-2024",
+        "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "webFetchResult": "not attempted separately (same host, 403 expected and later confirmed via curl consistency)",
+        "curlResult": "HTTP 200",
+        "quoteChecked": "\"players should focus on two main sources of information: where their teammates are and where the opposition's pressure is coming from\"; also independently confirmed zero occurrences of 'suppose' or 'hypothetical' anywhere on the page, matching the source-ledger's own disclosed limitation that this source does not use hypothetical-defender framing",
+        "verdict": "verified verbatim on the live page; disclosed limitation also verified true"
+      },
+      {
+        "sourceId": "hc-u9-skills",
+        "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/coaches/skills",
+        "webFetchResult": "not attempted separately",
+        "curlResult": "HTTP 200",
+        "quoteChecked": "\"Moving Passing and Receiving Moving forehand pass Moving backhand pass Pass and Follow\" (cited in draft26-u9-receive-001-q1's sources)",
+        "verdict": "verified verbatim on the live page"
+      }
+    ],
+    "priorSessionChecksTakenOnFaithButLineNumberCorroborated": "task-e-evidence/task-c-independent-review.md additionally claims 3 more verified sources (hc-u11-skills, hc-u7-faq, hc-u7-cross-ice-rules) and 2 verified exclusions (hc-u9-half-ice-rules, hc-u15/u18-coaches-skills soft-404) via curl fetches saved in this session's own scratchpad directory before this Task E attempt stalled. Not independently re-fetched a second time in this pass given the 3 fresh fetches above already corroborate the method and this reviewer's general reliability (also cross-checked via exact source-code line numbers in the taskC section above), but flagged here as reused-not-refetched for full transparency."
+  },
+  "unknownMappingResolutions": {
+    "scale": "Far larger than the assignment's own framing ('likely dozens not thousands') anticipated: contextZone alone was unknown for 1246 of 2170 rows (57%) before this pass.",
+    "fixesApplied": [
+      {
+        "field": "format",
+        "catalog": "pov-questions",
+        "rowsAffected": 280,
+        "rootCause": "tools/build-full-curriculum-matrix.mjs line 318 read q.type, but the real src/data/povQuestions.json question objects use the field name 'format' (e.g. \"format\": \"Multiple Choice\") and have no q.type field at all -- verified directly against the source JSON (sample id Q-2v1-001-A).",
+        "fix": "Changed line 318 from `format: q.type || 'unknown'` to `format: q.format || 'unknown'`.",
+        "verification": "Added a regression test (loadPovQuestionRows: format is read from the real field name 'format'...) to tools/build-full-curriculum-matrix.test.mjs. Re-ran the full test suite (19/19 pass, up from 17/17). Regenerated curriculum-matrix.json/csv/report.html via `node tools/build-full-curriculum-matrix.mjs`. Confirmed format='unknown' count dropped from 280 to 0; pov-questions rows now show real values (Multiple Choice, True/False, Hotspot, Open Response)."
+      },
+      {
+        "field": "learningObjective / objectiveSource",
+        "catalog": "legacy-live-bank",
+        "rowsAffected": 262,
+        "rootCause": "tools/build-full-curriculum-matrix.mjs line 202-203 read q.concept (a field that does not exist on any src/data/bank.json row -- confirmed 0/262 have it), while a `concept` object resolved from the row's valid nodeId was already computed two lines earlier (line 174, used for domainId/conceptId) and sitting unused in scope. 262/262 legacy-bank rows have a nodeId that resolves to a real ledger concept.",
+        "fix": "Changed to `learningObjective: q.concept || concept?.name || 'unknown'` and `objectiveSource: q.concept ? 'authored-concept-label' : (concept ? 'ledger-concept-via-nodeId' : 'unknown')`.",
+        "verification": "Added a regression test (loadLegacyBankRows: learningObjective falls back to the ledger concept name resolved via nodeId...) covering both the fallback and the pre-existing authored-label case. Re-ran the full suite (19/19 pass). Regenerated the matrix outputs. Confirmed learningObjective='unknown' count dropped from 262 to 0; all 262 legacy-bank rows now show objectiveSource='ledger-concept-via-nodeId' with a real ledger concept name."
+      }
+    ],
+    "documentedNotForced": [
+      {
+        "field": "contextZone",
+        "catalog": "experimental-bank",
+        "rowsRemainingUnknown": 1114,
+        "evidence": "contextZoneForText() is only fed scenario.topic/family/tags (build-full-curriculum-matrix.mjs line 145), never scenario.briefing, a full prose scene description. Sampled 200 experimental-bank scenarios: 135 had no zone keyword in topic/family/tags, and of those, 62 (46%) had an unambiguous zone keyword in briefing text the matcher never sees (e.g. exp26-u7-004: 'YOU are near the side boards...' would resolve to wall-boards).",
+        "decisionNotToFix": "Not applied in this pass. Feeding briefing text into the zone matcher is a real, evidenced improvement but is a heuristic keyword-matching change touching ~1100 rows at once with real risk of false-positive zone assignment if not carefully validated row-by-row -- higher risk than the two one-line field-name fixes above, and the exact proportional impact (62/200 scenario-level sample, not a row-level count) is an estimate, not exact. Documented here with exact code location and impact estimate for a dedicated follow-up pass with its own test coverage, rather than rushed into this one alongside two much lower-risk fixes."
+      },
+      {
+        "field": "conceptId / conceptName",
+        "catalog": "pov-questions",
+        "rowsRemainingUnmapped": 134,
+        "evidence": "loadPovQuestionRows() only builds its keyword-matching text from image-level metadata (archetype, cognitiveSkill, readTrigger, povType). Every one of the 280 individual question objects also carries an authored `concepts` array (confirmed 280/280 populated, e.g. [\"Pass vs Shoot\", \"Lane Support\", \"Cross-Ice Read\"] for Q-2v1-001-A) that is never read by the matrix builder.",
+        "decisionNotToFix": "Genuinely evidence-exists-but-unused, not evidence-absent -- but mapping free-text authored coaching labels ('Cross-Ice Read') to formal src/data/curriculum-ledger.json concept IDs requires a hockey-domain judgment/fuzzy-match pass that is out of scope for this session (no hockey-content judgment calls; pov-questions is also confirmed dead/unreachable code, lowering priority further). Left as unmapped. The evidenceRationale for this catalog is about non-reachability (verified accurate), not a 'no signal' claim, so no rationale-text correction was needed either."
+      },
+      {
+        "field": "cognitiveDemand",
+        "catalog": "scenario-engine-seed (28 rows) and pov-questions (280 rows)",
+        "rowsRemainingUnknown": 308,
+        "evidence": "cognitiveDemandFor() classifies by per-question `type` (choice/multi/sequence/position/explain) plus `basis`. scenario-engine-seed rows are one-per-file (not per-question) and carry only seed.type='scenario' (the filter condition itself), never a per-question type at this row's granularity. pov-questions rows have a `difficulty` field (\"Intermediate\") but that is a difficulty rating, not a Bloom's-taxonomy-style cognitive-demand category, and mapping one to the other would be a guess, not evidence.",
+        "decisionNotToFix": "Left as unknown. No real evidence exists in either catalog's actual data to resolve cognitive demand without guessing; forcing a resolution here would violate the explicit instruction not to force one where evidence genuinely doesn't exist."
+      }
+    ]
+  },
+  "filesChanged": [
+    {
+      "path": "tools/build-full-curriculum-matrix.mjs",
+      "change": "Two one-line field-name/fallback fixes (format for pov-questions, learningObjective/objectiveSource for legacy-live-bank). See unknownMappingResolutions.fixesApplied for exact diffs."
+    },
+    {
+      "path": "tools/build-full-curriculum-matrix.test.mjs",
+      "change": "Added 2 regression tests covering the two fixes above. Suite went from 17/17 to 19/19 passing."
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-matrix.json",
+      "change": "Regenerated via `node tools/build-full-curriculum-matrix.mjs` after the fixes. format-unknown count 280->0, learningObjective-unknown count 262->0. All other fields/counts unaffected (re-checked contextZone/conceptId/cognitiveDemand unknown counts are unchanged, as expected since those fields weren't touched)."
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-matrix.csv",
+      "change": "Regenerated alongside the JSON (same command, single run)."
+    },
+    {
+      "path": "docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/curriculum-report.html",
+      "change": "Regenerated alongside the JSON (same command, single run)."
+    }
+  ],
+  "overallVerdictSummary": {
+    "taskA": "One flagship claim (mislabeled screenshot) is an error, refuted by direct re-inspection of the actual images. The mechanical hash/count-reconciliation work (240 claims, calibration overlap) is solid and independently reproduced. Geometry sample is real but far thinner than it reads, with zero coverage of the age band (U15) most likely to contain the targeted bug pattern.",
+    "taskB": "Core factual claims (pov dead code, U15/U18 skating absence, U11 53/400) all reproduce independently. The '171 candidates, all hand-read' audit-trail claim does not reproduce from any shipped code and should not be treated as verified. The unknown/unmapped volume was substantially underexplored; two of the three concrete root causes found have now been fixed and verified in this pass (542 rows resolved with real evidence), a third is documented but deliberately not forced.",
+    "taskC": "Holds up well under independent geometry recomputation, fresh (not reused) source re-fetches, and direct schema-code reading. One judgment call (u7-vocab-002's position->choice fix, which quietly loses the brief's stated delivery-variety goal) is disclosed in the detail file but undersold in the top-line summary.",
+    "taskD": "The .gitignore fix is verified working with no side effects. The double-submit gap is a real, reproduced, in-scope defect left unfixed by judgment rather than by an external blocker -- a defensible call, honestly disclosed, but not a clean fit for Gate D's 'fixed... or exact external blockers documented' language."
+  }
+}

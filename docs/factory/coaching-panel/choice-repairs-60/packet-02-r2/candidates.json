@@ -1,0 +1,1102 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "author": "/root/choice_review_strong",
+  "authorQualification": "advisory-only preserved",
+  "humanCoachApproval": false,
+  "applied": false,
+  "packet": "02",
+  "changes": [
+    {
+      "scenarioId": "exp26-u9-003",
+      "questionId": "exp26-u9-003-q3",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "type": "multi",
+        "prompt": "What should you compare besides distance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Defender locations"
+          },
+          {
+            "id": "b",
+            "text": "Available passing angles"
+          },
+          {
+            "id": "c",
+            "text": "Whether a teammate is always closest"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Distance alone does not establish availability.",
+        "id": "exp26-u9-003-q3"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 is close to the passing line to Navy 2"
+          },
+          {
+            "id": "b",
+            "text": "Navy 3 offers a different passing angle across the middle"
+          },
+          {
+            "id": "c",
+            "text": "Both teammates lie on the same passing line behind Gold 1"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass.",
+        "id": "exp26-u9-003-q3"
+      },
+      "beforeHash": "557e626538587688575212af3dfe7c86c15ea7e6883b4c0cefcd683025beae82",
+      "afterHash": "d08718d098cb034348825db4fe8e00fbea9447f7729c75f001750d58119bfdb3",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold1 lies very near the canonical puck-to-Navy2 segment."
+        },
+        {
+          "optionId": "b",
+          "reason": "Navy3 is across middle on a different bearing. Gold1 point gap is about0.712m versus0.431m on Navy2 line; both remain near, with no reach clearance established."
+        },
+        {
+          "optionId": "c",
+          "reason": "The teammates have distinct y positions and passing bearings; they are not collinear behind Gold1."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-1",
+          "x": -5,
+          "y": 4.7
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -6,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -5,
+            "facing": 2.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3.5,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": 2,
+            "facing": -2.7
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "H2",
+            "distance": 5
+          },
+          {
+            "a": "YOU",
+            "b": "H3",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 2.5
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 12.165525060596437
+          },
+          {
+            "a": "H2",
+            "b": "H3",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "H2",
+            "b": "A1",
+            "distance": 2.5
+          },
+          {
+            "a": "H2",
+            "b": "A2",
+            "distance": 7.280109889280519
+          },
+          {
+            "a": "H3",
+            "b": "A1",
+            "distance": 11.101801655587257
+          },
+          {
+            "a": "H3",
+            "b": "A2",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 9.7082439194738
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "H2",
+            "distance": 4.060788100849391,
+            "otherSkaterGaps": [
+              {
+                "actor": "H3",
+                "team": "home",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.4309508293806207
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 7.280109889280519
+              }
+            ]
+          },
+          {
+            "receiver": "H3",
+            "distance": 12.573384588089237,
+            "otherSkaterGaps": [
+              {
+                "actor": "H2",
+                "team": "home",
+                "gap": 2.6404982498865373
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.7118210643519429
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 6.768265092329648
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 1.655294535724685,
+            "otherSkaterGaps": [
+              {
+                "actor": "H2",
+                "team": "home",
+                "gap": 2.5
+              },
+              {
+                "actor": "H3",
+                "team": "home",
+                "gap": 11.101801655587257
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.7082439194738
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 11.32651755836718,
+            "otherSkaterGaps": [
+              {
+                "actor": "H2",
+                "team": "home",
+                "gap": 0.27369400912727604
+              },
+              {
+                "actor": "H3",
+                "team": "home",
+                "gap": 7.5133419924939355
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.32225262364985763
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Combines actual near/far route observations. Different angle is a comparison, not proof of clear pressure.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u9-003-q1",
+          "prompt": "Which teammate is nearer YOU?"
+        },
+        {
+          "id": "exp26-u9-003-q2",
+          "prompt": "Where is Gold1 standing in this picture?"
+        },
+        {
+          "id": "exp26-u9-003-q4",
+          "prompt": "Move YOU a little to inspect a different passing angle."
+        },
+        {
+          "id": "exp26-u9-003-q5",
+          "prompt": "Imagine Gold2 closes Navy3's line before you pass. What could you do?"
+        },
+        {
+          "id": "exp26-u9-003-q6",
+          "prompt": "Why might the farther teammate be worth a look here?"
+        },
+        {
+          "id": "exp26-u9-003-q7",
+          "prompt": "Imagine Gold1 moves off the line to Navy2 and comes at YOU from the side. What can change?"
+        },
+        {
+          "id": "exp26-u9-003-q8",
+          "prompt": "Which two checks help YOU judge a pass to Navy3?"
+        },
+        {
+          "id": "exp26-u9-003-q9",
+          "prompt": "Place YOU where the puck has more room from Gold1 and both teammates stay ahead of YOU."
+        },
+        {
+          "id": "exp26-u9-003-q10",
+          "prompt": "If both teammates were covered, what could YOU do with the puck instead?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u9-007",
+      "questionId": "exp26-u9-007-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "type": "choice",
+        "prompt": "Imagine Gold1 comes along the boards instead. What is a useful response?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reconsider the receiving angle"
+          },
+          {
+            "id": "b",
+            "text": "Use the old plan without looking"
+          },
+          {
+            "id": "c",
+            "text": "Shoot before receiving"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "A different pressure side may call for a different touch or route.",
+        "id": "exp26-u9-007-q5"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy 3"
+          },
+          {
+            "id": "b",
+            "text": "Navy 2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing.",
+        "id": "exp26-u9-007-q5"
+      },
+      "beforeHash": "a4ddff1672eb86c0afe59e5f8994907d5dba56c68bd3466da8474ad38bc04696",
+      "afterHash": "878d2bb8f28f8f7b249e02c7c339fcbc4bed2037569cf0e11ab2487eb09674a0",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Navy3 x23,y-9 is ahead of YOU18,-10, near same side boards; a plausible continuation after explicitly conditional reception."
+        },
+        {
+          "optionId": "b",
+          "reason": "Navy2 x10,y-5 is behind YOU toward centre ice; a plausible return option but not the forward board-side receiver."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "home-skater-2",
+          "x": 11.220585346286203,
+          "y": -4.98690754295826
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -10,
+            "facing": 2.7
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": -0.6
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": -4,
+            "facing": -1.4
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "H2",
+            "distance": 9.433981132056603
+          },
+          {
+            "a": "YOU",
+            "b": "H3",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "H2",
+            "b": "H3",
+            "distance": 13.601470508735444
+          },
+          {
+            "a": "H2",
+            "b": "A1",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "H3",
+            "b": "A1",
+            "distance": 7.810249675906656
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 8.431581051608182,
+            "otherSkaterGaps": [
+              {
+                "actor": "H3",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 4.22973997960191
+              }
+            ]
+          },
+          {
+            "receiver": "H3",
+            "distance": 12.444256532750062,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 2.5590019664987635
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 2.797958916604235
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 5.863072593607355,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 6.082714292865088
+              },
+              {
+                "actor": "H3",
+                "team": "home",
+                "gap": 7.810249675906656
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Replaces impossible shooting before reception with two genuine next-pass recipients; asks receiver to locate continuation before receiving, without guaranteeing ownership or pass.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u9-007-q1",
+          "prompt": "Do YOU control the puck at this freeze?"
+        },
+        {
+          "id": "exp26-u9-007-q2",
+          "prompt": "What can YOU notice before reception?"
+        },
+        {
+          "id": "exp26-u9-007-q3",
+          "prompt": "Arrange this declared two-stage activity."
+        },
+        {
+          "id": "exp26-u9-007-q4",
+          "prompt": "Show a slightly different receiving angle near the boards."
+        },
+        {
+          "id": "exp26-u9-007-q6",
+          "prompt": "What can you do before the puck is yours?"
+        },
+        {
+          "id": "exp26-u9-007-q7",
+          "prompt": "Imagine YOU receive the pass and Gold1 then covers the line back to Navy2. What can YOU do?"
+        },
+        {
+          "id": "exp26-u9-007-q8",
+          "prompt": "Which two things does this picture actually show?"
+        },
+        {
+          "id": "exp26-u9-007-q9",
+          "prompt": "Place YOU where Navy2 would have a new option away from Gold1, after a pass back."
+        },
+        {
+          "id": "exp26-u9-007-q10",
+          "prompt": "If YOU pass the puck back to Navy2, why would YOU keep skating?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u9-003",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Look beyond the nearest jersey",
+      "family": "near-far-support",
+      "topic": "Passing",
+      "objective": "Compare a nearby covered teammate with another support option.",
+      "briefing": "YOU have the puck. Navy2 is nearby, but Gold1 occupies the direct line to Navy2. Navy3 is farther away at another angle; Gold2 is away from that illustrated line. Compare the options before trying a pass. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -6,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -5,
+            "facing": 2.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3.5,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": 2,
+            "facing": -2.7
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Navy2 is the nearer teammate.",
+        "Gold1 sits on that near line.",
+        "Navy3 offers another angle."
+      ],
+      "tags": [
+        "near-far-support",
+        "foundation",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "usah-skill-progression-2019",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+          "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+        },
+        {
+          "id": "hc-vision-scanning-2024",
+          "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; teaching at all ages; Reading Pressure / Corner Situations",
+          "use": "Supports locating teammates and pressure. Original scene choices do not measure an actual shoulder check."
+        }
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which teammate is nearer YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Navy3"
+            },
+            {
+              "id": "b",
+              "text": "Navy2"
+            },
+            {
+              "id": "c",
+              "text": "They are equally far"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Navy2 is the nearby partner on the same line.",
+          "id": "exp26-u9-003-q1"
+        },
+        {
+          "id": "exp26-u9-003-q2",
+          "type": "choice",
+          "prompt": "Where is Gold1 standing in this picture?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Close to YOU, almost on the line to Navy2"
+            },
+            {
+              "id": "b",
+              "text": "Beside Navy3, far up the ice"
+            },
+            {
+              "id": "c",
+              "text": "Far behind YOU, near the navy end"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 is two and a half metres from YOU, closer still to the puck, and almost exactly on the line from the puck to Navy2. Gold1 is more than eleven metres from Navy3, and stands ahead of YOU rather than behind."
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 is close to the passing line to Navy 2"
+            },
+            {
+              "id": "b",
+              "text": "Navy 3 offers a different passing angle across the middle"
+            },
+            {
+              "id": "c",
+              "text": "Both teammates lie on the same passing line behind Gold 1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass.",
+          "id": "exp26-u9-003-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU a little to inspect a different passing angle.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -5,
+            "y": 0
+          },
+          "basis": "coaching",
+          "explanation": "This changes the relationship to both targets. It is exploratory; the final choice still depends on defenders and puck travel.",
+          "id": "exp26-u9-003-q4"
+        },
+        {
+          "id": "exp26-u9-003-q5",
+          "type": "choice",
+          "prompt": "Imagine Gold2 closes Navy3's line before you pass. What could you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Recheck both options before passing"
+            },
+            {
+              "id": "b",
+              "text": "Pass to Navy3 anyway because that was the plan"
+            },
+            {
+              "id": "c",
+              "text": "Watch Gold1 only and stop tracking Gold2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The suggested preference changes when a line closes. Passing on the old plan sends the puck toward the new pressure, and tracking one defender only hides the change. If Gold2 stops short and the line stays open, Navy3 can still be a good choice."
+        },
+        {
+          "id": "exp26-u9-003-q6",
+          "type": "explain",
+          "prompt": "Why might the farther teammate be worth a look here?",
+          "basis": "coaching",
+          "explanation": "Navy2 is close but Gold1 sits on that line. Navy3 is at a different angle, though Gold1 is also near the start of that longer line in this picture, so neither pass is simply open. A useful answer says the far option is worth checking and that moving the puck first can change both angles."
+        },
+        {
+          "id": "exp26-u9-003-q7",
+          "type": "choice",
+          "prompt": "Imagine Gold1 moves off the line to Navy2 and comes at YOU from the side. What can change?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line to Navy2 can open up"
+            },
+            {
+              "id": "b",
+              "text": "Navy2 becomes a worse option every time"
+            },
+            {
+              "id": "c",
+              "text": "Nothing changes until YOU pass"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Moving off that line may leave Navy2 available, while Gold1 coming closer gives YOU less time. Check Gold1's reach and the lane before passing; movement alone does not guarantee an opening."
+        },
+        {
+          "id": "exp26-u9-003-q8",
+          "type": "multi",
+          "prompt": "Which two checks help YOU judge a pass to Navy3?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether Navy3 is ready to receive"
+            },
+            {
+              "id": "b",
+              "text": "Whether Gold1 or Gold2 can reach the passing lane"
+            },
+            {
+              "id": "c",
+              "text": "Whether Navy2 is the closest teammate"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Check the receiver and the whole passing lane. Gold1 is close to the puck and Gold2 is nearer Navy3. Either can affect the pass. Navy2 is another option, but being closest does not decide whether Navy3 is available."
+        },
+        {
+          "id": "exp26-u9-003-q9",
+          "type": "position",
+          "prompt": "Place YOU where the puck has more room from Gold1 and both teammates stay ahead of YOU.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -9,
+            "y": 1
+          },
+          "basis": "coaching",
+          "explanation": "Gold1 is closer to the puck than to YOU, so making room can come before choosing a target. From this example the puck sits about five metres from Gold1 instead of under two, and both navy teammates are still in front. Gold1 can follow, so look again before passing."
+        },
+        {
+          "id": "exp26-u9-003-q10",
+          "type": "explain",
+          "prompt": "If both teammates were covered, what could YOU do with the puck instead?",
+          "basis": "coaching",
+          "explanation": "There is no single right answer. A useful reply names something YOU can do without a pass, such as carrying to a new angle, protecting the puck, or waiting for a teammate to move. Nothing in a still picture proves any of those would work."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u9-007",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Pressure before a wall reception",
+      "family": "wall-reception-pressure",
+      "topic": "Receiving",
+      "objective": "Read the pressure side before a planned pass reaches the wall.",
+      "briefing": "Navy2 holds the puck and plans a pass to YOU near the boards. Gold1 approaches from the circle side; Navy3 is a second navy option along the wall. This freeze is before the pass, so YOU cannot shoot or carry the puck yet. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -10,
+            "facing": 2.7
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": -0.6
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": -4,
+            "facing": -1.4
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The puck still belongs to Navy2.",
+        "YOU wait near the boards.",
+        "Gold1 approaches from the circle side."
+      ],
+      "tags": [
+        "wall-reception-pressure",
+        "foundation",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-scanning-2024",
+          "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; teaching at all ages; Reading Pressure / Corner Situations",
+          "use": "Supports locating teammates and pressure. Original scene choices do not measure an actual shoulder check."
+        },
+        {
+          "id": "usah-skill-progression-2019",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+          "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+        }
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+      "questions": [
+        {
+          "id": "exp26-u9-007-q1",
+          "type": "choice",
+          "prompt": "Do YOU control the puck at this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, YOU have it"
+            },
+            {
+              "id": "b",
+              "text": "No, Navy2 still has it"
+            },
+            {
+              "id": "c",
+              "text": "No, the puck is loose on the ice"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Navy2 is still the puck owner in this picture, so this is the moment before the planned reception. The puck is not loose."
+        },
+        {
+          "type": "multi",
+          "prompt": "What can YOU notice before reception?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Pressure from Gold1"
+            },
+            {
+              "id": "b",
+              "text": "Navy3's supporting position"
+            },
+            {
+              "id": "c",
+              "text": "A guaranteed shooting chance"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Pressure and support are available information. A future shot is not established.",
+          "id": "exp26-u9-007-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange this declared two-stage activity.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Read while Navy2 has the puck"
+            },
+            {
+              "id": "b",
+              "text": "Receive if the planned pass is made"
+            },
+            {
+              "id": "c",
+              "text": "Recheck before the next action"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The reception is conditional, and the next action depends on the new state.",
+          "id": "exp26-u9-007-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Show a slightly different receiving angle near the boards.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 15,
+            "y": -9
+          },
+          "basis": "coaching",
+          "explanation": "The reference changes the approach angle. It is a suggestion, not proof the pass will arrive.",
+          "id": "exp26-u9-007-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Navy 3"
+            },
+            {
+              "id": "b",
+              "text": "Navy 2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing.",
+          "id": "exp26-u9-007-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "What can you do before the puck is yours?",
+          "basis": "coaching",
+          "explanation": "Look, communicate and prepare an available target. A puck action must wait for actual control.",
+          "id": "exp26-u9-007-q6"
+        },
+        {
+          "id": "exp26-u9-007-q7",
+          "type": "choice",
+          "prompt": "Imagine YOU receive the pass and Gold1 then covers the line back to Navy2. What can YOU do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Carry to a new angle and check the pass to Navy2 again"
+            },
+            {
+              "id": "b",
+              "text": "Send it back on the covered line anyway"
+            },
+            {
+              "id": "c",
+              "text": "Stand still and wait for Navy2 to skate to YOU"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Imagine YOU have received the puck. YOU are now the carrier. A controlled move can change your passing angle to Navy2, but check Gold1 again before sending it. Navy3 may also offer a clear pass, or YOU may need to protect the puck."
+        },
+        {
+          "id": "exp26-u9-007-q8",
+          "type": "multi",
+          "prompt": "Which two things does this picture actually show?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Navy2 has the puck"
+            },
+            {
+              "id": "b",
+              "text": "Gold1 is nearer the middle of the ice than YOU"
+            },
+            {
+              "id": "c",
+              "text": "The pass has already been made"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Navy2 is the puck owner, and Gold1 stands nearer the middle of the ice while YOU wait closer to the boards. The pass has not happened; this freeze is before it."
+        },
+        {
+          "id": "exp26-u9-007-q9",
+          "type": "position",
+          "prompt": "Place YOU where Navy2 would have a new option away from Gold1, after a pass back.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 12,
+            "y": -10
+          },
+          "basis": "coaching",
+          "explanation": "This asks YOU to imagine the pass and the return. From this example Navy2 has an offer of about five metres on the board side, and the line to it stays well away from Gold1, who is nearer the middle. Other clear spots can work, and if Gold1 follows YOU the picture changes again."
+        },
+        {
+          "id": "exp26-u9-007-q10",
+          "type": "explain",
+          "prompt": "If YOU pass the puck back to Navy2, why would YOU keep skating?",
+          "basis": "coaching",
+          "explanation": "A useful answer says a player who stops can be easier to cover, and that moving gives the carrier a new option. This picture is the moment before the first pass, so the return pass is something to imagine rather than something shown."
+        }
+      ]
+    }
+  ],
+  "revision": 2
+}

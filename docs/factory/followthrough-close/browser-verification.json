@@ -1,0 +1,31 @@
+{
+  "verifiedAt": "2026-09-07T16:11:16.838278+00:00",
+  "origin": "http://127.0.0.1:5194",
+  "isolation": "codex-followthrough-close worktree, synthetic notes only",
+  "automatedTests": 32,
+  "browserChecks": {
+    "draftSurvivesReload": true,
+    "actualQuestionSubmit": true,
+    "adminInternalComment": true,
+    "publicInvestigatingStatusAfterDispositionCli": true,
+    "internalCommentAbsentFromPlayerHistory": true,
+    "otherBrowserOwnerHasNoNotes": true,
+    "emptyNoteDisabled": true,
+    "mobile390x844Focus": true,
+    "mobileHorizontalOverflow": false,
+    "failedSendPreservesDraft": true,
+    "lostResponseRetryStoredOnce": true,
+    "decisionNotebookRepeatStoredOnce": true,
+    "historySurvivesReload": true,
+    "curriculumMobileCardsVisible": true,
+    "curriculumOtherTablesVisibleOnMobile": true,
+    "curriculumDesktop1365x900NoPageOverflow": true
+  },
+  "limitations": [
+    "Desktop browser emulation checks viewport and focus, not a physical phone soft keyboard.",
+    "Admin status disposition uses the existing CLI; browser admin comment path was exercised.",
+    "Same-origin local browser-owner partition is not production authentication.",
+    "Retries are deduplicated in the single local Vite process when callers provide submissionId; legacy requests without IDs retain compatibility.",
+    "No live bank changes or qualified content approval."
+  ]
+}

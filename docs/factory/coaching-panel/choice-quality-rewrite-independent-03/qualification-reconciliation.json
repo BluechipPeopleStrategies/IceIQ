@@ -1,0 +1,63 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "status": "eight-known-defects-detected; eligible-for-bounded-current-review-subject-to-root-adjudication",
+  "materialMisses": [],
+  "rows": [
+    {
+      "questionId": "exp26-u11-006-q7",
+      "expectedIssue": "Puck is inside the circle; D1 is centre-ice-side of the puck, not between it and the net.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-006-q9",
+      "expectedIssue": "The reference moves farther from the puck (8.06 m to 9.23 m) and is not at the opposite boards.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-006-q10",
+      "expectedIssue": "Covered-puck feedback needs an explicit stoppage scenario and must not advise continuing pressure after the whistle.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-011-q8",
+      "expectedIssue": "D2 is an away-team defender, not opposite-point support.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-012-q7",
+      "expectedIssue": "Below me depends on the camera; the puck is closer to the side boards than YOU.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-012-q5",
+      "expectedIssue": "Reaching the puck first does not establish control.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-016-q1",
+      "expectedIssue": "YOU takes do, not does; preserve Compared with F1.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    },
+    {
+      "questionId": "exp26-u11-016-q7",
+      "expectedIssue": "F1 is an opponent. Communicate the defensive plan to the shown teammate/goalie, without guaranteeing containment.",
+      "reconciliation": "Detected in saved pre-key judgment; no material miss."
+    }
+  ],
+  "limitations": [
+    "Blind only to separate answer-key.json and prior reviewers; historical cases themselves contain answers and charter/HISTORICAL-CHECKS prime known error categories.",
+    "No rendered artifact inspected. No external coaching source consulted for these local contradictions."
+  ],
+  "readSequenceAppend": [
+    "qualification-blind.json saved",
+    "nonexistent answer-key.json attempted",
+    "listed key filename only",
+    "historical-answer-key.json read",
+    "qualification-reconciliation.json saved"
+  ],
+  "precisionNotes": [
+    "q7 circle distance is inside using actual 3D texture circle; alternate legacy circle also contains puck.",
+    "q9 lateral board gaps were explicitly nominal, not exact rounded-board nearest distances; neither start nor reference is at boards.",
+    "Do not count eight of eight known-defect detection as a general hockey accuracy score. No prior reviewer answers were read."
+  ]
+}

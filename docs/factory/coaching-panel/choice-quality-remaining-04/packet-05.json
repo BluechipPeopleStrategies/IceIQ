@@ -1,0 +1,1332 @@
+{
+  "schemaVersion": 1,
+  "status": "unreviewed-lexical-candidates-not-confirmed-defects",
+  "humanCoachApproval": false,
+  "targets": [
+    {
+      "questionId": "exp26-u11-007-q5",
+      "scenarioId": "exp26-u11-007",
+      "scenarioVersion": 1,
+      "contentHash": "4b19e7144395402f9b72a7fae4a18c8842fe601046d4af730265e453cb4a14f3",
+      "status": "unreviewed",
+      "reason": "Lexical candidate only; substantive review pending."
+    },
+    {
+      "questionId": "exp26-u11-008-q5",
+      "scenarioId": "exp26-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "fff785aed1f075143bb17734280c4f7e11185662d11b63711df12b54de7d7d78",
+      "status": "unreviewed",
+      "reason": "Lexical candidate only; substantive review pending."
+    },
+    {
+      "questionId": "exp26-u11-009-q5",
+      "scenarioId": "exp26-u11-009",
+      "scenarioVersion": 2,
+      "contentHash": "2ee575232d2bf1496359ce21c554f9582e857725ed88138191fb62c80fc3402f",
+      "status": "unreviewed",
+      "reason": "Lexical candidate only; substantive review pending."
+    },
+    {
+      "questionId": "exp26-u11-013-q5",
+      "scenarioId": "exp26-u11-013",
+      "scenarioVersion": 1,
+      "contentHash": "45c2b6a7904a379685f84e1e1aab7ba82da86724dc952d94972d9f7f72934356",
+      "status": "unreviewed",
+      "reason": "Lexical candidate only; substantive review pending."
+    },
+    {
+      "questionId": "exp26-u11-015-q5",
+      "scenarioId": "exp26-u11-015",
+      "scenarioVersion": 2,
+      "contentHash": "2bd777849c8a8656d377ff5b290bbc1cbfd57ba704ef7658c68247f0c11ffc8e",
+      "status": "unreviewed",
+      "reason": "Lexical candidate only; substantive review pending."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u11-007",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "Keep the puck away from pressure",
+      "family": "puck-protection",
+      "topic": "Puck control",
+      "objective": "Connect puck-side space and nearby pressure when planning a protected carry.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU own the puck near the side boards. D1 approaches from the middle side and F2 is an outlet inside. This is a no-contact planning exercise.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 7,
+            "y": 8,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 2,
+            "facing": 2.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 9,
+            "y": 6,
+            "facing": 2.356
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "D1 approaches from the middle side.",
+        "The puck is currently on YOU’s wall side.",
+        "F2 offers a separate inside target."
+      ],
+      "tags": [
+        "puck-protection",
+        "puck control",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-puck-control-2024",
+          "title": "7 Principles for Coaches: Puck Control",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+          "section": "Building Skills Through Progression; Incorporating Vision & Scanning",
+          "use": "Supports progressive handling with awareness; layouts and options are original."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. The neutral rig does not demonstrate full puck-protection technique, body contact or actual stick control. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-007-q1",
+          "type": "choice",
+          "prompt": "Which shown player is the immediate opponent near YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "F2"
+            },
+            {
+              "id": "c",
+              "text": "A defender behind the right net"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "D1 is the only opposing skater shown near the carrier."
+        },
+        {
+          "id": "exp26-u11-007-q2",
+          "type": "multi",
+          "prompt": "What would help preserve options during this carry?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice D1’s reach and movement"
+            },
+            {
+              "id": "b",
+              "text": "Keep checking whether F2 is available"
+            },
+            {
+              "id": "c",
+              "text": "Watch only the puck for the whole play"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Protection and awareness work together. The picture does not prescribe a particular hand or body technique."
+        },
+        {
+          "id": "exp26-u11-007-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested pressure response.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice which side D1 threatens"
+            },
+            {
+              "id": "b",
+              "text": "Keep control while using available space"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the outlet or escape"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This discussion sequence is conditional; on ice the actions can overlap."
+        },
+        {
+          "id": "exp26-u11-007-q4",
+          "type": "position",
+          "prompt": "Move YOU to a possible holding spot away from D1’s current approach.",
+          "actorId": "h1",
+          "reference": {
+            "x": 6,
+            "y": 9
+          },
+          "basis": "coaching",
+          "explanation": "The example creates separation toward the wall without leaving the ice. It is not a required reverse or a guaranteed escape."
+        },
+        {
+          "id": "exp26-u11-007-q5",
+          "type": "choice",
+          "prompt": "If D1 follows toward the wall and F2’s lane opens, what becomes worth checking?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether an inside pass is now usable"
+            },
+            {
+              "id": "b",
+              "text": "Whether staying at the boards is always required"
+            },
+            {
+              "id": "c",
+              "text": "Whether F2’s earlier position still guarantees an outlet"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Pressure can change the outlet. A pass still depends on control and a clear actual lane."
+        },
+        {
+          "id": "exp26-u11-007-q6",
+          "type": "explain",
+          "prompt": "How could protecting the puck help F2 become useful?",
+          "basis": "coaching",
+          "explanation": "It may keep possession long enough for an outlet to appear. Explain the defender or passing-line change you would watch."
+        },
+        {
+          "id": "exp26-u11-007-q7",
+          "type": "choice",
+          "prompt": "What communication matches this protected carry?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 is inside; F2 may open if D1 follows"
+            },
+            {
+              "id": "b",
+              "text": "I will carry outside even if the picture changes"
+            },
+            {
+              "id": "c",
+              "text": "F2 must stop moving"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call connects D1's approach to F2's conditional availability."
+        },
+        {
+          "id": "exp26-u11-007-q8",
+          "type": "multi",
+          "prompt": "Which two cues support holding the outside shoulder?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 stays inside YOU"
+            },
+            {
+              "id": "b",
+              "text": "F2 can be reached from the protected touch"
+            },
+            {
+              "id": "c",
+              "text": "The wall itself makes the puck safe"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The defender side and F2 lane explain the protection; the wall does not guarantee safety."
+        },
+        {
+          "id": "exp26-u11-007-q9",
+          "type": "position",
+          "prompt": "Move YOU toward the outside while keeping F2 inside the picture.",
+          "actorId": "h1",
+          "reference": {
+            "x": 8.1,
+            "y": 8.2
+          },
+          "basis": "coaching",
+          "explanation": "This point changes the pressure angle and leaves F2 visible."
+        },
+        {
+          "id": "exp26-u11-007-q10",
+          "type": "explain",
+          "prompt": "D1 follows outside and F2 opens. Explain the next decision.",
+          "basis": "coaching",
+          "explanation": "Name D1's movement and check F2's reachable lane. Pass only if that route remains open; otherwise protect again."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-008",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "Space to carry before the defender arrives",
+      "family": "change-of-pace",
+      "topic": "Puck control",
+      "objective": "Recognize room for a controlled carry without assuming speed from a frozen pose.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU carry in the neutral area. D1 is offset toward the middle and F2 is farther up the same wide side. Speed is not shown; imagine choosing a controlled next route.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": -4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": -6,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 2,
+            "facing": -2.8
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "D1 is offset from the direct wide lane.",
+        "F2 is ahead on the wide side.",
+        "The freeze supplies positions, not speeds."
+      ],
+      "tags": [
+        "change-of-pace",
+        "puck control",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-puck-control-2024",
+          "title": "7 Principles for Coaches: Puck Control",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+          "section": "Building Skills Through Progression; Incorporating Vision & Scanning",
+          "use": "Supports progressive handling with awareness; layouts and options are original."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. No acceleration rate or successful beat is established. The question concerns a possible route and the evidence to reconsider it. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-008-q1",
+          "type": "choice",
+          "prompt": "What can this neutral-zone freeze tell you directly?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU’s exact skating speed"
+            },
+            {
+              "id": "b",
+              "text": "The players’ relative locations"
+            },
+            {
+              "id": "c",
+              "text": "Which skater will win the race"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Positions are visible. Speed and arrival order would require movement or explicit timing."
+        },
+        {
+          "id": "exp26-u11-008-q2",
+          "type": "multi",
+          "prompt": "Which cues could change a carry decision?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 moving into your route"
+            },
+            {
+              "id": "b",
+              "text": "F2 moving into a useful receiving lane"
+            },
+            {
+              "id": "c",
+              "text": "The camera rotating while players stay fixed"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Opponent and support movement change hockey options; camera orientation does not change the world positions."
+        },
+        {
+          "id": "exp26-u11-008-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested open-space read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find an available route"
+            },
+            {
+              "id": "b",
+              "text": "Carry under control while observing D1"
+            },
+            {
+              "id": "c",
+              "text": "Choose again as the gap changes"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The routine requires updating the read, rather than promising that an initially open route stays open."
+        },
+        {
+          "id": "exp26-u11-008-q4",
+          "type": "position",
+          "prompt": "Move YOU into a possible next wide carrying position.",
+          "actorId": "h1",
+          "reference": {
+            "x": -3,
+            "y": -5
+          },
+          "basis": "coaching",
+          "explanation": "The example advances without going directly toward D1. It represents a planned destination, not an instantaneous teleport."
+        },
+        {
+          "id": "exp26-u11-008-q5",
+          "type": "choice",
+          "prompt": "Suppose D1 turns and reaches the wide lane before you do. What could YOU change?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep the route because it was open earlier"
+            },
+            {
+              "id": "b",
+              "text": "Reconsider pace, direction or F2’s outlet"
+            },
+            {
+              "id": "c",
+              "text": "Assume F2 will remain available without checking"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "A closing lane may call for a different action. The appropriate response depends on the new timing and control."
+        },
+        {
+          "id": "exp26-u11-008-q6",
+          "type": "explain",
+          "prompt": "What movement would you watch to decide whether to keep carrying?",
+          "basis": "coaching",
+          "explanation": "Identify a change in D1’s path or F2’s availability and explain how it would alter your plan."
+        },
+        {
+          "id": "exp26-u11-008-q7",
+          "type": "choice",
+          "prompt": "What would you tell F2 during the open carry?",
+          "options": [
+            {
+              "id": "a",
+              "text": "I have room now; show me if D1 closes the lane"
+            },
+            {
+              "id": "b",
+              "text": "The carry is certain to work"
+            },
+            {
+              "id": "c",
+              "text": "Stay wide even if D1 arrives"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The message reports the visible space and makes the next cue conditional."
+        },
+        {
+          "id": "exp26-u11-008-q8",
+          "type": "multi",
+          "prompt": "Which two updates should follow D1's turn?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The lane ahead of YOU"
+            },
+            {
+              "id": "b",
+              "text": "F2's availability on the wide side"
+            },
+            {
+              "id": "c",
+              "text": "The original open-space label"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1's turn and F2's current lane determine whether the carry continues."
+        },
+        {
+          "id": "exp26-u11-008-q9",
+          "type": "position",
+          "prompt": "Move YOU farther into the forward lane before D1 closes.",
+          "actorId": "h1",
+          "reference": {
+            "x": -3.8,
+            "y": -4.8
+          },
+          "basis": "coaching",
+          "explanation": "This point moves into the shown open lane and leaves F2 on the outside."
+        },
+        {
+          "id": "exp26-u11-008-q10",
+          "type": "explain",
+          "prompt": "D1 reaches the wide lane. How do you keep the play alive?",
+          "basis": "coaching",
+          "explanation": "Re-check the forward lane, protect if D1 closes, and use F2 only if the actual passing route remains reachable."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-009",
+      "version": 2,
+      "ageBand": "U11",
+      "title": "Turn before the traffic closes",
+      "family": "evasive-route",
+      "topic": "Skating",
+      "objective": "Choose a possible turning space while noticing a teammate and opponent ahead.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU carry through the neutral zone toward F2 and D1. F2 occupies your straight path; D1 is closer to the middle. This exercise plans a turn, not a collision or contact play.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 0,
+            "y": 5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 5,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 2,
+            "facing": 2.5
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "F2 occupies the straight-ahead route.",
+        "D1 is on the middle side.",
+        "The positive-y side has room in this freeze."
+      ],
+      "tags": [
+        "evasive-route",
+        "skating",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-u11-pathway-2022",
+          "title": "Hockey Canada U11 Player Pathway",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+          "section": "U11 Skills Matrix, printed page 22 (PDF page 22)",
+          "use": "Age-topic support only; no approval of these answers."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. The U11 matrix includes turning and evasive skating; the model does not demonstrate skate-edge technique or braking distance. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-009-q1",
+          "type": "choice",
+          "prompt": "Which teammate occupies the straight-ahead route from YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Nobody"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "F2 is directly ahead at the same y position. D1 is an opponent offset toward the middle."
+        },
+        {
+          "id": "exp26-u11-009-q2",
+          "type": "multi",
+          "prompt": "What belongs in this turning decision?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Room beside the traffic"
+            },
+            {
+              "id": "b",
+              "text": "How much speed and control YOU actually have"
+            },
+            {
+              "id": "c",
+              "text": "The assumption that a teammate cannot obstruct a route"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "A useful plan considers both available space and the movement the still picture cannot show."
+        },
+        {
+          "id": "exp26-u11-009-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested controlled-turn plan.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice the traffic before reaching it"
+            },
+            {
+              "id": "b",
+              "text": "Choose a turn you can control"
+            },
+            {
+              "id": "c",
+              "text": "Look again as you leave the turn"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The order is a planning aid. It does not teach a particular edge technique from a static model."
+        },
+        {
+          "id": "exp26-u11-009-q4",
+          "type": "position",
+          "prompt": "Move YOU toward a possible turning space beside the traffic.",
+          "actorId": "h1",
+          "reference": {
+            "x": 2,
+            "y": 8
+          },
+          "basis": "coaching",
+          "explanation": "The example uses the wall-side room short of F2. Another controlled route could work if D1’s movement allows it."
+        },
+        {
+          "id": "exp26-u11-009-q5",
+          "type": "choice",
+          "prompt": "Suppose F2 moves toward that same outside space. What would help now?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep the planned turn without another look"
+            },
+            {
+              "id": "b",
+              "text": "Reassess space and slow or choose another route"
+            },
+            {
+              "id": "c",
+              "text": "Aim at F2’s original empty spot without checking D1"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Both traffic and available routes changed. Speed control or a different turn can be safer and more useful."
+        },
+        {
+          "id": "exp26-u11-009-q6",
+          "type": "explain",
+          "prompt": "Why must a turning plan account for a teammate as well as D1?",
+          "basis": "coaching",
+          "explanation": "A teammate can occupy the route even without defending it. Explain how you would preserve room for both players."
+        },
+        {
+          "id": "exp26-u11-009-q7",
+          "type": "choice",
+          "prompt": "What should YOU communicate before turning?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 is ahead; I am checking the side space around D1"
+            },
+            {
+              "id": "b",
+              "text": "The outside lane is mine even if the picture changes"
+            },
+            {
+              "id": "c",
+              "text": "D1 does not affect the turn"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call identifies both traffic cues and leaves the turn adaptable."
+        },
+        {
+          "id": "exp26-u11-009-q8",
+          "type": "multi",
+          "prompt": "Which two changes would make the first turn poor?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 moves into the side space"
+            },
+            {
+              "id": "b",
+              "text": "D1 closes the turn lane"
+            },
+            {
+              "id": "c",
+              "text": "YOU still see the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The teammate and defender can remove the turn; puck visibility alone is not enough."
+        },
+        {
+          "id": "exp26-u11-009-q9",
+          "type": "position",
+          "prompt": "Move YOU to a side-space entry that avoids F2 and D1.",
+          "actorId": "h1",
+          "reference": {
+            "x": 1.6,
+            "y": 7.4
+          },
+          "basis": "coaching",
+          "explanation": "This point changes the turn angle while leaving both players visible."
+        },
+        {
+          "id": "exp26-u11-009-q10",
+          "type": "explain",
+          "prompt": "F2 enters the side space as you begin turning. Explain your adjustment.",
+          "basis": "coaching",
+          "explanation": "Do not crowd F2. Protect the puck, choose another angle, and re-check D1 before continuing."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-013",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "A defender in the slot shooting line",
+      "family": "slot-shot-lane",
+      "topic": "Shooting",
+      "objective": "Relate a shooting lane through the slot to a separate half-wall passing option.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU own the puck in the high slot, the middle area farther from the net. D1 stands in the direct shooting line. F2 is near the half wall. The goalie is squarely near the goal centre.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 8,
+            "facing": -2.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 0,
+            "facing": 3.14
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "D1 lies between YOU and the goal.",
+        "F2 supplies a different passing angle at the half wall.",
+        "A visible lane obstruction does not reveal save probability."
+      ],
+      "tags": [
+        "slot-shot-lane",
+        "shooting",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "usah-skill-progressions-2018",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+          "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. The source names shooting and basic attacking concepts; the alternatives here are original. No “always pass” rule or goal prediction is supplied. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-013-q1",
+          "type": "choice",
+          "prompt": "Who occupies the direct line from YOU through the slot to the goal?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Only YOU"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "D1 is between the high-slot carrier and the goal centre."
+        },
+        {
+          "id": "exp26-u11-013-q2",
+          "type": "multi",
+          "prompt": "Which cues should be considered together?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1’s stick/body line"
+            },
+            {
+              "id": "b",
+              "text": "F2’s separate half-wall option"
+            },
+            {
+              "id": "c",
+              "text": "The assumption that every high-slot touch must be a shot"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The blocker and support angle inform the choice. The goalie’s future movement is not guaranteed by a freeze."
+        },
+        {
+          "id": "exp26-u11-013-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested high-slot decision routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Identify the blocker and the support option"
+            },
+            {
+              "id": "b",
+              "text": "Choose a controlled action supported by those cues"
+            },
+            {
+              "id": "c",
+              "text": "Read the defence again after the puck moves"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The routine encourages relating cues rather than treating every high-slot possession as an automatic shot."
+        },
+        {
+          "id": "exp26-u11-013-q4",
+          "type": "position",
+          "prompt": "Move YOU toward a possible shooting angle away from D1’s current line.",
+          "actorId": "h1",
+          "reference": {
+            "x": 17,
+            "y": -3
+          },
+          "basis": "coaching",
+          "explanation": "The example changes the angle without moving D1 or the goalie. It does not certify an open net or a reachable move."
+        },
+        {
+          "id": "exp26-u11-013-q5",
+          "type": "choice",
+          "prompt": "If D1 moves toward F2 and the direct lane clears, what becomes worth reconsidering?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A controlled shot through the newly available lane"
+            },
+            {
+              "id": "b",
+              "text": "Only a pass to the same half-wall spot"
+            },
+            {
+              "id": "c",
+              "text": "Shooting without checking the changed pressure"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "A changed blocker can make a shot more plausible. Control, pressure and the goalie still matter."
+        },
+        {
+          "id": "exp26-u11-013-q6",
+          "type": "explain",
+          "prompt": "Why might the slot and half wall offer different choices on this play?",
+          "basis": "coaching",
+          "explanation": "Name the goal line, blocker and passing angle. A location name helps describe space but does not by itself decide the action."
+        },
+        {
+          "id": "exp26-u11-013-q7",
+          "type": "choice",
+          "prompt": "What should YOU call when D1 moves toward F2?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The lane may be open; check the net and F2 before choosing"
+            },
+            {
+              "id": "b",
+              "text": "The shot is certain"
+            },
+            {
+              "id": "c",
+              "text": "F2 is no longer part of the play"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call connects D1's movement to the newly changed lane without promising an outcome."
+        },
+        {
+          "id": "exp26-u11-013-q8",
+          "type": "multi",
+          "prompt": "Which two checks belong before using the opening?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether the shooting lane stays clear"
+            },
+            {
+              "id": "b",
+              "text": "Whether F2 offers a safer reachable pass"
+            },
+            {
+              "id": "c",
+              "text": "That D1 moved once"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The lane and support must both be checked after D1 moves."
+        },
+        {
+          "id": "exp26-u11-013-q9",
+          "type": "position",
+          "prompt": "Move YOU to a slight outside shooting angle with F2 visible.",
+          "actorId": "h1",
+          "reference": {
+            "x": 16,
+            "y": 2.1
+          },
+          "basis": "coaching",
+          "explanation": "This point changes the line to the net and keeps the support option in view."
+        },
+        {
+          "id": "exp26-u11-013-q10",
+          "type": "explain",
+          "prompt": "D1 leaves the lane but F2 is covered. What is your next read?",
+          "basis": "coaching",
+          "explanation": "The opening may support a shot or protected touch, but check the net-side space and D1's recovery before deciding."
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-015",
+      "version": 2,
+      "ageBand": "U11",
+      "title": "Defend the middle before chasing wide",
+      "family": "inside-gap",
+      "topic": "Gap control",
+      "objective": "Relate a carrier, a wide teammate and the defended goal when planning inside position.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are the gold defender protecting the right net. Navy F1 carries toward you; F2 is wide across the rink from the carrier. No skating speed is given. Plan where YOU might stay connected to the middle threat.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 9,
+            "y": 3,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -6,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "YOU",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 0,
+            "facing": 3
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "a1",
+      "cues": [
+        "YOU are between the carrier and the defended goal.",
+        "F2 is a separate wide option.",
+        "Gap depends on movement that a static distance cannot prove."
+      ],
+      "tags": [
+        "inside-gap",
+        "gap control",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-u11-pathway-2022",
+          "title": "Hockey Canada U11 Player Pathway",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+          "section": "U11 Skills Matrix, printed page 22 (PDF page 22)",
+          "use": "Age-topic support only; no approval of these answers."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. The U11 matrix includes gap control. No universal gap in metres, body-check instruction or guaranteed lane closure is asserted. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-015-q1",
+          "type": "choice",
+          "prompt": "Which net are YOU protecting as the gold defender?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The right net"
+            },
+            {
+              "id": "b",
+              "text": "The left net"
+            },
+            {
+              "id": "c",
+              "text": "Only the side boards beside F1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The briefing assigns YOU to gold, which defends the right end while navy attacks it."
+        },
+        {
+          "id": "exp26-u11-015-q2",
+          "type": "multi",
+          "prompt": "What should your gap decision relate?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1’s approach and control"
+            },
+            {
+              "id": "b",
+              "text": "The middle route toward the defended goal"
+            },
+            {
+              "id": "c",
+              "text": "Only the largest possible distance from F1"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Useful spacing balances pressure with the ability to protect and recover. Maximum distance is not a general solution."
+        },
+        {
+          "id": "exp26-u11-015-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested defensive read.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate carrier, support and defended goal"
+            },
+            {
+              "id": "b",
+              "text": "Choose an inside position you can maintain"
+            },
+            {
+              "id": "c",
+              "text": "Adjust when the carrier’s movement changes"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is an original planning routine. A real gap requires speed and turning information."
+        },
+        {
+          "id": "exp26-u11-015-q4",
+          "type": "position",
+          "prompt": "Move YOU to an example inside position between F1 and the middle.",
+          "actorId": "a1",
+          "reference": {
+            "x": 14,
+            "y": 1.5
+          },
+          "basis": "coaching",
+          "explanation": "The sample remains goal-side while slightly adjusting toward the carrier. Other positions may fit different speeds or support responsibilities."
+        },
+        {
+          "id": "exp26-u11-015-q5",
+          "type": "choice",
+          "prompt": "If F1 accelerates and begins to get beside YOU, what should you reconsider?",
+          "options": [
+            {
+              "id": "a",
+              "text": "How to recover while protecting the route to goal"
+            },
+            {
+              "id": "b",
+              "text": "Whether the original distance must remain fixed"
+            },
+            {
+              "id": "c",
+              "text": "Whether YOU should follow F2 regardless of the carrier"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "A speed change can require an earlier turn or recovery. The freeze cannot choose an exact skating response."
+        },
+        {
+          "id": "exp26-u11-015-q6",
+          "type": "explain",
+          "prompt": "Why is there no single “correct gap number” in this picture?",
+          "basis": "coaching",
+          "explanation": "Explain which missing movement or control information could change the useful spacing. A distance alone is not the tactical answer."
+        },
+        {
+          "id": "exp26-u11-015-q7",
+          "type": "choice",
+          "prompt": "What should YOU communicate while holding the inside gap?",
+          "options": [
+            {
+              "id": "a",
+              "text": "I am protecting the middle; update me if F1 reaches the outside"
+            },
+            {
+              "id": "b",
+              "text": "I will close to one exact distance"
+            },
+            {
+              "id": "c",
+              "text": "F2 is the only threat"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call names the protected middle and the carrier route that would change the job."
+        },
+        {
+          "id": "exp26-u11-015-q8",
+          "type": "multi",
+          "prompt": "Which two cues can require a new gap read?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F1 changes speed"
+            },
+            {
+              "id": "b",
+              "text": "F1 changes the route toward the net"
+            },
+            {
+              "id": "c",
+              "text": "The rink stays the same size"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Carrier speed and route change the useful gap; fixed rink geometry does not."
+        },
+        {
+          "id": "exp26-u11-015-q9",
+          "type": "position",
+          "prompt": "Move YOU to an inside net-side position with F1 ahead.",
+          "actorId": "a1",
+          "reference": {
+            "x": 14.2,
+            "y": 1.4
+          },
+          "basis": "coaching",
+          "explanation": "This point keeps a net-side relationship to F1 and leaves F2 visible."
+        },
+        {
+          "id": "exp26-u11-015-q10",
+          "type": "explain",
+          "prompt": "F1 gets outside your starting gap. Explain the recovery choice.",
+          "basis": "coaching",
+          "explanation": "Protect the net-side lane, match F1's route, and re-check F2 rather than chasing the old inside spot."
+        }
+      ]
+    }
+  ]
+}

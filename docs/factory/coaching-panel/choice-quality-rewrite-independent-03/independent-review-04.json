@@ -1,0 +1,112 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "counts": {
+    "approve": 1,
+    "revise": 1,
+    "reject": 0
+  },
+  "candidateSha256": "eec17e477ab3ebbf6c65f27c689a7e051e3722d9609fee4278cfba7210a18c58",
+  "freezeCandidateHashMatches": true,
+  "readSequence": [
+    "blind-input-04.json",
+    "independent makeScene-offset geometry",
+    "blind-results-04.json saved",
+    "candidates.json and FREEZE.json"
+  ],
+  "rows": [
+    {
+      "questionId": "exp26-u13-003-q5",
+      "contentHash": "780859883b0110f2410e809c7e0eacb74b94cb3800d34588e818704ade9e6536",
+      "verdict": "approve",
+      "highRisk": true,
+      "sceneEvidence": {
+        "YOU": {
+          "A1": 0.34850075983336276,
+          "A2": 11.180339887498949
+        },
+        "C": {
+          "A1": 4.724468093806996,
+          "A2": 8.54400374531753
+        }
+      },
+      "blindAnswer": [
+        "b"
+      ],
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "defensible outlet, not answer to spacing comparison",
+          "reason": "Nearest shown defender is A1 at .3485m from puck-to-YOU segment; A2 is11.1803m away."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "Minimum shown-defender gap4.7245m, with A2gap8.5440m. Greater minimum room, not farther from each defender individually."
+        }
+      ],
+      "reason": "Substantive improvement: two genuine teammates, useful lane comparison, no harmful mandated movement. Explanation identifies nearest defender and preserves conditional alternative. More room refers to minimum clearance; C is closer to A2 than YOU line, but A1 limits both routes.",
+      "proposedRepair": null,
+      "limitations": [
+        "AI advice only, no human coaching approval.",
+        "No rendered/mobile or external-source inspection.",
+        "Review limited to q5; no clearance of full scene."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-011-q5",
+      "contentHash": "d9d229b0023a4841460469cd215b04212cd312b8501dca57af488cdc29d46a15",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "D2": {
+          "A1": 5.0
+        },
+        "F1": {
+          "A1": 2.959969214897736
+        }
+      },
+      "blindAnswer": [
+        "a"
+      ],
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Puck(13,.7)-D2(13,-8) segment stays5m from A1."
+        },
+        {
+          "optionId": "b",
+          "assessment": "defensible attacking alternative",
+          "reason": "Puck-to-F1 segment gap2.9600m from A1; F1 farther up ice may remain tactically useful."
+        }
+      ],
+      "reason": "Hockey comparison and feedback are sound; approve substance. Small exact-payload repair: before another shot implies an earlier shot, but no preceding shot is stated in setup, briefing or cues. Remove that clause; it is unnecessary and avoids unsupported event history. This is a wording revision, not rejection of new tactical design.",
+      "proposedRepair": {
+        "id": "exp26-u13-011-q5",
+        "type": "choice",
+        "prompt": "YOU are weighing the two teammate passes. Which direct passing line stays farther from Gold 1 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The pass from YOU to D2"
+          },
+          {
+            "id": "b",
+            "text": "The pass from YOU to F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The line to D2 stays farther from Gold 1 than the line to F1. That makes D2 an option to assess around the current blocker. F1 is farther toward the net and may offer a useful attacking option if that lane remains available. More distance from one defender does not guarantee reception or make D2 the best play in every situation.",
+        "basis": "coaching"
+      },
+      "limitations": [
+        "AI advice only, no human coaching approval.",
+        "No rendered/mobile or external-source inspection.",
+        "Review limited to q5; no clearance of full scene."
+      ]
+    }
+  ],
+  "priorFindingsPreserved": true
+}

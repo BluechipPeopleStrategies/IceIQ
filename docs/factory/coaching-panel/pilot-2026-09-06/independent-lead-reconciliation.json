@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "reviewers": ["Sol independent", "Luna lead"],
+  "status": "material-disagreements-found",
+  "summary": {
+    "independentVerdicts": {"retain": 28, "repair": 6, "hold": 0},
+    "leadVerdicts": {"retain": 34, "repair": 0, "hold": 0},
+    "independentHighRisk": 13,
+    "leadHighRisk": 0,
+    "conclusion": "The lead review cannot be treated as reliable calibration evidence because several rows use coordinates that are not in the frozen snapshot, one row reverses the actual roster/answer, and every required position/sequence risk flag is absent."
+  },
+  "disagreements": [
+    {
+      "questionId": "cal26-u9-wall-turn-001-q1",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "The lead reports Gold1 9.22 m, Navy2 14.50 m and Gold2 20.52 m. Frozen coordinates give Gold1=sqrt(84.25)=9.18 m, Navy2=sqrt(84.25)=9.18 m, Gold2=18.07 m. The current 'closest player' stem has a tie."
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q5",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "The keyed response is defensible, but both distractors explicitly advertise reckless behaviour ('through Gold2'; 'without checking the gap'). They are too weak for the intended U13 differentiation."
+    },
+    {
+      "questionId": "exp26-u11-001-q4",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "The lead audits (-16,-9), which is not the frozen reference (-18,-10.5). The response changes position only; it cannot establish gaze/view, and the unchanged actor facing is not toward F2."
+    },
+    {
+      "questionId": "exp26-u11-001-q8",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "Option c says the puck remains loose after a stem that supposes recovery. If interpreted as a changed state, it also prevents the planned pass, creating a third defensible answer; if held outside the hypothetical, it is a premise contradiction rather than a clean distractor."
+    },
+    {
+      "questionId": "exp26-u11-001-q9",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "The lead audits (-8,2), which is not the frozen reference (-16,-3.5). F2 starts at y=-1; the actual reference increases distance from y=0 middle from 1 m to 3.5 m and contradicts the prompt."
+    },
+    {
+      "questionId": "exp26-u11-001-q10",
+      "lead": "retain",
+      "independent": "repair",
+      "evidence": "The explanation directs a protected touch or wall-side escape without establishing possession, arrival order, or wall-side availability. It needs conditional wording."
+    }
+  ],
+  "additionalLeadEvidenceFailures": [
+    {
+      "questionId": "cal26-u7-skating-space-001-q1",
+      "evidence": "The lead calls option b's Navy2 an away actor, but Navy2 is home. The final verdict happens to remain correct because Navy2 is not the puck owner."
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q4",
+      "evidence": "The lead uses (-5,-2); frozen reference is (-5,-8)."
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q4",
+      "evidence": "The lead uses (-14,4); frozen reference is (-20,4)."
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q4",
+      "evidence": "The lead uses (5,-2); frozen reference is (8,-5)."
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q4",
+      "evidence": "The lead uses (8,-1); frozen reference is (10,-8)."
+    },
+    {
+      "questionId": "exp26-u11-001-q7",
+      "evidence": "The lead says D1 is inside, F2 is wall-side support, and b is correct. Frozen roster/geometry show D1 at the same y as YOU, F2 nearer y=0 middle, and the actual answer is a. The independent review retains a."
+    },
+    {
+      "questionId": "all position and sequence questions",
+      "evidence": "The lead marks highRisk=false for every position and sequence row, contrary to the panel instruction and despite not auditing the actual references on multiple rows."
+    }
+  ],
+  "agreements": {
+    "count": 28,
+    "note": "Both reviewers retain the other 28 questions, but agreement does not repair the lead's evidence defects or replace human coach approval."
+  },
+  "limitations": [
+    "This reconciliation compares the saved reviews against the frozen snapshot and renderer helpers; it does not edit the live bank.",
+    "Sources support age/topic principles and scanning inputs, not exact keys, placements or sequences.",
+    "No browser was used; root owns rendered-flow inspection.",
+    "Human coach approval remains separate."
+  ]
+}

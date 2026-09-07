@@ -1,0 +1,212 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "status": "complete-bounded-five-question-review",
+  "counts": {
+    "approve": 2,
+    "revise": 3,
+    "reject": 0
+  },
+  "candidateSha256": "701e93d221f3217bb0596500055faa01b2370085374ea19aecc87215077a4eba",
+  "freezeCandidateHashMatches": true,
+  "readSequence": [
+    "blind-input.json",
+    "makeScene implementation",
+    "local geometry calculation",
+    "blind-results.json saved",
+    "candidates.json and FREEZE.json",
+    "targeted full after fields and independent carried-puck line calculation"
+  ],
+  "scope": "Five q5 rewrites only; accidentally displayed candidate full scenarios after blind save, no claim to clear other questions.",
+  "rows": [
+    {
+      "questionId": "exp26-u13-002-q5",
+      "contentHash": "42933a5c518df84848eba3fab8f647ce58a4d03a2fc004897cda03e39ecebfb3",
+      "verdict": "approve",
+      "highRisk": true,
+      "blindAnswer": [
+        "b"
+      ],
+      "sceneEvidence": "makeScene puck(-24,6.7). W advance12m width9 lane-A1 gap.1473; C advance9m width2 gap5.1048; D2 advance0m width6 gap6.1392.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "conditionally reasonable",
+          "reason": "W gives most progress but widens and shown A1 is .147m from segment; unsuitable stated conjunction, may suit changed route."
+        },
+        {
+          "optionId": "b",
+          "assessment": "supported",
+          "reason": "C advances9m with receiver abs y2, and A1 is5.105m from segment."
+        },
+        {
+          "optionId": "c",
+          "assessment": "conditionally reasonable",
+          "reason": "D2 is teammate reset/reverse; no centre-ice advance from current puck."
+        }
+      ],
+      "reason": "Key b and every comparative claim are supported. This is a modest scene-reading task rather than high-level tactical diagnosis, but C actually offers progress on an inside line well separated from the shown forechecker. The explicit assess/recheck wording and conditional alternatives avoid turning the constrained aim into a universal reverse prohibition.",
+      "proposedRepair": null,
+      "limitations": [
+        "AI review only; no human coaching approval.",
+        "Current rendered/mobile evidence not inspected.",
+        "Local geometry and state examined; referenced governing-body PDFs not retrieved, so no source certification claimed."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-003-q5",
+      "contentHash": "b072a948914a2ae7695ace5bc8bf9d3cd39352d3a10cddc15bc184f240b036d6",
+      "verdict": "revise",
+      "highRisk": true,
+      "blindAnswer": [
+        "a"
+      ],
+      "sceneEvidence": "Puck(-21,7.7), initial pass14.0602m;2m toward C ->12.8035, Gold2->14.3733, boards->14.3837. A1 initial lane gap.3485, C2m gap.4639, boards2m1.3140. Toward C initial route first crosses tighter shadow before gap grows.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "mathematically supported; coaching concern",
+          "reason": "Shorter/inward but first metre worsens Gold1 shadow."
+        },
+        {
+          "optionId": "b",
+          "assessment": "conditionally reasonable direction only",
+          "reason": "Gold2 is opponent landmark; initially pass lengthens, so fails shorter aim. Do not recommend skating into opponent."
+        },
+        {
+          "optionId": "c",
+          "assessment": "conditionally reasonable",
+          "reason": "Wider lane direction actually increases initial Gold1 clearance but excluded by imposed inside constraint."
+        }
+      ],
+      "reason": "Key a is arithmetically unique but selects an initial move into a tighter forechecker shadow. At1m toward C, point clearance falls .3485 to .0388m. Shorter and inward are not sufficient evidence of useful support in this setup. Feedback checks spacing with C but fails to explain the worsening Gold1 line. Do not clear on imposed mathematical aims alone.",
+      "proposedRepair": {
+        "id": "exp26-u13-003-q5",
+        "type": "explain",
+        "prompt": "Compare a short move toward C with a short move toward the nearby side boards. Which would you test to get outside Gold 1\u2019s passing shadow, and what would you check before asking D1 for the puck?",
+        "basis": "coaching",
+        "explanation": "The first step toward C shortens the pass but initially brings its line closer to Gold 1. A short step toward the nearby boards initially moves the line farther from Gold 1. Neither establishes a usable pass: check the defender\u2019s reach and movement, board space, and your separation from C before calling. An inside route can become useful after you get past the shadow."
+      },
+      "limitations": [
+        "AI review only; no human coaching approval.",
+        "Current rendered/mobile evidence not inspected.",
+        "Local geometry and state examined; referenced governing-body PDFs not retrieved, so no source certification claimed."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-006-q5",
+      "contentHash": "8a24b41ce421f260e72b75536c4d9786c0ee18ff40f04c33fb4dea7767798b7b",
+      "verdict": "approve",
+      "highRisk": true,
+      "blindAnswer": [
+        "c"
+      ],
+      "sceneEvidence": "Puck(-8,-1.3). Start YOU(2,6), A1(-1,4). 2m centre ->(1.3675,4.1026), lane clearance.1535->1.0939m, A1 distance3.6056->2.3698m. 2m D1 clearance.1504m.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "conditionally reasonable different aim",
+          "reason": "F1 direction is up ice/wider, so fails deeper-middle even though bearing can change."
+        },
+        {
+          "optionId": "b",
+          "assessment": "conditionally reasonable",
+          "reason": "Shorter support but retains near-alignment with Gold1."
+        },
+        {
+          "optionId": "c",
+          "assessment": "supported with checks",
+          "reason": "Back/inward plus new bearing; nearby Gold1 still matters."
+        }
+      ],
+      "reason": "Key c fits deeper+middle and changes the passing bearing substantially more than heading straight to D1. Feedback explicitly warns Gold1 may still reach the line and to recheck. This teaches a relevant support principle without claiming arrival or safe reception. At2m Gold1 is closer to YOU, so retain that qualification.",
+      "proposedRepair": null,
+      "limitations": [
+        "AI review only; no human coaching approval.",
+        "Current rendered/mobile evidence not inspected.",
+        "Local geometry and state examined; referenced governing-body PDFs not retrieved, so no source certification claimed."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-011-q5",
+      "contentHash": "d2a23e78a517ea69b2a05f04c9b7b25cc3613d440086ba81e6e16a70fe92d716",
+      "verdict": "revise",
+      "highRisk": true,
+      "blindAnswer": [
+        "c"
+      ],
+      "sceneEvidence": "Carried puck starts(13,.7), NOT YOU(12,0). Short negative-y carry moves puck toward centre line initially and hits same lane at.7m. 2m endpoint puck(13,-1.3) vs positive-side(13,2.7), latter greater blocker clearance. Need recompute moving puck to net, not stale start puck.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "defensible alternative",
+          "reason": "Changes angle and initial clearance improves more, but excluded by arbitrary away-F1 aim."
+        },
+        {
+          "optionId": "b",
+          "assessment": "misleading if treated as identical puck line",
+          "reason": "Closes blocker distance; carrier centres remain aligned but offset puck line also changes slightly. Not a useful lateral escape."
+        },
+        {
+          "optionId": "c",
+          "assessment": "conditionally reasonable only",
+          "reason": "Eventually changes side of line, initially moves puck into tighter blocker line. No evidence this side is preferred."
+        }
+      ],
+      "reason": "Key c follows the arbitrary away-from-F1 constraint, not an evidenced hockey benefit. Canonical puck offset makes its earliest motion tighten the blocker line: clearance .4479m initially, .1921m after1m carry toward D2 side, zero at.7m. At2m clearance .8292; opposite side gives1.6981m. Wording says explore and does not promise safe shot, but a mathematically forced preferred direction still obscures the real read. Player-centre alignment is not puck shooting alignment.",
+      "proposedRepair": {
+        "id": "exp26-u13-011-q5",
+        "type": "explain",
+        "prompt": "Compare a short carry toward F1\u2019s side with one toward D2\u2019s side. What happens to the puck\u2019s line past Gold 1, and what would decide whether you shoot or pass next?",
+        "basis": "coaching",
+        "explanation": "Use the puck, not just your body, to judge the shooting line. It begins slightly on F1\u2019s side. A small carry farther that way moves the line farther from Gold 1 in the frozen view. Moving toward D2\u2019s side first brings it toward Gold 1\u2019s line, then changes the angle after crossing it. Recheck Gold 1, the goalie and available passes; neither carry guarantees a shot."
+      },
+      "limitations": [
+        "AI review only; no human coaching approval.",
+        "Current rendered/mobile evidence not inspected.",
+        "Local geometry and state examined; referenced governing-body PDFs not retrieved, so no source certification claimed."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-012-q5",
+      "contentHash": "5b052ceb4f30ed3dacd54a09da2185933cdb964dd6eb0bd201be53661402b1d3",
+      "verdict": "revise",
+      "highRisk": true,
+      "blindAnswer": [
+        "c"
+      ],
+      "sceneEvidence": "Puck F2(16,8.7). Start YOU(11,1): pass9.181m, A1 distance9.2195 A2distance11.4018. 2m toward Navy net ->(9.0007,.9473), pass10.4449, A1distance10.8454 A2distance13.3292. Lane A1 gap2.6032->2.6249: practically unchanged clearance.",
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "conditionally reasonable different aim",
+          "reason": "Forward support shortens pass but closes both defender distances; cannot rule out on tactical usefulness alone."
+        },
+        {
+          "optionId": "b",
+          "assessment": "conditionally reasonable different aim",
+          "reason": "Wider support shortens return pass but closes A1 distance; actual route must decide."
+        },
+        {
+          "optionId": "c",
+          "assessment": "mathematically supported; coaching concern",
+          "reason": "Retreat separates from defenders but lengthens already-available-looking backward option."
+        }
+      ],
+      "reason": "Key c satisfies farther-from-defenders but YOU already provide a backward outlet. No pressure or blocked return lane establishes a need to retreat. A2 is11.40m away, A1 9.22m; after2m retreat pass grows9.181 to10.445m while A1-to-pass gap barely changes2.603 to2.625m. Exploring alternatives is fine; grading retreat by defender distance alone is weak support coaching.",
+      "proposedRepair": {
+        "id": "exp26-u13-012-q5",
+        "type": "explain",
+        "prompt": "YOU are already behind F2 as a possible return option. What would make staying available here more useful than skating farther toward Navy\u2019s net, and what change would make you move?",
+        "basis": "coaching",
+        "explanation": "Keep a visible, usable return lane rather than moving only to increase your distance from defenders. Retreating farther increases the pass length in this view. Staying can help while F2 can use your lane; change your angle or distance if pressure, coverage or F2\u2019s movement removes it. Forward and wider support may also help when their routes are available."
+      },
+      "limitations": [
+        "AI review only; no human coaching approval.",
+        "Current rendered/mobile evidence not inspected.",
+        "Local geometry and state examined; referenced governing-body PDFs not retrieved, so no source certification claimed."
+      ]
+    }
+  ],
+  "repairLimit": "Proposed explain replacements are concrete alternatives requiring new revision, hashes, and review. If choice format is mandatory, redesign the tactical situation rather than force unique direction with arbitrary goals.",
+  "verificationLimits": "Known-defect qualification is not proof of hockey expertise; no publish, bank edit, or human approval."
+}

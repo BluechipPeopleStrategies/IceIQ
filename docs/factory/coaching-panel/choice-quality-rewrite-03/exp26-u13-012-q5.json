@@ -1,0 +1,140 @@
+{
+  "scenarioId": "exp26-u13-012",
+  "questionId": "exp26-u13-012-q5",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "status": "draft",
+  "before": {
+    "id": "exp26-u13-012-q5",
+    "type": "choice",
+    "prompt": "If Gold 2 moves into your new route, what could you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Follow the route without looking"
+      },
+      {
+        "id": "b",
+        "text": "Change direction or stay as another support option"
+      },
+      {
+        "id": "c",
+        "text": "Insist on the return pass anyway"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "The pass does not obligate the receiver to return it; another support action may be better.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-012-q5",
+    "type": "choice",
+    "prompt": "F2 has the puck. YOU want to offer a backward outlet farther from both gold defenders. Which direction should YOU explore first in this view?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Toward Gold’s net"
+      },
+      {
+        "id": "b",
+        "text": "Toward the side boards beside F2"
+      },
+      {
+        "id": "c",
+        "text": "Toward Navy’s net"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "Moving toward Navy’s net offers F2 an option farther back and initially takes YOU farther from both gold defenders. Moving toward Gold’s net closes those gaps; moving toward F2’s side boards brings YOU closer to Gold 1. Check the passing line and F2’s next action. This is one support plan, not a required retreat; a forward or wider option can become useful as pressure changes.",
+    "basis": "coaching"
+  },
+  "beforeHash": "69b8ec27bd116b66f6a0bc26d722750b1b3522397f173a5bd23db3aa655f0063",
+  "afterHash": "5b052ceb4f30ed3dacd54a09da2185933cdb964dd6eb0bd201be53661402b1d3",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "Right-net direction closes both gold gaps; plausible attacking give-and-go but not backward separation."
+    },
+    {
+      "optionId": "b",
+      "reason": "Positive-y board direction decreases Gold1 gap but increases Gold2 gap; plausible wider support but not both aims."
+    },
+    {
+      "optionId": "c",
+      "reason": "Left-net direction increases both gold gaps and remains behind F2 in attack direction; no implied possession transfer or owed return."
+    }
+  ],
+  "limitations": [
+    "Advisory author; not reviewed, approved or applied.",
+    "No motion, reach, timing, gaze, collision or completed pass simulated.",
+    "Render/mobile legibility and U13 challenge require independent assessment.",
+    "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+    "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author."
+  ],
+  "geometry": {
+    "units": "metres; source x/y; angle in degrees",
+    "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+    "actors": {
+      "YOU": [
+        11,
+        1
+      ],
+      "F2": [
+        15,
+        8
+      ],
+      "A1": [
+        18,
+        7
+      ],
+      "A2": [
+        22,
+        -2
+      ]
+    },
+    "renderedPuck": [
+      16,
+      8.7
+    ],
+    "ownerId": "home-skater-2",
+    "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+    "before": {
+      "Gold1Distance": 9.219544457292887,
+      "Gold2Distance": 11.40175425099138
+    },
+    "options": {
+      "GoldNet": {
+        "trialPosition": [
+          11.997785157856608,
+          0.933480989476226
+        ],
+        "Gold1Distance": 8.534004682228197,
+        "Gold2Distance": 10.423512482076854,
+        "passLength": 8.737078526801739
+      },
+      "F2boards": {
+        "trialPosition": [
+          11,
+          2
+        ],
+        "Gold1Distance": 8.602325267042627,
+        "Gold2Distance": 11.704699910719626,
+        "passLength": 8.360023923410745
+      },
+      "NavyNet": {
+        "trialPosition": [
+          10.000365030127147,
+          0.972982838652085
+        ],
+        "Gold1Distance": 10.015942068242753,
+        "Gold2Distance": 12.362437719524223,
+        "passLength": 9.782761061351053
+      }
+    }
+  },
+  "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+}

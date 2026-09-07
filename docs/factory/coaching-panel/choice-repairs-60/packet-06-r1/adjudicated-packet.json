@@ -1,0 +1,1048 @@
+{
+  "status": "root-adjudicated-experimental-repairs",
+  "humanCoachApproval": false,
+  "changes": [
+    {
+      "scenarioId": "exp26-u11-018",
+      "questionId": "exp26-u11-018-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-018-q5",
+        "type": "choice",
+        "prompt": "If D1 falls behind F1 and calls for help, how should YOU respond?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keep the original assignment without looking again."
+          },
+          {
+            "id": "b",
+            "text": "Recheck the immediate net threat and communicate who can cover F2."
+          },
+          {
+            "id": "c",
+            "text": "Automatically skate to the far corner."
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "New pressure information can change the responsibilities. Helping on the carrier may be needed, but F2’s route should remain part of the decision rather than disappearing from the read."
+      },
+      "after": {
+        "id": "exp26-u11-018-q5",
+        "type": "choice",
+        "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2 could have more room away from the two defenders"
+          },
+          {
+            "id": "b",
+            "text": "F1 could have more room away from the two defenders"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Putting both defenders near F1 can leave the separate runner F2 with less attention. Help may still be needed on F1, but communicate who will account for F2. Being close to the carrier does not prove that either defender wins the puck."
+      },
+      "beforeHash": "2410c936fdfe3a0542ccc352a6c4bead0a149f5e42bf86837eb7accfc35bc310",
+      "afterHash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F2 is the separate opponent away from the stated two-defender pressure; possible risk, not certain free pass."
+        },
+        {
+          "optionId": "b",
+          "reason": "Hypothetical explicitly keeps both defenders close toF1, so this is not the separation created by switching."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 13,
+          "y": 6.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "YOU",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -2,
+            "facing": 0.1
+          },
+          {
+            "id": "a2",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 3,
+            "facing": 2.5
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "F1",
+            "b": "YOU",
+            "distance": 8
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 5
+          },
+          {
+            "a": "F1",
+            "b": "G",
+            "distance": 15.231546211727817
+          },
+          {
+            "a": "F2",
+            "b": "YOU",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "F2",
+            "b": "G",
+            "distance": 9.486832980505138
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 6.4031242374328485
+          },
+          {
+            "a": "YOU",
+            "b": "G",
+            "distance": 14.142135623730951
+          },
+          {
+            "a": "D1",
+            "b": "G",
+            "distance": 10.44030650891055
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F2",
+            "distance": 10.492378186092987,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 4.241173851222982
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 1.3628940690446885
+              }
+            ]
+          },
+          {
+            "receiver": "YOU",
+            "distance": 8.75728268357257,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 5.099019513592785
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.40288204420997
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 4.763402145525822,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.082762530298218
+              },
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 6.403124237432848
+              }
+            ]
+          },
+          {
+            "receiver": "G",
+            "distance": 14.624978632463023,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 6.78975350976473
+              },
+              {
+                "actor": "YOU",
+                "team": "away",
+                "gap": 8.191464959414045
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 1.9145327117161377
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Compares consequences of a defined defensive allocation, retaining flexible help rather than fixed assignment or random far-corner action.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-018-q1",
+          "prompt": "Who is already assigned to the carrier in this practice rep?"
+        },
+        {
+          "id": "exp26-u11-018-q2",
+          "prompt": "Before choosing your backcheck route, what information belongs in the read?"
+        },
+        {
+          "id": "exp26-u11-018-q3",
+          "prompt": "Arrange this suggested backcheck check-in."
+        },
+        {
+          "id": "exp26-u11-018-q4",
+          "prompt": "Move YOU toward a useful defensive relationship with F2 and the right net. Multiple recovery spots may work."
+        },
+        {
+          "id": "exp26-u11-018-q6",
+          "prompt": "What would make your backcheck different from simply skating toward the puck?"
+        },
+        {
+          "id": "exp26-u11-018-q7",
+          "prompt": "What should YOU communicate on the backcheck?"
+        },
+        {
+          "id": "exp26-u11-018-q8",
+          "prompt": "Which two events can change your backcheck?"
+        },
+        {
+          "id": "exp26-u11-018-q9",
+          "prompt": "Move YOU between F2 and the right net."
+        },
+        {
+          "id": "exp26-u11-018-q10",
+          "prompt": "D1 calls for help after falling behind F1. How do you choose?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u11-020",
+      "questionId": "exp26-u11-020-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-020-q5",
+        "type": "choice",
+        "prompt": "If D1 turns away from D2 and carries down toward the corner, what should YOU do with the original approach?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Skate to D2’s old location without looking."
+          },
+          {
+            "id": "b",
+            "text": "Keep charging the exact original line."
+          },
+          {
+            "id": "c",
+            "text": "Recheck D1’s new route and adjust while keeping support in view."
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The carrier’s turn changes the useful angle. Depending on speed and team support, YOU might follow under control or let a teammate take over; the original point-pass cue is no longer the only cue."
+      },
+      "after": {
+        "id": "exp26-u11-020-q5",
+        "type": "choice",
+        "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1’s puck to D2 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F2 is closer to the illustrated outlet line than YOU. That is useful information to communicate while YOU assess D1’s approach angle. It does not prove F2 can intercept the pass or require a particular team system; the carrier and both support players can move."
+      },
+      "beforeHash": "68fabcc9fd8410bca336e587df655eb997c3c4d24d1f8379534ef72068bc8523",
+      "afterHash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F2(11,-2) lies nearer canonical D1-puck toD2(8,-7) segment."
+        },
+        {
+          "optionId": "b",
+          "reason": "YOU(14,6) is nearer carrier side but farther from that outlet segment; valid carrier pressure role."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "a1",
+          "x": 19,
+          "y": 6.3
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 6,
+            "facing": 0.15
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -2,
+            "facing": 0.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 7,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "D2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": -7,
+            "facing": 0.8
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 8.54400374531753
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 6.0827625302982185
+          },
+          {
+            "a": "YOU",
+            "b": "D2",
+            "distance": 14.317821063276352
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "F2",
+            "b": "D2",
+            "distance": 5.8309518948453
+          },
+          {
+            "a": "D1",
+            "b": "D2",
+            "distance": 18.439088914585774
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 5.008991914547277,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 8.54400374531753
+              },
+              {
+                "actor": "D2",
+                "team": "away",
+                "gap": 14.317821063276352
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 11.527792503337315,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.3918028962336444
+              },
+              {
+                "actor": "D2",
+                "team": "away",
+                "gap": 5.8309518948453
+              }
+            ]
+          },
+          {
+            "receiver": "D2",
+            "distance": 17.259490143106778,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 3.66175359040031
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 0.8748810002380482
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Adds teammate/outlet relationship without mandating a route after a turn; no inferred interception or role from F label.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-020-q1",
+          "prompt": "Which gold player is the possible outlet near the point, close to the blue line?"
+        },
+        {
+          "id": "exp26-u11-020-q2",
+          "prompt": "What should YOU check before accelerating at D1?"
+        },
+        {
+          "id": "exp26-u11-020-q3",
+          "prompt": "Arrange this suggested forecheck read."
+        },
+        {
+          "id": "exp26-u11-020-q4",
+          "prompt": "Move YOU to an example approach position between D1’s half-wall possession and D2’s point outlet."
+        },
+        {
+          "id": "exp26-u11-020-q6",
+          "prompt": "How does naming “half wall” and “point” help explain this forecheck?"
+        },
+        {
+          "id": "exp26-u11-020-q7",
+          "prompt": "What should YOU call before closing D1?"
+        },
+        {
+          "id": "exp26-u11-020-q8",
+          "prompt": "Which lane checks keep this forecheck approach honest?"
+        },
+        {
+          "id": "exp26-u11-020-q9",
+          "prompt": "Move YOU toward D1 while keeping D2 visible."
+        },
+        {
+          "id": "exp26-u11-020-q10",
+          "prompt": "D1 turns away from D2. How should your approach change?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u11-002-q2",
+        "type": "multi",
+        "prompt": "Which two observations shape a useful receiving spot?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 can close the inside shoulder"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 can reach the new spot cleanly"
+          },
+          {
+            "id": "c",
+            "text": "Whether F2 is up ice regardless of the lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open."
+      },
+      "after": {
+        "id": "exp26b-u11-002-q2",
+        "type": "multi",
+        "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 is behind YOU toward Navy’s defending end"
+          },
+          {
+            "id": "b",
+            "text": "D1 is ahead of YOU and nearer the middle"
+          },
+          {
+            "id": "c",
+            "text": "F2 is behind YOU on the same up-ice side as F1"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available."
+      },
+      "beforeHash": "6226023c8e8f73fe8b1b9dc61141c903f9c00df00a07e43b4c053ae38b7899e3",
+      "afterHash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "F1x-14 versusYOU-7 is farther towarddefendedleftend."
+        },
+        {
+          "optionId": "b",
+          "reason": "D1x-5 is ahead and|y|1<YOU4 is nearer middle."
+        },
+        {
+          "optionId": "c",
+          "reason": "F2x2 is ahead, opposite longitudinal relationship fromF1; genuine alternate spatial account but false in frame."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h2",
+          "x": -13,
+          "y": 1.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": 4,
+            "facing": 2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": 7,
+            "facing": 0.2
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": 1,
+            "facing": 3
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 7.615773105863909
+          },
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 9.486832980505138
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 3.6055512754639896
+          },
+          {
+            "a": "F1",
+            "b": "F2",
+            "distance": 17.08800749063506
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 9
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 9.219544457292887
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 6.4257295305669375,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.486832980505138
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.6055512754639896
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 15.908802594790094,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 0.16971736143637928
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.325203118512766
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 8.030566605165541,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 2.814247251926519
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 9.219544457292887
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Three matched visible relationships replace disqualifying a legitimate F2 cue via regardless wording.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u11-002-q1",
+          "prompt": "Who owns the puck before F1 releases it?"
+        },
+        {
+          "id": "exp26b-u11-002-q3",
+          "prompt": "Arrange this receiving decision."
+        },
+        {
+          "id": "exp26b-u11-002-q4",
+          "prompt": "Move YOU to a receiving point with more separation from D1 and a visible lane from F1."
+        },
+        {
+          "id": "exp26b-u11-002-q5",
+          "prompt": "D1 steps into your inside shoulder as F1 releases. Which reception fits the changed cue?"
+        },
+        {
+          "id": "exp26b-u11-002-q6",
+          "prompt": "Why can a wider receiving angle help here, and what would make you change it?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26b-u11-004",
+      "questionId": "exp26b-u11-004-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Adjust support relative to F2 and call the available lane"
+          },
+          {
+            "id": "b",
+            "text": "Follow F2’s route without checking D1’s new lane"
+          },
+          {
+            "id": "c",
+            "text": "Hold the old return point without checking F2’s route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Support follows the actual carrier. Update F2’s route and D1’s lane instead of chasing blindly or holding the old return point."
+      },
+      "after": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line from F2’s puck to YOU"
+          },
+          {
+            "id": "b",
+            "text": "The line from F2’s puck to F1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves."
+      },
+      "beforeHash": "cebce1ea791f3100a5f505fc429d5cb3fa4079c898cf0559cf4f72dd2f675018",
+      "afterHash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D1 is near canonical F2-puck toYOU segment, matching shaded old return picture."
+        },
+        {
+          "optionId": "b",
+          "reason": "F1 is opposite-side support with greater D1 segment separation; actual same-team receiver."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h2",
+          "x": 17.8409980462847,
+          "y": -0.11528406471606967
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 0.2
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -6,
+            "facing": 0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 1,
+            "facing": 2.8
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "YOU",
+            "b": "F1",
+            "distance": 10
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 4.242640687119286
+          },
+          {
+            "a": "F2",
+            "b": "F1",
+            "distance": 7.0710678118654755
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 2.8284271247461903
+          },
+          {
+            "a": "F1",
+            "b": "D1",
+            "distance": 7.615773105863909
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 7.145125688888033,
+            "otherSkaterGaps": [
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 8.174800977075199
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 0.7245697514820884
+              }
+            ]
+          },
+          {
+            "receiver": "F1",
+            "distance": 8.291389498490968,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 7.044655238241746
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 2.802044038863387
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 3.052069534595023,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.242640687119286
+              },
+              {
+                "actor": "F1",
+                "team": "home",
+                "gap": 7.615773105863909
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Compares the real alternate teammate rather than forcing follower/holder behavior after unspecified carrier motion.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26b-u11-004-q1",
+          "prompt": "What changed when the pass reached F2?"
+        },
+        {
+          "id": "exp26b-u11-004-q2",
+          "prompt": "Which two details should shape your next support spot?"
+        },
+        {
+          "id": "exp26b-u11-004-q3",
+          "prompt": "Arrange this post-pass support read."
+        },
+        {
+          "id": "exp26b-u11-004-q4",
+          "prompt": "Move YOU toward the side boards to offer a new angle to F2."
+        },
+        {
+          "id": "exp26b-u11-004-q6",
+          "prompt": "What can your support accomplish when F2 keeps the puck?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "adjudications": [
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u11-018-q5",
+      "afterHash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u11-018-q5",
+      "afterHash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520",
+      "verdict": "approve",
+      "reason": "The explicit two-defender carrier focus leaves a separate runner as the relevant coverage risk; no automatic puck win.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u11-020-q5",
+      "afterHash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u11-020-q5",
+      "afterHash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b",
+      "verdict": "approve",
+      "reason": "F2 is nearer the finite D1-puck to D2 segment; this is location evidence, not interception timing.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u11-002-q2",
+      "afterHash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u11-002-q2",
+      "afterHash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1",
+      "verdict": "approve",
+      "reason": "Up-ice and middle relationships agree with coordinates; the alternative reverses the advanced teammate position.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26b-u11-004-q5",
+      "afterHash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26b-u11-004-q5",
+      "afterHash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795",
+      "verdict": "approve",
+      "reason": "The actual second support line is farther from D1; both options remain real passes with conditional availability.",
+      "evidence": "root-review.json"
+    }
+  ]
+}

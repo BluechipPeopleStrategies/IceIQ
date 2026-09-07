@@ -1,0 +1,191 @@
+{
+  "scenarios": [
+    {
+      "id": "exp26-u13-011",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "The point shot has a blocker",
+      "family": "shooting-lane",
+      "topic": "shooting lane",
+      "objective": "Compare the current shooting lane with another angle.",
+      "briefing": "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 13,
+            "y": -8,
+            "facing": 1.695151321341658
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": 6,
+            "facing": -2.642245931909663
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 1 shares the centre lane between the puck and the attacking net.",
+        "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side."
+      ],
+      "tags": [
+        "shooting-lane"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 18, Shooting",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-011-q5",
+          "type": "choice",
+          "prompt": "YOU are weighing the two teammate passes. Which direct passing line stays farther from Gold 1 in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The pass from YOU to D2"
+            },
+            {
+              "id": "b",
+              "text": "The pass from YOU to F1"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-012",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Offer again after a short pass",
+      "family": "give-and-go-support",
+      "topic": "give and go support",
+      "objective": "Recognize a useful off-puck movement after passing.",
+      "briefing": "YOU have just passed to F2. Gold 1 faces F2 near the boards. You are still in the place from which you passed; the exercise asks you to seek another visible option. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 1,
+            "facing": 1.0516502125483738
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": 8,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": 7,
+            "facing": 2.819842099193151
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 22,
+            "y": -2,
+            "facing": 2.1815222911841055
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The puck is now assigned to F2 after the stated pass.",
+        "YOU have just passed to F2. Gold 1 faces F2 near the boards. You are still in the place from which you passed; the exercise asks you to seek another visible option."
+      ],
+      "tags": [
+        "give-and-go-support"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-012-q5",
+          "type": "choice",
+          "prompt": "Before offering an inside option, which description matches the two gold defenders in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 is closer to F2; Gold 2 is farther toward the attacking net and nearer the middle"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2 is closer to F2; Gold 1 is farther toward the attacking net and nearer the middle"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    }
+  ]
+}

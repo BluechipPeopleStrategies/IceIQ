@@ -1,0 +1,181 @@
+[
+  {
+    "scene": {
+      "id": "exp26-u9-003",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Look beyond the nearest jersey",
+      "family": "near-far-support",
+      "topic": "Passing",
+      "objective": "Compare a nearby covered teammate with another support option.",
+      "briefing": "YOU have the puck. Navy2 is nearby, but Gold1 occupies the direct line to Navy2. Navy3 is farther away at another angle; Gold2 is away from that illustrated line. Compare the options before trying a pass. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -6,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -5,
+            "facing": 2.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3.5,
+            "y": 4,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": 2,
+            "facing": -2.7
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Navy2 is the nearer teammate.",
+        "Gold1 sits on that near line.",
+        "Navy3 offers another angle."
+      ],
+      "tags": [
+        "near-far-support",
+        "foundation",
+        "experimental"
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. "
+    },
+    "question": {
+      "type": "multi",
+      "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gold 1 is close to the passing line to Navy 2"
+        },
+        {
+          "id": "b",
+          "text": "Navy 3 offers a different passing angle away from Gold 1"
+        },
+        {
+          "id": "c",
+          "text": "Both teammates lie on the same passing line behind Gold 1"
+        }
+      ],
+      "basis": "scene",
+      "id": "exp26-u9-003-q3"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u9-007",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Pressure before a wall reception",
+      "family": "wall-reception-pressure",
+      "topic": "Receiving",
+      "objective": "Read the pressure side before a planned pass reaches the wall.",
+      "briefing": "Navy2 holds the puck and plans a pass to YOU near the boards. Gold1 approaches from the circle side; Navy3 is a second navy option along the wall. This freeze is before the pass, so YOU cannot shoot or carry the puck yet. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -10,
+            "facing": 2.7
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": -0.6
+          },
+          {
+            "id": "home-skater-3",
+            "label": "H3",
+            "team": "home",
+            "role": "skater",
+            "x": 23,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": -4,
+            "facing": -1.4
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The puck still belongs to Navy2.",
+        "YOU wait near the boards.",
+        "Gold1 approaches from the circle side."
+      ],
+      "tags": [
+        "wall-reception-pressure",
+        "foundation",
+        "experimental"
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. "
+    },
+    "question": {
+      "type": "choice",
+      "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Navy 3"
+        },
+        {
+          "id": "b",
+          "text": "Navy 2"
+        }
+      ],
+      "basis": "coaching",
+      "id": "exp26-u9-007-q5"
+    }
+  }
+]

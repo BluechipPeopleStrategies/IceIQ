@@ -490,6 +490,7 @@ function lazyWithReload(factory) {
   }));
 }
 
+const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
 const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));

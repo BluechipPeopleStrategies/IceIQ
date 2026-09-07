@@ -1,0 +1,57 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "readSequence": [
+    "blind-input.json",
+    "makeScene definition",
+    "local Python geometry calculations"
+  ],
+  "visualInspected": false,
+  "externalSourcesConsulted": false,
+  "rows": [
+    {
+      "questionId": "exp26-u13-002-q5",
+      "answer": [
+        "b"
+      ],
+      "ambiguity": "C is unique under imposed advance/no-wider constraint. W advances more but wider and A1 almost on lane. D2 is valid conditional reset.",
+      "geometry": "makeScene puck(-24,6.7). W advance12m width9 lane-A1 gap.1473; C advance9m width2 gap5.1048; D2 advance0m width6 gap6.1392.",
+      "coachingUsefulness": "Reasonable assess-C read; phrase as progress through available inside lane instead of numerical maximization. Reverse remains conditional."
+    },
+    {
+      "questionId": "exp26-u13-003-q5",
+      "answer": [
+        "a"
+      ],
+      "ambiguity": "Unique shorter+inside direction; not unique best hockey support route. Board-side movement opens lane more at equal2m stride.",
+      "geometry": "Puck(-21,7.7), initial pass14.0602m;2m toward C ->12.8035, Gold2->14.3733, boards->14.3837. A1 initial lane gap.3485, C2m gap.4639, boards2m1.3140. Toward C initial route first crosses tighter shadow before gap grows.",
+      "coachingUsefulness": "Shorten and inside is valid coaching drill goal but lacks reason to select over immediately wider open lane. Do not describe two strides as usable pass; still close to A1."
+    },
+    {
+      "questionId": "exp26-u13-006-q5",
+      "answer": [
+        "c"
+      ],
+      "ambiguity": "F1 also changes angle more than straight toward D1 but fails deeper+middle aims. Centre direction uniquely fits conjunction.",
+      "geometry": "Puck(-8,-1.3). Start YOU(2,6), A1(-1,4). 2m centre ->(1.3675,4.1026), lane clearance.1535->1.0939m, A1 distance3.6056->2.3698m. 2m D1 clearance.1504m.",
+      "coachingUsefulness": "Potentially useful changing angle rather than skating down covered passing line; must check approaching A1. Centre dot is direction cue, not destination or permission for automatic pass."
+    },
+    {
+      "questionId": "exp26-u13-011-q5",
+      "answer": [
+        "c"
+      ],
+      "ambiguity": "Correct only because away-from-F1 is stipulated; both lateral sides alter shooting angle. No reason given to prefer that side.",
+      "geometry": "Carried puck starts(13,.7), NOT YOU(12,0). Short negative-y carry moves puck toward centre line initially and hits same lane at.7m. 2m endpoint puck(13,-1.3) vs positive-side(13,2.7), latter greater blocker clearance. Need recompute moving puck to net, not stale start puck.",
+      "coachingUsefulness": "Revision needed: imposed direction conceals coaching decision. Do not teach moving away from teammate as automatically helpful."
+    },
+    {
+      "questionId": "exp26-u13-012-q5",
+      "answer": [
+        "c"
+      ],
+      "ambiguity": "Unique further-from-both direction but YOU already behind F2 with usable-looking outlet. No need for retreat established.",
+      "geometry": "Puck F2(16,8.7). Start YOU(11,1): pass9.181m, A1 distance9.2195 A2distance11.4018. 2m toward Navy net ->(9.0007,.9473), pass10.4449, A1distance10.8454 A2distance13.3292. Lane A1 gap2.6032->2.6249: practically unchanged clearance.",
+      "coachingUsefulness": "Revision needed: increasing distance from defenders without pressure/coverage cue can worsen support by lengthening already available pass. Explicitly ask whether stay/reoffer, or add genuine need."
+    }
+  ]
+}

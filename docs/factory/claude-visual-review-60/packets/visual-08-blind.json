@@ -1,0 +1,632 @@
+{
+  "packetId": "visual-08",
+  "scenes": [
+    {
+      "id": "exp26b-u13-020",
+      "version": 4,
+      "ageBand": "U13",
+      "title": "Keep the third player connected",
+      "family": "third-player-balance",
+      "topic": "neutral-zone transition",
+      "objective": "Choose a third-player height that supports rush and recovery",
+      "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries up the left side with W inside. YOU are the third Navy player, Gold 1 defends the carrier, and Gold 2 is high.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 8,
+            "facing": 2.9
+          },
+          {
+            "id": "n2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -7,
+            "facing": 2.9
+          },
+          {
+            "id": "n3",
+            "label": "W",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 3
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": -5,
+            "facing": 3
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": 7,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "n2",
+          "x": 16.862,
+          "y": -7.44
+        }
+      },
+      "focusActorId": "n1",
+      "tags": [
+        "third-player-balance",
+        "neutral-zone transition"
+      ],
+      "sources": [
+        {
+          "id": "hc-u17-principles",
+          "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+          "section": "PDF pages 7–8, team support and transition principles",
+          "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "Closing The Gap and A Proper Angle",
+          "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "If Gold 1 wins control from F1, which gold attacker starts nearest YOU to account for during recovery?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2"
+            }
+          ],
+          "basis": "coaching",
+          "id": "exp26b-u13-020-q5"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u15-001",
+      "version": 2,
+      "ageBand": "U15",
+      "title": "Pinch only with the declared cover",
+      "family": "supported-pinch",
+      "topic": "Offensive blue line",
+      "objective": "Evaluate a pinch under an explicitly stated cover assignment.",
+      "briefing": "Navy uses a drill rule: YOU may pinch the puck-side wall only while F3 covers your high position. F1 contests Gold 1’s rim; F3 is currently closer to Gold’s net than the puck, so the named cover is not established. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 8,
+            "facing": 0.21866894587394195
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": 0.982793723247329
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 21,
+            "y": 9,
+            "facing": 2.356194490192345
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 24,
+            "y": -4,
+            "facing": 1.849095985800008
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 1,
+            "facing": 1.3521273809209546
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": 8,
+            "facing": 2.5535900500422257
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 4,
+            "facing": 0.982793723247329
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": -3,
+            "facing": 1.5707963267948966
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": 25,
+            "y": 1,
+            "facing": 2.0778948311872334
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": 20,
+          "y": 10
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "supported-pinch"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 20, Offensive Zone Play",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u15-001-q2",
+          "type": "multi",
+          "prompt": "Which three checks belong before considering a pinch under this drill’s stated cover rule?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F3 has taken the agreed high-cover responsibility"
+            },
+            {
+              "id": "b",
+              "text": "The current wall contest leaves a puck route YOU can reach"
+            },
+            {
+              "id": "c",
+              "text": "D2’s position allows the defenders to coordinate recovery"
+            },
+            {
+              "id": "d",
+              "text": "F2 remaining low has filled the high-cover job assigned to F3"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u15-002",
+      "version": 3,
+      "ageBand": "U15",
+      "title": "Draw one penalty killer at the half wall",
+      "family": "power-play-local-advantage",
+      "topic": "Power-play support",
+      "objective": "Recognize a local passing choice within a stated five-on-four setup.",
+      "briefing": "Navy has five skaters against four. YOU control the puck at the puck-side half wall. In this exercise F2 is the low option and F3 the slot option; Gold 1 is the nearest penalty killer. No named formation is mandatory. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 9,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 24,
+            "y": 6,
+            "facing": 2.677945044588987
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 21,
+            "y": -1,
+            "facing": 1.8622531212727638
+          },
+          {
+            "id": "home-skater-4",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 3,
+            "facing": 0.7086262721276703
+          },
+          {
+            "id": "home-skater-5",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -8,
+            "facing": 1.2315037123408519
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 5,
+            "facing": 2.0344439357957027
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": 1,
+            "facing": 2.129395642138459
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": -4,
+            "facing": 1.4940244355251187
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "role": "skater",
+            "x": 14,
+            "y": 1,
+            "facing": 1.1071487177940904
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "power-play-local-advantage"
+      ],
+      "sources": [
+        {
+          "id": "usa-special-teams-2015",
+          "title": "Special Teams Tactics with Mike Guentzel",
+          "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+          "section": "Youth power-play advice / creating 2-on-1s",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u15-002-q5",
+          "type": "choice",
+          "prompt": "If Gold 1 moves toward F2, which other shown Gold skater is closest to F3’s current slot position and needs checking before an inside pass?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "Gold 3"
+            },
+            {
+              "id": "c",
+              "text": "Gold 4"
+            }
+          ],
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u15-002-q7",
+          "type": "choice",
+          "prompt": "Which pressure call matches the two direct passing lines in this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 is nearer the line to F3 than the line to F2; check both options"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1 is nearer the line to F2 than the line to F3; check both options"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u15-005",
+      "version": 3,
+      "ageBand": "U15",
+      "title": "Replace high support after the entry pass",
+      "family": "entry-role-replacement",
+      "topic": "Zone-entry timing",
+      "objective": "Track a changing support role after a delay pass.",
+      "briefing": "YOU delayed in a wide attacking-zone lane and passed inside to F2. Under the coach’s plan, YOU now offer support closer to the blue line than F2 as the attack continues. Navy attacks the right net.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 20,
+            "y": 8,
+            "facing": -1.695151321341658
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 19,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 24,
+            "y": -5,
+            "facing": 2.356194490192345
+          },
+          {
+            "id": "home-skater-4",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 4,
+            "facing": -0.4182243295792291
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 22,
+            "y": 6,
+            "facing": -2.0344439357957027
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": -1,
+            "facing": 2.896613990462929
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": -4,
+            "facing": 0.9272952180016122
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "entry-role-replacement"
+      ],
+      "sources": [
+        {
+          "id": "hc-practice-2020",
+          "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+          "section": "Printed page 2, Entries — Delay",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u15-005-q5",
+          "type": "choice",
+          "prompt": "If Gold 2 wins control at the shown position, which Navy teammate starts farther back toward Navy’s net to include in the recovery conversation?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "F3"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u15-007",
+      "version": 3,
+      "ageBand": "U15",
+      "title": "Hinge around a two-player forecheck",
+      "family": "regroup-under-pressure",
+      "topic": "Neutral-zone regroup",
+      "objective": "Assess a reset when the first forward lanes are covered.",
+      "briefing": "YOU control a neutral-zone regroup. Gold 1 closes your board side and Gold 2 screens the direct route to F1. D2 is deeper on the opposite side; the drill permits a D-to-D reset when available. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -4,
+            "y": 6,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -5,
+            "facing": 1.0714496051147666
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 7,
+            "facing": -3.058451421701352
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 4,
+            "y": -4,
+            "facing": 2.2455372690184494
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -8,
+            "facing": 2.4227626539681686
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 0,
+            "y": 6,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 7,
+            "facing": -3.017237659043032
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "role": "skater",
+            "x": 11,
+            "y": -2,
+            "facing": 2.651635327336065
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "regroup-under-pressure"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 14, Neutral Zone Regroups",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u15-007-q5",
+          "type": "choice",
+          "prompt": "Imagine Gold 2 leaves F1’s line while the other players stay at their shown positions. Which remaining forechecker is still nearer that direct passing line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 3"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    }
+  ]
+}

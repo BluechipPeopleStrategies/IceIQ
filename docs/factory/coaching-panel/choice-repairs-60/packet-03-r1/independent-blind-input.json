@@ -1,0 +1,193 @@
+[
+  {
+    "scene": {
+      "id": "exp26b-u9-003",
+      "ageBand": "U9",
+      "objective": "Approach a loose puck while identifying pressure and a support option.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. A loose puck sits in the attacking zone, off to one side. YOU are closest. Gold1 approaches from the circle side. Navy2 waits along the boards behind YOU.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 20,
+            "y": -8,
+            "facing": 1.1
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": -9,
+            "facing": 0.1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": -3,
+            "facing": -1.4
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": 22,
+          "y": -7
+        }
+      },
+      "cues": [
+        "The puck is loose.",
+        "YOU are closest.",
+        "Gold1 approaches from the circle side and Navy2 waits behind."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u9-003-q5",
+      "type": "choice",
+      "prompt": "Imagine Gold 1 arrives beside the loose puck first. Which next observation would show that YOU now need to defend a puck carrier?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gold 1 gets the puck under control"
+        },
+        {
+          "id": "b",
+          "text": "Gold 1 is the closest player to the puck"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u9-004",
+      "ageBand": "U9",
+      "objective": "Change roles after a turnover and recover through a useful defensive lane.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Gold1 has just taken the puck in navy's attacking zone. YOU are behind the play, off to one side. Navy2 is closer to the middle. The coach asks YOU to recover while watching the puck carrier.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": 7,
+            "facing": 3
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 1,
+            "facing": 3.1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 13,
+            "y": 0,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "cues": [
+        "Gold1 has just taken the puck.",
+        "YOU are behind the play.",
+        "Navy2 is closer to the middle."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u9-004-q5",
+      "type": "choice",
+      "prompt": "Which defensive picture should guide YOUR recovery toward Navy\u2019s net in this freeze?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Navy 2 is nearer Navy\u2019s net than Gold 1; YOU are farther from it than Gold 1"
+        },
+        {
+          "id": "b",
+          "text": "YOU are nearer Navy\u2019s net than Gold 1; Navy 2 is farther from it than Gold 1"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u9-005",
+      "ageBand": "U9",
+      "objective": "Keep the puck carrier and support player in view while recovering.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. The coach asks YOU to move backward toward the navy end while facing the attacking end. Gold1 carries the puck toward YOU. Navy2 waits behind and to your side.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -5,
+            "facing": 0.2
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 13,
+            "y": 0,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "cues": [
+        "The coach names a backward-moving practice.",
+        "Gold1 carries toward YOU.",
+        "Navy2 is behind and to the side."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u9-005-q5",
+      "type": "choice",
+      "prompt": "Before changing your backward route, which arrangement should YOU account for in this view?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Navy 2 is behind YOU and off to one side; Gold 1 is in front of YOU"
+        },
+        {
+          "id": "b",
+          "text": "Gold 1 is behind YOU and off to one side; Navy 2 is in front of YOU"
+        }
+      ],
+      "basis": "scene"
+    }
+  }
+]

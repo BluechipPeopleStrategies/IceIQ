@@ -1,0 +1,657 @@
+{
+  "status": "root-adjudicated-experimental-repairs",
+  "humanCoachApproval": false,
+  "changes": [
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-007-q5",
+        "type": "choice",
+        "prompt": "If D1 follows toward the wall and F2’s lane opens, what becomes worth checking?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether an inside pass is now usable"
+          },
+          {
+            "id": "b",
+            "text": "Whether staying at the boards is always required"
+          },
+          {
+            "id": "c",
+            "text": "Whether F2’s earlier position still guarantees an outlet"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure can change the outlet. A pass still depends on control and a clear actual lane."
+      },
+      "after": {
+        "id": "exp26-u11-007-q5",
+        "type": "choice",
+        "prompt": "To begin giving the puck more room from D1, which short carry could YOU explore in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A small move toward the nearby side boards"
+          },
+          {
+            "id": "b",
+            "text": "A small move toward the middle of the rink"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 is on the middle side. A small move toward the boards initially increases the puck’s separation from D1; moving inward initially brings it closer. Keep the puck controlled and leave room to move: this is not an instruction to trap yourself on the wall. Recheck F2 and D1 before continuing or passing."
+      },
+      "beforeHash": "4b19e7144395402f9b72a7fae4a18c8842fe601046d4af730265e453cb4a14f3",
+      "afterHash": "8688fc07987b67d17674d9c5753cb753d4596f911b26824f82fec289c559ab66",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "With facing held for comparison, one-metre +y carry moves puck(8,8.7) to(8,9.7): D1(9,6) gap increases2.879 to3.833m."
+        },
+        {
+          "optionId": "b",
+          "reason": "One-metre -y carry moves puck(8,7.7), gap1.972m; an inside turn may become useful after pressure changes, not initial separation here."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 8,
+          "y": 8.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 7,
+            "y": 8,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 2,
+            "facing": 2.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 9,
+            "y": 6,
+            "facing": 2.356
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 7.211102550927979
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 2.8284271247461903
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 4.47213595499958
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F2",
+            "distance": 7.340980860893182,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 0.1907102097838271
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 2.8792360097775935,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 4.47213595499958
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Directly serves puck-protection topic with a bounded initial move that improves pressure separation; no arbitrary distant endpoint or guaranteed escape.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-007-q1",
+          "prompt": "Which shown player is the immediate opponent near YOU?"
+        },
+        {
+          "id": "exp26-u11-007-q2",
+          "prompt": "What would help preserve options during this carry?"
+        },
+        {
+          "id": "exp26-u11-007-q3",
+          "prompt": "Arrange this suggested pressure response."
+        },
+        {
+          "id": "exp26-u11-007-q4",
+          "prompt": "Move YOU to a possible holding spot away from D1’s current approach."
+        },
+        {
+          "id": "exp26-u11-007-q6",
+          "prompt": "How could protecting the puck help F2 become useful?"
+        },
+        {
+          "id": "exp26-u11-007-q7",
+          "prompt": "What communication matches this protected carry?"
+        },
+        {
+          "id": "exp26-u11-007-q8",
+          "prompt": "Which two cues support holding the outside shoulder?"
+        },
+        {
+          "id": "exp26-u11-007-q9",
+          "prompt": "Move YOU toward the outside while keeping F2 inside the picture."
+        },
+        {
+          "id": "exp26-u11-007-q10",
+          "prompt": "D1 follows outside and F2 opens. Explain the next decision."
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-008-q5",
+        "type": "choice",
+        "prompt": "Suppose D1 turns and reaches the wide lane before you do. What could YOU change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keep the route because it was open earlier"
+          },
+          {
+            "id": "b",
+            "text": "Reconsider pace, direction or F2’s outlet"
+          },
+          {
+            "id": "c",
+            "text": "Assume F2 will remain available without checking"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A closing lane may call for a different action. The appropriate response depends on the new timing and control."
+      },
+      "after": {
+        "id": "exp26-u11-008-q5",
+        "type": "choice",
+        "prompt": "YOU are considering a short carry straight toward the attacking end. What should YOU notice about the space to F2 as you advance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The gap to F2 gets smaller, so check that both players still have room"
+          },
+          {
+            "id": "b",
+            "text": "The gap to F2 gets larger, so check that F2 stays close enough to support"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F2 is ahead on the same wide side, so a short forward carry brings YOU closer. That may shorten a pass, but it can also crowd the support space. Keep checking D1; this frame supplies spacing, not a speed or a successful way past the defender."
+      },
+      "beforeHash": "fff785aed1f075143bb17734280c4f7e11185662d11b63711df12b54de7d7d78",
+      "afterHash": "46872470de5a9b9791e7def999319ef6750216071e6d9f2c69d60112d863099f",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "YOU(-7,-4) toward+x reduces distance toF2(1,-6); first1m actor gap8.246 to7.280m, puck gap7.503 to6.579m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Would describe a teammate behindYOU; F2 is ahead, so first forward carry does not enlarge the gap."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": -6,
+          "y": -3.3
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": -4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": -6,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 2,
+            "facing": -2.8
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 8.246211251235321
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 8.54400374531753
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F2",
+            "distance": 7.502666192761078,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 6.384397062235843
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 6.640030120413612,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.2138226982946705
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Adds carrier/teammate spacing tradeoff to pace scene without inferring speed or giving an unconditional route; not a best-play claim.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-008-q1",
+          "prompt": "What can this neutral-zone freeze tell you directly?"
+        },
+        {
+          "id": "exp26-u11-008-q2",
+          "prompt": "Which cues could change a carry decision?"
+        },
+        {
+          "id": "exp26-u11-008-q3",
+          "prompt": "Arrange this suggested open-space read."
+        },
+        {
+          "id": "exp26-u11-008-q4",
+          "prompt": "Move YOU into a possible next wide carrying position."
+        },
+        {
+          "id": "exp26-u11-008-q6",
+          "prompt": "What movement would you watch to decide whether to keep carrying?"
+        },
+        {
+          "id": "exp26-u11-008-q7",
+          "prompt": "What would you tell F2 during the open carry?"
+        },
+        {
+          "id": "exp26-u11-008-q8",
+          "prompt": "Which two updates should follow D1's turn?"
+        },
+        {
+          "id": "exp26-u11-008-q9",
+          "prompt": "Move YOU farther into the forward lane before D1 closes."
+        },
+        {
+          "id": "exp26-u11-008-q10",
+          "prompt": "D1 reaches the wide lane. How do you keep the play alive?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u11-013",
+      "questionId": "exp26-u11-013-q5",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "before": {
+        "id": "exp26-u11-013-q5",
+        "type": "choice",
+        "prompt": "If D1 moves toward F2 and the direct lane clears, what becomes worth reconsidering?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A controlled shot through the newly available lane"
+          },
+          {
+            "id": "b",
+            "text": "Only a pass to the same half-wall spot"
+          },
+          {
+            "id": "c",
+            "text": "Shooting without checking the changed pressure"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "A changed blocker can make a shot more plausible. Control, pressure and the goalie still matter."
+      },
+      "after": {
+        "id": "exp26-u11-013-q5",
+        "type": "choice",
+        "prompt": "Before choosing between a pass and a shot, which direct line has more space from D1 in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line from the puck to F2"
+          },
+          {
+            "id": "b",
+            "text": "The line from the puck to the net"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The line to F2 goes farther around D1 than the direct line to the net. That makes the half-wall pass worth assessing, not automatically the best play. The goalie, puck control and any change in pressure still matter; a later shot may become useful."
+      },
+      "beforeHash": "45c2b6a7904a379685f84e1e1aab7ba82da86724dc952d94972d9f7f72934356",
+      "afterHash": "b2916cc27472cf3fe54d66b5acbf16b43e13a5e66e378d17b3a4b217f970d793",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Canonical puck(17,.7) toF2(18,8) has D1(20,0) gap about3.08m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Puck-to-net(26,0) line passes within about.465m ofD1; point proximity is not a measured block or goal probability."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "h1",
+          "x": 17,
+          "y": 0.7
+        },
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 8,
+            "facing": -2.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 0,
+            "facing": 3.14
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.14
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 8.246211251235321
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 4
+          },
+          {
+            "a": "YOU",
+            "b": "G",
+            "distance": 10
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 8.246211251235321
+          },
+          {
+            "a": "F2",
+            "b": "G",
+            "distance": 11.313708498984761
+          },
+          {
+            "a": "D1",
+            "b": "G",
+            "distance": 6
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "F2",
+            "distance": 7.368174807915459,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 3.0805843601498726
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 3.0805843601498726,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.368174807915459
+              }
+            ]
+          },
+          {
+            "receiver": "G",
+            "distance": 9.027181176868005,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.355563015634257
+              },
+              {
+                "actor": "D1",
+                "team": "away",
+                "gap": 0.4652615160491548
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Two real puck-action lines with visible blocker distinction; removes only/unchecked wording and respects actual stick offset.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u11-013-q1",
+          "prompt": "Who occupies the direct line from YOU through the slot to the goal?"
+        },
+        {
+          "id": "exp26-u11-013-q2",
+          "prompt": "Which cues should be considered together?"
+        },
+        {
+          "id": "exp26-u11-013-q3",
+          "prompt": "Arrange this suggested high-slot decision routine."
+        },
+        {
+          "id": "exp26-u11-013-q4",
+          "prompt": "Move YOU toward a possible shooting angle away from D1’s current line."
+        },
+        {
+          "id": "exp26-u11-013-q6",
+          "prompt": "Why might the slot and half wall offer different choices on this play?"
+        },
+        {
+          "id": "exp26-u11-013-q7",
+          "prompt": "What should YOU call when D1 moves toward F2?"
+        },
+        {
+          "id": "exp26-u11-013-q8",
+          "prompt": "Which two checks belong before using the opening?"
+        },
+        {
+          "id": "exp26-u11-013-q9",
+          "prompt": "Move YOU to a slight outside shooting angle with F2 visible."
+        },
+        {
+          "id": "exp26-u11-013-q10",
+          "prompt": "D1 leaves the lane but F2 is covered. What is your next read?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "adjudications": [
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u11-007-q5",
+      "afterHash": "8688fc07987b67d17674d9c5753cb753d4596f911b26824f82fec289c559ab66",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u11-007-q5",
+      "afterHash": "8688fc07987b67d17674d9c5753cb753d4596f911b26824f82fec289c559ab66",
+      "verdict": "approve",
+      "reason": "A small boardward move increases separation from the middle-side defender and leaves board room; feedback bounds the claim to an initial comparison.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u11-008-q5",
+      "afterHash": "46872470de5a9b9791e7def999319ef6750216071e6d9f2c69d60112d863099f",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u11-008-q5",
+      "afterHash": "46872470de5a9b9791e7def999319ef6750216071e6d9f2c69d60112d863099f",
+      "verdict": "approve",
+      "reason": "Forward translation reduces the gap to the teammate ahead; both alternatives compare the same spacing consequence without assuming speed.",
+      "evidence": "root-review.json"
+    },
+    {
+      "role": "independent",
+      "reviewerId": "/root/rewrite_independent",
+      "questionId": "exp26-u11-013-q5",
+      "afterHash": "b2916cc27472cf3fe54d66b5acbf16b43e13a5e66e378d17b3a4b217f970d793",
+      "verdict": "approve",
+      "evidence": "independent-review.json"
+    },
+    {
+      "role": "root",
+      "reviewerId": "/root",
+      "questionId": "exp26-u11-013-q5",
+      "afterHash": "b2916cc27472cf3fe54d66b5acbf16b43e13a5e66e378d17b3a4b217f970d793",
+      "verdict": "approve",
+      "reason": "Canonical net and teammate line comparison supports F2; the option is not presented as a guaranteed completed pass or categorically better play.",
+      "evidence": "root-review.json"
+    }
+  ]
+}

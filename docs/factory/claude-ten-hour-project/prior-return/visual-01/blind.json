@@ -1,0 +1,58 @@
+{
+  "packetId": "visual-01",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear (4/8 calibration misses, see output/calibration/reconciliation.json)",
+  "readOrderDisclosure": "Read packets/visual-01-manifest.json and packets/visual-01-blind.json only. Did not open packets/visual-01-after-solve.json before writing this file.",
+  "blindTimestampUtc": "2026-09-07T01:15:00Z",
+  "checklistApplied": [
+    "roles-from-roster (not label)",
+    "claimed-relationship geometry (recompute distances/sides from actor x,y)",
+    "positional-hockey-term-vs-coordinates (do not accept 'point'/'board side'/etc at face value)",
+    "arrival-vs-control distinction",
+    "whistle/stoppage check (n/a to this packet -- no covered/stopped puck)",
+    "YOU-grammar (are/do/have, read aloud)",
+    "camera/body-relative direction words (above/below/left/right) vs rink-relative landmarks"
+  ],
+  "questions": [
+    {
+      "questionId": "exp26-u9-003-q3",
+      "scenarioId": "exp26-u9-003",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(-6,4), Navy2=(-1,4), Gold1=(-3.5,4), Navy3=(3,-5). YOU-to-Navy2 line is the horizontal y=4; Gold1 sits exactly on that line (same y, x between the endpoints) -- so (a) is true, if anything understated ('close to' when Gold1 is exactly on the line). YOU-to-Navy3 line is a diagonal crossing both x=0 and y=0 (\"across the middle\") -- (b) is true. (c) claims Navy2 and Navy3 'lie on the same passing line' from YOU, but they sit on two different lines (horizontal vs. diagonal) -- (c) is false, correctly designed as a distractor.",
+      "note": "Low-severity wording softness only: 'close to the passing line' understates that Gold1 is exactly colinear (same y) with YOU and Navy2. Not scored as a defect."
+    },
+    {
+      "questionId": "exp26-u9-007-q5",
+      "scenarioId": "exp26-u9-007",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Navy attacks +x. YOU=(18,-10), Navy2=(10,-5), Navy3=(23,-9). Navy3's x (23) > YOU's x (18) > Navy2's x (10), so Navy3 is farther toward the attacking net; Navy3's y (-9) is close to YOU's y (-10, same board side), while Navy2's y (-5) is more central. Navy3 satisfies both 'farther toward net' and 'along the board side'; Navy2 satisfies neither.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u9-003-q5",
+      "scenarioId": "exp26b-u9-003",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Question distinguishes 'Gold 1 arrives beside the loose puck' (mere arrival, option b) from 'Gold 1 gets the puck under control' (option a). Only actual control makes Gold1 a puck carrier that YOU must defend against; arrival/closest alone does not. This question correctly embodies the arrival-vs-control distinction rather than violating it.",
+      "note": "This is the same pattern I missed blind in calibration case exp26-u11-012-q5 (there, the ORIGINAL question conflated arrival with control; HERE, the question is explicitly built to test the distinction correctly). Flagging that I checked this deliberately given the fresh lesson, not that I found a defect."
+    },
+    {
+      "questionId": "exp26b-u9-004-q5",
+      "scenarioId": "exp26b-u9-004",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Navy attacks +x, so Navy's own (defended) net is at the -x end; distance-to-own-net is measured by lower x. YOU=(17,7)->x=17, Navy2=(10,1)->x=10, Gold1=(13,0)->x=13. Order nearest-to-farthest from Navy's own net: Navy2(10) < Gold1(13) < YOU(17). Option (a) states exactly this ordering (Navy2 nearer than Gold1; YOU farther than Gold1).",
+      "note": "No defect found. Confirmed 'Navy's net' means Navy's own defended net (recovery context, home team getting back), not the net Navy attacks -- worth an explicit render check that the UI doesn't ambiguously label this."
+    },
+    {
+      "questionId": "exp26b-u9-005-q5",
+      "scenarioId": "exp26b-u9-005",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU=(8,0) facing=0 (+x, the attacking end, per briefing 'facing the attacking end'). Navy2=(3,-5): lower x than YOU and off-axis in y -> behind YOU and to one side. Gold1=(13,0): higher x, same y as YOU -> directly in front. Option (a) matches: 'Navy 2 is behind YOU and off to one side; Gold 1 is in front of YOU.'",
+      "note": "No defect found."
+    }
+  ],
+  "grammarPass": "Read all five prompts/options aloud for YOU-verb agreement (are/do/have/need/account). No violations found in this packet (contrast with calibration case exp26-u11-016-q1 'where does YOU start', which I missed blind -- checked explicitly here as a named step)."
+}

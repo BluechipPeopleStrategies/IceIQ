@@ -1,0 +1,149 @@
+{
+  "scenarioId": "exp26-u13-003",
+  "questionId": "exp26-u13-003-q5",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "status": "draft",
+  "before": {
+    "id": "exp26-u13-003-q5",
+    "type": "choice",
+    "prompt": "If Gold 1 follows your inward move, which response could help?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call for a pass without looking at Gold 1"
+      },
+      {
+        "id": "b",
+        "text": "Reoffer elsewhere or make room for C"
+      },
+      {
+        "id": "c",
+        "text": "Remain still because your first move should have worked"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "A supporter should update the option; the first movement does not guarantee availability.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-003-q5",
+    "type": "choice",
+    "prompt": "YOU want to offer D1 a shorter pass while moving nearer the middle. Looking at the players, which direction fits both aims for your first few strides?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Toward C"
+      },
+      {
+        "id": "b",
+        "text": "Toward Gold 2"
+      },
+      {
+        "id": "c",
+        "text": "Toward the side boards nearest YOU"
+      }
+    ],
+    "answer": [
+      "a"
+    ],
+    "explanation": "A short move toward C brings YOU nearer D1 and nearer the middle. Do not skate all the way into C’s space: stop and check whether YOU offer a separate passing line. Moving toward Gold 2 heads inward but initially lengthens D1’s pass; moving toward the nearby boards goes wider. Those directions may serve other plans as players move.",
+    "basis": "coaching"
+  },
+  "beforeHash": "b2cc07aa7cfc6290a35adf23c03a9f5001d0d44a4bbdb3619729966b7885670c",
+  "afterHash": "b072a948914a2ae7695ace5bc8bf9d3cd39352d3a10cddc15bc184f240b036d6",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "C direction shortens receiver-carrier distance and reduces |y|. Stop short of crowding C."
+    },
+    {
+      "optionId": "b",
+      "reason": "Gold 2 is an opponent direction landmark, not a receiver. Inward but initially increases pass length."
+    },
+    {
+      "optionId": "c",
+      "reason": "Wall-side movement increases width and pass length; plausible wide support but fails stated aims."
+    }
+  ],
+  "limitations": [
+    "Advisory author; not reviewed, approved or applied.",
+    "No motion, reach, timing, gaze, collision or completed pass simulated.",
+    "Render/mobile legibility and U13 challenge require independent assessment.",
+    "Scene setup unchanged; proposed short movements are directions, not scored destinations.",
+    "Canonical carried-puck offset checked with makeScene; no rendered screenshot inspected by author.",
+    "The one-metre move toward C reduces Gold1 point clearance from 0.349 m to 0.039 m. It meets shorter/inward constraints but does not improve lane availability; independent reviewer should reject if this constrained aim teaches an unhelpful move."
+  ],
+  "geometry": {
+    "units": "metres; source x/y; angle in degrees",
+    "method": "makeScene canonical owner-facing puck offset; Euclidean point-to-segment distances. One-metre trial positions are analysis examples only, not movement simulation or scored targets.",
+    "actors": {
+      "YOU": [
+        -7,
+        9
+      ],
+      "D1": [
+        -22,
+        7
+      ],
+      "C": [
+        -13,
+        1
+      ],
+      "A1": [
+        -14,
+        8
+      ],
+      "A2": [
+        -5,
+        -2
+      ]
+    },
+    "renderedPuck": [
+      -21,
+      7.7
+    ],
+    "ownerId": "home-skater-2",
+    "limits": "Point clearance is not stick/body reach or interception feasibility; endpoint does not prove route safety.",
+    "before": {
+      "passLength": 14.060227594174995,
+      "width": 9,
+      "Gold1Gap": 0.3485007598333631
+    },
+    "options": {
+      "C": {
+        "trialPosition": [
+          -7.6,
+          8.2
+        ],
+        "passLength": 13.409325113517086,
+        "playerDistanceD1": 14.449913494550753,
+        "width": 8.2,
+        "Gold1Gap": 0.03877898369962106
+      },
+      "Gold2": {
+        "trialPosition": [
+          -6.821114561800017,
+          8.016130089900093
+        ],
+        "passLength": 14.182409192494054,
+        "playerDistanceD1": 15.212859149601035,
+        "width": 8.016130089900093,
+        "Gold1Gap": 0.14389339458908032
+      },
+      "boards": {
+        "trialPosition": [
+          -7,
+          10
+        ],
+        "passLength": 14.187670703818862,
+        "playerDistanceD1": 15.297058540778355,
+        "width": 10,
+        "Gold1Gap": 0.8387564279171571
+      }
+    }
+  },
+  "imageDependency": "Options require locating named players or rink landmarks relative to YOU; prompt does not supply those positions. Briefing supplies some context, so no claim that image is sole information source."
+}

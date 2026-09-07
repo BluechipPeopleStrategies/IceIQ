@@ -1,0 +1,180 @@
+{
+  "status": "advisory-first-pass",
+  "humanCoachApproval": false,
+  "limitations": [
+    "All target options reviewed against roster/possession. No rendered inspection, rule claim or human approval."
+  ],
+  "rows": [
+    {
+      "questionId": "exp26b-u11-011-q5",
+      "scenarioVersion": 2,
+      "contentHash": "aa10a0c13b2413aa24491c13f207c91e1b58e6ac7a703957e6ad93a153d79099",
+      "verdict": "revise",
+      "issueCategory": "off-puck actor mismatch and giveaway",
+      "exactOffendingText": [
+        "Whether the wall route or F2 lane is now more reachable",
+        "Bank the puck without looking because D1 moved",
+        "Pass through D1 to the original spot"
+      ],
+      "reason": "YOU are receiver while F1 owns puck. Options b/c prescribe banking/passing as though YOU control it, while key is a check. Turning alone correctly is not treated as lane closure in explanation.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Whether the wall route or F2 lane is now more reachable",
+          "assessment": "supported within stated conditions",
+          "reason": "Comparing wall/F2 routes and D2 is appropriate assessment, no outcome guaranteed."
+        },
+        {
+          "optionId": "b",
+          "text": "Bank the puck without looking because D1 moved",
+          "assessment": "see reason",
+          "reason": "YOU cannot bank before F1 release; without looking adds giveaway."
+        },
+        {
+          "optionId": "c",
+          "text": "Pass through D1 to the original spot",
+          "assessment": "see reason",
+          "reason": "YOU cannot pass current puck; through D1 also signals bad option."
+        }
+      ],
+      "repairDirection": "Use matched receiver observations/support adjustments or explicitly ask what F1 should assess; preserve turn-not-lane-closure distinction.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u11-013-q5",
+      "scenarioVersion": 2,
+      "contentHash": "2ea8ddb506e823fde51d30419129ef82cde494500779ca835e104d5eff7d3f09",
+      "verdict": "revise",
+      "issueCategory": "umbrella answer and reckless alternatives",
+      "exactOffendingText": [
+        "Whether the open lane supports a shot or a pass now",
+        "Force a shot without checking the goalie or lane",
+        "Ignore F2 because D1 moved"
+      ],
+      "reason": "Key says assess shot or pass, encompassing alternatives. Other choices explicitly ignore/force; U11 player can solve without reading actual F2/blocker geometry.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Whether the open lane supports a shot or a pass now",
+          "assessment": "supported within stated conditions",
+          "reason": "Reassessing shot/pass is conditional and sensible."
+        },
+        {
+          "optionId": "b",
+          "text": "Force a shot without checking the goalie or lane",
+          "assessment": "see reason",
+          "reason": "Without checking makes shooting automatically careless."
+        },
+        {
+          "optionId": "c",
+          "text": "Ignore F2 because D1 moved",
+          "assessment": "see reason",
+          "reason": "Ignoring F2 is unwarranted; D1 moving toward F2 makes it more relevant."
+        }
+      ],
+      "repairDirection": "Compare actual shot/pass lines or ask a precise changed blocker relationship; do not claim success from opening.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u11-016-q2",
+      "scenarioVersion": 2,
+      "contentHash": "c9b3d6d26fcaa9c04190ab35cb312cb876fa0354ba7fe700ed0f3d4ee353dc09",
+      "verdict": "retain",
+      "issueCategory": "bounded inside-angle principle",
+      "exactOffendingText": [],
+      "reason": "Question asks intention, not achieved containment. Feedback explicitly recognizes YOU behind F1, no guaranteed wall route, and continued F2 scan. A single answer in multi is schema-valid and prompt does not request two.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "The middle and the route to the net",
+          "assessment": "supported within stated conditions",
+          "reason": "Protect middle/net route is the intended aim, not proof achieved."
+        },
+        {
+          "optionId": "b",
+          "text": "A chance to chase F2 wide immediately",
+          "assessment": "see reason",
+          "reason": "Immediate chase of F2 wide is not the purpose of inside approach."
+        },
+        {
+          "optionId": "c",
+          "text": "A predictable carrier path regardless of movement",
+          "assessment": "see reason",
+          "reason": "Predictability regardless of movement is false certainty the item explicitly rejects."
+        }
+      ],
+      "repairDirection": "None for introductory principle; consider clearer choice type only if product requires multi to have multiple correct answers (not current schema).",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u11-018-q5",
+      "scenarioVersion": 2,
+      "contentHash": "ad9f4bf64847130ba0bd2f9c214d49060f8538885c4bcaadf0e055272e3c8eed",
+      "verdict": "revise",
+      "issueCategory": "internally inconsistent distractor",
+      "exactOffendingText": [
+        "Whether to help pressure F1 while keeping track of F2",
+        "Leave both attackers to chase the puck",
+        "Stay on F2 without checking F1"
+      ],
+      "reason": "F1 owns puck, so leave both attackers to chase puck is not a coherent alternative: puck chase necessarily concerns F1. Staying F2 becomes bad only via without checking.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Whether to help pressure F1 while keeping track of F2",
+          "assessment": "supported within stated conditions",
+          "reason": "Conditional help while tracking runner and communicating is sensible."
+        },
+        {
+          "optionId": "b",
+          "text": "Leave both attackers to chase the puck",
+          "assessment": "see reason",
+          "reason": "Cannot coherently leave puck-carrying F1 while chasing that same puck in stated state."
+        },
+        {
+          "optionId": "c",
+          "text": "Stay on F2 without checking F1",
+          "assessment": "see reason",
+          "reason": "Maintaining runner responsibility may remain useful after reassessing; qualifier removes conditional value."
+        }
+      ],
+      "repairDirection": "Use matched help-versus-runner plans with explicit threat cue, keeping F2 accounted for and no automatic switch.",
+      "highRisk": true
+    },
+    {
+      "questionId": "exp26b-u11-019-q5",
+      "scenarioVersion": 2,
+      "contentHash": "1f36c8b19af8464fefc39fd62d6d7608752b1bb72b01d188674ef5681ae12728",
+      "verdict": "revise",
+      "issueCategory": "invented prior possession distractor",
+      "exactOffendingText": [
+        "Re-check possession and return to an attacking support read",
+        "Continue backchecking F2 without looking",
+        "Assume F2 still controls the puck"
+      ],
+      "reason": "Gold F2 never controlled the puck: D1 lost it to Navy F1 before F2 receives. Still controls is fabricated history, not a plausible transition read.",
+      "optionAssessments": [
+        {
+          "optionId": "a",
+          "text": "Re-check possession and return to an attacking support read",
+          "assessment": "supported within stated conditions",
+          "reason": "New Navy possession supports attacking support read while checking pressure."
+        },
+        {
+          "optionId": "b",
+          "text": "Continue backchecking F2 without looking",
+          "assessment": "see reason",
+          "reason": "Unobserved continuing defence ignores regain; could protect against pressure if reassessed."
+        },
+        {
+          "optionId": "c",
+          "text": "Assume F2 still controls the puck",
+          "assessment": "see reason",
+          "reason": "F2 still controls contradicts both before and stated regain."
+        }
+      ],
+      "repairDirection": "Replace c with a plausible support/pressure observation, preserving exact Navy F1 possession and avoiding arbitrary lost-owner assumptions.",
+      "highRisk": true
+    }
+  ]
+}

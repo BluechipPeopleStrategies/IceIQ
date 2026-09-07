@@ -1,0 +1,50 @@
+{
+  "packetId": "visual-09",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-09-manifest.json and packets/visual-09-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T03:55:00Z",
+  "questions": [
+    {
+      "questionId": "exp26-u15-009-q5",
+      "scenarioId": "exp26-u15-009",
+      "type": "choice",
+      "blindAnswer": "b",
+      "geometryCheck": "Hypothetical: YOU(puck)=(16,0), assumed net~(26,0) given Navy attacks Gold's net and all actors sit at high +x. The shooting line is essentially the x-axis. Gold1(A1)=(25,-5): |y|=5. Gold2(A2)=(21,0): |y|=0, exactly on the line. Gold3(A3)=(18,6): |y|=6. Gold2 sits exactly on the shooting line, clearly nearest.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u15-015-q7",
+      "scenarioId": "exp26-u15-015",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(19,-9), F1=(28,-3), F2=(22,1), Gold1(A1)=(20,-4). Perpendicular distance Gold1-to-(YOU-F1) ~3.60 (t=0.33, valid); Gold1-to-(YOU-F2) ~0.48 (t=0.49, valid). Gold1 is much nearer the F2 (slot) line, matching the briefing's own statement that 'Gold 1 shades the slot route to F2.'",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-002-q2",
+      "scenarioId": "exp26b-u15-002",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU(puck)=(18,9), F2=(24,6), F3=(21,-1), Gold1(a2)=(20,5), Gold2(a3)=(23,1), D1(a1,away)=(11,3). (a) Gold1-to-(YOU-F3 line) ~0.77 vs Gold1-to-(YOU-F2 line) ~2.68 -- nearer F3, true. (b) distance Gold2-to-F3 ~2.83 vs Gold2-to-F2 ~5.10 -- Gold2 closer to F3, true. (c) 'D1 closer to F2 than Gold2' is false: distance D1-to-F2 ~13.34 is far greater than Gold2-to-F2 ~5.10 -- reversed.",
+      "note": "No defect found. Same coordinate pattern (defender-nearer-one-line-than-another) as exp26-u15-002-q7 in packet 8, computed independently here."
+    },
+    {
+      "questionId": "exp26b-u15-003-q2",
+      "scenarioId": "exp26b-u15-003",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "5-on-4 penalty kill, away roster a1..a5 mapped to Gold1..Gold5 by index: Gold1=(-18,10), Gold2=(-24,7), Gold3=(-20,0), Gold4=(-12,1), Gold5=(-17,-9). YOU=(-23,-4), D1=(-22,4). (a) distance YOU-to-Gold3 ~5.0 vs YOU-to-Gold5 ~7.81 -- YOU closer to Gold3, true. (b) distance D1-to-Gold2 ~3.61 vs YOU-to-Gold2 ~11.05 -- D1 closer, true. (c) 'F2 same side of middle as Gold2' is false: F2 y=-3 vs Gold2 y=7, opposite signs.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-005-q2",
+      "scenarioId": "exp26b-u15-005",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "Navy attacks +x (Gold's goal line at high x; blue line toward lower x). YOU=(20,8), F2(puck)=(19,0), F3=(24,-5), D1(away)=(10,4). (a) YOU x=20 vs F2 x=19 -- YOU marginally farther toward the goal line, true but a thin 1-unit margin worth a careful visual check. (b) D1 x=10 vs F2 x=19 -- D1 much farther toward the blue line (lower x), true. (c) 'F3 farther toward blue line than F2' is false: F3 x=24 > F2 x=19, so F3 is actually farther toward the GOAL line, not the blue line -- reversed.",
+      "note": "Flagging option (a)'s thin 1-unit margin (YOU x=20 vs F2 x=19) for careful visual confirmation rather than trusting the raw numbers alone."
+    }
+  ],
+  "grammarPass": "Read all five prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "exp26b-u15-003 is a 5-on-4 penalty-kill scene with 5 away actors (a1-a5) mapped to Gold1-Gold5 by index -- confirmed against setup.actors before scoring any option naming a specific Gold number. Other scenes in this packet continue the established D1/D-label = sometimes-teammate, sometimes-opponent pattern; checked setup.actors.team per scene rather than assumed."
+}

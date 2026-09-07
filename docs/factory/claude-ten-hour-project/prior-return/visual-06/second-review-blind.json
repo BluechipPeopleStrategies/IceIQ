@@ -1,0 +1,33 @@
+{
+  "packetId": "visual-06",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-06-manifest.json + packets/visual-06-blind.json only, no live render access. Navy's own defended net inferred as the very-negative-x end (~x=-26), consistent with the goalie coordinates shown in u13-016 and u13-020 in this same packet, and with 'Navy attacks Gold's net (+x)/defends Navy's net (-x)' stated across all 5 scenes.",
+  "answers": [
+    {
+      "questionId": "exp26-u13-014-q8",
+      "myAnswer": ["a", "b"],
+      "reasoning": "C=(-1,-4), Gold1/A1=(-2,1). Navy's net is at very negative x, so 'farther from net' = less negative x. C(-1) > Gold1(-2), so C is farther from net than Gold1 -- (a) true, though by a thin 1-unit margin. Gold2/A2=(4,7): opposite sign of y from C(y=-4) -- 'other side of the middle', (b) true. (c) 'Gold2 nearer Navy's net than Gold1': Gold2 x=4 is far LESS negative than Gold1 x=-2, so Gold2 is actually FARTHER from net, not nearer -- (c) false, reversed."
+    },
+    {
+      "questionId": "exp26-u13-015-q5",
+      "myAnswer": "a",
+      "reasoning": "Gold2/A2=(-11,-3). Distance YOU(-3,3)->Gold2 = sqrt(8^2+6^2)=10.0. Distance D1(-14,0)->Gold2 = sqrt(3^2+3^2)=4.24. D1 is more than twice as close. Answer (a) D1."
+    },
+    {
+      "questionId": "exp26-u13-016-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy's own net at x=-26 (matches this scene's own goalie). YOU x=-18 -> distance to net = 8. Gold2/A2 x=-23 -> distance to net = 3. Gold2 is closer to Navy's net than YOU, the weak-side defender -- a coverage gap worth noting before treating the low slot as covered. Answer (a)."
+    },
+    {
+      "questionId": "exp26-u13-017-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Per coordinator's flag, checked the (a)/(c) contradiction directly. YOU=(8,6), Gold1/A1=(-3,8), Gold2/A2=(-2,-1), Navy's own net at very negative x (~-26, per this dataset's consistent convention). (a) 'YOU farther from Navy's end than both attackers': YOU x=8 is far LESS negative than Gold1 x=-3 and Gold2 x=-2, i.e. YOU is much farther from the -26 net than either attacker -- TRUE. (c) 'YOU already between both gold attackers and Navy's net' would require YOU to be CLOSER to the net than both attackers (more negative x than -3 and -2) -- the opposite of what the coordinates show. (a) and (c) are mutually exclusive on these same coordinates, and only (a) is supported. (b) D1(-10,4) to Gold1(-3,8) = sqrt(7^2+4^2)=8.06; YOU(8,6) to Gold1 = sqrt(11^2+2^2)=11.18 -- D1 is closer, (b) true. Correct pair: (a, b); (c) is false and directly contradicts (a) given identical coordinates."
+    },
+    {
+      "questionId": "exp26-u13-020-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "D1(-23,-8) to Gold1/A1(-25,-9) = sqrt(2^2+1^2)=2.24; YOU(-23,1) to Gold1 = sqrt(2^2+10^2)=10.2 -- D1 much closer, (a) true. YOU(-23,1) to Gold2/A2(-18,0) = sqrt(5^2+1^2)=5.10; D1(-23,-8) to Gold2 = sqrt(5^2+8^2)=9.43 -- YOU closer, (b) true. (c) 'Gold2 farther toward the side boards than either Navy defender': |Gold2.y|=0 (exactly center), vs |YOU.y|=1 and |D1.y|=8 -- Gold2 is actually the LEAST toward the boards of the three, not farther; (c) false, reversed."
+    }
+  ],
+  "grammarCheck": "Read all 5 prompts aloud for YOU-subject verb agreement (should YOU account for, YOU treat, YOU plan) -- no violations found."
+}
