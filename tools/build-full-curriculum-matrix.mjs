@@ -50,6 +50,7 @@
 // questionContentHash from tools/question-batch-core.mjs, and the same
 // combined-review.json / choice-repairs-60 review-status lookup already used
 // by tools/build-question-catalog.mjs.
+import { ALL_ANIMATED_PLAYS } from '../src/play/playCatalog.js';
 import { mkdirSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -64,7 +65,7 @@ import { questionContentHash } from './question-batch-core.mjs';
 import { selectPracticeQuestions } from '../src/one-on-one/practiceQuestionSelection.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const OUTPUT = resolve(ROOT, 'docs/factory/claude-ten-hour-project/output/ten-hour-followthrough');
+const OUTPUT = resolve(ROOT, 'docs/factory/followthrough-close');
 const AGE_LABEL_TO_BAND = Object.fromEntries(['U7 / Initiation', 'U9 / Novice', 'U11 / Atom', 'U13 / Peewee', 'U15 / Bantam', 'U18 / Midget'].map(label => [label, label.split(' / ')[0]]));
 // A seed's actors[] mixes players and the puck in one array (kind:'puck' for
 // the puck); adapt it to the {setup:{actors,puck}} shape geometryHash()
@@ -332,6 +333,31 @@ export function loadPovQuestionRows(ledger, overrides = {}) {
   return rows;
 }
 
+// One age-specific opportunity per decision node. contentUnitId preserves
+// the shared authored identity so age availability is not mistaken for new content.
+export function loadAnimatedPlayRows(ledger, overrides = {}) {
+ const rows=[];
+ for(const play of overrides.plays || ALL_ANIMATED_PLAYS){
+  for(const [nodeId,node] of Object.entries(play.nodes || {})){
+   if(!(node.ask?.q||node.q) || !node.ask?.opts?.length)continue;
+   const concept=conceptById(ledger,play.concept),domain=concept?domainById(ledger,concept.domainId):null;
+   const text=[play.title,play.concept,node.ask.q||node.q,...node.ask.opts.map(o=>o.t)].join(' ');
+   const signals=domainSignalsForText(text);
+   for(const ageBand of play.ageBands || AGE_ORDER){rows.push({
+    catalog:'animated-play',questionId:`${play.id}:${nodeId}:${ageBand}`,contentUnitId:`${play.id}:${nodeId}`,
+    sceneId:play.id,sceneVersion:play.version||null,sceneContentHash:sha256(play),questionContentHash:sha256({prompt:node.ask.q||node.q,ask:node.ask}),openingGeometryHash:'not-applicable:animated-play',
+    ageBand,domainId:domain?.id||'unmapped',domainName:domain?.name||'Unmapped',conceptId:concept?.id||'unmapped',conceptName:concept?.name||'Unmapped',
+    domainConceptMappingMethod:concept?'explicit-play-concept':'unmapped',learningObjective:play.concept||play.title,objectiveSource:'authored play concept',
+    format:'animated-choice',cognitiveDemand:'apply',reflectionType:'n/a',contextZone:contextZoneForText(text),sourceSupport:play.sourceRef?.url||'none-cited',
+    reviewStatus:'inventory-only-not-cleared',navigationExposure:'reachable-in-live-app',changedCueGenuine:false,changedCueManuallyVerified:false,evidenceStrength:concept?'medium':'low',
+    secondaryDomainSignals:signals,
+    evidenceRationale:`Authored animated decision node ${nodeId}, reachable via ReadThePlay / PracticeLibrary / LearningWorlds; age availability from play.ageBands. Domain uses exact concept lookup only. Secondary text signals describe possible cross-domain content, not a curriculum binding.`,
+   });}
+  }
+ }
+ return rows;
+}
+
 export function buildFullCurriculumMatrix(overrides = {}) {
   const ledger = overrides.ledger || loadLedger();
   const rawExperimentalBank = overrides.experimental?.bank || readBankFiles().bank;
@@ -340,6 +366,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
     ...loadLegacyBankRows(ledger, overrides.legacy),
     ...loadScenarioSeedRows(ledger, overrides.seeds),
     ...loadPovQuestionRows(ledger, overrides.pov),
+    ...loadAnimatedPlayRows(ledger, overrides.animated),
   ];
 
   const byCatalog = {};
@@ -390,7 +417,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
   const skatingMovementByAge = ages.map(age => {
     const ageRows = rows.filter(r => r.ageBand === age);
     const matches = ageRows.filter(r => r.domainId === 'skating-movement');
-    return { ageBand: age, totalQuestions: ageRows.length, skatingMovementQuestions: matches.length, catalogsWithMatch: [...new Set(matches.map(r => r.catalog))] };
+    return { ageBand: age, totalQuestions: ageRows.length, skatingMovementQuestions: matches.length, catalogsWithMatch: [...new Set(matches.map(r => r.catalog))], secondarySignalQuestionIds:ageRows.filter(r=>r.secondaryDomainSignals?.some(s=>s.domainId==='skating-movement')).map(r=>r.questionId) };
   });
 
   const skatingMovementLedgerDepth = ['edges-balance', 'agility-mobility', 'backward-transitions', 'deception-with-feet'].map(conceptId => {
@@ -405,7 +432,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
     manuallyVerifiedCount: Object.keys(U11_MANUAL_VERIFICATION).length,
     manuallyVerifiedGenuineCount: Object.values(U11_MANUAL_VERIFICATION).filter(Boolean).length,
     naiveImagineSupposeKeywordCount: u11Prompts.filter(prompt => /^\s*(imagine|suppose)/i.test(prompt)).length,
-    disclosure: 'EXHAUSTIVE: a two-pass regex swept all 400 U11 experimental-bank prompts for candidate hypothetical/state-change markers (171 candidates found). Every one of those 171 candidates was then read by hand and hand-classified against the explicit rule in tools/lib/curriculum-changed-cue.mjs (64 of the 171 needed a call beyond a trivial exclusion; those 64 hand calls are U11_MANUAL_VERIFICATION). The remaining ~229 U11 questions with zero candidate marker were NOT individually re-read one by one; the disclosed risk is a genuine changed-cue question phrased with no marker word from this bank\'s own vocabulary would be missed. Not sampled: this was a full pass over every U11 question, not a subset.',
+    disclosure: 'Rule-based classification of all U11 experimental prompts with the saved manual exception ledger. The earlier 171 hand-read candidate claim was not reproducible and is withdrawn. Counts describe this classifier, not exhaustive semantic coverage; unmarked phrasing may be missed.',
   };
 
   const mappingDriftRows = rows.filter(r => r.evidenceRationale.includes('mapping drift, not missing content'));
@@ -414,7 +441,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
   // tools/build-curriculum-coverage.mjs's own BACKLOG_CANDIDATES rather than
   // leaving it untouched, per the assignment's instruction: this task's
   // findings changed the picture on ranks 1 and 2 below (skating-movement is
-  // now confirmed missing-content across every catalog + the ledger's own
+  // now requires mapping review after including animated content + the ledger's own
   // locked depth targets, not just an experimental-bank signal gap; and the
   // U11 cause-and-effect pattern turns out to already be real and sizeable
   // once paraphrase-only "Imagine/Suppose" counting is replaced with the
@@ -423,12 +450,12 @@ export function buildFullCurriculumMatrix(overrides = {}) {
   const gapBacklog = [
     {
       rank: 1,
-      id: 'u15-u18-skating-movement-missing-content',
-      classification: 'missing-content',
-      confidence: 'high',
+      id: 'u15-u18-skating-movement-mapping-review',
+      classification: 'mapping and coverage review; product-wide absence not established',
+      confidence: 'limited',
       ageBands: ['U15', 'U18'],
-      evidence: `Zero skating-movement questions in ALL FOUR catalogs at U15 and U18 (checked: experimental-bank keyword+explicit-binding signal, legacy-live-bank explicit nodeId binding, scenario-engine-seed explicit nodeId binding including _pending/_retired, pov-questions keyword signal). The ledger itself (src/data/curriculum-ledger.json, locked 2026-06-04) targets depth "R" (refinement, at speed under random/opposed conditions) for all four skating-movement concepts at U15 and U18 -- the taxonomy explicitly expects this content to continue, it is not a U7-U13-only concept by design. See report.skatingMovementByAge and report.skatingMovementLedgerDepth.`,
-      recommendedSmallPilot: 'Unchanged from the prior gap plan\'s recommendation: 2 new U15 scenes and 2 new U18 scenes (4 total, 8 questions) pairing a skating/edge cue with the same geometry-comparison question pattern already used throughout the bank.',
+      evidence: 'The original four inventories yielded zero primary skating-movement assignments at U15/U18. They omitted animated plays, including play_gap_control_pivot_match_speed_u13_v1, which is available at both ages and asks about pivoting and matching speed. Primary defensive concepts can contain skating cues. Inspect secondary signals and unknown mappings before deciding whether new content is needed. This is not a finding of product-wide absence.',
+      recommendedSmallPilot: 'After reviewing existing animated content and confirming the precise unfilled objective, consider the prior gap plan\'s recommendation: 2 new U15 scenes and 2 new U18 scenes (4 total, 8 questions) pairing a skating/edge cue with the same geometry-comparison question pattern already used throughout the bank.',
     },
     {
       rank: 2,
@@ -436,7 +463,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
       classification: 'missing-mapping (of an already-real pattern), not missing content',
       confidence: 'medium-high',
       ageBands: ['U11'],
-      evidence: `The prior return's "Imagine/Suppose" keyword count (14/400, 3.5%) undercounted: applying the explicit changed-cue rule in tools/lib/curriculum-changed-cue.mjs (state-change narration + read-update ask, hand-verified against all 171 candidate U11 prompts) finds ${u11ChangedCue.genuineChangedCueQuestions}/${u11ChangedCue.totalU11Questions} (${(u11ChangedCue.genuineChangedCueQuestions / u11ChangedCue.totalU11Questions * 100).toFixed(1)}%) genuine changed-cue reasoning questions already exist at U11 -- almost 4x the naive count. The gap is that this pattern is scattered across many scenes' q5/q10 slots rather than named as its own family/objective anywhere in the metadata.`,
+      evidence: `The prior return's "Imagine/Suppose" keyword count (14/400, 3.5%) undercounted: applying the explicit changed-cue rule in tools/lib/curriculum-changed-cue.mjs (state-change narration + read-update ask, with a saved manual exception ledger) finds ${u11ChangedCue.genuineChangedCueQuestions}/${u11ChangedCue.totalU11Questions} (${(u11ChangedCue.genuineChangedCueQuestions / u11ChangedCue.totalU11Questions * 100).toFixed(1)}%) genuine changed-cue reasoning questions already exist at U11 -- almost 4x the naive count. The gap is that this pattern is scattered across many scenes' q5/q10 slots rather than named as its own family/objective anywhere in the metadata.`,
       recommendedSmallPilot: 'Do not add volume first. Name the existing pattern as an explicit family (e.g. "read-the-change") in 3-5 already-existing U11 scenes\' objective/tags fields as a mapping fix, THEN author 2-3 new scenes under that name if a coach review confirms the pilot is worth extending. Separately worth checking (not done in this pass; see TASK-B-SUMMARY.md disclosure): whether U13 (0.5% naive keyword rate, the lowest of any age) shows the same undercount once the same explicit rule is hand-applied there.',
     },
     { rank: 3, id: 'pov-questions-orphaned-catalog', classification: 'missing-navigation-exposure', confidence: 'high', ageBands: ['U7', 'U9', 'U11', 'U13'], evidence: `src/data/povQuestions.json contains ${byCatalog['pov-questions']?.length || 0} authored questions across 24 images (U7/U9/U11/U13 only, no U15/U18), but an exhaustive grep of src/**/*.{js,jsx} found zero importers or fetch() calls referencing it -- this content cannot currently be reached by any player or coach.`, recommendedSmallPilot: 'Decide (Codex/Thomas call, not a content decision): either wire src/data/povQuestions.json into a live screen, or explicitly retire/archive it. Leaving authored content silently unreachable is itself the defect, independent of the content\'s quality.' },
@@ -453,6 +480,7 @@ export function buildFullCurriculumMatrix(overrides = {}) {
       status: 'descriptive inventory / planning aid, provisional-not-reviewed',
       source: 'tools/build-full-curriculum-matrix.mjs',
       catalogs: [
+        {id:'animated-play',description:'Authored decision nodes from playCatalog.js, expanded by declared age availability; contentUnitId identifies shared content.',liveInApp:true,rowCount:byCatalog['animated-play']?.length||0},
         { id: 'experimental-bank', description: 'Composed experimental one-on-one bank (tools/experimental-bank-files.mjs).', liveInApp: true, rowCount: byCatalog['experimental-bank']?.length || 0 },
         { id: 'legacy-live-bank', description: 'src/data/bank.json, loaded by src/qbLoader.js and consumed across App.jsx/PlayerLearningHome/LearningWorlds/PracticeLibrary/questionOfDay/review/screens/speedRound/teamChallenges.', liveInApp: true, rowCount: byCatalog['legacy-live-bank']?.length || 0 },
         { id: 'scenario-engine-seed', description: 'src/scenario/seeds/*.json (top level only), merged into the live QB by src/qbLoader.js collectScenarios().', liveInApp: true, rowCount: byCatalog['scenario-engine-seed']?.length || 0 },
@@ -466,6 +494,10 @@ export function buildFullCurriculumMatrix(overrides = {}) {
       ],
       counting: {
         totalQuestions: rows.length,
+        countingUnit: "Inventory rows, including age-specific animated opportunities and unreachable POV content; not a count of distinct live questions.",
+        liveOpportunityRows: rows.filter(r=>r.catalog!=="pov-questions").length,
+        unreachableRows: rows.filter(r=>r.catalog==="pov-questions").length,
+        animatedDistinctDecisions: new Set(rows.filter(r=>r.catalog==="animated-play").map(r=>r.contentUnitId)).size,
         distinctScenes,
         uniqueOpeningGeometry,
         uniqueOpeningGeometryScope: 'experimental-bank + scenario-engine-seed only (legacy-live-bank and pov-questions record a static image, not actor/puck coordinates) -- see meta.geometryNote.',
@@ -486,11 +518,12 @@ export function buildFullCurriculumMatrix(overrides = {}) {
 }
 
 function csvCell(value) {
+  if(value && typeof value==='object')value=JSON.stringify(value);
   const stringValue = Array.isArray(value) ? value.map(v => (typeof v === 'object' ? v.title || v.url || JSON.stringify(v) : v)).join(' | ') : (typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value ?? ''));
   return '"' + stringValue.replace(/^[=+@-]/, "'$&").replaceAll('"', '""').replace(/[\r\n]+/g, ' ') + '"';
 }
 
-const CSV_COLUMNS = ['questionId', 'catalog', 'sceneId', 'sceneVersion', 'sceneContentHash', 'questionContentHash', 'openingGeometryHash', 'ageBand', 'domainId', 'domainName', 'conceptId', 'conceptName', 'domainConceptMappingMethod', 'learningObjective', 'objectiveSource', 'format', 'cognitiveDemand', 'reflectionType', 'contextZone', 'sourceSupport', 'reviewStatus', 'navigationExposure', 'changedCueGenuine', 'changedCueManuallyVerified', 'evidenceStrength', 'evidenceRationale'];
+const CSV_COLUMNS = ['questionId', 'contentUnitId', 'secondaryDomainSignals', 'catalog', 'sceneId', 'sceneVersion', 'sceneContentHash', 'questionContentHash', 'openingGeometryHash', 'ageBand', 'domainId', 'domainName', 'conceptId', 'conceptName', 'domainConceptMappingMethod', 'learningObjective', 'objectiveSource', 'format', 'cognitiveDemand', 'reflectionType', 'contextZone', 'sourceSupport', 'reviewStatus', 'navigationExposure', 'changedCueGenuine', 'changedCueManuallyVerified', 'evidenceStrength', 'evidenceRationale'];
 
 export function buildCsv(report) {
   const rows = [CSV_COLUMNS.map(csvCell).join(',')];
@@ -513,13 +546,13 @@ export function buildReportHtml(report) {
     gapBacklog: report.gapBacklog,
     mappingDriftRows: report.mappingDriftRows,
   }).replaceAll('<', '\\u003c');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RinkReads curriculum matrix (all catalogs)</title><style>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RinkReads curriculum matrix (inventoried catalogs)</title><style>
 :root{color-scheme:light;--navy:#0b1a33;--navy2:#132b4f;--gold:#c9a24b;--ice:#eef7f8;--line:#c8d8df;--ink:#1b2a3a;--muted:#5c6d7c;--white:#fff}*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#f7fbfc,#e8f2f4);color:var(--ink);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:24px clamp(14px,4vw,54px)}h1{margin:0 0 5px;font-size:clamp(20px,4vw,32px);letter-spacing:-.03em}header p{margin:0;color:#d5e4ef;max-width:900px;font-size:13px}.shell{max-width:1450px;margin:auto;padding:16px clamp(10px,3vw,42px) 50px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin:0 0 16px}.card,.panel{background:#ffffffd9;border:1px solid #fff;box-shadow:0 7px 20px #16324a12;border-radius:14px}.card{padding:13px}.card b{display:block;font-size:22px;color:var(--navy)}.card span{color:var(--muted);font-size:11px}.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:12px}.toolbar label{display:grid;gap:3px;color:var(--muted);font-size:11px}.toolbar select,.toolbar input{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 9px;font-size:13px;min-width:120px}.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.tabs button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;font-size:12px}.tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}.panel{padding:14px;overflow:auto}.panel h2{font-size:17px;margin:0 0 5px;color:var(--navy)}.note{color:var(--muted);margin:0 0 10px;font-size:12.5px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:70vh}table{border-collapse:collapse;width:100%;min-width:900px;background:#fff}th,td{padding:7px 8px;border-bottom:1px solid #e3ebee;text-align:left;vertical-align:top;font-size:12.5px}th{position:sticky;top:0;background:#f0f6f7;color:var(--navy);font-size:11px;white-space:nowrap}tr:last-child td{border-bottom:0}.pill{display:inline-block;padding:2px 6px;margin:1px 2px 1px 0;border-radius:99px;background:#e3eef3;color:var(--navy);font-size:11px}.pill.warn{background:#fbe6cf;color:#7a4a12}.pill.bad{background:#fbdada;color:#7a1212}.pill.good{background:#d9f0e0;color:#12602f}.muted{color:var(--muted)}.backlog{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.candidate{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--ice)}.candidate h3{color:var(--navy);margin:0 0 4px;font-size:14px}.candidate p{margin:5px 0;font-size:12.5px}code{font-size:11px;color:#174a64}
-@media(max-width:600px){.table-wrap{display:none}#mobileCards{display:block}}
 #mobileCards{display:none}
+@media(max-width:600px){.table-wrap:has(+ #mobileCards){display:none}#mobileCards{display:block;overflow-wrap:anywhere}}
 .mrow{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:12.5px}
 .mrow b{color:var(--navy);display:block;margin-bottom:3px}
-</style></head><body><header><div class="shell"><h1>RinkReads curriculum matrix — all catalogs</h1><p>Cross-catalog inventory: experimental bank, legacy live bank (src/data/bank.json), scenario-engine seeds, and the orphaned pov-questions catalog. Descriptive inventory / planning aid, provisional-not-reviewed. No content-quality certification implied.</p></div></header><main class="shell"><div id="cards" class="cards"></div><div class="toolbar"><label>Age<select id="age"><option value="">All ages</option></select></label><label>Catalog<select id="catalog"><option value="">All catalogs</option></select></label><label>Domain<select id="domain"><option value="">All domains</option></select></label><label>Concept<select id="concept"><option value="">All concepts</option></select></label><label>Format<select id="format"><option value="">All formats</option></select></label><label>Search<input id="search" type="search" placeholder="id, objective, rationale"></label></div><nav id="tabs" class="tabs" aria-label="Views"></nav><section id="content" class="panel"></section><p class="muted" style="margin-top:16px;font-size:12px">Data: <a href="curriculum-matrix.json">curriculum-matrix.json</a> · <a href="curriculum-matrix.csv">curriculum-matrix.csv</a> · Generated by tools/build-full-curriculum-matrix.mjs.</p></main>
+</style></head><body><header><div class="shell"><h1>RinkReads curriculum matrix — inventoried catalogs</h1><p>Cross-catalog inventory: experimental bank, legacy live bank (src/data/bank.json), scenario-engine seeds, animated decision plays, and the unreachable pov-questions catalog. Descriptive inventory / planning aid, provisional-not-reviewed. No content-quality certification implied.</p></div></header><main class="shell"><div id="cards" class="cards"></div><div class="toolbar"><label>Age<select id="age"><option value="">All ages</option></select></label><label>Catalog<select id="catalog"><option value="">All catalogs</option></select></label><label>Domain<select id="domain"><option value="">All domains</option></select></label><label>Concept<select id="concept"><option value="">All concepts</option></select></label><label>Format<select id="format"><option value="">All formats</option></select></label><label>Search<input id="search" type="search" placeholder="id, objective, rationale"></label></div><nav id="tabs" class="tabs" aria-label="Views"></nav><section id="content" class="panel"></section><p class="muted" style="margin-top:16px;font-size:12px">Data: <a href="curriculum-matrix.json">curriculum-matrix.json</a> · <a href="curriculum-matrix.csv">curriculum-matrix.csv</a> · Generated by tools/build-full-curriculum-matrix.mjs.</p></main>
 <script id="matrix-data" type="application/json">${embedded}</script><script>
 const DATA=JSON.parse(document.getElementById('matrix-data').textContent);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -527,7 +560,7 @@ const state={age:'',catalog:'',domain:'',concept:'',format:'',search:''};
 let view='rows';
 const tabs=[['rows','Rows'],['skating','Skating &amp; Movement check'],['changedcue','U11 changed-cue check'],['drift','Mapping drift'],['backlog','Gap backlog']];
 function filteredRows(){return DATA.rows.filter(r=>(!state.age||r.ageBand===state.age)&&(!state.catalog||r.catalog===state.catalog)&&(!state.domain||r.domainId===state.domain)&&(!state.concept||r.conceptId===state.concept)&&(!state.format||r.format===state.format)&&(!state.search||[r.questionId,r.sceneId,r.learningObjective,r.evidenceRationale].join(' ').toLowerCase().includes(state.search.toLowerCase())))}
-function renderCards(){const c=DATA.meta.counting;document.getElementById('cards').innerHTML=[['total questions',c.totalQuestions],['distinct scenes',c.distinctScenes],['unique opening geometry',c.uniqueOpeningGeometry],['distinct decision patterns',c.distinctDecisionPattern],['required questions',c.requiredQuestions],['optional reflections',c.optionalReflections]].map(([l,n])=>'<div class="card"><b>'+esc(n)+'</b><span>'+l+'</span></div>').join('')}
+function renderCards(){const c=DATA.meta.counting;document.getElementById('cards').innerHTML=[['inventory rows',c.totalQuestions],['live opportunity rows',c.liveOpportunityRows],['unreachable rows',c.unreachableRows],['distinct animated decisions',c.animatedDistinctDecisions],['distinct scenes',c.distinctScenes],['unique opening geometry',c.uniqueOpeningGeometry],['distinct decision patterns',c.distinctDecisionPattern],['required questions',c.requiredQuestions],['optional reflections',c.optionalReflections]].map(([l,n])=>'<div class="card"><b>'+esc(n)+'</b><span>'+l+'</span></div>').join('')}
 function table(heads,rows){return '<div class="table-wrap"><table><thead><tr>'+heads.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'}
 function renderRows(){
  const rows=filteredRows();
@@ -538,16 +571,16 @@ function renderRows(){
 }
 function renderSkating(){
  const rows=DATA.skatingMovementByAge;
- document.getElementById('content').innerHTML='<h2>U15/U18 Skating &amp; Movement recheck</h2><p class="note">Ledger-designed depth (locked 2026-06-04) expects refinement-level skating-movement content through U15/U18, not just U7-U13. Checked across every catalog found, keyword and explicit-binding methods both.</p>'
-  +table(['Age','Total questions','Skating-movement matches','Catalogs with a match'],rows.map(r=>'<tr><td>'+esc(r.ageBand)+'</td><td>'+r.totalQuestions+'</td><td>'+(r.skatingMovementQuestions===0?'<span class="pill bad">0</span>':r.skatingMovementQuestions)+'</td><td>'+(r.catalogsWithMatch.map(c=>'<span class="pill">'+esc(c)+'</span>').join('')||'<span class="muted">none</span>')+'</td></tr>'))
-  +'<h2 style="margin-top:16px">Ledger depth targets (why this is "missing content", not just a signal gap)</h2>'
+ document.getElementById('content').innerHTML='<h2>U15/U18 Skating &amp; Movement recheck</h2><p class="note">Ledger-designed depth (locked 2026-06-04) expects refinement-level skating-movement content through U15/U18, not just U7-U13. Primary mappings and secondary signals have different meanings. Animated plays include skating cues; product-wide absence is not established. Unreachable POV content is inventoried separately.</p>'
+  +table(['Age','Total questions','Skating-movement matches','Catalogs with a match','Secondary skating signals'],rows.map(r=>'<tr><td>'+esc(r.ageBand)+'</td><td>'+r.totalQuestions+'</td><td>'+(r.skatingMovementQuestions===0?'<span class="pill bad">0</span>':r.skatingMovementQuestions)+'</td><td>'+(r.catalogsWithMatch.map(c=>'<span class="pill">'+esc(c)+'</span>').join('')||'<span class="muted">none</span>')+'</td><td>'+r.secondarySignalQuestionIds.length+'</td></tr>'))
+  +'<h2 style="margin-top:16px">Ledger depth targets (compare with mappings and actual content)</h2>'
   +table(['Concept','U7','U9','U11','U13','U15','U18'],DATA.skatingMovementLedgerDepth.map(c=>'<tr><td>'+esc(c.conceptId)+'</td>'+['U7','U9','U11','U13','U15','U18'].map(a=>'<td>'+esc(c.depthByAge[a]||'-')+'</td>').join('')+'</tr>'))
-  +'<p class="note" style="margin-top:10px">Depth legend: I=introduced, D=developing, M=mastery emphasis, R=refinement at speed under opposed conditions. R at U15/U18 with zero matching questions anywhere is the missing-content finding.</p>';
+  +'<p class="note" style="margin-top:10px">Depth legend: I=introduced, D=developing, M=mastery emphasis, R=refinement at speed under opposed conditions. Depth targets describe intended progression; zero primary mappings cannot establish missing content.</p>';
 }
 function renderChangedCue(){
  const d=DATA.u11ChangedCue;
  document.getElementById('content').innerHTML='<h2>U11 "changed-cue" reasoning recheck</h2>'
-  +table(['Metric','Value'],[['Total U11 questions (experimental bank)',d.totalU11Questions],['Naive "Imagine/Suppose" keyword count (prior method)',d.naiveImagineSupposeKeywordCount],['Genuine changed-cue questions (explicit rule, hand-verified)',d.genuineChangedCueQuestions],['Candidates hand-verified',d.manuallyVerifiedCount],['Of those, confirmed genuine',d.manuallyVerifiedGenuineCount]].map(([k,v])=>'<tr><td>'+esc(k)+'</td><td><b>'+esc(v)+'</b></td></tr>'))
+  +table(['Metric','Value'],[['Total U11 questions (experimental bank)',d.totalU11Questions],['Naive "Imagine/Suppose" keyword count (prior method)',d.naiveImagineSupposeKeywordCount],['Changed-cue matches (rule + saved manual ledger)',d.genuineChangedCueQuestions],['Candidates hand-verified',d.manuallyVerifiedCount],['Of those, confirmed genuine',d.manuallyVerifiedGenuineCount]].map(([k,v])=>'<tr><td>'+esc(k)+'</td><td><b>'+esc(v)+'</b></td></tr>'))
   +'<p class="note" style="margin-top:10px">'+esc(d.disclosure)+'</p>';
 }
 function renderDrift(){

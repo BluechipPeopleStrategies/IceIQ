@@ -1,0 +1,40 @@
+✔ classifyChangedCue: rejects a plain pre-check with no narrated state change (1.2693ms)
+✔ classifyChangedCue: accepts an explicit "Suppose" hypothetical paired with a read-update ask (0.2005ms)
+✔ classifyChangedCue: accepts a narrated (non-"Suppose") state change paired with a read-update ask (0.1529ms)
+✔ classifyChangedCue: excludes "Move YOU..." placement instructions even when they mention a future event (0.0764ms)
+✔ classifyChangedCue: excludes a basis:scene fact about an already-fixed event (0.0626ms)
+✔ cognitiveDemandFor: explain is analyze, position is apply-spatial, scene-basis choice is recall (0.0807ms)
+✔ contextZoneForText: unknown when no zone keyword is present, matched otherwise (0.0739ms)
+✔ loadLegacyBankRows: a valid nodeId resolves to an explicit binding; an invalid one is flagged as drift, not silently unmapped (1.1426ms)
+✔ loadLegacyBankRows: learningObjective falls back to the ledger concept name resolved via nodeId when the row has no authored q.concept label (regression: was hardcoded to q.concept only, leaving every valid-nodeId row "unknown") (0.3648ms)
+✔ loadScenarioSeedRows: skips non-scenario entries and flags a seed with no nodeId at all distinctly from a drifted one (0.4276ms)
+✔ loadPovQuestionRows: every row is marked not-reachable-in-app regardless of content (0.2705ms)
+✔ loadPovQuestionRows: format is read from the real field name "format", not "type" (regression: real povQuestions.json rows use q.format, e.g. "Multiple Choice", and have no q.type at all, so every row fell through to "unknown") (0.1374ms)
+✔ real data: reported totals reconcile with the actual row array and per-catalog counts (125.0372ms)
+✔ real data: no duplicate (catalog, questionId) pair exists across the composed matrix (110.7681ms)
+✔ real data: an "unmapped" mapping method never leaves a resolved domain/concept id behind (98.4762ms)
+✔ real data: every experimental-bank scenario has at most one "required" reflection and the rest are optional (102.462ms)
+✔ animated decision inventory includes older-age pivot cues without claiming zero semantic coverage (99.7067ms)
+✔ real data: the U11 changed-cue manual-verification ledger only references IDs that exist in the live U11 bank (92.1347ms)
+✔ real data: CSV has one header row plus exactly one data row per question, and every row is a well-formed quoted line (110.0184ms)
+✔ animated loader includes node-level prompts as well as ask.q (90.4222ms)
+✔ displayed order is tied to actual source options (3.5085ms)
+✔ exact question and position context preserved (0.1554ms)
+✔ free reflections and arbitrary context fields are not retained (0.1034ms)
+✔ nested context is normalized and opaque answer objects rejected (0.1525ms)
+✔ foreign answer strings and duplicated IDs cannot enter feedback context (0.6302ms)
+✔ stale version/hash and unbounded notes rejected (0.1466ms)
+✔ history stays received until explicit disposition; unknown states do not imply changed (0.1521ms)
+✔ feedback attaches exact identity without treating it as approval (1.3261ms)
+✔ stale, unknown and empty feedback rejected (0.1806ms)
+✔ general observations accepted without inventing question identity (0.0684ms)
+✔ concurrent retries persist once, survive restart, reject changed payload and preserve distinct notes/owners (132.0794ms)
+✔ player projection includes only matching local owner and public summaries (1.242ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1005.5687

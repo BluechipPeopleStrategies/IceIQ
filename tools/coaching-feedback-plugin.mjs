@@ -55,6 +55,15 @@ export function coachingFeedbackPlugin(){return {name:'local-coaching-feedback',
    const bank=value.scope==='coaching-pilot-2026-09-06'?pack.scenarios:value.scope==='skating-2026-09-06'?JSON.parse(fs.readFileSync(path.join(server.config.root,'docs/factory/calibration/skating-movement-2026-09-06.json'),'utf8')).candidates:readBankFiles().bank;
    const entry=value.contentHash?validateContextFeedback(value,bank):validateFeedback(value,pack,hash);
    const owner=req.headers['x-feedback-owner'];if(typeof owner==='string'&&/^[a-zA-Z0-9-]{16,80}$/.test(owner))entry.ownerId=owner;
+   if(value.submissionId!==undefined){
+    if(typeof value.submissionId!=='string'||!/^[a-zA-Z0-9-]{16,80}$/.test(value.submissionId))throw Error('Invalid submission ID.');
+    entry.submissionId=value.submissionId;
+    entry.submissionHash=crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+    // Synchronous lookup + append intentionally has no await between them:
+    // concurrent requests in this local Vite process cannot both insert.
+    const previous=lines(path.join(dir,'inbox.jsonl')).find(n=>n.submissionId===entry.submissionId&&n.ownerId===entry.ownerId);
+    if(previous){if(previous.submissionHash!==entry.submissionHash)throw Error('Submission changed. Send it as a new thought.');return res.end(JSON.stringify({saved:true,id:previous.id,replayed:true}));}
+   }
    fs.mkdirSync(dir,{recursive:true});
    fs.appendFileSync(path.join(dir,'inbox.jsonl'),JSON.stringify(entry)+'\n');
    res.end(JSON.stringify({saved:true,id:entry.id}));

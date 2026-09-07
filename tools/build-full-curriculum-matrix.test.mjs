@@ -168,10 +168,13 @@ test('real data: every experimental-bank scenario has at most one "required" ref
   }
 });
 
-test('real data: U15/U18 show zero skating-movement questions in every catalog checked (input-drift guard for the headline claim)', () => {
-  const report = buildFullCurriculumMatrix();
-  const u15u18 = report.skatingMovementByAge.filter(row => row.ageBand === 'U15' || row.ageBand === 'U18');
-  for (const row of u15u18) assert.equal(row.skatingMovementQuestions, 0, `${row.ageBand} should have zero skating-movement matches; if this fails, content or mapping changed and the summary needs re-checking`);
+test('animated decision inventory includes older-age pivot cues without claiming zero semantic coverage',()=>{
+ const report=buildFullCurriculumMatrix();
+ for(const age of ['U15','U18'])assert.ok(report.rows.some(r=>r.catalog==='animated-play'&&r.ageBand===age&&r.sceneId==='play_gap_control_pivot_match_speed_u13_v1'));
+ assert.equal(report.gapBacklog[0].confidence,'limited');
+ const animated=report.rows.filter(r=>r.catalog==='animated-play');
+ assert.ok(new Set(animated.map(r=>r.contentUnitId)).size<animated.length);
+ assert.ok(report.meta.counting.unreachableRows>0);
 });
 
 test('real data: the U11 changed-cue manual-verification ledger only references IDs that exist in the live U11 bank', () => {
@@ -189,3 +192,5 @@ test('real data: CSV has one header row plus exactly one data row per question, 
   assert.equal(lines.length, report.rows.length + 1);
   for (const line of lines.slice(0, 5)) assert.ok(line.startsWith('"'), 'CSV rows should be quoted');
 });
+
+test('animated loader includes node-level prompts as well as ask.q',()=>{const report=buildFullCurriculumMatrix();assert.ok(report.rows.some(r=>r.sceneId==='play_2v1_pass_lane_removed_u11_v1'&&r.catalog==='animated-play'));});

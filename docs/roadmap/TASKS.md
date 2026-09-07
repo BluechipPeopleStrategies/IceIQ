@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-07 · Ten-hour Claude followthrough (gates A-F) completed on branch
+**Last updated:** 2026-09-07 · Codex followthrough closure: feedback retry fix and browser workflow verified; animated-play curriculum inventory added; mobile report visibility corrected; ten draft hashes verified and all ten held with specific findings. 32 tests and build pass. Integration branch prepared; no push/deployment or content promotion.
 `claude/ten-hour-followthrough` (commit `16a67ef`, based on `899e96f7`) — see
 `docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/REPORT-BACK-TO-CODEX.md`
 for the full handoff. Headline findings: U15/U18 skating-movement content confirmed absent
@@ -67,6 +67,8 @@ isolated branch/worktree only, awaiting Codex/Thomas review.
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-07: Closed code/evidence followthrough on `codex/followthrough-close`. See `docs/factory/followthrough-close/index.html`: retry deduplication, real browser evidence, corrected cross-catalog scope, mobile CSS repair and ten draft holds. Original Claude returns preserved.
 
 - 2026-09-06: Created `docs/factory/claude-visual-review-60/START-HERE.md` and portable five-hour Claude ZIP with 11 packets / 55 scenes / 60 exact current questions, stripped first-pass inputs, separate keys, historical calibration, return template, file hashes and resumable 20-30 minute checkpoints. Claude produces evidence and drafts; Codex owns integration. No Claude session or scheduled run launched.
 
