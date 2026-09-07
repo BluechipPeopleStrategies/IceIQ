@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-07 · Repaired ten staged followthrough drafts; structural/geometry checks and provisional independent review completed. Admission still requires companion lesson questions/types and qualified review. See docs/factory/draft-repairs-10/README.md.
+**Last updated:** 2026-09-07 · Expanded the repaired drafts into eight staged lessons / 48 questions, including 38 companions and six optional reflections. Fixed reversed-direction rink context. See docs/factory/companion-lessons-8/README.md; qualified admission remains pending.
 `claude/ten-hour-followthrough` (commit `16a67ef`, based on `899e96f7`) — see
 `docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/REPORT-BACK-TO-CODEX.md`
 for the full handoff. Headline findings: U15/U18 skating-movement content confirmed absent
@@ -67,6 +67,8 @@ isolated branch/worktree only, awaiting Codex/Thomas review.
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-07: Completed eight staged companion lessons (48 questions, five types, 12.5% optional reflections), corrected independent-review findings, and added hash-bound coverage/review evidence and an actual-interface preview. Reversed Navy attack direction now informs zone context and board description; defaults remain compatible. Live bank and paused qualification stream unchanged.
 
 - 2026-09-07: Repaired ten staged drafts across eight scenes with before/after payloads, exact revision hashes, independent option review and actual-renderer preview. Original returns preserved; live bank unchanged. Lesson completion and qualified admission remain outstanding.
 

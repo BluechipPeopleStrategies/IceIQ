@@ -1,0 +1,376 @@
+{
+  "scenes": [
+    {
+      "id": "draft26-u11-cause-001",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "Read-the-change: baseline",
+      "family": "read-the-change",
+      "topic": "Cause & Effect",
+      "objective": "Locate the defender relative to a passing lane.",
+      "briefing": "YOU have the puck. Teammate 1 and gold F1 are both visible. Compare their positions.",
+      "setup": {
+        "actors": [
+          { "id": "you", "label": "YOU", "team": "home", "role": "skater", "x": 0, "y": 0, "facing": 0.559 },
+          { "id": "gold1", "label": "Navy 1", "team": "home", "role": "skater", "x": 8, "y": 5, "facing": -2.583 },
+          { "id": "f1", "label": "F1", "team": "away", "role": "skater", "x": 5, "y": -4, "facing": 1.249 }
+        ],
+        "puck": { "owner": "you" }
+      },
+      "focusActorId": "you",
+      "cues": ["YOU have the puck. Teammate 1 and gold F1 are both visible. Compare their positions."],
+      "tags": ["read-the-change", "u11-tactical", "experimental-draft"],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [{ "id": "hc-vision-scanning", "title": "Hockey Canada: Vision and Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw", "section": "Vision and scanning coaching principle", "use": "Scanning and reassessment theme; does not certify this scene or key." }],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Is F1 between YOU and teammate 1 in this freeze?",
+          "options": [{ "id": "a", "text": "No, F1 is away from that passing lane" }, { "id": "b", "text": "Yes, F1 is on that passing lane" }],
+          "answer": ["a"], "basis": "scene",
+          "explanation": "F1 is away from the straight lane joining YOU and 1. This describes the current picture; it does not mean a pass is always better than keeping the puck.",
+          "id": "draft26-u11-cause-001-q1"
+        },
+        {
+          "type": "explain",
+          "prompt": "Suppose F1 moves into the lane to teammate 1. What would you check before passing?",
+          "basis": "coaching",
+          "explanation": "Check whether another lane is open and whether you have space to keep the puck. If the lane to 1 has closed, you can delay or choose another option. Explain which cue would guide your choice.",
+          "optional": true, "id": "draft26-u11-cause-001-q2"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which visible cues are useful before YOU choose a pass? Select all that apply.",
+          "options": [
+            { "id": "a", "text": "F1 is below YOU in this freeze" },
+            { "id": "b", "text": "Teammate 1 is farther toward +x than F1" },
+            { "id": "c", "text": "F1 sits directly between YOU and teammate 1" },
+            { "id": "d", "text": "F1 has the puck in this freeze" }
+          ],
+          "answer": ["a", "b"], "basis": "scene",
+          "explanation": "F1 is at y=-4 while YOU are at y=0, and teammate 1 is at x=8 while F1 is at x=5. F1 is not on the straight YOU-to-1 lane and does not own the puck.",
+          "id": "draft26-u11-cause-001-q3"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Put this scan-and-decide routine in a useful order for the current freeze.",
+          "options": [
+            { "id": "a", "text": "Locate F1 and the lane to teammate 1" },
+            { "id": "b", "text": "Check another support lane or space" },
+            { "id": "c", "text": "Choose whether to pass, carry, or keep the puck" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "coaching",
+          "explanation": "This is one suggested scan-to-decision routine: see the pressure, check support, then choose an action. Players may scan in a slightly different order when the picture changes; the routine is not the only possible temporal action.",
+          "id": "draft26-u11-cause-001-q4"
+        },
+        {
+          "type": "position",
+          "prompt": "Place teammate 1 in a support position that opens a different passing angle from YOU.",
+          "actorId": "you",
+          "actorId": "gold1",
+          "reference": { "x": -4, "y": 3 },
+          "basis": "coaching",
+          "explanation": "A support spot with separation can give the puck carrier another angle. This is a coaching suggestion to discuss, not an objectively graded single correct location.",
+          "id": "draft26-u11-cause-001-q5"
+        },
+        {
+          "type": "choice",
+          "prompt": "What does the current picture allow YOU to say with confidence?",
+          "options": [
+            { "id": "a", "text": "F1 is not currently on the straight lane to teammate 1" },
+            { "id": "b", "text": "The pass will definitely arrive safely" },
+            { "id": "c", "text": "YOU must pass immediately" }
+          ],
+          "answer": ["a"], "basis": "scene",
+          "explanation": "The freeze supports the lane description. It cannot prove a future pass outcome or require an immediate release.",
+          "id": "draft26-u11-cause-001-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u11-cause-002",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "Read-the-change: boards lane baseline",
+      "family": "read-the-change",
+      "topic": "Cause & Effect",
+      "objective": "Compare positions using the stated attack direction.",
+      "briefing": "Navy teammate 1 has the puck and attacks the -x net (left net on the overhead board). Compare where gold F1 is in that attack direction.",
+      "attackDirection": -1,
+      "setup": {
+        "actors": [
+          { "id": "gold1", "label": "Navy 1", "team": "home", "role": "skater", "x": -6, "y": -10.5, "facing": 3.142 },
+          { "id": "f1", "label": "F1", "team": "away", "role": "skater", "x": -10, "y": -11.5, "facing": 0.245 }
+        ],
+        "puck": { "owner": "gold1" }
+      },
+      "focusActorId": "gold1",
+      "cues": ["Navy teammate 1 has the puck and attacks the -x net (left net on the overhead board). Compare where gold F1 is in that attack direction."],
+      "tags": ["read-the-change", "u11-tactical", "experimental-draft"],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [{ "id": "hc-vision-scanning", "title": "Hockey Canada: Vision and Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw", "section": "Vision and scanning coaching principle", "use": "Scanning and reassessment theme; does not certify this scene or key." }],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Is F1 ahead of or behind teammate 1 toward the defended net?",
+          "options": [{ "id": "a", "text": "Ahead of 1 toward the net" }, { "id": "b", "text": "Behind 1, away from the net" }],
+          "answer": ["a"], "basis": "scene",
+          "explanation": "Navy attacks the -x end. F1 is farther in that direction than 1, so F1 is ahead toward the net. Being ahead does not by itself mean F1 blocks the direct lane.",
+          "id": "draft26-u11-cause-002-q1"
+        },
+        {
+          "type": "choice",
+          "prompt": "Suppose F1 steps into the lane from 1 to the net. What should 1 reassess?",
+          "options": [{ "id": "b", "text": "Whether to continue through the same occupied lane" }, { "id": "a", "text": "Whether to change direction or keep the puck away from F1" }],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "The hypothetical has changed the route: F1 now occupies that route. Check for another direction or space to protect the puck. The best next action depends on the space that remains.",
+          "id": "draft26-u11-cause-002-q2"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which details can 1 use to reassess after F1 changes position? Select all that apply.",
+          "options": [
+            { "id": "a", "text": "F1 is farther toward the -x net than Navy 1" },
+            { "id": "b", "text": "F1 is lower on the board than Navy 1" },
+            { "id": "c", "text": "Navy 1 is the puck owner in this freeze" },
+            { "id": "d", "text": "F1 is behind Navy 1 toward the -x net" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "scene",
+          "explanation": "F1 is at x=-10 versus Navy 1 at x=-6, and y=-11.5 versus -10.5. Navy 1 owns the puck. F1 is ahead toward -x, not behind.",
+          "id": "draft26-u11-cause-002-q3"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange a simple reassessment after F1 steps into the route.",
+          "options": [
+            { "id": "a", "text": "Notice that the original lane changed" },
+            { "id": "b", "text": "Scan for another lane or support" },
+            { "id": "c", "text": "Select a puck action that fits the new space" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "coaching",
+          "explanation": "The sequence is a suggested routine for this stated change. A player can adapt the timing and may protect the puck before scanning again; it is not the sole correct temporal action.",
+          "id": "draft26-u11-cause-002-q4"
+        },
+        {
+          "type": "position",
+          "prompt": "Place puck-carrying Navy 1 in a position that gives a side option away from F1.",
+          "actorId": "gold1",
+          "reference": { "x": -4, "y": -7 },
+          "basis": "coaching",
+          "explanation": "A support spot with a different angle can help the puck carrier keep options available. This is a coachable example, not a unique correct placement.",
+          "id": "draft26-u11-cause-002-q5"
+        },
+        {
+          "type": "choice",
+          "prompt": "If F1 steps into the -x route, what should Navy 1 check next?",
+          "options": [
+            { "id": "a", "text": "Whether a different lane or a puck-protection route is open" },
+            { "id": "b", "text": "Whether the current lane has become wider without a change" },
+            { "id": "c", "text": "Whether F1 has moved behind Navy 1 toward the net" }
+          ],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "Once the route is occupied, check a different lane or protect the puck while reassessing. The scene does not establish that the original lane widened or that F1 moved behind.",
+          "id": "draft26-u11-cause-002-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u15-skate-001",
+      "version": 1,
+      "ageBand": "U15",
+      "title": "Tight turn off the boards",
+      "family": "skating-tactical-link",
+      "topic": "Skating & Movement",
+      "objective": "Compare the passing lanes available after a described turn.",
+      "briefing": "Navy attacks the +x end (right net on the overhead board). YOU have the puck after a turn away from the boards. F1 is gold and is near the lane to teammate 2. Teammate 1 is in the middle. The earlier turn is described, not animated.",
+      "attackDirection": 1,
+      "setup": {
+        "actors": [
+          { "id": "you", "label": "YOU", "team": "home", "role": "skater", "x": -8, "y": -9, "facing": 0.927 },
+          { "id": "f1", "label": "F1", "team": "away", "role": "skater", "x": -1, "y": -10.7, "facing": 3.142 },
+          { "id": "gold1", "label": "Navy 1", "team": "home", "role": "skater", "x": -2, "y": -3, "facing": 0 },
+          { "id": "gold2", "label": "Navy 2", "team": "home", "role": "skater", "x": 5, "y": -10.5, "facing": -3.1 }
+        ],
+        "puck": { "owner": "you" }
+      },
+      "focusActorId": "you",
+      "cues": ["Navy attacks the +x end (right net on the overhead board). YOU have the puck after a turn away from the boards. F1 is gold and is near the lane to teammate 2. Teammate 1 is in the middle. The earlier turn is described, not animated."],
+      "tags": ["skating-movement", "edge-work", "turning", "experimental-draft"],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [{ "id": "hc-vision-scanning", "title": "Hockey Canada: Vision and Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw", "section": "Vision and scanning coaching principle", "use": "Scanning and reassessment theme; does not certify this scene or key." }],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "After your turn, which passing lane is farther from F1?",
+          "options": [{ "id": "a", "text": "The lane to teammate 1 through the middle" }, { "id": "b", "text": "The lane to teammate 2 near the boards" }, { "id": "c", "text": "Both lanes are equally far from F1" }],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "The lane to 1 runs through the middle, farther from F1 than the lane to 2 near the boards. That gives you a clearer lane to consider in this freeze. Check again before releasing the puck; this does not guarantee a completed pass.",
+          "id": "draft26-u15-skate-001-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which cues should YOU scan before choosing between the two teammates? Select all that apply.",
+          "options": [
+            { "id": "a", "text": "Teammate 1 is farther from the boards than teammate 2" },
+            { "id": "b", "text": "F1 is closer to teammate 2 than to teammate 1" },
+            { "id": "c", "text": "YOU is farther from the boards than teammate 2" },
+            { "id": "d", "text": "Teammate 2 is farther from the boards than teammate 1" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "scene",
+          "explanation": "Using distance from the horizontal boards, teammate 1 is at y=-3 while teammate 2 is at y=-10.5; F1 is nearer teammate 2 than teammate 1; and YOU at y=-9 is farther from the boards than teammate 2.",
+          "id": "draft26-u15-skate-001-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Put this suggested routine after the described turn in a useful order.",
+          "options": [
+            { "id": "a", "text": "Recheck F1 and both lane options" },
+            { "id": "b", "text": "Compare support and puck-protection space" },
+            { "id": "c", "text": "Choose a pass, carry, or delay" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "coaching",
+          "explanation": "This order connects the turn to a fresh scan, a space check, and a decision. It is a suggested routine, not the only correct temporal action when pressure changes.",
+          "id": "draft26-u15-skate-001-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Place YOU a little farther from the boards to create another angle while keeping the puck protected.",
+          "actorId": "you",
+          "reference": { "x": -6, "y": -7 },
+          "basis": "coaching",
+          "explanation": "Moving YOU farther from the boards can create another angle to discuss. The reference is an example, not a unique correct location, and the static scene cannot prove puck protection.",
+          "optional": false,
+          "id": "draft26-u15-skate-001-q4"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why might the middle option be worth checking even though the turn began near the boards?",
+          "basis": "coaching",
+          "explanation": "The middle lane may be farther from F1 in this freeze, but your explanation should still mention support, pressure, and a fresh scan. The static frame cannot establish a completed pass.",
+          "optional": true,
+          "id": "draft26-u15-skate-001-q5"
+        },
+        {
+          "type": "choice",
+          "prompt": "If F1 shifts toward the middle lane, what should YOU reassess?",
+          "options": [
+            { "id": "a", "text": "Both lanes and the support available after F1's change" },
+            { "id": "b", "text": "The lane to 2 stays unchanged without another scan" },
+            { "id": "c", "text": "The earlier turn proves which pass will work" }
+          ],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "A defender movement changes the picture, so reassess both lanes and support. The earlier turn cannot establish that a lane remains open or that a pass will work.",
+          "id": "draft26-u15-skate-001-q6"
+        }
+      ]
+    },
+    {
+      "id": "draft26-u18-skate-002",
+      "version": 1,
+      "ageBand": "U18",
+      "title": "Pivot to close the gap",
+      "family": "skating-tactical-link",
+      "topic": "Skating & Movement",
+      "objective": "Connect a described pivot with tracking the current puck threat.",
+      "briefing": "Gold attacks the +x end (right net on the overhead board), which Navy defends. YOU have just pivoted and are still on the net side of F1. F1 has the puck; F2 is behind F1 in the attack direction. The pivot is stated, not animated.",
+      "attackDirection": -1,
+      "setup": {
+        "actors": [
+          { "id": "you", "label": "YOU", "team": "home", "role": "skater", "x": 10, "y": 6, "facing": -0.785 },
+          { "id": "f1", "label": "F1", "team": "away", "role": "skater", "x": 6, "y": 4, "facing": 0 },
+          { "id": "f2", "label": "F2", "team": "away", "role": "skater", "x": -2, "y": -2, "facing": 0 }
+        ],
+        "puck": { "owner": "f1" }
+      },
+      "focusActorId": "you",
+      "cues": ["Gold attacks the +x end (right net on the overhead board), which Navy defends. YOU have just pivoted and are still on the net side of F1. F1 has the puck; F2 is behind F1 in the attack direction. The pivot is stated, not animated."],
+      "tags": ["skating-movement", "pivot", "gap-control", "experimental-draft"],
+      "limits": "Static practice scene. Any earlier action or hypothetical change is stated in words; speed and outcomes are not simulated.",
+      "sources": [{ "id": "hc-vision-scanning", "title": "Hockey Canada: Vision and Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw", "section": "Vision and scanning coaching principle", "use": "Scanning and reassessment theme; does not certify this scene or key." }],
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "After your pivot, which threat should YOU track first here?",
+          "options": [{ "id": "b", "text": "F2 trailing behind the puck" }, { "id": "c", "text": "The space halfway between F1 and F2" }, { "id": "a", "text": "F1 carrying the puck toward your net" }],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "F1 has the puck and is the immediate netward threat. Match your movement to that threat while continuing to check F2. Tracking the puck carrier first does not mean ignoring a possible pass.",
+          "id": "draft26-u18-skate-002-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which cues should YOU keep checking after the pivot? Select all that apply.",
+          "options": [
+            { "id": "a", "text": "F1's puck and direction toward the defended net" },
+            { "id": "b", "text": "F2's position behind the puck carrier" },
+            { "id": "c", "text": "The space between YOU and the attackers" },
+            { "id": "d", "text": "A guaranteed outcome from the pivot" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "coaching",
+          "explanation": "Puck threat, trailing support, and usable gap space are relevant cues. The stated pivot does not guarantee an outcome.",
+          "id": "draft26-u18-skate-002-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange this suggested tracking routine after the pivot.",
+          "options": [
+            { "id": "a", "text": "Identify the puck carrier and netward threat" },
+            { "id": "b", "text": "Check F2 and the space behind the carrier" },
+            { "id": "c", "text": "Choose a gap or route that protects the net" }
+          ],
+          "answer": ["a", "b", "c"], "basis": "coaching",
+          "explanation": "This sequence suggests what to check first, second, and then use for a decision. It is not the sole correct temporal action if the puck or support changes.",
+          "id": "draft26-u18-skate-002-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Place YOU slightly closer to the middle while staying between the puck carrier and the net.",
+          "actorId": "you",
+          "reference": { "x": 8, "y": 5 },
+          "basis": "coaching",
+          "explanation": "A middle support position can offer another angle for tracking the puck carrier and net. This is a coaching example, not a uniquely correct placement or proof of successful movement.",
+          "id": "draft26-u18-skate-002-q4"
+        },
+        {
+          "type": "explain",
+          "prompt": "What would make you change your first focus from F1 to another threat?",
+          "basis": "coaching",
+          "explanation": "Explain a visible change such as F1 releasing the puck or F2 becoming an immediate scoring threat. The static scene cannot establish speed, gaze, or what happens next.",
+          "optional": true,
+          "id": "draft26-u18-skate-002-q5"
+        },
+        {
+          "type": "choice",
+          "prompt": "If F1 passes to F2, which change should YOU account for first?",
+          "options": [
+            { "id": "a", "text": "The puck threat has moved, so scan F2 and adjust the gap" },
+            { "id": "b", "text": "Keep tracking F1 only because the pivot fixed the threat" },
+            { "id": "c", "text": "F2 is still behind the puck because passes do not change direction" }
+          ],
+          "answer": ["a"], "basis": "coaching",
+          "explanation": "A pass changes the puck threat, so scan F2 and the remaining gap. The pivot does not freeze the play or prevent a change in possession.",
+          "id": "draft26-u18-skate-002-q6"
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    { "questionId": "draft26-u11-cause-001-q3", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "F1 is at y=-4 while YOU are at y=0." }, { "optionId": "b", "assessment": "supported", "reason": "Teammate 1 is at x=8 while F1 is at x=5." }, { "optionId": "c", "assessment": "unsupported", "reason": "F1 is away from the straight YOU-to-1 lane." }, { "optionId": "d", "assessment": "unsupported", "reason": "The puck owner is YOU, not F1." }], "evidence": "Actor coordinates and puck owner.", "limitations": "Static geometry does not establish movement or future execution." },
+    { "questionId": "draft26-u11-cause-001-q4", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "The first step names the visible pressure and lane." }, { "optionId": "b", "assessment": "supported", "reason": "Support space is a relevant next scan." }, { "optionId": "c", "assessment": "supported", "reason": "The final step is an adaptable coaching decision." }], "evidence": "Static lane comparison and stated possession.", "limitations": "Sequence is a suggested routine, not a sole correct temporal action." },
+    { "questionId": "draft26-u11-cause-001-q5", "optionAudits": [], "evidence": "Reference moves teammate 1 to a distinct on-ice support spot.", "limitations": "Position is coaching guidance with no unique correct point and no objective grading." },
+    { "questionId": "draft26-u11-cause-001-q6", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "Current geometry places F1 away from the straight lane." }, { "optionId": "b", "assessment": "unsupported", "reason": "Future pass safety is not visible." }, { "optionId": "c", "assessment": "unsupported", "reason": "The freeze does not require immediate release." }], "evidence": "Actor coordinates and current puck owner.", "limitations": "Static geometry cannot predict the next action." },
+    { "questionId": "draft26-u11-cause-002-q3", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "F1 is farther toward -x than Navy 1." }, { "optionId": "b", "assessment": "supported", "reason": "F1 is at y=-11.5 versus Navy 1 at y=-10.5." }, { "optionId": "c", "assessment": "supported", "reason": "The setup gives puck ownership to Navy 1." }, { "optionId": "d", "assessment": "unsupported", "reason": "F1 is ahead toward -x, not behind." }], "evidence": "Briefing direction, actor coordinates, and puck owner.", "limitations": "Static geometry does not establish movement or future execution." },
+    { "questionId": "draft26-u11-cause-002-q4", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "Reassessment starts with recognizing the changed route." }, { "optionId": "b", "assessment": "supported", "reason": "Scanning alternatives is conditionally useful." }, { "optionId": "c", "assessment": "supported", "reason": "Action must fit the new space." }], "evidence": "Stated hypothetical and attack direction.", "limitations": "Suggested order is not the sole correct temporal action." },
+    { "questionId": "draft26-u11-cause-002-q5", "optionAudits": [], "evidence": "Reference moves puck-carrying Navy 1 to a distinct on-ice point.", "limitations": "No unique correct placement; no speed or success claim." },
+    { "questionId": "draft26-u11-cause-002-q6", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "A closed route warrants checking another lane or protecting the puck." }, { "optionId": "b", "assessment": "unsupported", "reason": "No geometry shows the lane widened." }, { "optionId": "c", "assessment": "unsupported", "reason": "F1 remains ahead toward -x in the stated scene." }], "evidence": "Prompt is anchored to the stated -x route closing.", "limitations": "Coaching choice is conditional; static geometry cannot prove success." },
+    { "questionId": "draft26-u15-skate-001-q2", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "Teammate 1 is at y=-3 while teammate 2 is at y=-10.5." }, { "optionId": "b", "assessment": "supported", "reason": "F1 is closer to teammate 2 by the setup distances." }, { "optionId": "c", "assessment": "supported", "reason": "YOU at y=-9 is farther from the boards than teammate 2 at y=-10.5." }, { "optionId": "d", "assessment": "unsupported", "reason": "Teammate 2 is closer to the boards than teammate 1." }], "evidence": "Static y coordinates and actor labels.", "limitations": "Turn speed, edge quality, gaze, and future lane availability are unknown." },
+    { "questionId": "draft26-u15-skate-001-q3", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "A fresh scan is appropriate after a stated turn." }, { "optionId": "b", "assessment": "supported", "reason": "Space and support affect the next choice." }, { "optionId": "c", "assessment": "supported", "reason": "The action remains conditional." }], "evidence": "Described turn and two visible teammate lanes.", "limitations": "Suggested routine is not the sole correct temporal action." },
+    { "questionId": "draft26-u15-skate-001-q4", "optionAudits": [], "evidence": "Reference moves YOU from x=-8,y=-9 to a distinct on-ice point.", "limitations": "Example placement is not unique and does not certify puck protection." },
+    { "questionId": "draft26-u15-skate-001-q5", "optionAudits": [], "evidence": "Middle lane is farther from F1 in the stated freeze.", "limitations": "Explanation cannot establish speed, gaze, or pass completion." },
+    { "questionId": "draft26-u15-skate-001-q6", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "A defender shift requires reassessing both lanes and support." }, { "optionId": "b", "assessment": "unsupported", "reason": "A lane cannot be assumed unchanged after F1 shifts." }, { "optionId": "c", "assessment": "unsupported", "reason": "The described turn does not prove a future pass." }], "evidence": "Prompt states a changed F1 position and asks for a conditional reassessment.", "limitations": "Static geometry cannot establish how far F1 shifts or which action succeeds." },
+    { "questionId": "draft26-u18-skate-002-q2", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "F1 has the puck and attacks the defended net." }, { "optionId": "b", "assessment": "supported", "reason": "F2's trailing position is stated." }, { "optionId": "c", "assessment": "supported", "reason": "Gap space is relevant to a defensive choice." }, { "optionId": "d", "assessment": "unsupported", "reason": "The pivot does not guarantee an outcome." }], "evidence": "Possession and relative positions in briefing/setup.", "limitations": "No speed, gaze, or successful gap closure is shown." },
+    { "questionId": "draft26-u18-skate-002-q3", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "The puck carrier is the immediate stated threat." }, { "optionId": "b", "assessment": "supported", "reason": "F2's location is a relevant second check." }, { "optionId": "c", "assessment": "supported", "reason": "A route decision should account for net protection and space." }], "evidence": "Puck owner F1 and actors' stated attack direction.", "limitations": "Suggested routine is not the sole correct temporal action." },
+    { "questionId": "draft26-u18-skate-002-q4", "optionAudits": [], "evidence": "Reference moves YOU to a distinct on-ice point closer to the middle.", "limitations": "Example is not uniquely correct and cannot prove gap control." },
+    { "questionId": "draft26-u18-skate-002-q5", "optionAudits": [], "evidence": "Prompt asks for a conditional change to the stated puck threat.", "limitations": "Static scene cannot establish speed, gaze, release timing, or future danger." },
+    { "questionId": "draft26-u18-skate-002-q6", "optionAudits": [{ "optionId": "a", "assessment": "supported", "reason": "A pass moves the puck threat to F2, requiring a fresh scan and gap adjustment." }, { "optionId": "b", "assessment": "unsupported", "reason": "The pivot does not fix the threat in place." }, { "optionId": "c", "assessment": "unsupported", "reason": "A pass can change which player has the puck." }], "evidence": "Prompt states a conditional pass from F1 to F2.", "limitations": "No pass timing, speed, gaze, or successful defensive adjustment is shown." }
+  ]
+}

@@ -25,7 +25,7 @@ function downloadFile(filename,text,type){
  const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-export function ExperimentalBoard({scene,onPoint,reference}){
+export function ExperimentalBoard({scene,onPoint,reference,attackDirection=1}){
  const ref=useRef(null);
  useEffect(()=>{
   if(!onPoint||!ref.current)return;
@@ -35,13 +35,13 @@ export function ExperimentalBoard({scene,onPoint,reference}){
    const hit=p.matrixTransform(matrix.inverse()),point={x:hit.x,y:-hit.y};if(isCoachRoutePoint(point))onPoint(point);
   });
  },[onPoint]);
- return <svg className="ep-board" viewBox="-33 -16 66 32" ref={ref} role="img" aria-label="Overhead rink. Navy attacks right. Player coordinates are also listed below.">
+ return <svg className="ep-board" viewBox="-33 -16 66 32" ref={ref} role="img" aria-label={`Overhead rink. Navy attacks ${attackDirection===-1?'left':'right'}. Player coordinates are also listed below.`}>
   <rect x="-30.48" y="-12.954" width="60.96" height="25.908" rx="8.5344" fill="#e4eff2" stroke="#c9a24b" strokeWidth=".3"/>
   <path d="M-7.62-12.954v25.908M7.62-12.954v25.908" stroke="#478eb7" strokeWidth=".22"/><path d="M0-12.954v25.908M-27-9.8V9.8M27-9.8V9.8" stroke="#cf6574" strokeWidth=".16"/>
   <circle r="4.572" fill="none" stroke="#87b5cc" strokeWidth=".12"/>
   {[-20.7,20.7].flatMap(x=>[-6.7,6.7].map(y=><g key={`${x}:${y}`}><circle cx={x} cy={y} r="4.572" fill="none" stroke="#d8a5ad" strokeWidth=".1"/><circle cx={x} cy={y} r=".24" fill="#c85f70"/></g>))}
   {[-1,1].map(side=><g key={side}><path d={`M${side*27},-1.85A1.85,1.85 0 0 ${side===1?0:1} ${side*27},1.85`} fill="#b5d6e5"/><rect x={side===1?27:-29} y="-1" width="2" height="2" fill="none" stroke="#c35c66" strokeWidth=".18"/></g>)}
-  <text x="0" y="-14" textAnchor="middle" fontSize="1" fill="#aec6da">NAVY ATTACKS →</text>
+  <text x="0" y="-14" textAnchor="middle" fontSize="1" fill="#aec6da">{attackDirection===-1?'← NAVY ATTACKS':'NAVY ATTACKS →'}</text>
   {(scene.overlays?.cells||[]).map(c=><rect key={`${c.x}:${c.y}`} x={c.x-c.size/2} y={-c.y-c.size/2} width={c.size} height={c.size} fill={c.band==='strong'?'#167b70':'#b47c13'} opacity={c.band==='strong'?.35:.22} pointerEvents="none"/>)}
   {reference&&<g transform={`translate(${reference.x},${-reference.y})`}><circle r="1.15" fill="none" stroke="#146a73" strokeWidth=".22" strokeDasharray=".35 .2"/><text y="2" textAnchor="middle" fontSize=".75" fill="#155563">Example</text></g>}
   {scene.actors.map(a=><g key={a.id} transform={`translate(${a.x},${-a.y})`}><title>{actorDisplayName(a)}</title><circle r=".65" fill={a.team==='home'?'#10233d':'#c9a24b'} stroke={a.team==='home'?'#fff':'#795916'} strokeWidth=".12"/><path d="M.8-.28l.6.28-.6.28" transform={`rotate(${-a.facing*180/Math.PI})`} fill="none" stroke="#364b59" strokeWidth=".15"/><text y="-1.05" textAnchor="middle" fontSize=".9" fontWeight="700" fill="#10233d" stroke="#edf5f4" strokeWidth=".25" paintOrder="stroke">{compactActorLabel(a)}</text></g>)}
@@ -101,8 +101,8 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
   <header><p className="ep-kicker">{s.ageBand} / {s.topic} / {s.id}</p><h2>{s.title}</h2><p className="ep-briefing">{s.briefing}</p></header>
   <nav className="ep-question-nav" aria-label="Scenario questions">{visibleQuestions.map((item,i)=><button key={item.id} type="button" aria-label={`Question ${i+1}: ${QUESTION_TYPES[item.type]}${item.type==='explain'?' (optional)':''}${currentAnswers[item.id]?.reviewed?', reviewed':''}`} title={`${QUESTION_TYPES[item.type]}${item.type==='explain'?' (optional)':''}`} aria-current={i===index?'step':undefined} onClick={()=>{setIndex(i);setNotice('');}}><span aria-hidden="true">{i+1}</span>{currentAnswers[item.id]?.reviewed&&<span className="ep-reviewed-dot" aria-hidden="true"/>}</button>)}</nav>
   <div className="ep-workspace">
-   <div className="ep-rink-column"><div className="ep-view-choice"><span>{experimentalRinkContext(scene)}</span><button type="button" aria-pressed={board} onClick={()=>setBoard(v=>!v)}>{board?'Open 3D rink':'Use overhead board'}</button></div>
-    {board||!availability?<ExperimentalBoard scene={displayScene} onPoint={isPosition?move:null} reference={result&&isPosition?q.reference:null}/>:<ScenarioRinkView overlays={displayScene.overlays} state={displayScene} title={s.title} focusKey={`${s.id}:${s.version}:${q.id}`} focusPoints={isPosition&&q.reference?[q.reference]:[]} focusActorId={isPosition?q.actorId:s.focusActorId} selectedActorId={isPosition?q.actorId:null} editableIds={isPosition?[q.actorId]:[]} onSelect={()=>{}} onMove={(_,point)=>move(point)} onAvailabilityChange={setAvailability} teamLabels={{home:'Navy',away:'Gold'}} onViewUsage={cameraAction=>onMetric('camera',s,q,{cameraAction})}/>}
+   <div className="ep-rink-column"><div className="ep-view-choice"><span>{experimentalRinkContext(scene,s.attackDirection)}</span><button type="button" aria-pressed={board} onClick={()=>setBoard(v=>!v)}>{board?'Open 3D rink':'Use overhead board'}</button></div>
+    {board||!availability?<ExperimentalBoard attackDirection={s.attackDirection} scene={displayScene} onPoint={isPosition?move:null} reference={result&&isPosition?q.reference:null}/>:<ScenarioRinkView overlays={displayScene.overlays} state={displayScene} title={s.title} focusKey={`${s.id}:${s.version}:${q.id}`} focusPoints={isPosition&&q.reference?[q.reference]:[]} focusActorId={isPosition?q.actorId:s.focusActorId} selectedActorId={isPosition?q.actorId:null} editableIds={isPosition?[q.actorId]:[]} onSelect={()=>{}} onMove={(_,point)=>move(point)} onAvailabilityChange={setAvailability} teamLabels={{home:'Navy',away:'Gold'}} onViewUsage={cameraAction=>onMetric('camera',s,q,{cameraAction})}/>}
     {isPosition&&<div className="ep-coordinates"><span>Place {actorDisplayName(actor)}</span>{['x','y'].map(axis=><label key={axis}>{axis==='x'?'Along rink':'Across rink'}<input type="number" step=".25" aria-label={`Player ${axis} coordinate`} value={coordinates[axis]} onChange={e=>setCoordinates(old=>({...old,[axis]:e.target.value}))}/></label>)}<button type="button" onClick={()=>{const point={x:Number(coordinates.x),y:Number(coordinates.y)};if(coordinates.x.trim()&&coordinates.y.trim()&&isCoachRoutePoint(point))move(point);else setNotice('Choose a position inside the rink.');}}>Place player</button><button type="button" onClick={()=>{const original=s.setup.actors.find(a=>a.id===q.actorId);move({x:original.x,y:original.y});}}>Reset position</button></div>}
     {notice&&<p role="alert">{notice}</p>}
     <details className="ep-positions"><summary>Player locations and facing</summary><ul>{scene.actors.map(a=><li key={a.id}>{actorDisplayName(a)} · {a.x.toFixed(1)}, {a.y.toFixed(1)} m · {Math.round(a.facing*180/Math.PI)}°</li>)}</ul><p>0° faces the right end of the rink. Turning the camera does not change the players’ directions.</p></details>
