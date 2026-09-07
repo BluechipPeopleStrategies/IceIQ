@@ -1,16 +1,16 @@
 # Curriculum coverage map
 
-Generated 2026-09-07T06:48:03.413Z by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
+Generated 2026-09-07T20:41:17.821Z by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
 
 ## What this measures
 
-The current inventory contains **200 scenarios**, **1600 questions**, and **200 unique opening geometries**. The ratio is **8 questions per geometry**. Geometry is a canonical hash of each scenario setup's actors and puck; it does not inspect question wording or prove that two prompts teach the same thing.
+The current inventory contains **208 scenarios**, **1648 questions**, and **208 unique opening geometries**. The ratio is **7.92 questions per geometry**. Geometry is a canonical hash of each scenario setup's actors and puck; it does not inspect question wording or prove that two prompts teach the same thing.
 
 The report retains each scenario's authored age, topic, family, tags, objective and source references. It also keeps compact question rows with the current question ID, type, basis and prompt. Use coverage.json for the complete data and index.html for the interactive age/topic views.
 
 ## Delivery formats
 
-Observed current types are: Multiple choice (508), Choose all that apply (300), Move / arrange players (295), Order actions (197), Explain, compare and reconsider (300). The format table also lists delivery modes that are not present in this composed bank, including true/false, feature taps, routes, responsibility matching, mistake spotting, prediction and vocabulary activities. Unseen formats are backlog signals, not automatic quality findings.
+Observed current types are: Multiple choice (524), Choose all that apply (310), Move / arrange players (303), Order actions (205), Explain, compare and reconsider (306). The format table also lists delivery modes that are not present in this composed bank, including true/false, feature taps, routes, responsibility matching, mistake spotting, prediction and vocabulary activities. Unseen formats are backlog signals, not automatic quality findings.
 
 ## Curriculum mapping boundary
 
@@ -50,9 +50,3 @@ These links are primary or official development resources used to frame candidat
 - Counts are not targets, quotas, mastery coverage or a quality ranking.
 - Domain signals may overlap; a scenario can contribute to several domains.
 - Backlog candidates need authored geometry, exact answer contracts, age review and source review before they become content.
-
-## Audited snapshot
-
-Scene audit completed 2026-09-06T15:47:22.880Z, before this map. Snapshot SHA256: 5ce63f9742c4d594cd1c10bdfd577c1f58718316e5cc0de155e849eaefbaf899. [Nine placement repair items](../scene-audit-2026-09-06/index.html).
-
-Routine practice has 1500 questions including 200 optional reflections. The authored inventory includes all 1,600. No learner performance data was collected in this inventory run; no learning-effectiveness claim follows from volume.

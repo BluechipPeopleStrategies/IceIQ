@@ -33,7 +33,9 @@ import BoardInspection from '../visuals/BoardInspection.jsx';
 import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
-import ReadSequenceRecall from './ReadSequenceRecall.jsx';
+// ReadSequenceRecall disabled for MVP (2026-09-07): nests interactive rink controls inside
+// a button, so clicking them also fires the outer button. Re-enable once that's fixed.
+// import ReadSequenceRecall from './ReadSequenceRecall.jsx';
 import ReadSequenceBoard from './ReadSequenceBoard.jsx';
 import ScenarioRinkView from '../visuals/ScenarioRinkView.jsx';
 import CameraViewControls from '../visuals/CameraViewControls.jsx';
@@ -728,7 +730,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {notice && <p className="rs-notice" role="status">{notice}</p>}
       </aside>
     </div>
-    {!defenderPerspectiveActive && session.phase === 'complete' && <ReadSequenceRecall key={`${storageKey}:recall`} session={session} playerId={playerId} draftAccess={recallDraftAccess} renderBoard={(state, description) => <ScenarioRinkView ageBand={definition.ageBand} questionId={`${definition.id}:recall:${description}`} state={state} title={description} bounds={getReadSceneBounds(definition, { wide: true })} hideZoneLines={isYoung || definition.ui?.hideZoneLines === true} showBothGoals={false} />} />}
+    {/* ReadSequenceRecall disabled for MVP (2026-09-07), see import comment above. */}
     {!defenderPerspectiveActive && isU11 && session.phase === 'complete' && <ChangedCueComparison key={storageKey} session={session} onSave={setSession} />}
   </section>;
 }

@@ -88,11 +88,17 @@ docs/feedback-shots/
 # Daily Tracker backup directory (local-only runtime artifacts)
 docs/roadmap/.tracker-backups/
 
+# Whole tmp/ directory is scratch space, never repo content (broadened
+# 2026-09-07 after an auto-commit hook swept a 370MB tmp/calibration-preview-head.zip
+# into history anyway — the narrower /tmp/coaching-feedback/-only ignore below
+# had claimed "nothing under tmp/ was ever committed," which this disproved
+# the same day). Ignoring does not affect any file already tracked.
+/tmp/
+
 # Local coaching-feedback dev inbox (tools/coaching-feedback-plugin.mjs writes
-# receipts + dispositions here; never a production/Supabase path, but was
-# untracked-and-unignored, one `git add -A`/`git add .` away from committing
-# real player feedback text to the repo). Ignoring does not affect any file
-# already tracked; nothing under tmp/ was ever committed (verified 2026-09-07).
+# receipts + dispositions here; never a production/Supabase path). Kept as an
+# explicit entry even though /tmp/ above already covers it, in case tmp/ is
+# ever narrowed again.
 /tmp/coaching-feedback/
 
 # Scraper working files: raw third-party transcripts stay off git (retained
