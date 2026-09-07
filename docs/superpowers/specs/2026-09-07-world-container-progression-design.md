@@ -35,6 +35,8 @@ the natural container for the whole path.
 6. **Experimental scenarios stops being a labelled destination** and becomes part of the
    in-world mix.
 7. **Copy goes to American spelling** ("practice", not "practise").
+8. **Peripheral features appear gradually over roughly the first five to seven real
+   sessions**, rather than all at once on day one.
 
 ## Player experience
 
@@ -137,6 +139,55 @@ the practice record ("Saved on this device").
 persisted field name or question id is renamed, because renaming a persisted key silently
 orphans every existing saved practice record.
 
+## Progressive disclosure
+
+Even with worlds as the container, the home page still carries goals, training log,
+progress, Play, Brain Gym and Take a quiz. Shown all at once on a first visit that is
+still a wall. So peripheral features appear gradually.
+
+**The trigger is a qualifying session, not an app open.** A qualifying session is a visit
+in which the player answered at least one question, with visits separated by at least
+thirty minutes of inactivity so that closing and reopening the app does not count twice.
+Counting raw logins would reveal "See your progress" to a player who has answered
+nothing, which teaches them the feature is empty, and would let a player unlock the whole
+interface in an afternoon without learning anything.
+
+**Each step also requires the prerequisite that makes the feature worth seeing**, so a
+feature never arrives before it has something to show.
+
+| Qualifying session | Appears | Why then |
+|---|---|---|
+| 1 | Worlds and Start only | One decision: pick a world, press Start |
+| 1, on finishing | See your progress | There is now a result worth looking at |
+| 2 | Stars on world cards | Enough history for depth to mean something |
+| 3 | Brain Gym, Play | Core loop established; variety is a reward, not a distraction |
+| 4 | Log your training | Habit layer, and it draws a parent in |
+| 5 | Set a hockey goal | Goals need history behind them to be grounded |
+| 6 to 7 | Lesson library, guided lessons, explore the rink | Browse and go deeper, once there is something worth revisiting |
+
+**The World Challenge is deliberately absent from this table.** It is governed solely by
+its own rule (five distinct questions seen in that world). Gating it on both its own rule
+and a session count would be two systems deciding one thing, which is the failure mode
+this design rejects elsewhere.
+
+**Rules.**
+
+- Once revealed, a feature is never hidden again.
+- Reveals are announced lightly, a small "new" marker, never an interrupting modal or a
+  tutorial overlay.
+- A feature that does not apply to the player's age band still does not appear. Existing
+  gating wins over the ladder; for example, explore the rink stays U7 and U9 only via
+  `allowsRinkDiscovery`.
+- **A "Show everything" switch in settings**, default off, immediately reveals the full
+  interface for anyone who wants it. This keeps a single code path while protecting the
+  day one impression for a parent evaluating the app, who is the buyer, and giving older
+  players an escape hatch.
+
+**Storage, and a deliberate asymmetry.** Disclosure state is stored per player and is
+*not* per age band, unlike unlock state which is. Onboarding is about the person, so a
+player moving up an age band starts a fresh world progression but does not sit through
+the interface being introduced to them a second time.
+
 ## Backdrop
 
 Reuses the existing sprite at `/assets/journey/worlds-v1.png` with the same CSS variable
@@ -164,6 +215,10 @@ world.
   worlds, per-band isolation, and that unlocks never revoke.
 - `worldSessionCore.test.mjs`: sequencing returns a teach moment before reads for an
   unmet concept, prefers unseen questions, and terminates sensibly on a small world.
+- Disclosure tests: a visit with no answered question does not count; two visits inside
+  thirty minutes count once; revealed features never un-reveal; the "Show everything"
+  switch reveals all; age-band gating still suppresses a feature whose ladder step has
+  passed; disclosure state survives an age band change while unlock state resets.
 - The existing practice suite stays green.
 - **Verification includes an actual `npm run build` and a look at rendered frames.** On
   2026-09-07 a fully green 648-test suite coexisted with an app that could not load at
