@@ -3,7 +3,7 @@
   "createdAt": "2026-09-07T05:32:09.873657+00:00",
   "implementationBaseline": "899e96f7a6c35e16422e6c9a99a1f9914d2f6d45",
   "priorReviewBaseline": "f1f5667bc5daa7ac7edae010e36b8c87873e6645",
-  "timeBudgetMinutes": 600,
+  "timeBudgetMinutes": null,
   "checkpointMinutes": 30,
   "priorFindingsStatus": "reported-not-independently-verified",
   "qualification": "Both previous reviewers failed 4 of 8 historical cases. No clearance authority restored. Hockey Authority remains paused.",
@@ -19,5 +19,7 @@
     "REPORT-BACK-TO-CODEX.md",
     "RUN-STATE.json"
   ],
-  "writePolicy": "Isolated worktree only; no live bank writes, deployment, paid services, Supabase or paused workstream changes."
+  "writePolicy": "Isolated worktree only; no live bank writes, deployment, paid services, Supabase or paused workstream changes.",
+  "executionMode": "until-completed",
+  "stopCondition": "All A-F acceptance gates satisfied, or genuinely blocked with no independent authorized work remaining; interruptions require resumable state."
 }

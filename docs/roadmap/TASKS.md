@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Prepared ten-hour Claude followthrough project after the reported five-hour return. Both prior reviewers failed calibration; their findings and 12 drafts remain provisional. Assignment covers evidence intake, reproducible curriculum mapping, draft improvement and isolated feedback fixes. Execution has not been launched here; Supabase and paused Hockey Authority/shared-3D streams remain untouched.
+**Last updated:** 2026-09-06 · Owner removed the Claude ten-hour cutoff. Handoff now runs until A-F completion gates are satisfied, with resumable checkpoints and explicit blockers. Existing provisional-review, isolated-work and paused-workstream boundaries remain. Claude execution has not been launched here.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Replaced the Claude time limit with completion gates, explicit interruption/resume handling and a refreshed `RinkReads-Claude-Until-Completed.zip`.
 
 - 2026-09-06: Prepared `docs/factory/claude-ten-hour-project/START-HERE.md` with 600-minute queue, 30-minute checkpoints, frozen prior inputs, evidence inventory, qualification limits and portable verification. User requested Claude execution handoff; no claim of executing Claude or clearing its prior review.
 
