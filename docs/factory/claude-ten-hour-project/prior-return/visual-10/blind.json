@@ -1,0 +1,66 @@
+{
+  "packetId": "visual-10",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-10-manifest.json and packets/visual-10-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T04:20:00Z",
+  "questions": [
+    {
+      "questionId": "exp26b-u15-007-q5",
+      "scenarioId": "exp26b-u15-007",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(-6,5), D2=(-12,-5), F1=(7,2), Gold1(a1)=(-1,6). Naive perpendicular distances: D2 line ~3.77, F1 line ~2.10. But the D2 line's t-parameter is negative (-0.29), meaning Gold1 projects outside the segment (behind YOU); the real segment-bounded distance is the distance to the YOU endpoint, ~5.10 -- even farther, reinforcing (not overturning) that D2's line clears Gold1 by more.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-009-q5",
+      "scenarioId": "exp26b-u15-009",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU=(15,7), Gold2(a2)=(14,4), Gold3(a3)=(24,3). Distance YOU-to-Gold2 ~3.16 vs YOU-to-Gold3 ~9.85. Gold2 much closer.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-014-q2",
+      "scenarioId": "exp26b-u15-014",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU(puck)=(-1,-2), F1=(9,6), F2=(12,-5), Gold1(a1)=(2,2), Gold2(a2)=(6,-1), Gold3(a3)=(-4,-8). (a) Gold1-to-F1-line ~1.25 (t=0.38 valid) vs Gold1-to-F2-line ~4.57 -- nearer F1, true. (b) Gold2-to-F2-line ~2.55 (t=0.49 valid) vs Gold2-to-F1-line ~3.59 -- nearer F2, true. (c) 'Gold3 nearer F2 line than Gold2' is false: Gold3-to-F2-line ~6.52 (or farther once segment-bounded, t slightly negative) vs Gold2's valid 2.55 -- Gold3 is farther, not nearer.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-014-q5",
+      "scenarioId": "exp26b-u15-014",
+      "type": "choice",
+      "blindAnswer": "c",
+      "geometryCheck": "Navy attacks the Gold net (+x); Navy's own net is at very negative x (matches D2 at (-10,5) being described as 'behind'). YOU=(-1,-2). Gold1(2,2) x=2 and Gold2(6,-1) x=6 are both higher x than YOU (ahead, not behind). Gold3(-4,-8) x=-4 is lower than YOU -- the only one already on the behind-YOU-toward-own-net side.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u15-015-q5",
+      "scenarioId": "exp26b-u15-015",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(20,9), F1=(28,-5), F2=(19,3), Gold2(a2)=(24,1). Perpendicular distance Gold2-to-(YOU-F1 line) ~0.50 (t=0.55 valid) vs Gold2-to-(YOU-F2 line) ~5.26. Gold2 is much nearer the F1 line.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u18-001-q5",
+      "scenarioId": "exp26-u18-001",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "First U18 target in this assignment. YOU(puck)=(0,-6), F1=(9,-8), F2=(14,5), Gold1(A1)=(4,-4). Perpendicular distance Gold1-to-(YOU-F1 line) ~2.82 (t=0.38 valid) vs Gold1-to-(YOU-F2 line) ~0.90 (t=0.25 valid). F1 line is farther from Gold1.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u18-001-q7",
+      "scenarioId": "exp26-u18-001",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Same scene as q5. D2=(-9,1), F3=(5,1), Gold1(A1)=(4,-4). Distance Gold1-to-(YOU-D2 line): raw perpendicular ~4.04, but t is negative (-0.17, projects behind YOU) so the real bounded distance is the distance to the YOU endpoint, ~4.47 -- still clearly farther than the valid F3-line distance (~2.09, t=0.46). Gold1 is farther from the D2 line either way.",
+      "note": "No defect found. Same negative-t pattern as exp26b-u15-007-q5 in this packet -- checked explicitly rather than trusting the raw perpendicular number."
+    }
+  ],
+  "grammarPass": "Read all seven prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "Confirmed setup.actors.team for every named defender/attacker in this packet's 6 scenes before scoring, including the first U18 target (exp26-u18-001, 10-actor 5-on-5 scene)."
+}

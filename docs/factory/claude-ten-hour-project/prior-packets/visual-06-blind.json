@@ -1,0 +1,451 @@
+{
+  "packetId": "visual-06",
+  "scenes": [
+    {
+      "id": "exp26-u13-014",
+      "version": 4,
+      "ageBand": "U13",
+      "title": "Receive the rush without going flat-footed",
+      "family": "gap-control",
+      "topic": "gap control",
+      "objective": "Read a defender’s space and support against an approaching carrier.",
+      "briefing": "Gold 1 carries toward your Navy net. YOU are the defender between Gold 1 and that net. C is recovering through the middle; no closing speed is specified. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -9,
+            "y": 0,
+            "facing": 0.14189705460416394
+          },
+          {
+            "id": "home-skater-2",
+            "label": "C",
+            "team": "home",
+            "role": "skater",
+            "x": -1,
+            "y": -4,
+            "facing": 1.7681918866447774
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": 1,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 7,
+            "facing": -2.356194490192345
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "gap-control"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "Closing The Gap",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "type": "multi",
+          "prompt": "Which two positions should YOU account for before deciding whether recovering help changes your gap?",
+          "options": [
+            {
+              "id": "a",
+              "text": "C is still farther from Navy’s net than Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2 is a separate attacker on the other side of the middle from C"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is nearer Navy’s net than Gold 1"
+            }
+          ],
+          "basis": "scene",
+          "id": "exp26-u13-014-q8"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-015",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Angle from the middle toward the wall",
+      "family": "angling-recovery",
+      "topic": "angling recovery",
+      "objective": "Protect the middle while retaining a route back toward the net.",
+      "briefing": "Gold 1 carries in a wide neutral-zone lane toward Navy’s left net. YOU approach from nearer the middle. The drill asks YOU to influence the carrier toward the boards while preserving a recovery route. D1 is closer to Navy’s net; skating speed is not specified.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 3,
+            "facing": 2.0344439357957027
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 0,
+            "facing": 0.844153986113171
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -6,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -11,
+            "y": -3,
+            "facing": 1.176005207095135
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "angling-recovery"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "A Proper Angle",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-015-q5",
+          "type": "choice",
+          "prompt": "If Gold 2 receives and controls a pass at the shown position, which Navy defender starts closer to that new carrier?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-016",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "See the far-side player in the low slot",
+      "family": "weak-side-coverage",
+      "topic": "weak side coverage",
+      "objective": "Balance puck awareness with an off-puck threat near the net.",
+      "briefing": "Gold 1 controls the puck at the puck-side half wall. Gold 2 waits across the low slot. YOU are the weak-side defender and the coach has assigned you to stay aware of Gold 2 while D1 pressures the puck. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": -5,
+            "facing": 1.4994888620096063
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": 6,
+            "facing": 1.2490457723982544
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -17,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -23,
+            "y": -3,
+            "facing": 1.1071487177940904
+          },
+          {
+            "id": "home-goalie-3",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "weak-side-coverage"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-016-q5",
+          "type": "choice",
+          "prompt": "Which relationship needs attention before YOU treat the low-slot threat as covered?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2 is closer to Navy’s net than YOU are"
+            },
+            {
+              "id": "b",
+              "text": "YOU are closer to Navy’s net than Gold 2 is"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-017",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Recover through useful middle ice",
+      "family": "backcheck-recovery",
+      "topic": "backcheck recovery",
+      "objective": "Choose a recovery relationship to an inside attacking threat.",
+      "briefing": "Gold 1 carries toward the Navy net near the side boards. Gold 2 is the inside support player. YOU are recovering behind the rush; D1 is already between Gold 1 and the net. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 6,
+            "facing": 2.961739153797315
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 4,
+            "facing": 0.5191461142465229
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3,
+            "y": 8,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": -1,
+            "facing": 1.6814535479687922
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "backcheck-recovery"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-drill-2016",
+          "title": "14U Offense-Defense-Out with a Goalie Twist",
+          "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+          "section": "Coaching Points: middle-lane backcheck",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "U13 adaptation of a 14U role-change drill; route timing is not simulated. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-017-q2",
+          "type": "multi",
+          "prompt": "Which two starting relationships matter when YOU plan to help the recovery?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU are farther from Navy’s end along the rink than both gold attackers"
+            },
+            {
+              "id": "b",
+              "text": "D1 is closer to Gold 1 than YOU are"
+            },
+            {
+              "id": "c",
+              "text": "YOU are already between both gold attackers and Navy’s net"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-020",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Decide before leaving the net front",
+      "family": "defensive-zone-support",
+      "topic": "defensive zone support",
+      "objective": "Avoid duplicating a teammate’s pressure without checking coverage.",
+      "briefing": "D1 pressures Gold 1 in the puck-side corner. YOU are near the net front. Gold 2 is in the slot. The coach’s stated plan has D1 contesting the corner while YOU protect the inside threat. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": 1,
+            "facing": -1.7681918866447774
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": -8,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -25,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -18,
+            "y": 0,
+            "facing": -2.2318394956455836
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "defensive-zone-support"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-020-q2",
+          "type": "multi",
+          "prompt": "Which two defender-to-attacker relationships support the stated division of jobs in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 is nearer Gold 1 than YOU are"
+            },
+            {
+              "id": "b",
+              "text": "YOU are nearer Gold 2 than D1 is"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is farther toward the side boards than either Navy defender"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    }
+  ]
+}

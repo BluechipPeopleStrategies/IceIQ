@@ -1,0 +1,37 @@
+{
+  "packetId": "visual-09",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-09-manifest.json + packets/visual-09-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26-u15-009-q5",
+      "myAnswer": "b",
+      "reasoning": "YOU=(16,0). Navy attacks Gold's net (+x); this dataset's consistent net position (~26,0) means the direct shooting line from YOU is the segment y=0, x in [16,26]. Gold1/A1=(25,-5): perp distance 5. Gold2/A2=(21,0): perp distance = 0 EXACTLY (y=0 matches the line, x=21 inside [16,26]) -- Gold2 sits directly on the shooting line. Gold3/A3=(18,6): perp distance 6. Gold2 is unambiguously nearest -- answer (b)."
+    },
+    {
+      "questionId": "exp26-u15-015-q7",
+      "myAnswer": "a",
+      "reasoning": "YOU/puck=(19,-9), F2=(22,1), F1=(28,-3), Gold1/A1=(20,-4). Line YOU-F2: d=(3,10), vec=(1,5), cross=3*5-10*1=5, perp=5/10.44=0.48 (t=0.486, valid). Line YOU-F1: d2=(9,6), vec=(1,5), cross2=9*5-6*1=39, perp=39/10.82=3.61 (t=0.333, valid). Gold1 is much nearer the F2 line (0.48) than the F1 line (3.61) -- matches briefing's 'Gold 1 shades the slot route to F2.' Answer (a)."
+    },
+    {
+      "questionId": "exp26b-u15-002-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "YOU/puck=(18,9), F3=(21,-1), F2=(24,6), Gold1/A1=(20,5), Gold2/A2=(23,1). Line YOU-F3: d=(3,-10), vec=(2,-4), cross=8, perp=0.77 (t=0.422, valid). Line YOU-F2: d2=(6,-3), vec=(2,-4), cross2=-18, perp=2.68 (t=0.533, valid). Gold1 nearer F3-line, true (a). Gold2-to-F3=sqrt(2^2+2^2)=2.83; Gold2-to-F2=sqrt(1^2+5^2)=5.10 -- Gold2 closer to F3, true (b). Gold D1(away)=(11,3): distance to F2=sqrt(13^2+3^2)=13.34, far more than Gold2-to-F2=5.10 -- (c) 'Gold D1 closer to F2 than Gold2' is false, reversed."
+    },
+    {
+      "questionId": "exp26b-u15-003-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Independently verified the flagged 5-on-4 roster mapping per coordinator's request: setup.actors shows a1-a5 all team='away' -- Gold1..Gold5 by index. Cross-checked against the briefing ('D1 is on the puck side', 'YOU on the opposite side of the middle from the puck'): puck owner a1(Gold1)=(-18,10), y=10 positive; home D1=(-22,4), y=4 positive (same/puck side, matches); YOU=(-23,-4), y=-4 negative (opposite side, matches). Mapping confirmed sound. Gold3/a3=(-20,0): YOU-to-Gold3=sqrt(3^2+4^2)=5.0. Gold5/a5=(-17,-9): YOU-to-Gold5=sqrt(6^2+5^2)=7.81. YOU closer to Gold3, true (a). Gold2/a2=(-24,7): D1-to-Gold2=sqrt(2^2+3^2)=3.61; YOU-to-Gold2=sqrt(1^2+11^2)=11.05 -- D1 much closer, true (b). (c) 'F2 same side of middle as Gold2': F2.y=-3 (negative) vs Gold2.y=7 (positive) -- opposite sides, false."
+    },
+    {
+      "questionId": "exp26b-u15-005-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Independently recomputed the flagged thin-margin claim per coordinator's request, not deferring to the lead. YOU.x=20 vs F2.x=19: this is an EXACT integer comparison in the JSON (no measurement noise to 'flip' -- these are authored coordinates, not sensor readings), so 20>19 is unambiguously, mathematically true: YOU is farther toward Gold's goal line (+x direction) than F2, if only by 1 unit -- option (a) is literally true on the data, though I flag the margin as thin enough to warrant this explicit note rather than a confident pass. Option (b): Gold D1(away)=(10,4) vs F2.x=19 -- a 9-unit gap, D1 unambiguously farther toward the blue line (lower x), true, and robust. Option (c): F3.x=24 vs F2.x=19 -- F3 is actually MORE advanced toward Gold's goal line (higher x), i.e. closer to it, not farther toward the blue line as claimed; matches the briefing's own statement 'F3 is nearer the goal line' -- (c) is false, reversed. Answer: (a,b), with (a) flagged as a thin-margin item worth extra scrutiny against the key/lead."
+    }
+  ],
+  "grammarCheck": "Read all 5 prompts aloud for YOU-subject verb agreement (YOU control, YOU must weigh, YOU account for) -- no violations found.",
+  "flaggedItemsDoubleChecked": {
+    "exp26b-u15-003-q2": "Confirmed a1-a5 (team='away') map to Gold1-Gold5 by index via cross-checking the briefing's stated puck-side/opposite-side relationships against actual y-coordinates, not just the label pattern.",
+    "exp26b-u15-005-q2": "Recomputed YOU.x=20 vs F2.x=19 independently -- confirmed true but thin (1 unit); flagged explicitly rather than treated as an obviously wide margin like (b)'s 9-unit gap."
+  }
+}

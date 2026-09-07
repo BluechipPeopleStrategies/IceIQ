@@ -1,0 +1,153 @@
+{
+  "packetId": "visual-01",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (missed 4/8 known calibration defects -- see output/calibration/reconciliation.json). Every verdict below is 'no-defect-found-in-this-unqualified-pass, pending qualified review', not a trusted clearance.",
+    "readOrderDisclosure": "manifest -> blind.json -> (blind answers saved) -> live app render (both viewports) -> after-solve.json -> this file. hash verification (output/verify-hashes.mjs) run separately against all 60 targets before any packet-level work."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u9-003",
+      "scenarioVersion": 3,
+      "questionId": "exp26-u9-003-q3",
+      "contentHash": "d08718d098cb034348825db4fe8e00fbea9447f7729c75f001750d58119bfdb3",
+      "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass",
+      "highRisk": true,
+      "highRiskReason": "comparative geometry (passing-line proximity)",
+      "blindAnswer": ["a", "b"],
+      "keyedAnswer": ["a", "b"],
+      "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene (both viewports) shows YOU, Gold1 and Navy2 essentially colinear at y=4 (Gold1 sits on the near passing line), and Navy3 offset at a clearly different angle crossing the middle. Matches manifest coordinates and both screenshots.",
+      "optionReviews": [
+        {"optionId": "a", "text": "Gold 1 is close to the passing line to Navy 2", "assessment": "correct", "reason": "Gold1 (x=-3.5,y=4) lies on the same y as YOU (-6,4) and Navy2 (-1,4); confirmed on screen as visually colinear."},
+        {"optionId": "b", "text": "Navy 3 offers a different passing angle across the middle", "assessment": "correct", "reason": "Navy3 at (3,-5) is on a diagonal line crossing both x=0 and y=0, visually at a distinct angle in both screenshots."},
+        {"optionId": "c", "text": "Both teammates lie on the same passing line behind Gold 1", "assessment": "incorrect distractor, correctly excluded", "reason": "Navy2 and Navy3 are not colinear with each other from YOU (different lines); scene confirms Navy3 is well off Gold1's line."}
+      ],
+      "viewports": [
+        {"viewport": "1365x900", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26-u9-003&question=exp26-u9-003-q3#practice-arena", "timestampUtc": "2026-09-07T00:47:00Z", "screenshotPath": "output/visual-01/screenshots/exp26-u9-003-q3_desktop-1365x900.png", "sha256": "b72566a2af4f26505bd8449bd95ba9bcb26f74f4f46d830e56e1d2adf8a5cff6"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26-u9-003&question=exp26-u9-003-q3#practice-arena", "timestampUtc": "2026-09-07T00:48:30Z", "screenshotPath": "output/visual-01/screenshots/exp26-u9-003-q3_phone-390x844_top.png", "sha256": "af173637d80598458eb564cf2c27c8984f728c67516c201746b8af179107c517", "note": "top-of-page crop; scene sits below the fold"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26-u9-003&question=exp26-u9-003-q3#practice-arena", "timestampUtc": "2026-09-07T00:48:45Z", "screenshotPath": "output/visual-01/screenshots/exp26-u9-003-q3_phone-390x844_scene.png", "sha256": "9c07738aa92ca4077e4b096faad74a963c65c44c9f4f19e537f13a9a0d34bf86", "note": "scrolled to show full scene + question start; two shots needed on mobile per assignment instructions"}
+      ],
+      "interactionTest": {
+        "tested": true,
+        "correctSelection": {"selected": ["b","a"], "result": "Yep, you got it.", "feedbackText": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass."},
+        "incorrectSelection": {"selected": ["a of orig -> Navy3", "c -> both teammates same line"], "result": "Not quite. Look at the scene again.", "feedbackText": "Same explanation text restated, plus the correct scene answer."},
+        "revisionRetestConfirmed": true
+      },
+      "sources": [],
+      "secondReview": "pending -- dispatched to hockey-authority subagent, see output/visual-01/second-review.json once returned",
+      "limitations": "3D rink shows a text fallback ('This browser cannot display the 3D rink') in the accessibility tree even though the actual visual (Broadcast camera, 2D-style top-down render) displayed correctly in the screenshot -- flagging this console/a11y discrepancy for Codex, not a visual defect I can confirm blocks real users. Timing/interception/contact legality not assessable from a static scene, per assignment scope."
+    },
+    {
+      "scenarioId": "exp26-u9-007",
+      "scenarioVersion": 3,
+      "questionId": "exp26-u9-007-q5",
+      "contentHash": "878d2bb8f28f8f7b249e02c7c339fcbc4bed2037569cf0e11ab2487eb09674a0",
+      "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass",
+      "highRisk": true,
+      "highRiskReason": "comparative geometry (distance to attacking net along board side)",
+      "blindAnswer": "a",
+      "keyedAnswer": "a",
+      "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene shows the offensive-zone crease at bottom-right; measuring on-screen distance from each skater to the crease, Navy3 (labelled '3') is visibly closer than YOU, and YOU is closer than Navy2 -- matches manifest x-coordinates (23 > 18 > 10).",
+      "optionReviews": [
+        {"optionId": "a", "text": "Navy 3", "assessment": "correct", "reason": "Highest x (23) among the three, and same board side (y close to YOU's)."},
+        {"optionId": "b", "text": "Navy 2", "assessment": "incorrect, correctly excluded", "reason": "Lowest x (10) and more central y -- neither farther toward net nor board-side."}
+      ],
+      "viewports": [
+        {"viewport": "1365x900", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26-u9-007&question=exp26-u9-007-q5#practice-arena", "timestampUtc": "2026-09-07T00:52:10Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26-u9-007-q5_desktop-1365x900.png", "sha256": "58b41d4ddbf315cf4edd4fd6d375a4adc18c66ca82712951780bea164301d208"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26-u9-007&question=exp26-u9-007-q5#practice-arena", "timestampUtc": "2026-09-07T00:52:45Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26-u9-007-q5_phone-390x844_scene.png", "sha256": "6b12e312385fdf2d06e03ba3e671ddd847fbd3f66caafdbab66e0021f0f8fcfd"}
+      ],
+      "interactionTest": {
+        "tested": true,
+        "correctSelection": {"selected": "Navy 3", "result": "Yep, that matches the suggested approach.", "feedbackText": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing."}
+      },
+      "sources": [],
+      "secondReview": "pending -- dispatched to hockey-authority subagent",
+      "limitations": "Same 3D-fallback a11y note as above. No incorrect-selection test recorded for this specific question (representative sampling; incorrect-path already exercised on exp26-u9-003-q3 in this same packet)."
+    },
+    {
+      "scenarioId": "exp26b-u9-003",
+      "scenarioVersion": 3,
+      "questionId": "exp26b-u9-003-q5",
+      "contentHash": "5536adb7ad1089f382969865190d882f8c1006e26cf0cc3f454f2e7aca545bd0",
+      "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass",
+      "highRisk": true,
+      "highRiskReason": "possession-change / arrival-vs-control judgment",
+      "blindAnswer": "a",
+      "keyedAnswer": "a",
+      "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene shows YOU directly adjacent to the loose-puck marker; question correctly separates 'Gold1 arrives beside the puck' (option b, insufficient) from 'Gold1 gets the puck under control' (option a, the actual trigger). No arrival-treated-as-possession defect found.",
+      "optionReviews": [
+        {"optionId": "a", "text": "Gold 1 gets the puck under control", "assessment": "correct", "reason": "Only actual control makes Gold1 a puck carrier YOU must defend."},
+        {"optionId": "b", "text": "Gold 1 is the closest player to the puck", "assessment": "incorrect distractor, correctly excluded", "reason": "Proximity/arrival alone does not establish possession -- this is the exact arrival-vs-control distinction named in START-HERE.md, and this question tests it correctly rather than committing the error."}
+      ],
+      "viewports": [
+        {"viewport": "1365x900", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-003&question=exp26b-u9-003-q5#practice-arena", "timestampUtc": "2026-09-07T00:53:10Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-003-q5_desktop-1365x900.png", "sha256": "16acd9b84b90f60b11e0a1a89411b63c56ca96a36e99e5ca8ca42478f124ce88"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-003&question=exp26b-u9-003-q5#practice-arena", "timestampUtc": "2026-09-07T00:53:40Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-003-q5_phone-390x844_scene.png", "sha256": "defc281e15100864a76bfb730d65ccd15da14124093cb55a85f244dc3ba6277e"}
+      ],
+      "interactionTest": {"tested": false, "reason": "Representative sampling budget for this packet spent on q3/q5 above; not every question interactively tested per assignment's 'representative' allowance."},
+      "sources": [],
+      "secondReview": "pending -- dispatched to hockey-authority subagent",
+      "limitations": "Same 3D-fallback a11y note."
+    },
+    {
+      "scenarioId": "exp26b-u9-004",
+      "scenarioVersion": 3,
+      "questionId": "exp26b-u9-004-q5",
+      "contentHash": "c5913e3b35f20ceed5075fa21b524a0c6ee93990955ac5aef159fdfc69c1846a",
+      "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass",
+      "highRisk": true,
+      "highRiskReason": "comparative geometry (distance to own defended net)",
+      "blindAnswer": "a",
+      "keyedAnswer": "a",
+      "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene (both viewports) shows Navy2 nearer the blue line/neutral-zone side (lower x) than Gold1, and YOU deepest into the zone (highest x, farthest from Navy's own net). Matches manifest x-order Navy2(10) < Gold1(13) < YOU(17).",
+      "optionReviews": [
+        {"optionId": "a", "text": "Navy 2 is nearer Navy's net than Gold 1; YOU are farther from it than Gold 1", "assessment": "correct", "reason": "Matches x-order exactly."},
+        {"optionId": "b", "text": "YOU are nearer Navy's net than Gold 1; Navy 2 is farther from it than Gold 1", "assessment": "incorrect, correctly excluded", "reason": "Reverses the actual order."}
+      ],
+      "viewports": [
+        {"viewport": "1365x900", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-004&question=exp26b-u9-004-q5#practice-arena", "timestampUtc": "2026-09-07T00:53:55Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-004-q5_desktop-1365x900.png", "sha256": "ddc6b0988a9361a96f61ece90903b30acca5d36d6c97c3218daf91b0d6a82d5a"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-004&question=exp26b-u9-004-q5#practice-arena", "timestampUtc": "2026-09-07T00:54:15Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-004-q5_phone-390x844_scene.png", "sha256": "0174bb12c7e6929a468c2461ab80783fe618984fcc94adaeda4ce178ef77137d"}
+      ],
+      "interactionTest": {"tested": false, "reason": "Representative sampling; not every question interactively tested."},
+      "sources": [],
+      "secondReview": "pending -- dispatched to hockey-authority subagent",
+      "limitations": "The camera framing at this zoom level does not show Navy's actual own net (off-frame); the geometric comparison is verified by relative x-position, not by seeing the net itself. Same 3D-fallback a11y note."
+    },
+    {
+      "scenarioId": "exp26b-u9-005",
+      "scenarioVersion": 2,
+      "questionId": "exp26b-u9-005-q5",
+      "contentHash": "1d4ff3e7803173bd59419725b1a1070df5b32c882c6f2d5f481b63266a3a7e13",
+      "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass",
+      "highRisk": true,
+      "highRiskReason": "facing-relative geometry (front/behind)",
+      "blindAnswer": "a",
+      "keyedAnswer": "a",
+      "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene (both viewports, different crops/camera framing) both show Gold1 on YOU's forward (+x, attacking-end) side and Navy2 on YOU's rearward side. 'Behind/in front' here is tied to YOU's explicitly stated facing (facing the attacking end while moving backward), not an arbitrary screen direction, so this does not trigger the above/below-camera-rotation regression pattern.",
+      "optionReviews": [
+        {"optionId": "a", "text": "Navy 2 is behind YOU and off to one side; Gold 1 is in front of YOU", "assessment": "correct", "reason": "Navy2 lower x (behind, given facing=0/+x); Gold1 higher x (in front)."},
+        {"optionId": "b", "text": "Gold 1 is behind YOU and off to one side; Navy 2 is in front of YOU", "assessment": "incorrect, correctly excluded", "reason": "Reverses the actual front/behind relationship."}
+      ],
+      "viewports": [
+        {"viewport": "1365x900", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-005&question=exp26b-u9-005-q5#practice-arena", "timestampUtc": "2026-09-07T00:54:35Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-005-q5_desktop-1365x900.png", "sha256": "6f1c8a2b7abf4e8998967057e0d60939ae45faf2422ef4598b04b6535cc9381c"},
+        {"viewport": "390x844", "camera": "Broadcast (default)", "url": "https://ice-iq.vercel.app/?arena=experimental&age=U9&scenario=exp26b-u9-005&question=exp26b-u9-005-q5#practice-arena", "timestampUtc": "2026-09-07T00:54:55Z", "screenshotPath": "output/visual-01/screenshots/visual-01_exp26b-u9-005-q5_phone-390x844_scene.png", "sha256": "4832de30d0550400fe369a79cb0b443df8fc79b8c52a92daf4c5e2333117a280", "note": "Mobile crop shows a visibly different camera framing (more vertical extent, Gold1 appears higher on screen / Navy2 lower) than desktop, but the front/behind relationship reads the same on both -- worth an explicit note to Codex that this pattern (portrait crop changes apparent up/down without changing the underlying front/behind read) generalizes across the bank and should be spot-checked elsewhere, not just here."}
+      ],
+      "interactionTest": {"tested": false, "reason": "Representative sampling; not every question interactively tested."},
+      "sources": [],
+      "secondReview": "pending -- dispatched to hockey-authority subagent",
+      "limitations": "Same 3D-fallback a11y note."
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched the after-solve.json keyed answers exactly (5/5). Verified via packets/visual-01-after-solve.json.",
+  "hashVerification": "All 5 targets confirmed against the pinned sourceCommit's live composed bank via output/verify-hashes.mjs (0 mismatches). Production wording at https://ice-iq.vercel.app matched the source-commit JSON text verbatim for all 5 (no stale-baseline holds).",
+  "crossQuestionNote": "No cross-question contradictions noticed in the other questions visible in each scene's after-solve.json context (not independently audited beyond the assigned target, per assignment scope)."
+}

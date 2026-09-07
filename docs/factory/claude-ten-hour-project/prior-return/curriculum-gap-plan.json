@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-not-reviewed",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear (see output/calibration/reconciliation.json). This is a provisional gap analysis, not an approved curriculum change.",
+  "method": "Started from references/CURRICULUM-COVERAGE.json (a dated aggregate, meta.generatedAt=2026-09-06T18:02:49.683Z, ledgerVersion 3.1.0). Refreshed the core counts against the LIVE composed experimental bank at the pinned sourceCommit f1f5667bc5daa7ac7edae010e36b8c87873e6645 using tools/experimental-bank-files.mjs (readBankFiles). The refresh matched the dated file exactly on every number checked (200 scenarios, 1600 questions, age distribution U7=20/U9=30/U11=50/U13=50/U15=30/U18=20) -- no drift found, so the dated aggregate's counts are current as of this run. Two additional independent checks were run directly against the live bank rather than relying on the aggregate's own domain-signal methodology: (1) a keyword re-scan for skating/edges/agility/pivot/backward/deception content by age band, and (2) a scan for 'Imagine...'/'Suppose...' hypothetical-consequence question prompts by age band. Both are reported below with exact counts and are distinguishable from the dated file's own domain-signal numbers.",
+  "explicitCaveat": "Per references/CURRICULUM-COVERAGE.json's own methodology note: signal counts are 'a signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding.' Topic-level scenario counts are NOT used as gap evidence here because the bank is designed with ~1:1 scenario-to-family granularity (195 families across 200 scenarios) -- almost every topic shows 'scenarios: 1' by construction, so a low topic count is not itself a gap signal. Only domain-level (6 domains) and age-band-level signals, which aggregate across many scenarios, are used as gap evidence. Delivery-format gaps (true-false, tap-player-feature, pick-spot-lane -- all show currentQuestionCount:0 in the dated file's own formatRows) are explicitly NOT counted as tactical-situation gaps, per the assignment's instruction not to count delivery formats as new tactical situations.",
+  "gaps": [
+    {
+      "rank": 1,
+      "id": "gap-skating-movement-u15-u18",
+      "ageBands": ["U15", "U18"],
+      "skillConcept": "Skating & Movement domain (edges/balance, agility/mobility, backward transitions, deception-with-feet) -- RinkReads' own domain taxonomy, domains[0] in CURRICULUM-COVERAGE.json",
+      "currentEvidenceAndDate": "Verified live against the pinned sourceCommit on 2026-09-07: 0 scenes in U15 or U18 match skating/edges/agility/pivot/backward/deception keywords across tags, topic, family or objective (10 total skating-signal scenes exist bank-wide, distributed U7=1, U9=2, U11=3, U13=4, U15=0, U18=0). The dated CURRICULUM-COVERAGE.json aggregate reports the same pattern independently via its own domain-signal method (skating-movement domain: 8 signal scenarios, ageBands explicitly listed as only ['U7','U9','U11','U13'] -- U15/U18 absent). Both methods agree; this is not a stale or unmapped-tag artifact.",
+      "missingQuestionFormatsOrCues": "No skating/edge-work visible cue (stride length, crossover mechanics, backward-to-forward pivot points, deceptive footwork setup) appears in any U15/U18 scene. Existing question types (choice, multi, position) are sufficient to deliver this content once a scene shows the relevant visible cue; no new delivery format is required.",
+      "developmentalRationale": "Hockey Canada's Skating Pathway explicitly frames skating as a skill that continues developing past early specialization, and agility/edge work under game-speed pressure (not just straight-line speed) is a stated emphasis for older, more competitive play. A bank that teaches gap control, angling, forechecking and transition entirely through positional geometry without ever surfacing the skating mechanic that enables those reads leaves a genuine hole at exactly the ages where skating separates players most.",
+      "sourceReferences": [
+        {"id": "hc-skating-pathway", "title": "Hockey Canada: Skating Skill Development - The Skating Pathway", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating", "section": "Continue to build the Skating Foundation; Keys to teaching skating"}
+      ],
+      "recommendedSmallPilot": "2 new U15 scenes and 2 new U18 scenes (4 total, 8 questions), each pairing a skating/edge cue (e.g. a tight turn setting up an angling approach, a backward-to-forward pivot before a gap-control read) with the SAME kind of geometry-comparison question already proven throughout this assignment's audit (e.g. 'which line stays farther from X'), so the pilot tests whether skating cues can be added without inventing a new question format."
+    },
+    {
+      "rank": 2,
+      "id": "u7-rink-vocabulary-label",
+      "ageBands": ["U7"],
+      "skillConcept": "Rink landmarks and beginner vocabulary (net, boards, blue line, faceoff circle)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates (dated 2026-09-06). U7 currently has 20 scenarios / 160 questions, topTags include 'blue-line' and 'landmark', but no scenario is built around pure landmark identification as the primary objective -- existing U7 objectives sampled from the file are tactical ('Find a teammate before choosing whom to involve') rather than vocabulary-first.",
+      "missingQuestionFormatsOrCues": "The original backlog candidate proposed a 'label-picture / tap-player-feature' delivery format, which does not exist in the current app (formatRows confirms 0 questions of type tap-player-feature bank-wide). This gap plan does NOT propose adding that format; instead it recommends achieving the same landmark-vocabulary objective using the EXISTING 'choice' or 'explain' question types, asking the learner to identify a landmark from the rendered scene by choosing among labeled options.",
+      "developmentalRationale": "Hockey Canada's U7 (Timbits) FAQ and game-play-rules pages describe cross-ice, foundational orientation as a stated program priority before tactical reads are meaningful. A player who cannot name the blue line or the faceoff circle cannot use those landmarks in the rink-relative language this bank already requires ('use rink-relative landmarks, not camera-relative directions' -- the exact convention audited throughout this assignment).",
+      "sourceReferences": [
+        {"id": "hc-u7-faq", "title": "Hockey Canada: Answering questions about Timbits U7 hockey", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"},
+        {"id": "hc-u7-cross-ice-rules", "title": "Hockey Canada: Set-up, game play and rules for Timbits U7 hockey", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/associations/game-play-rules"}
+      ],
+      "recommendedSmallPilot": "2 new U7 scenes (4 questions) using the existing 'choice' type, each scene showing one clear landmark (net/crease, blue line, faceoff circle) and asking the learner to identify it or a player's position relative to it, using only vocabulary already used elsewhere in the U7 band."
+    },
+    {
+      "rank": 3,
+      "id": "u9-receive-on-the-move",
+      "ageBands": ["U9"],
+      "skillConcept": "Passing and receiving while both players are moving (not a static freeze)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates. U9 has 30 scenarios / 240 questions; every scene in this bank is an explicitly static freeze ('Static original practice illustration; movement and outcomes are not simulated' appears in every scene's limits field, confirmed while reviewing all 60 audited questions in this assignment). This is a structural property of the whole bank, not specific to U9, but the U9 official pathway places unusual emphasis on receiving in motion.",
+      "missingQuestionFormatsOrCues": "No new format needed. The gap is a scene-content gap: a freeze showing a receiver mid-stride with one clearly open and one clearly blocked route, using the existing 'choice' or 'position' type.",
+      "developmentalRationale": "Hockey Canada's U9 Player Pathway document names passing and receiving, in sequence with skating and puck control, as core age-band emphases. A static-freeze bank can still test 'which route is open right now' without claiming to simulate motion, exactly as the audited packets already do for passing-lane comparisons at older ages -- this pilot would extend that proven pattern down to U9's receiving-specific framing.",
+      "sourceReferences": [
+        {"id": "hc-u9-half-ice-rules", "title": "Hockey Canada: Set-up, game play and rules for U9 hockey", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/associations/game-play-rules"},
+        {"id": "hc-vision-scanning-2024", "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"}
+      ],
+      "recommendedSmallPilot": "2 new U9 scenes (4 questions) each freezing a receiver a moment before the puck arrives, with one open and one blocked route, asking which route to take -- geometry-comparison pattern already validated in this assignment's audit."
+    },
+    {
+      "rank": 4,
+      "id": "u11-cause-and-effect-family",
+      "ageBands": ["U11"],
+      "skillConcept": "Named 'cause-and-effect' family: a stated hypothetical action by one actor and the resulting change to the learner's best read (distinct from the existing scattered 'Imagine X...' questions)",
+      "currentEvidenceAndDate": "Verified live against the pinned sourceCommit on 2026-09-07: bank-wide, questions whose prompt begins 'Imagine...' or 'Suppose...' (a hypothetical-consequence framing) number 20/160 (12.5%) at U7, 18/240 (7.5%) at U9, 14/400 (3.5%) at U11, 2/400 (0.5%) at U13, 6/240 (2.5%) at U15, 2/160 (1.25%) at U18. U11 sits at a proportional dip relative to the two younger bands despite having the largest scenario count (50) to draw on, and this assignment's own instructions specifically flag U11 as the right age to pilot a named cause-and-effect family 'where supported' -- U11 already has real, working examples of this pattern (confirmed while auditing packets in this assignment, e.g. exp26-u11-012-q5's corrected version explicitly asks a controls-not-just-reaches question), just not yet formalized as its own family/objective.",
+      "missingQuestionFormatsOrCues": "No new format needed (existing 'choice' and 'explain' types already carry this pattern elsewhere in the bank). The gap is a lack of a NAMED, deliberately designed family at U11 that isolates the cause-and-effect skill (predicting how a stated change to one actor's position or possession changes the learner's best option) as its own explicit objective, rather than the pattern appearing incidentally inside scenes built for other topics.",
+      "developmentalRationale": "Hockey Canada's Vision & Scanning principles describe 'updating the read after pressure moves' as a coachable skill in its own right, not just a byproduct of scanning drills. U11 sits developmentally between the pure-observation U7/U9 bands and the heavier tactical-system content that begins at U13 -- a good bridge point to make prediction-under-change an explicit, named skill before it gets folded into more complex team-system content.",
+      "sourceReferences": [
+        {"id": "hc-vision-scanning-2024", "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw", "section": "Key Information to Identify"}
+      ],
+      "recommendedSmallPilot": "3 new U11 scenes (6 questions) under a single new family name (e.g. 'read-the-change'), each stating one explicit hypothetical action by a named actor and asking what changes about the learner's best read -- deliberately distinct from the existing incidental 'Imagine' questions by being the scene's PRIMARY objective, not a secondary question inside an otherwise-static scene."
+    },
+    {
+      "rank": 5,
+      "id": "u11-scan-before-receive",
+      "ageBands": ["U11"],
+      "skillConcept": "Scan before first touch (freeze the moment just before reception, not just after)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates. U11 has 50 scenarios / 400 questions; sampled objectives include 'Prepare for a pass while checking pressure outside the receiver's forward view', confirming the concept exists but the backlog candidate's specific proposed format ('true-false / watch-judge-why') does not exist in the app.",
+      "missingQuestionFormatsOrCues": "Deliver via the existing 'choice' type rather than the proposed unbuilt formats -- ask the learner to identify what they should check before the puck arrives, using only visible pre-reception cues.",
+      "developmentalRationale": "Same Hockey Canada Vision & Scanning source as gap #4; this is a narrower, single-scene version of the same skill rather than a family-level redesign, useful as a smaller/faster pilot if the cause-and-effect family (#4) is judged too large to start with.",
+      "sourceReferences": [
+        {"id": "hc-vision-scanning-2024", "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning", "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"},
+        {"id": "hc-skating-pathway", "title": "Hockey Canada: Skating Skill Development - The Skating Pathway", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating"}
+      ],
+      "recommendedSmallPilot": "1-2 new U11 scenes (2-4 questions), each freezing the moment just before a pass arrives with a defender approaching from outside the receiver's stated forward-facing view."
+    },
+    {
+      "rank": 6,
+      "id": "u7-small-space-sharing",
+      "ageBands": ["U7"],
+      "skillConcept": "Sharing the puck in a small space (2-3 players, one available teammate and one visibly blocked lane)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates. U7 currently has 20 scenarios; existing content already touches near/far teammate comparisons (confirmed by this assignment's own U9 packet audits of the closely-related 'near-far-support' family, one age band up) but no U7-specific scene isolates 'sharing space' as the stated objective.",
+      "missingQuestionFormatsOrCues": "Deliver via existing 'choice' or 'multi' types; no new format required despite the backlog's original 'true-false' suggestion.",
+      "developmentalRationale": "IIHF's small-area-games research and USA Hockey's ADM both cite constrained-space play as a way to increase puck touches and decision reps at the youngest ages; a U7-specific scene keeps this developmentally appropriate rather than borrowing the U9 near-far-support pattern wholesale.",
+      "sourceReferences": [
+        {"id": "iihf-small-area", "title": "IIHF Research on Small-Area Games", "url": "https://www.iihf.com/en/static/20840/research-on-small-area-games"},
+        {"id": "hc-u7-skills", "title": "Hockey Canada: Fundamental skill development for Timbits U7 hockey", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills"}
+      ],
+      "recommendedSmallPilot": "1-2 new U7 scenes (2-4 questions) with 2-3 actors in a small area, one clearly available teammate and one visibly blocked lane."
+    },
+    {
+      "rank": 7,
+      "id": "u11-small-area-decision",
+      "ageBands": ["U11"],
+      "skillConcept": "Repeated small-area decision-making under two successive freezes with a stated condition for the second decision",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates. This is the only backlog candidate proposing a two-freeze / sequential-decision structure; the bank's existing 'sequence' question type (197 questions bank-wide) already supports ordering multiple steps, so this may be partially achievable without new engine work, but that needs confirming against the sequence type's actual constraints before drafting -- flagged as needing an engineering check, not assumed.",
+      "missingQuestionFormatsOrCues": "Needs verification: whether the existing 'sequence' or 'position' type can represent two DISTINCT freezes of the same scene (a before/after), or whether this requires new scene-authoring support. Not assumed either way.",
+      "developmentalRationale": "IIHF small-area-games research supports varying player count and surface as a design input for repeated-decision reps, which is different in kind from RinkReads' current single-freeze model.",
+      "sourceReferences": [
+        {"id": "iihf-small-area", "title": "IIHF Research on Small-Area Games", "url": "https://www.iihf.com/en/static/20840/research-on-small-area-games"}
+      ],
+      "recommendedSmallPilot": "Before drafting content: 1 engineering spike to confirm whether a two-freeze scene is representable in the current scene schema. If yes, 1 pilot U11 scene (2 questions); if no, defer this gap and flag it to Codex as a scene-authoring feature request rather than a content gap."
+    },
+    {
+      "rank": 8,
+      "id": "u13-coverage-match",
+      "ageBands": ["U13"],
+      "skillConcept": "Match a defender to a changing threat with an explicit switch cue (distinct from the many existing single-freeze coverage scenes)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates. U13 has 50 scenarios / 400 questions and the largest topic count (45) of any age band, with many single-scenario coverage topics already (confirmed via topicRows: most U13 defensive topics show exactly 1 scenario each, by the bank's normal 1:1 granularity) -- but per this gap plan's own caveat, that 1-scenario-per-topic pattern is NOT itself evidence of a gap. The genuine gap is the ABSENCE of any scene built around an explicit mid-scene coverage handoff/switch as the stated objective (distinct from this assignment's audited exp26b-u18-004-q5, which tests STICKING to an assignment, the opposite skill).",
+      "missingQuestionFormatsOrCues": "Deliver via existing 'choice' or 'multi' types; the backlog's proposed 'match-responsibilities / spot-mistake' formats do not exist and are not required.",
+      "developmentalRationale": "IIHF's 3v3 coaching resource and Hockey Canada's downloads both name defensive-assignment switching as an age-appropriate U13+ concept; pairing this gap with the already-audited 'stick to your confirmed assignment' pattern (exp26b-u18-004-q5) gives the bank both halves of the same coaching principle at appropriate ages.",
+      "sourceReferences": [
+        {"id": "iihf-3v3", "title": "IIHF: 3vs3", "url": "https://www.iihf.com/en/coaching/18775/3vs3"},
+        {"id": "hockey-canada-downloads", "title": "Hockey Canada Player Development Downloads", "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/downloads"}
+      ],
+      "recommendedSmallPilot": "2 new U13 scenes (4 questions), each with three attackers/defenders and one explicit, coach-stated switch cue, asking which defender should now cover which attacker."
+    },
+    {
+      "rank": 9,
+      "id": "goalie-observation-track",
+      "ageBands": ["U9", "U11", "U13", "U15", "U18"],
+      "skillConcept": "Goalie angle, depth and recovery observations (skater-side observation of goalie positioning, not goaltending technique instruction)",
+      "currentEvidenceAndDate": "Carried forward from references/CURRICULUM-COVERAGE.json backlogCandidates, which notes 'the ledger has a goalie domain, but the current composed experimental bank is skater-question heavy.' Not independently re-verified with a live scan in this pass (lower priority, flagged as carried-forward-not-refreshed).",
+      "missingQuestionFormatsOrCues": "Deliver via existing 'choice' type; use only a visible shooter, net and goalie position, keeping save outcome and technique judgments explicitly out of scope, per the backlog candidate's own caution.",
+      "developmentalRationale": "Lowest-confidence item in this plan: worth pursuing only with a specifically reviewed goaltending source, since a skater-authored goalie-positioning question risks stating something a coach would consider technically wrong. Ranked last on purpose.",
+      "sourceReferences": [
+        {"id": "iihf-development-hub", "title": "IIHF Development Hub", "url": "https://www.iihf.com/en/statichub/4625/development"}
+      ],
+      "recommendedSmallPilot": "Do not draft content yet. Recommend Codex or a goaltending-specific reviewer identify one specific, age-appropriate source before any scene is authored."
+    }
+  ],
+  "explicitlyExcluded": [
+    {
+      "candidate": "true-false / tap-player-feature / pick-spot-lane / match-responsibilities / spot-mistake / pause-predict / draw-route delivery formats",
+      "reason": "These are delivery-format proposals from the dated backlog, not tactical-situation gaps. references/CURRICULUM-COVERAGE.json's own formatRows confirms 0 current questions of these types bank-wide and labels their absence 'backlog signal only; absence is not a quality verdict.' Per this assignment's explicit instruction not to count delivery formats as new tactical situations, these are excluded from the ranked gap list above; every recommended pilot in this plan uses only the 5 existing question types (choice, multi, explain, position, sequence)."
+    },
+    {
+      "candidate": "u15-u18-pace-update (original backlog candidate)",
+      "reason": "Folded into gap #1 (skating-movement-u15-u18) and gap #4 (u11-cause-and-effect-family) rather than kept as a separate item -- its stated intent ('update the read when space and player count change') overlaps substantially with both, and keeping it separate would have inflated the ranked list without adding a distinct, independently-verifiable gap."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Sixty repairs verified live (5c17736). Prepared an owner-requested five-hour Claude handoff: 60-question rendered audit, bounded curriculum proposals and isolated feedback workflow checks. Handoff is ready; Claude execution has not been launched here. Supabase and shared-3D redesign remain deferred/paused.
+**Last updated:** 2026-09-06 · Prepared ten-hour Claude followthrough project after the reported five-hour return. Both prior reviewers failed calibration; their findings and 12 drafts remain provisional. Assignment covers evidence intake, reproducible curriculum mapping, draft improvement and isolated feedback fixes. Execution has not been launched here; Supabase and paused Hockey Authority/shared-3D streams remain untouched.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Prepared `docs/factory/claude-ten-hour-project/START-HERE.md` with 600-minute queue, 30-minute checkpoints, frozen prior inputs, evidence inventory, qualification limits and portable verification. User requested Claude execution handoff; no claim of executing Claude or clearing its prior review.
 
 - 2026-09-06: Created `docs/factory/claude-visual-review-60/START-HERE.md` and portable five-hour Claude ZIP with 11 packets / 55 scenes / 60 exact current questions, stripped first-pass inputs, separate keys, historical calibration, return template, file hashes and resumable 20-30 minute checkpoints. Claude produces evidence and drafts; Codex owns integration. No Claude session or scheduled run launched.
 

@@ -1,0 +1,65 @@
+{
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session",
+  "reconciledAtUtc": "2026-09-07T01:05:00Z",
+  "readOrderDisclosure": "Read calibration-cases.json first and saved blind.json before opening calibration-key-after-solve.json, HISTORICAL-CHECKS.md or OPERATING-CHARTER.md. This reconciliation was written after reading all three.",
+  "expectedVerdictForAllEight": "repair",
+  "scorecard": {
+    "casesWithDefectCorrectlyFlaggedBlind": 4,
+    "casesMissedBlind": 4,
+    "totalCases": 8,
+    "qualifiedToClear": false
+  },
+  "perCase": [
+    {
+      "id": "exp26-u11-006-q7",
+      "blindResult": "flagged the right thing",
+      "match": "Blind flag said D1's x (22) sits behind the puck's x (23), not between puck and net. Key: 'D1 is centre-ice-side of the puck, not between it and the net.' Same finding.",
+      "missedNuance": "Key also corrects 'puck below the circle' to 'puck inside the circle' -- did not independently verify the circle claim itself, only the D1-position claim."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "blindResult": "flagged the right thing",
+      "match": "Blind flag: reference point increases distance from the puck rather than closing it. Key: 'reference moves farther from the puck (8.06 m to 9.23 m) and is not at the opposite boards.' Same finding, key adds exact distances I did not compute.",
+      "missedNuance": "Did not compute the actual 8.06m/9.23m distances, only the directional (toward/away) read."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "blindResult": "MISSED",
+      "match": "Blind verdict: 'provisional-pass, no defect found.' Key: repair required -- the question needs an explicit whistle/stoppage and must not imply continued pressure on a covered puck. This is exactly the historical-regression pattern named in START-HERE.md ('Whistles ignored; ordinary ongoing-play pressure suggested after a stoppage') and I did not apply it to an explain-type question.",
+      "lessonForNextPacket": "Apply the whistle/stoppage check to every question type, including open explain-type reflections, not just scored choice/position questions."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "blindResult": "MISSED",
+      "match": "Blind verdict: 'provisional-pass, distractor design looks sound.' Key: repair required -- option b ('D2 remains available at the opposite point') mischaracterizes D2, an away-team defender, as opposite-point support. I accepted the hockey term 'opposite point' without checking D2's actual coordinates/role against it.",
+      "lessonForNextPacket": "Do not accept a positional hockey term (point, weak side, slot, etc.) at face value -- check it against the actor's actual team and coordinates before accepting the option as correct, per HISTORICAL-CHECKS.md #3 ('Do not rationalize a hockey term ... into an unstated alternate meaning to rescue an answer')."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "blindResult": "flagged the right thing (partial)",
+      "match": "Blind flag: 'below me' is camera/body-relative, not a rink landmark -- matches key's 'Below me depends on the camera.'",
+      "missedNuance": "Key adds a second issue I did not independently verify: 'the puck is closer to the side boards than YOU' -- I did not check this specific distance comparison, only the directional-language problem."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "blindResult": "MISSED",
+      "match": "Blind verdict: explicitly said this does NOT match the arrival-treated-as-possession regression, because the event was conditionally stated ('if D1 reaches the puck first'). Key: repair required -- 'reaching the puck first does not establish control'; the fixed prompt adds 'and controls it.' I reasoned about the wrong axis (conditional vs. unconditional) and missed that 'reaches' alone (even conditionally) does not establish 'controls', which is the actual gap.",
+      "lessonForNextPacket": "Reaching/arriving and controlling are separate states regardless of whether the arrival is stated as hypothetical or actual. Check control explicitly, not just whether an event is asserted vs. assumed."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "blindResult": "MISSED",
+      "match": "Blind verdict: 'no defect found', only checked the numeric/geometry claim (which was correct). Key: repair required for grammar only -- 'YOU takes do, not does' ('where does YOU start' -> 'where do YOU start'). I did not read the prompt grammar aloud despite START-HERE.md explicitly stating the YOU-grammar rule.",
+      "lessonForNextPacket": "Explicitly grammar-check every YOU-subject verb (are/do/have) as its own checklist item, separate from the geometry/logic check -- a question can be numerically correct and still need a grammar repair."
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "blindResult": "flagged the right thing",
+      "match": "Blind flag: F1 is on the opposing (home) roster, not YOU's teammate, so 'tell F1' misdirects the communication. Key: 'F1 is an opponent. Communicate the defensive plan to the shown teammate/goalie.' Same finding; key changes the addressee to the goalie.",
+      "missedNuance": "None material; this was a clean catch."
+    }
+  ],
+  "conclusion": "4 of 8 known defects were missed blind (exp26-u11-006-q10 whistle/stoppage, exp26-u11-011-q8 D2 point mislabel, exp26-u11-012-q5 arrival-vs-control, exp26-u11-016-q1 YOU-grammar). Per START-HERE.md ('Any missed known defect means this session is not qualified to clear substantive questions') and OPERATING-CHARTER.md's own precedent (Luna did not qualify; Sol had a false-flag arithmetic error), THIS SESSION IS NOT QUALIFIED TO CLEAR HOCKEY JUDGMENTS THIS RUN.",
+  "operatingConsequence": "For the remainder of this run: (1) no verdict from this session will be reported as 'no-further-defect-found' in a final/trusted sense -- every clean-looking question is reported as 'no-defect-found-in-this-unqualified-pass, pending qualified review' instead; (2) every flag and every high-risk question still gets an independent second-reviewer pass (hockey-authority subagent), disclosed as sharing the same underlying model/vendor as this session, which is a real limitation, not independent human judgment; (3) the four specific missed-pattern lessons above (whistle/stoppage on ALL question types, positional-term-vs-coordinates, arrival-vs-control, YOU-grammar-as-separate-checklist-item) are applied explicitly to every subsequent packet as named checklist items, not just carried as vague awareness.",
+  "disclosure": "This calibration read was genuinely blind (cases.json read and blind.json saved before the key/historical-checks/charter were opened). It has not been repeated or reset. If this file or blind.json is ever read again before a future blind attempt, that future attempt must disclose the exposure rather than claim a fresh blind pass."
+}

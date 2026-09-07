@@ -1,0 +1,48 @@
+{
+  "packetId": "visual-10",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-10-manifest.json + packets/visual-10-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26b-u15-007-q5",
+      "myAnswer": "a",
+      "reasoning": "Independently re-derived per coordinator's flag. YOU=(-6,5), D2=(-12,-5), F1=(7,2), Gold1/A1=(-1,6). Line YOU-D2: d=(-6,-10), vec=Gold1-YOU=(5,1), cross=(-6)(1)-(-10)(5)=44, raw perp=44/11.66=3.77; t=(5*-6+1*-10)/136=-40/136=-0.294 -- NEGATIVE, Gold1's projection falls outside the segment, behind YOU's own endpoint. Corrected segment-bounded distance = distance to YOU = sqrt(5^2+1^2)=5.10. Line YOU-F1: d2=(13,-3), cross2=13*1-(-3)*5=28, perp=28/13.34=2.10; t2=(5*13+1*-3)/178=0.348 (valid). Both the naive (3.77 vs 2.10) and corrected (5.10 vs 2.10) comparisons agree: the D2 line stays farther from Gold1. Answer (a)."
+    },
+    {
+      "questionId": "exp26b-u15-009-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(15,7). Gold2/A2=(14,4): dist=sqrt(1^2+3^2)=3.16. Gold3/A3=(24,3): dist=sqrt(9^2+4^2)=9.85. Gold2 far closer -- answer (a)."
+    },
+    {
+      "questionId": "exp26b-u15-014-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "YOU=(-1,-2), F1=(9,6), F2=(12,-5). Gold1/A1=(2,2): perp-to-F1-line=1.25 (t=0.378, valid), perp-to-F2-line=4.57 (t=0.152, valid) -- nearer F1-line, (a) true. Gold2/A2=(6,-1): perp-to-F1-line=3.59 (t=0.476, valid), perp-to-F2-line=2.55 (t=0.494, valid) -- nearer F2-line, (b) true. Gold3/A3=(-4,-8): perp-to-F2-line raw=6.52 but t=-0.118 (negative, outside segment) -- corrected distance to nearest endpoint (YOU) = sqrt(3^2+6^2)=6.71. Either way Gold3 (6.5-6.7) is much farther from the F2-line than Gold2 (2.55), so (c) 'Gold3 nearer F2-line than Gold2' is false, reversed."
+    },
+    {
+      "questionId": "exp26b-u15-014-q5",
+      "myAnswer": "c",
+      "reasoning": "Navy attacks Gold's net (+x); navy's own net is at -x. YOU.x=-1. Gold1/A1.x=2 (ahead, not behind). Gold2/A2.x=6 (ahead). Gold3/A3.x=-4 (behind YOU, on the navy-net side). Only Gold3 is on that side -- answer (c)."
+    },
+    {
+      "questionId": "exp26b-u15-015-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(20,9), F1=(28,-5), F2=(19,3), Gold2/A2=(24,1). Perp-to-F1-line: d=(8,-14), vec=(4,-8), cross=8*-8-(-14)*4=-8, perp=8/16.13=0.50 (t=0.554, valid). Perp-to-F2-line: d2=(-1,-6), cross2=(-1)(-8)-(-6)(4)=32, perp=32/6.08=5.26 (t=1.189, outside segment; corrected distance to F2 itself=sqrt(5^2+2^2)=5.39, still far). Gold2 is far nearer the F1 line (0.50) than the F2 line (~5.3-5.4) -- answer (a)."
+    },
+    {
+      "questionId": "exp26-u18-001-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(0,-6), F1=(9,-8), F2=(14,5), Gold1/A1=(4,-4). Perp-to-F1-line: d=(9,-2), vec=(4,2), cross=9*2-(-2)*4=26, perp=26/9.22=2.82 (t=0.376, valid). Perp-to-F2-line: d2=(14,11), cross2=14*2-11*4=-16, perp=16/17.80=0.90 (t=0.246, valid). Gold1 much nearer the F2 line -- the F1 line stays farther, answer (a)."
+    },
+    {
+      "questionId": "exp26-u18-001-q7",
+      "myAnswer": "a",
+      "reasoning": "Independently re-derived per coordinator's flag. YOU=(0,-6), D2=(-9,1), F3=(5,1), Gold1/A1=(4,-4). Line YOU-D2: d=(-9,7), vec=(4,2), cross=(-9)(2)-7*4=-46, raw perp=46/11.40=4.04; t=(4*-9+2*7)/130=-22/130=-0.169 -- NEGATIVE, Gold1's projection falls outside the segment, behind YOU. Corrected distance = distance to YOU = sqrt(4^2+2^2)=4.47. Line YOU-F3: d2=(5,7), cross2=5*2-7*4=-18, perp=18/8.60=2.09 (t=0.459, valid). Both naive (4.04 vs 2.09) and corrected (4.47 vs 2.09) comparisons agree: Gold1 is farther from the D2 line than the F3 line -- answer (a), matching the coordinator's note that the answer holds either way."
+    }
+  ],
+  "grammarCheck": "Read all 7 prompts aloud -- no YOU-subject verb constructions present in this packet's prompts to check for agreement.",
+  "flaggedItemsDoubleChecked": {
+    "exp26b-u15-007-q5": "t=-0.294 for the YOU-D2 line, confirmed negative independently; corrected distance 5.10 vs raw 3.77, same qualitative answer either way.",
+    "exp26-u18-001-q7": "t=-0.169 for the YOU-D2 line, confirmed negative independently; corrected distance 4.47 vs raw 4.04, same qualitative answer either way.",
+    "note": "Also found a third, unflagged instance of the same negative-t pattern in exp26b-u15-014-q2 option (c) (Gold3 to the YOU-F2 line, t=-0.118) and a t>1 (past-the-endpoint) instance in exp26b-u15-015-q5 (Gold2 to the YOU-F2 line, t=1.189) -- neither changes the correct answer, but both are recorded since the segment-bound check matters whenever an option makes a farther/nearer claim, not just on the two items specifically flagged this round."
+  }
+}

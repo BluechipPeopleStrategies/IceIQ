@@ -1,0 +1,77 @@
+{
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer role",
+    "readOrder": "Read references/calibration-cases.json only. Did not open calibration-key-after-solve.json, HISTORICAL-CHECKS.md, or OPERATING-CHARTER.md before writing this file.",
+    "blindTimestampUtc": "2026-09-07T00:58:00Z"
+  },
+  "cases": [
+    {
+      "id": "exp26-u11-006-q7",
+      "blindVerdict": "provisional-pass-with-flag",
+      "blindAnswer": "a",
+      "reasoning": "Options b and c each assert an unearned future outcome (own team gets the next shot; F1 specifically shoots next) despite the briefing's explicit 'no goal or next touch is assumed.' Option a only names observed elements (puck position relative to a rink landmark, D1's position), which fits the no-assumed-outcome design.",
+      "flag": {
+        "severity": "low-to-medium",
+        "concern": "Option a's clause 'D1 is between it and the net' is not clearly supported by the coordinates. Puck=(23,5), D1=(22,1), net/G=(26,0). D1's x (22) is behind the puck's x (23), i.e. D1 sits on the near side of the puck (toward the blue line), not between the puck (x=23) and the net (x=26) on the x-axis. In y, D1 (y=1) does sit between net (y=0) and puck (y=5). So the 'between' claim is only true in one axis, not a clean geometric read.",
+        "needsCheck": "Compare against the rendered scene / key to see if 'between' is meant loosely (shooting-lane sense) or if this is a genuine geometry-language defect."
+      }
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "blindVerdict": "provisional-pass-with-flag",
+      "reference": { "x": 22.2, "y": -4.2 },
+      "reasoning": "YOU starts at (19,-2); reference target (22.2,-4.2) closes x-distance toward the puck (23,5) but increases y-distance from the puck (from 7 to 9.2 in absolute y-separation). Explanation frames this as a deliberate wide/opposite-side-boards arc that preserves D1 and the net in view, which is a legitimate coaching concept (loop to keep vision), not a straight-line approach.",
+      "flag": {
+        "severity": "low",
+        "concern": "Read literally, 'move toward the loose puck' while the target point moves further from the puck in y could confuse a learner without a diagram showing the arc. Wording precision issue more than a geometry error.",
+        "needsCheck": "Confirm in the rendered app that the position-question UI conveys this as an arc/route rather than a straight vector, and that camera view doesn't make the move look like it's heading the wrong way."
+      }
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "blindVerdict": "provisional-pass",
+      "reasoning": "Open explain-type reflection question, no scored options to fail. Prompt and explanation are consistent with the scene (goalie covers the loose puck, re-read possession and F1's support). No defect found blind."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "blindVerdict": "provisional-pass",
+      "blindAnswer": ["a", "b"],
+      "reasoning": "Scene: D1 blocks the direct F1-to-YOU line; side boards offer an alternate route; D2 sits nearer the middle/goal. The bank pass depends on (a) where YOU can receive the rebound off the boards and (b) whether D2 is still available at the opposite point. Distractor (c) overstates certainty ('D2 does not move') where the scene never asserts D2 is static. No defect found blind; distractor design looks intentional and sound."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "blindVerdict": "provisional-pass-with-flag",
+      "blindAnswer": "a",
+      "reasoning": "Puck loose at (7,-6), YOU at (5,-3): puck is down-and-slightly-right of YOU, so 'below me' is directionally plausible in raw coordinates. Options b and c each assume an outcome not yet established (target unchanged; D1 can't reach it), which the scene doesn't support ('the loose puck is wider than YOU').",
+      "flag": {
+        "severity": "medium",
+        "concern": "'Below me' is a first-person camera/body-relative direction, not a rink-relative landmark or named end. This is the exact pattern START-HERE.md calls out: '\"Above/below/left/right\" changing meaning with camera rotation. Use rink-relative landmarks and named ends.' Coordinates alone don't confirm the app renders a fixed, camera-stable 'below' for every viewing angle or team-perspective toggle.",
+        "needsCheck": "Verify in the live render whether 'below' stays consistent regardless of camera angle/team perspective; if the app can rotate or mirror the view, this option may need a rink-relative rewrite (e.g., 'toward our own blue line' or a named boards reference)."
+      }
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "blindVerdict": "provisional-pass",
+      "blindAnswer": "b",
+      "reasoning": "Question explicitly conditions on a stated event ('If D1 reaches the puck first'), not an assumed one, so this does not match the 'arrival/closest player treated as automatic possession' regression — the event is hypothetical and named, and answer b correctly reframes the read as defending/regaining rather than preserving YOU's carrier status. No defect found blind."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "blindVerdict": "provisional-pass",
+      "blindAnswer": "a",
+      "reasoning": "Pure coordinate check: YOU y=2, F1 y=7, rink middle ~y=0. |2| < |7|, so YOU is closer to the middle. Matches keyed answer and stated basis ('scene'). No defect found blind."
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "blindVerdict": "flag-suspected-defect",
+      "blindAnswer": "a (content itself questioned)",
+      "reasoning": "Roster check: h1=F1 and h2=F2 are both team 'home' (offense/puck-carrying side); a1=YOU is team 'away' (the lone defender in this scene); g1=G is away's goalie. The question asks 'What should YOU tell F1 from the inside angle?' but F1 is the OPPOSING attacker, not YOU's teammate. A defender does not communicate coaching reads to the opponent they're containing; if anyone gets told anything here it would be YOU's own goalie or another defender, not F1.",
+      "flag": {
+        "severity": "medium-high",
+        "concern": "This matches the exact historical-regression pattern named in START-HERE.md: 'A teammate/opponent inferred from a D/F label rather than the roster.' The prompt appears to have picked 'F1' as an addressee without checking that F1 is on the opposing roster from YOU.",
+        "needsCheck": "Confirm against roster/team fields before opening the key; if confirmed, this is a genuine defect the calibration is designed to test for, not just a wording nitpick."
+      }
+    }
+  ],
+  "note": "This blind pass is now complete and saved before opening calibration-key-after-solve.json, HISTORICAL-CHECKS.md, or OPERATING-CHARTER.md."
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5)",
+  "scorecard": "4 of 8 known defects caught blind; 4 of 8 missed. Per OPERATING-CHARTER.md ('any missed known defect means not qualified to issue trusted clearances'), I am NOT QUALIFIED to clear hockey judgments this run.",
+  "qualified_this_run": false,
+  "cases": [
+    {
+      "id": "exp26-u11-006-q7",
+      "caughtBlind": true,
+      "note": "Correctly found D1 is on the centre-ice side of the puck, not between puck and net (x=22 < puck x=23 < net x=26). Key's fix matches: 'D1 is centre-ice-side of the puck, not between it and the net.' I also independently flagged the unanchored 'below the circle' language; key changed it to 'inside the circle,' consistent direction of correction."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "caughtBlind": false,
+      "note": "MISSED. I reasoned qualitatively that the reference point was a plausible 'opposite-boards waypoint' and did not run the actual distance arithmetic. Key: original reference increases puck distance from 8.06m to 9.23m -- moving AWAY from the puck while the prompt says 'toward.' Verified myself now: start(19,-2)-to-puck(23,5) = sqrt(4^2+7^2)=8.06; reference(22.2,-4.2)-to-puck(23,5)=sqrt(0.8^2+9.2^2)=9.23. This is exactly check #2 ('recompute any claimed distance ... before/after') and I skipped the computation in favor of a directional narrative. Concrete process failure to encode: always compute the numeric before/after distance for any position-type question, not just judge plausibility of the route shape."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "caughtBlind": true,
+      "note": "Correctly identified that 'goalie covers' implies a whistle/stoppage and that the original explanation wrongly advised continuing to contest/pressure the puck. Matches key exactly."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "caughtBlind": false,
+      "note": "MISSED. I verified D1/D2 positions matched the scene cues and stopped there. Key's issue: D2 is an away-team (opponent) defender, and framing D2's positioning as 'remains available at the opposite point' uses supporting-teammate language for an opponent. This is the same actor/team-role class of error I DID catch later in exp26-u11-016-q7, but I failed to apply the same suspicion here because the original wording was passively phrased ('remains available') rather than an explicit 'tell the opponent' construction. Lesson: apply the team-resolution check to descriptive/option text about any actor, not only to communication-recipient prompts."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "caughtBlind": true,
+      "note": "Correctly flagged 'the puck is below me' as an unanchored camera/body-relative claim requiring a named landmark or explicit facing tie (my supporting math used facing-vector alignment; the key's fix instead reframes as a boards-distance comparison -- 'closer to the side boards than I am'). Same defect identified, adjacent-but-compatible geometric justification. Counted as caught since the flagged clause and required fix direction match."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "caughtBlind": false,
+      "note": "MISSED, and this is the most concerning miss: the review brief explicitly instructs 'separate arrival from control' (check #4 in the task instructions and in HISTORICAL-CHECKS.md #4), and this case is precisely that pattern. Key: 'reaches the puck first' does not by itself establish control; corrected prompt adds 'and controls it.' I read the option text, found it logically sound given the stated premise, and did not question whether the premise itself (arrival = control) was doing unstated work."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "caughtBlind": false,
+      "note": "MISSED, a pure grammar defect I should not have missed given explicit check #6 ('read every YOU-subject verb aloud'). Original prompt: 'Compared with F1, where does YOU start across the rink width?' -- 'does YOU' is a subject-verb agreement error (YOU takes 'do'). I verified the geometry (correctly, y=2 vs y=7), confirmed the answer was right, and stopped there without reading the prompt sentence aloud for grammar. This is a direct process gap: correct geometry does not excuse broken language, and I let it."
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "caughtBlind": true,
+      "note": "Correctly identified that F1 is the opposing puck carrier (home/navy) while YOU is the defender (away/gold), so 'What should YOU tell F1' has YOU giving a defensive read to the opponent -- nonsensical. Key confirms verbatim: 'F1 is an opponent. Communicate the defensive plan to the shown teammate/goalie.'"
+    }
+  ],
+  "process_corrections_for_visual-01_pass": [
+    "For every position-type question: compute the literal before/after (or reference-vs-start) Euclidean distance to the named target, do not just judge route plausibility.",
+    "Apply team/role resolution to every actor mention in option text and explanations, not only to explicit 'tell X' communication prompts.",
+    "For any claim that resembles 'X reached/got to the puck', check whether the text conflates arrival with control/possession.",
+    "Read every YOU-subject sentence aloud for subject-verb agreement, independent of whether the geometry/answer is otherwise correct.",
+    "Given this scorecard, treat all visual-01 findings below as PROVISIONAL / SECOND-OPINION EVIDENCE only -- I am not qualified this run to issue a trusted clearance or overall approval recommendation."
+  ]
+}

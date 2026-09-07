@@ -1,0 +1,58 @@
+{
+  "packetId": "visual-08",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-08-manifest.json and packets/visual-08-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T03:30:00Z",
+  "questions": [
+    {
+      "questionId": "exp26b-u13-020-q5",
+      "scenarioId": "exp26b-u13-020",
+      "type": "choice",
+      "blindAnswer": "b",
+      "geometryCheck": "YOU=(5,8), Gold1=(20,-5), Gold2=(8,7). Distance YOU-to-Gold1 ~19.85; YOU-to-Gold2 ~3.16. Gold2 is much nearer.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u15-001-q2",
+      "scenarioId": "exp26-u15-001",
+      "type": "multi",
+      "blindAnswer": ["a", "b", "c"],
+      "geometryCheck": "This is a 4-option/pick-3 procedural-checklist question, not a pure geometry check. F3=(18,1); Gold's net~(26,0); puck(loose)=(20,10). F3-to-net ~8.06 vs F3-to-puck ~9.22 -- F3 is indeed closer to net than to the puck, confirming the briefing's own statement that the named cover is not currently established. Option (d) ('F2 remaining low has filled the high-cover job assigned to F3') substitutes a different named player (F2, at (24,-4), nowhere near YOU's high slot) for the specifically-assigned F3 -- both conceptually confused (the drill names F3, not 'whoever ends up there') and positionally implausible (F2 isn't near the relevant area). Treating (d) as the one false/irrelevant check, leaving (a,b,c) as the three legitimate checks.",
+      "note": "Genuine interpretive uncertainty flagged: unlike the geometry-heavy questions elsewhere in this assignment, this one asks which procedural checks belong on a pre-pinch checklist, not which coordinate relationships are true. Recommend the second reviewer treat this one as higher-uncertainty than the typical geometry question."
+    },
+    {
+      "questionId": "exp26-u15-002-q5",
+      "scenarioId": "exp26-u15-002",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "F3(slot)=(21,-1). Gold2(A2)=(23,1): dist~2.83. Gold3(A3)=(17,-4): dist~5.0. Gold4(A4)=(14,1): dist~7.28. Gold2 is closest.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u15-002-q7",
+      "scenarioId": "exp26-u15-002",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(18,9), F2=(24,6), F3=(21,-1), Gold1(A1)=(20,5). Perpendicular distance Gold1-to-(YOU-F2 line) ~2.68 (t=0.53, valid); Gold1-to-(YOU-F3 line) ~0.77 (t=0.42, valid). Gold1 is nearer the F3 line.",
+      "note": "No defect found. Checked t-parameter validity for both lines given the earlier lesson about segment-bounding -- both valid here, so the raw perpendicular distances are meaningful without adjustment."
+    },
+    {
+      "questionId": "exp26-u15-005-q5",
+      "scenarioId": "exp26-u15-005",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Navy attacks the right net (+x), so Navy's own net is at the -x end; lower x = farther back. D1=(10,4), F3=(24,-5). D1's x is much lower -- D1 is farther back toward Navy's net.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26-u15-007-q5",
+      "scenarioId": "exp26-u15-007",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "YOU(puck)=(-4,6), F1=(8,7), Gold1(A1)=(0,6), Gold2(A2)=(4,7), Gold3(A3)=(11,-2). Perpendicular distance Gold1-to-(YOU-F1 line) ~0.33 (t=0.33, valid); Gold3-to-line ~9.22 (clearly far). Notably, Gold2's distance to the same line is ALSO ~0.33 (coincidentally identical to Gold1's) -- consistent with the briefing describing Gold2 as the one 'screening' that line, while Gold1 (described as pressuring the board side, a different role) happens to also sit almost exactly on it. So even with Gold2 hypothetically removed, Gold1 independently still blocks the line -- Gold3 does not.",
+      "note": "No defect found. Verified Gold2's distance too (not just the two named answer options) to confirm the briefing's 'Gold2 screens the line' claim and to make sure the hypothetical removal genuinely changes something relevant -- it does not change the correct answer, but it's worth recording that Gold1's proximity to this line is real and independent of Gold2's role, not an artifact."
+    }
+  ],
+  "grammarPass": "Read all six prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "First U15 targets in this assignment (5 of 6). These scenes have larger rosters (up to 9 actors, full 5-on-4 formations). Confirmed away-team actors A1-A4 map to Gold1-Gold4 by index (consistent with the established team-color-plus-index rendering convention) before scoring any option that names a specific Gold number."
+}

@@ -1,0 +1,36 @@
+{
+  "packetId": "visual-11",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-11-manifest.json + packets/visual-11-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26-u18-002-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "YOU=(11,7), F1=(24,1), F2=(18,-4). Gold1/A1=(16,5): perp-to-F1-line=0.28 (t=0.376,valid), perp-to-F2-line=3.15 (t=0.335,valid) -- nearer F1, (a) true. Gold3/A3=(18,-1): perp-to-F2-line=1.61 (t=0.806,valid), perp-to-F1-line=4.33 (t=0.678,valid) -- nearer F2, (b) true. Gold5/A5=(13,-7) to F1=13.60 vs Gold2/A2=(22,0) to F1=2.24 -- Gold5 much farther, not closer; (c) false, reversed."
+    },
+    {
+      "questionId": "exp26-u18-005-q5",
+      "myAnswer": "c",
+      "reasoning": "YOU=(-3,5), F1/puck=(3,0). Gold1/A1=(15,2): to-YOU=18.25, to-F1=12.17. Gold2/A2=(12,-5): to-YOU=18.03, to-F1=10.30. Gold3/A3=(-1,2): to-YOU=3.61, to-F1=4.47. Gold3 is dramatically closer to both -- answer (c)."
+    },
+    {
+      "questionId": "exp26-u18-009-q2",
+      "myAnswer": ["a", "b"],
+      "reasoning": "Gold1/A1=(8,3), Gold2/A2=(4,-4), Gold3/A3=(16,0). Gold1-to-F1(13,4)=5.10 vs Gold2-to-F1=12.04 -- Gold1 closer, (a) true. Gold2-to-F2(10,-8)=7.21 vs Gold1-to-F2=11.18 -- Gold2 closer, (b) true. Gold3-to-YOU(1,1)=15.03 vs Gold2-to-YOU=5.83 -- Gold3 far farther, not closer; (c) false, reversed."
+    },
+    {
+      "questionId": "exp26b-u18-001-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(0,-6), F1=(9,-8), F2=(14,5), Gold2/A2=(8,2). Perp-to-F1-line: d=(9,-2), vec=(8,8), cross=9*8-(-2)*8=88, perp=88/9.22=9.55 (t=0.659,valid). Perp-to-F2-line: d2=(14,11), cross2=14*8-11*8=24, perp=24/17.80=1.35 (t=0.631,valid). Gold2 much farther from F1-line -- answer (a)."
+    },
+    {
+      "questionId": "exp26b-u18-004-q5",
+      "myAnswer": "a",
+      "reasoning": "Resolved every actor by its actual 'label' field, per coordinator's flag, since the id numbering is shuffled: id=a2 carries label='A4'; id=a3 carries label='A3'; id=a4 carries label='A1'; id=a5 carries label='A2'. Cross-checked against puck.owner='a4' -> label 'A1' -> Gold1 owns the puck, matching the briefing's 'Gold 1 controls behind the goal line' (id a4 is at (-28,-4), the deepest/most extreme actor, consistent with being 'behind the goal line'). So Gold2 = label A2 = id a5 = (-24,5); Gold3 = label A3 = id a3 = (-18,-10). YOU=(-23,4), on the side opposite the puck (puck y=-4, negative; YOU y=4, positive) per the briefing, and D1=(-22,-5) is on the puck side (negative y), also matching. Gold2 (y=5, positive) is on YOU's own side -- distance YOU-to-Gold2=sqrt(1^2+1^2)=1.41 (very close), consistent with Gold2 being 'the low threat' the drill assigns to YOU. Gold3 (y=-10) is far away (distance from YOU=14.87) and on the puck side, not YOU's assignment. Since 'no teammate has confirmed a coverage handoff,' YOU's original assignment (Gold2) has not transferred to anyone else, regardless of Gold3 cutting inward -- Gold3 is a new threat to call out, not a responsibility swap. Answer (a) Gold2."
+    }
+  ],
+  "grammarCheck": "Read all 5 prompts aloud for YOU-subject verb agreement (YOU join, YOU call out) -- no violations found.",
+  "flaggedItemDoubleChecked": {
+    "exp26b-u18-004-q5": "Resolved every actor by its actual label field (not id numbering), cross-checked against puck.owner='a4' (label A1 = Gold1, matching the briefing's 'Gold 1 controls behind the goal line' at the most extreme position). Confirmed Gold2=id a5=(-24,5) is on YOU's own side of the puck and very close to YOU (1.41 units), matching the drill's stated low-threat assignment; Gold3=id a3=(-18,-10) is far away on the puck side. Independently reached (a) Gold2 before comparing to the lead's claim."
+  }
+}

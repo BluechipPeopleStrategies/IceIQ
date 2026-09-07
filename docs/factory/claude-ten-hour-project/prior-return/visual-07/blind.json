@@ -1,0 +1,51 @@
+{
+  "packetId": "visual-07",
+  "reviewer": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear",
+  "readOrderDisclosure": "Read packets/visual-07-manifest.json and packets/visual-07-blind.json only before writing this file.",
+  "blindTimestampUtc": "2026-09-07T03:05:00Z",
+  "questions": [
+    {
+      "questionId": "exp26-u13-023-q5",
+      "scenarioId": "exp26-u13-023",
+      "type": "choice",
+      "blindAnswer": "a",
+      "geometryCheck": "Puck=(3,-3), D1=(-8,-7), F2=(11,5), Gold1=(6,-1). Infinite-line perpendicular distances look close (D1-line ~0.85, F2-line ~0.71), but the t-parameter for the D1 line is negative (~-0.30), meaning Gold1's nearest point on that real passing segment is the puck itself, not a point along the line -- real segment distance to the D1 line is ~3.6 (puck-to-Gold1 distance). The F2 line's t (~0.31) IS valid on the segment, so its real distance stays ~0.71. Once bounded to the actual segment, D1's line is far clearer of Gold1 (~3.6 vs ~0.71), not a close call.",
+      "note": "No defect found, but this one required the segment-bounded (not infinite-line) distance check to avoid a misleading near-tie -- exactly the class of check the second-reviewer subagent flagged as important on an earlier packet."
+    },
+    {
+      "questionId": "exp26b-u13-007-q2",
+      "scenarioId": "exp26b-u13-007",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(22,0), D2(puck)=(15,8), W=(23,-7), Gold1=(21,3), net~(26,0). (a) W y=-7 vs D2 y=8, opposite signs -> other side of middle, true. (b) YOU is much nearer both the net (dist 4 vs 13.6) and the middle (|0| vs |8|) than D2, true. (c) |Gold1 y|=3 is LESS than |D2 y|=8, so Gold1 is nearer the middle than D2, not farther -- false, reverses the true relationship.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u13-012-q2",
+      "scenarioId": "exp26b-u13-012",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "Navy defends the left net (lower x = closer to own net). YOU=(8,9) is the lowest x of the four skaters (8<14<17<20) -- closer to net than both Gold1(20) and Gold2(17), true (a). Distance D1-to-Gold1(puck) ~6.7 vs YOU-to-Gold1 ~12.65 -- D1 closer, true (b). |Gold2 y|=0 < |Gold1 y|=5, so Gold2 is nearer the middle, not farther toward the boards -- false (c).",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u13-014-q2",
+      "scenarioId": "exp26b-u13-014",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "Puck(loose)=(-26,0.6), goalie=(-26,0), D1=(-26,-1), YOU=(-24,2), Gold2=(-22,-5), net~(-26,0). Distance goalie-to-puck 0.6 vs D1-to-puck 1.6 -- goalie closer, true (a). Distance YOU-to-net 2.83 vs Gold2-to-net 6.4 -- YOU closer, true (b). Distance Gold2-to-puck 6.88 vs YOU-to-puck 2.44 -- YOU is actually closer to the puck than Gold2, so 'Gold2 closer than YOU' is false (c), reversed.",
+      "note": "No defect found."
+    },
+    {
+      "questionId": "exp26b-u13-019-q2",
+      "scenarioId": "exp26b-u13-019",
+      "type": "multi",
+      "blindAnswer": ["a", "b"],
+      "geometryCheck": "YOU=(-20,6), D1(puck)=(-26,-7), D2=(-19,2), Gold1=(-23,-2). YOU y=6 vs D1 y=-7, opposite signs -> across the middle, true (a). Distance D2-to-puck ~11.4 vs YOU-to-puck ~14.3 -- D2 closer, true (b). Distance Gold1-to-puck ~5.83 vs YOU-to-puck ~14.3 -- Gold1 is actually much closer to the puck than YOU, so 'Gold1 is farther... than YOU' is false (c), reversed.",
+      "note": "No defect found."
+    }
+  ],
+  "grammarPass": "Read all five prompts/options aloud for YOU-verb agreement. No violations found.",
+  "rosterCheck": "All 5 scenes use D1/D2 for NAVY's own teammate defensemen (consistent with the U13 convention from packets 5-6), opponents labeled Gold N / A-prefixed. Checked setup.actors.team for each before scoring.",
+  "patternNote": "All four multi-select questions in this packet share the same structure: options (a) and (b) are true relationships, option (c) reverses an actual comparison to make it false. Noted as a recurring authoring pattern across this packet, not treated as reducing scrutiny on any individual option."
+}
