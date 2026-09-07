@@ -6,14 +6,15 @@ import { samplePlayerMotion } from './playerMotion.js';
 /** The observer's existing equipment in world space. Camera scans never move
  * the gloves/stick. Camera-intersecting sleeves are visibility-masked;
  * no billboard, overlay, duplicate puck or enlarged reach. */
-export default function FirstPersonEquipment({frameRef,actorKey,colour,goalie=false,ageBand,stage,finish,showStick=true}) {
+export default function FirstPersonEquipment({frameRef,actorId,actorKey,colour,goalie=false,ageBand,stage,finish,showStick=true}) {
  const holder=useRef();
- const actor=frameRef.current?.actors?.find(item=>item.id===actorKey)||frameRef.current?.[actorKey];
+ const resolvedActorId = actorId ?? actorKey;
+ const actor=frameRef.current?.actors?.find(item=>item.id===resolvedActorId)||frameRef.current?.[resolvedActorId];
  const modelAge=ageBand??actor?.ageBand,modelStage=stage??actor?.stage;
  const rig=useMemo(()=>buildHockeyPlayerRig({view:'first-person',colour,goalie,ageBand:modelAge,stage:modelStage,finish,showStick}),[colour,goalie,modelAge,modelStage,finish,showStick]);
  useEffect(()=>()=>rig.dispose(),[rig]);
  useFrame(()=>{
-  const frame=frameRef.current,current=frame?.actors?.find(item=>item.id===actorKey)||frame?.[actorKey];
+  const frame=frameRef.current,current=frame?.actors?.find(item=>item.id===resolvedActorId)||frame?.[resolvedActorId];
   if(!holder.current)return;
   holder.current.visible=!!current&&Number.isFinite(current.x)&&Number.isFinite(current.y)&&Number.isFinite(current.facing);
   if(!holder.current.visible)return;

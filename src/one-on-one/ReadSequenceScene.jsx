@@ -1,11 +1,19 @@
-import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
+import FirstPersonEquipment from '../visuals/FirstPersonEquipment.jsx';
+import { isFocusedActor } from '../visuals/PlayerLocator.jsx';
+import { compactActorLabel } from '../visuals/actorLabel.js';
 import { Ice, Arena, Goal, Puck } from './PracticeScene.jsx';
 import { createReadSceneFrame, getReadSceneBounds, clampReadSceneTargetCenter } from './readSequenceVisuals.js';
 import ScenarioCamera from '../visuals/ScenarioCamera.jsx';
+import { parseStartingView, resolvePlayerEye } from '../visuals/questionCamera.js';
+import { characterProportions } from '../visuals/characterPresentation.js';
+import RinkActorAnswer from '../visuals/RinkActorAnswer.jsx';
+import RinkGoalAnswer from '../visuals/RinkGoalAnswer.jsx';
+import RinkActionCue from '../visuals/RinkActionCue.jsx';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
 import { watchWebglContextLoss } from '../cognitive-gym/webglLifecycle.js';
 import './ReadSequenceScene.css';
@@ -13,7 +21,7 @@ import './ReadSequenceScene.css';
 const JERSEY_NUMBERS = { F1: '17', F2: '9', D1: '4', G: '1' };
 const BADGE_CORNERS = [[29, -29], [-29, -29], [29, 29], [-29, 29]];
 const world = (point, height = 0) => [point.y, height, -point.x];
-const chipLift = screenY => Math.min(16, Math.max(0, screenY - 18));
+const chipLift = screenY => Math.min(8, Math.max(0, screenY - 14));
 
 class ReadSceneBoundary extends Component {
   state = { failed: false };
@@ -22,7 +30,7 @@ class ReadSceneBoundary extends Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function CompletedIceTap({ onPoint, bounds, cameraPreset }) {
+function CompletedIceTap({ onPoint, bounds, cameraPreset, cameraResetToken }) {
   const { gl, camera, size } = useThree();
   const callback = useRef(onPoint);
   callback.current = onPoint;
@@ -41,15 +49,8 @@ function CompletedIceTap({ onPoint, bounds, cameraPreset }) {
       const point = worldPointToCoachRoute(hit);
       if (point && point.x >= 0) callback.current(point);
     });
-  }, [gl, camera, bounds, cameraPreset, size.width, size.height]);
+  }, [gl, camera, bounds, cameraPreset, cameraResetToken, size.width, size.height]);
   return null;
-}
-
-function PuckHalo({ puck }) {
-  return <group position={world(puck, .045)}>
-    <mesh rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[.25, .39, 40]} /><meshBasicMaterial color="#fffdf4" depthWrite={false} /></mesh>
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .003, 0]}><ringGeometry args={[.39, .43, 40]} /><meshBasicMaterial color="#142d44" depthWrite={false} /></mesh>
-  </group>;
 }
 
 function PlannedRoute({ route }) {
@@ -63,7 +64,7 @@ function PlannedRoute({ route }) {
   </group>;
 }
 
-function ActorChip({ actor, labelledActors, movable }) {
+function ActorChip({ actor, labelledActors, movable, focused }) {
   const chip = useRef(null);
   const { invalidate } = useThree();
   const attachChip = useCallback(node => {
@@ -72,7 +73,7 @@ function ActorChip({ actor, labelledActors, movable }) {
     if (node) invalidate();
   }, [invalidate]);
   const project = useMemo(() => new THREE.Vector3(), []);
-  const label = actor.label === 'YOU' ? 'YOU' : labelledActors ? actor.label || actor.id : '';
+  const label = focused || labelledActors ? compactActorLabel(actor) : '';
   const height = actor.role === 'goalie' ? 1.9 : 2.05;
   useFrame(({ camera, size }) => {
     if (!chip.current) return;
@@ -153,33 +154,54 @@ function TargetMarker({ target, index, targets, actors, puck, labelledActors, on
   </>;
 }
 
-function SceneContents({ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing, cameraPreset, cameraAdjusting }) {
+function SceneContents({ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, focusActorId, onMove, onRoutePoint, onFirstAction, route, playing, cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, cameraView, cameraEntryKey, onReady }) {
   const { invalidate } = useThree();
   // A frozen read has no independent animation loop; every authored frame or
   // user edit requests one render, and Skater receives the finite lesson clock.
-  useLayoutEffect(() => { invalidate(); }, [frame, bounds, targets, route, moveActorId, invalidate]);
+  useLayoutEffect(() => { invalidate(); }, [frame, bounds, targets, route, moveActorId, focusActorId, invalidate]);
   const labelledActors = definition.ui?.labelledActors !== false && definition.ageBand !== 'U9';
   const answering = !playing && !cameraAdjusting;
   const movable = answering && moveActorId && frame.actors.some(actor => actor.id === moveActorId) && typeof onMove === 'function';
-  const tap = answering && targets.length === 0 ? typeof onRoutePoint === 'function' ? onRoutePoint : movable ? onMove : null : null;
+  const firstActions = typeof onFirstAction === 'function' ? Object.keys(definition.branches) : [];
+  const passReceiver = firstActions.includes('pass') ? frame.actors.find(actor => actor.id === definition.branches.pass.state.puck.owner) : null;
+  const carrier = firstActions.includes('carry') ? frame.actors.find(actor => actor.id === frame.puck?.owner) : null;
+  const tap = answering && targets.length === 0 ? typeof onRoutePoint === 'function' ? onRoutePoint : movable ? onMove : firstActions.includes('carry') ? () => onFirstAction('carry') : null : null;
   return <>
     <color attach="background" args={['#182d40']} />
     <ambientLight intensity={.9} color="#e4edf5" />
     <hemisphereLight args={['#f8fcff', '#64778c', 1.4]} />
     <directionalLight position={[-10, 27, -12]} intensity={2.4} color="#fff8e8" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-24} shadow-camera-right={24} shadow-camera-top={36} shadow-camera-bottom={-36} shadow-camera-near={1} shadow-camera-far={75} shadow-bias={-.00015} shadow-normalBias={.025} />
     <directionalLight position={[12, 14, -30]} intensity={.7} color="#d8eaff" />
-    <ScenarioCamera bounds={bounds} cameraPreset={cameraPreset} cameraAdjusting={cameraAdjusting} /><Arena /><Ice hideZoneLines={definition.ui?.hideZoneLines === true || definition.ageBand === 'U9'} /><Goal />
+    <ScenarioCamera key={cameraEntryKey} cameraDirect bounds={bounds} frame={frame} cameraView={cameraView} onReady={onReady} cameraPreset={cameraPreset} cameraAdjusting={cameraAdjusting} cameraPanMode={cameraPanMode} cameraCommand={cameraCommand} cameraResetToken={cameraResetToken} /><Arena playerEye={cameraView?.type === 'first-person'} openView={cameraView?.type !== 'first-person'} /><Ice clearBoards={cameraView?.type !== 'first-person'} hideZoneLines={definition.ui?.hideZoneLines === true || definition.ageBand === 'U9'} /><Goal />
     <PlannedRoute route={route} />
-    {frame.actors.map(actor => <Skater key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={JERSEY_NUMBERS[actor.id] || '8'} goalie={actor.role === 'goalie'} selected={actor.id === moveActorId} />)}
-    <PuckHalo puck={frame.puck} /><Puck frameRef={frameRef} />
-    {frame.actors.map(actor => <ActorChip key={actor.id} actor={actor} labelledActors={labelledActors} movable={movable && actor.id === moveActorId} />)}
+    {frame.actors.filter(actor=>cameraView?.type==='first-person' && actor.id===cameraView.actorId).map(actor=><FirstPersonEquipment key={`equipment-${actor.id}`} frameRef={frameRef} actorId={actor.id} colour={actor.team==='home'?'#0B1A33':'#C9A24B'} goalie={actor.role==='goalie'} ageBand={definition.ageBand}/>)}
+    {frame.actors.map(actor => <Skater visible={cameraView?.type !== 'first-person' || actor.id !== cameraView.actorId} ageBand={definition.ageBand} showHeading={cameraPreset === 'overhead'} key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={JERSEY_NUMBERS[actor.id] || '8'} goalie={actor.role === 'goalie'} selected={actor.id === moveActorId} isLearner={isFocusedActor(actor, focusActorId)} />)}
+    <Puck frameRef={frameRef} />
+    {passReceiver && (cameraView?.type !== 'first-person' || passReceiver.id !== cameraView.actorId) && <Html center position={world(passReceiver, .9)} zIndexRange={[25, 15]} style={{ pointerEvents: answering ? 'auto' : 'none' }}><RinkActorAnswer actorId={passReceiver.id} onAnswer={() => onFirstAction('pass')} enabled={answering} className="rs-first-action-hit" aria-label={labelledActors ? `Pass to ${compactActorLabel(passReceiver)}` : 'Pass to your teammate'}><span className="rs-scene-sr-only">Pass</span></RinkActorAnswer></Html>}
+    {passReceiver && (cameraView?.type !== 'first-person' || passReceiver.id !== cameraView.actorId) && <RinkActionCue action="pass" point={passReceiver} actors={frame.actors} puck={frame.puck} onAnswer={() => onFirstAction('pass')} enabled={answering} label={labelledActors ? `Select pass to ${compactActorLabel(passReceiver)}` : 'Select pass to your teammate'} />}
+    {carrier && (cameraView?.type !== 'first-person' || carrier.id !== cameraView.actorId) && <RinkActionCue action="carry" point={carrier} actors={frame.actors} puck={frame.puck} offset={[-46, 0]} onAnswer={() => onFirstAction('carry')} enabled={answering} label="Carry the puck into space" />}
+    {firstActions.includes('shoot') && <RinkGoalAnswer onAnswer={() => onFirstAction('shoot')} enabled={answering} />}
+    {frame.actors.filter(actor => cameraView?.type !== 'first-person' || actor.id !== cameraView.actorId).map(actor => <ActorChip key={actor.id} actor={actor} focused={isFocusedActor(actor, focusActorId)} labelledActors={labelledActors} movable={movable && actor.id === moveActorId} />)}
     {targets.map((target, index) => <TargetMarker key={target.id} target={target} index={index} targets={targets} actors={frame.actors} puck={frame.puck} labelledActors={labelledActors} onTarget={onTarget} disabled={!answering || typeof onTarget !== 'function'} />)}
-    {tap && <CompletedIceTap key={typeof onRoutePoint === 'function' ? 'route' : `move-${moveActorId}`} onPoint={tap} bounds={bounds} cameraPreset={cameraPreset} />}
+    {tap && <CompletedIceTap key={typeof onRoutePoint === 'function' ? 'route' : `move-${moveActorId}`} onPoint={tap} bounds={bounds} cameraPreset={cameraPreset} cameraResetToken={cameraResetToken} />}
   </>;
 }
 
-function ReadScene({ state, definition, playing = false, time = 0, supportPoint = null, route = null, wide = false, targets = [], onTarget, moveActorId = null, onMove, onRoutePoint, onFailure, cameraPreset = 'broadcast', cameraAdjusting = false }) {
-  const previous = useRef(null);
+function ReadScene({ state, definition, playing = false, time = 0, supportPoint = null, route = null, wide = false, targets = [], onTarget, moveActorId = null, focusActorId, onMove, onRoutePoint, onFirstAction, onFailure, onReady, onPending, startingView, questionId, cameraPresetVersion = 0, cameraPreset = 'broadcast', cameraAdjusting = false, cameraPanMode = false, cameraCommand = null, cameraResetToken = 0 }) {
+  const cameraEntryKey = questionId ?? definition.id;
+  const [viewState, setViewState] = useState({ identity: null, preset: cameraPreset, presetVersion: cameraPresetVersion, view: null });
+  let active = viewState;
+  if (viewState.identity !== cameraEntryKey || viewState.preset !== cameraPreset || viewState.presetVersion !== cameraPresetVersion) {
+    active = { identity: cameraEntryKey, preset: cameraPreset, presetVersion: cameraPresetVersion,
+      view: viewState.identity !== cameraEntryKey ? parseStartingView(startingView) ?? {type:'preset',preset:cameraPreset} : {type:'preset',preset:cameraPreset} };
+    setViewState(active);
+  }
+  const observer = state.actors.find(actor => actor.id === active.view?.actorId);
+  const cameraView = active.view?.type === 'first-person'
+    ? {...active.view,eyeHeight:active.view.eyeHeight ?? characterProportions(definition.ageBand ?? observer?.ageBand,observer?.stage).eyeHeight}
+    : active.view;
+  if (cameraView?.type === 'first-person') resolvePlayerEye(cameraView,state.actors);
+  const selectedPreset = cameraView?.type === 'preset' ? cameraView.preset : cameraPreset;
   const frameRef = useRef(null);
   const lossCleanup = useRef(null);
   const failed = useRef(false);
@@ -192,28 +214,18 @@ function ReadScene({ state, definition, playing = false, time = 0, supportPoint 
     lossCleanup.current = null;
     failureCallback.current?.();
   }, []);
-  const frame = useMemo(() => {
-    const velocityById = {};
-    const last = previous.current;
-    const delta = time - (last?.time ?? time);
-    if (playing && last?.playing && delta > 0 && delta <= .25) {
-      for (const actor of state.actors) {
-        const prior = last.state.actors.find(item => item.id === actor.id);
-        if (prior) velocityById[actor.id] = { vx: (actor.x - prior.x) / delta, vy: (actor.y - prior.y) / delta };
-      }
-    }
-    return createReadSceneFrame(state, { time, velocityById });
-  }, [state, playing, time]);
+  const frame = useMemo(() => createReadSceneFrame(state, {time,preserveActorVelocity:true}), [state,time]);
   frameRef.current = frame;
-  useLayoutEffect(() => { previous.current = { state, time, playing }; }, [state, time, playing]);
+  const pendingCallback = useRef(onPending); pendingCallback.current = onPending;
+  useLayoutEffect(() => { pendingCallback.current?.(); }, [cameraEntryKey,active.view,cameraResetToken]);
   useEffect(() => () => { lossCleanup.current?.(); lossCleanup.current = null; }, []);
   const bounds = useMemo(() => getReadSceneBounds(definition, { supportPoint, route, wide }), [definition, supportPoint, route, wide]);
   return <div className="rs-scene3d" role="group" aria-label={`${definition.ageBand} connected read. Three-dimensional rink. Navy players attack; gold players defend.`}>
-    <Canvas orthographic frameloop="demand" aria-label={cameraAdjusting ? 'Adjust hockey camera. Drag or use arrow keys to rotate; pinch, scroll or use plus and minus to zoom.' : 'Hockey play with labelled players, puck and net'} style={{ touchAction: cameraAdjusting ? 'none' : 'pan-y' }} shadows={{ type: THREE.PCFShadowMap }} dpr={[1, 1.5]}
+    <Canvas orthographic frameloop="demand" aria-label={cameraAdjusting ? 'Adjust hockey camera. Drag or use arrow keys to rotate; pinch, scroll or use plus and minus to zoom.' : 'Hockey play with labelled players, puck and net'} style={{ touchAction: cameraAdjusting ? 'none' : 'pan-y' }} shadows={{ type: THREE.PCFShadowMap }} dpr={[1.5, 2]}
       camera={{ position: [16, 28, -8], left: -20, right: 20, top: 20, bottom: -20, near: .1, far: 160 }}
-      gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }} fallback="This browser cannot display the 3D rink. Choose Tactical board to continue."
+      gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }} fallback="The 3D rink could not load. Use Retry 3D rink to open it again."
       onCreated={({ gl }) => { lossCleanup.current?.(); lossCleanup.current = watchWebglContextLoss(gl.domElement, fail); }}>
-      <SceneContents {...{ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing, cameraPreset, cameraAdjusting }} />
+      <SceneContents {...{ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, focusActorId, onMove, onRoutePoint, onFirstAction, route, playing, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, cameraView, cameraEntryKey, onReady }} cameraPreset={selectedPreset} />
     </Canvas>
   </div>;
 }
