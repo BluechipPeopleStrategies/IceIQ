@@ -1,0 +1,453 @@
+{
+  "packetId": "visual-02",
+  "scenes": [
+    {
+      "id": "exp26b-u9-010",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Support the breakout side",
+      "family": "breakout-support",
+      "topic": "Off-puck support",
+      "objective": "Choose a support lane that helps a carrier exit pressure near the defending end.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 has the puck in the defending end, off to one side. YOU are closer to the side boards than Navy2. Gold1 is ahead of Navy2 along the rink. Navy3 waits farther ahead, toward the neutral zone. The coach asks you to become a safe outlet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": -8,
+            "facing": 0.5
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": -25,
+            "y": -3,
+            "facing": 0.2
+          },
+          {
+            "id": "home-skater-3",
+            "label": "Navy3",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0.1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": -20,
+            "y": -4,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "breakout",
+        "outlet",
+        "support",
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-puck-control-2024",
+          "title": "Hockey Canada: 7 Principles for Coaches: Puck Control",
+          "section": "Enhancing Time & Space",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+          "use": "Supports creating a useful outlet and time with the puck; the authored route is conditional."
+        },
+        {
+          "id": "hc-vision-scanning-2024",
+          "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "use": "Supports checking pressure and support in a corner; it does not certify breakout success."
+        }
+      ],
+      "limits": "Static breakout practice. It does not encode a full team system, icing, or offside call. An adult may read the questions aloud.",
+      "questions": [
+        {
+          "id": "exp26b-u9-010-q5",
+          "type": "choice",
+          "prompt": "Navy 2 is comparing the two outlets. Which pass is shorter to assess when looking for nearby help?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The pass to YOU"
+            },
+            {
+              "id": "b",
+              "text": "The pass to Navy 3"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u9-014",
+      "version": 3,
+      "ageBand": "U9",
+      "title": "Use the faceoff circle as a search area",
+      "family": "circle-search",
+      "topic": "Rink awareness",
+      "objective": "Use a named rink area to look for support while checking a defender.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU have the puck inside the attacking faceoff circle. Navy2 waits outside the circle, closer to the middle across the ice. Gold1 is between you and the net. The coach names the circle as a place to search, not a guaranteed pass spot.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 20,
+            "y": -7,
+            "facing": 1.2
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -1,
+            "facing": -1.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": -2,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "tags": [
+        "circle",
+        "landmark",
+        "support",
+        "experimental",
+        "expansion"
+      ],
+      "sources": [
+        {
+          "id": "hc-u9-development",
+          "title": "Hockey Canada: U9 Development Model",
+          "section": "Skills and game-sense development",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+          "use": "Supports age-appropriate small-area decision practice; the circle is a named landmark in this authored scene."
+        },
+        {
+          "id": "hc-vision-scanning-2024",
+          "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+          "section": "Key Information to Identify",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "use": "Supports scanning for teammates and defenders around a landmark; it does not certify a pass."
+        }
+      ],
+      "limits": "The faceoff circle is a named search area, not a restart, offside, or guaranteed target rule. Static art does not show movement. An adult may read the questions aloud.",
+      "questions": [
+        {
+          "id": "exp26b-u9-014-q5",
+          "type": "choice",
+          "prompt": "From the puck in this view, which direct line gives more room from Gold 1 to assess?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line toward Navy 2"
+            },
+            {
+              "id": "b",
+              "text": "The line toward Gold’s net"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-001",
+      "version": 5,
+      "ageBand": "U11",
+      "title": "Look beyond the loose puck",
+      "family": "retrieval-scan",
+      "topic": "Scanning",
+      "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+      "briefing": "You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -16,
+            "y": -6,
+            "facing": -1.88283844835743
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -1,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -12,
+            "y": -6,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -18,
+          "y": -12.2
+        }
+      },
+      "focusActorId": "h1",
+      "tags": [
+        "retrieval-scan",
+        "scanning",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-2024",
+          "title": "7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-001-q5",
+          "type": "choice",
+          "prompt": "Before planning a pass after the pickup, which relationship should YOU account for in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 and F2 are both up ice from the loose puck"
+            },
+            {
+              "id": "b",
+              "text": "D1 is on the net side of the loose puck, opposite F2 along the rink"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-003",
+      "version": 3,
+      "ageBand": "U11",
+      "title": "Step out of the shaded lane",
+      "family": "support-angle",
+      "topic": "Support",
+      "objective": "Recognize that a teammate can be nearby yet unavailable on a direct passing line.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. F1 has possession. YOU are a nearby receiver, but D1 stands between you and the puck. F2 is farther across the ice. The task is to improve your own availability.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": -4,
+            "facing": 3.14
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": 6,
+            "facing": -2.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 12.5,
+            "y": -4.5,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "focusActorId": "h2",
+      "tags": [
+        "support-angle",
+        "support",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-2024",
+          "title": "7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. Static line obstruction is visible; interception timing and a uniquely best pass are not proven. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-003-q5",
+          "type": "choice",
+          "prompt": "Imagine D1 follows YOU farther from F1, keeping the same distance from YOU. What benefit could that create while F1 still has the puck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "More room for F1 to assess a carry"
+            },
+            {
+              "id": "b",
+              "text": "More separation from D1 for YOU to receive"
+            }
+          ],
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u11-003-q7",
+          "type": "choice",
+          "prompt": "Which call best describes the two support options F1 can see in this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 has a different angle across the ice; D1 is close to the line to me"
+            },
+            {
+              "id": "b",
+              "text": "I have the different angle across the ice; D1 is close to F2’s line"
+            }
+          ],
+          "basis": "coaching"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u11-004",
+      "version": 2,
+      "ageBand": "U11",
+      "title": "A new job after your pass",
+      "family": "pass-and-support",
+      "topic": "Passing",
+      "objective": "Plan off-puck movement after a completed pass without assuming an immediate return.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU have just passed to F2, who now owns the puck. D1 lies between your old position and F2. This freeze begins after reception, not during flight.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": 0.5,
+            "facing": 2.7
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "focusActorId": "h1",
+      "tags": [
+        "pass-and-support",
+        "passing",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-u11-pathway-2022",
+          "title": "Hockey Canada U11 Player Pathway",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+          "section": "U11 Skills Matrix, printed page 22 (PDF page 22)",
+          "use": "Age-topic support only; no approval of these answers."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. Pass-and-follow is an age-topic connection. The support route is original and has no timing validation. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "exp26-u11-004-q2",
+          "type": "multi",
+          "prompt": "Which two visible relationships matter when YOU offer F2 another passing option?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 is across the middle from YOU"
+            },
+            {
+              "id": "b",
+              "text": "D1 is near the direct return line between F2 and YOU"
+            },
+            {
+              "id": "c",
+              "text": "D1 is closer to the side boards than either Navy skater"
+            }
+          ],
+          "basis": "scene"
+        }
+      ]
+    }
+  ]
+}
