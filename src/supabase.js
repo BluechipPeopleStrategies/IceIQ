@@ -50,7 +50,7 @@ export const hasSupabase = !!supabase;
 // ─────────────────────────────────────────────
 // AUTH
 // ─────────────────────────────────────────────
-export async function signUp({ email, password, role, name }) {
+export async function signUp({ email, password, role, name, inviteCode }) {
   if (!supabase) throw new Error("Supabase not configured");
   const signupTimeoutMs = 12000;
   const signupPromise = supabase.auth.signUp({ email, password });
@@ -77,18 +77,50 @@ export async function signUp({ email, password, role, name }) {
   const user = authData?.user || data?.user;
 
   if (user) {
-    // Profile creation should not make a successful auth signup look failed.
-    // Use upsert so repeat attempts do not explode on duplicate profile rows.
-    const { error: pErr } = await supabase.from("profiles").upsert({
-      id: user.id,
-      role,
-      name,
-    }, { onConflict: "id" });
-
-    if (pErr) warn("profile upsert after signup", pErr);
+    // The profile is created by redeem_invite_code(), not by a client insert.
+    // The function validates the code, writes the profile and consumes the code
+    // in one transaction, so an account can never exist without a profile (the
+    // dead-end state) and a code can never be spent without an account.
+    const status = await redeemInviteCode({ code: inviteCode, role, name });
+    if (status !== "ok" && status !== "already_registered") {
+      // Roll the session back so a failed redemption does not leave the browser
+      // signed in as a user with no profile, staring at the auth screen.
+      await supabase.auth.signOut().catch(() => {});
+      throw new Error(inviteCodeMessage(status));
+    }
   }
 
   return authData;
+}
+
+// Maps the function's deliberately vague status codes to something a person can
+// act on. Every unusable code returns 'invalid' from the server so that probing
+// cannot distinguish "no such code" from "already used".
+export function inviteCodeMessage(status) {
+  switch (status) {
+    case "invalid": return "That invite code is not valid. Check it and try again, or ask whoever invited you for a new one.";
+    case "unauthenticated": return "Your session expired before we could finish. Please try again.";
+    case "bad_role": return "Choose whether you are a player or a coach.";
+    case "bad_name": return "Enter a name so we know what to call you.";
+    default: return "We could not finish setting up your account. Please try again.";
+  }
+}
+
+// Returns the raw status string. Callers decide how to present it.
+export async function redeemInviteCode({ code, role, name, level = null, position = null }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { data, error } = await supabase.rpc("redeem_invite_code", {
+    p_code: code || "",
+    p_role: role,
+    p_name: name,
+    p_level: level,
+    p_position: position,
+  });
+  if (error) {
+    warn("redeem invite code", error);
+    throw new Error("We could not check that invite code. Please try again.");
+  }
+  return data;
 }
 
 export async function signIn({ email, password }) {
@@ -205,23 +237,23 @@ export async function getProfile(userId) {
 // completed that form was silently downgraded to a player, and nothing logged
 // it.
 //
-// Insert-then-adopt keeps the property the upsert was reaching for (a retry is
-// harmless) without ever overwriting a row this screen did not create: on a
-// duplicate-key collision the existing row wins and is returned as-is.
-export async function ensureOwnProfile({ id, role, name }) {
+// Recovery for an authenticated user with no profile row. Since migration 0025
+// removed the client "insert own profile" policy, this goes through the same
+// SECURITY DEFINER function as signup: leaving a client insert path open here
+// would be a side door around the invite gate.
+//
+// Asking for the code again is not friction for its own sake. Anyone genuinely
+// in this state was invited and still has their code, and the alternative is an
+// unauthenticated-but-signed-in user able to mint themselves a profile.
+export async function ensureOwnProfile({ id, role, name, inviteCode }) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { data, error } = await supabase.from("profiles")
-    .insert({ id, role, name })
-    .select()
-    .single();
-  if (!error) return data;
-  // 23505 = unique_violation. The row appeared between our check and our write,
-  // so somebody else's write is the truth. Adopt it rather than clobber it.
-  if (error.code === "23505") {
-    const existing = await getProfile(id);
-    if (existing) return existing;
-  }
-  throw error;
+  const status = await redeemInviteCode({ code: inviteCode, role, name });
+  // already_registered means the row appeared between the check and this write.
+  // That is a success for this screen's purpose: a profile now exists.
+  if (status !== "ok" && status !== "already_registered") throw new Error(inviteCodeMessage(status));
+  const existing = await getProfile(id);
+  if (existing) return existing;
+  throw new Error("We could not finish setting up your account. Please try again.");
 }
 
 export async function updateProfile(userId, patch) {

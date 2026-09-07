@@ -5,6 +5,7 @@ import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
+import { formatInviteCode, isValidInviteFormat, normalizeInviteCode } from "./utils/inviteCode.js";
 import ReadAloudToggle from "./ReadAloudToggle.jsx";
 import { ttsSupported, getReadAloud, speakParts, stopSpeaking } from "./speak.js";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
@@ -6698,17 +6699,19 @@ function PasswordResetScreen({ onDone }) {
 function FinishSetupScreen({ email, onDone, onSignOut }) {
   const [role, setRole] = useState("player");
   const [name, setName] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
   async function save() {
     if (!name.trim()) { setErr("Enter a name so we know what to call you."); return; }
+    if (!isValidInviteFormat(inviteCode)) { setErr("Enter the 8-character invite code you were sent."); return; }
     setBusy(true); setErr("");
     try {
       const { data } = await supabase.auth.getSession();
       const uid = data?.session?.user?.id;
       if (!uid) throw new Error("Your session expired. Sign in again.");
-      const row = await SB.ensureOwnProfile({ id: uid, role, name: name.trim() });
+      const row = await SB.ensureOwnProfile({ id: uid, role, name: name.trim(), inviteCode });
       await onDone(row);
     } catch (e) {
       setErr(e.message || "Could not finish setting up your account.");
@@ -6737,6 +6740,11 @@ function FinishSetupScreen({ email, onDone, onSignOut }) {
         <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".4rem"}}>NAME</div>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
           style={{width:"100%",padding:".85rem",borderRadius:12,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:15,marginBottom:".85rem"}}/>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".4rem"}}>INVITE CODE</div>
+        <input value={formatInviteCode(inviteCode)} onChange={(e) => setInviteCode(normalizeInviteCode(e.target.value).slice(0,8))}
+          placeholder="ABCD-EFGH" autoComplete="off" autoCapitalize="characters" spellCheck="false"
+          style={{width:"100%",padding:".85rem",borderRadius:12,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:15,letterSpacing:".08em",marginBottom:".4rem"}}/>
+        <div style={{fontSize:11,color:C.dimmer,marginBottom:".85rem"}}>The same code you were invited with.</div>
         {err && <div style={{color:C.red,fontSize:12,marginBottom:".75rem"}}>{err}</div>}
         <button onClick={save} disabled={busy}
           style={{width:"100%",padding:".95rem",borderRadius:12,border:"none",background:C.gradientPrimary,color:C.bg,fontFamily:FONT.body,fontWeight:800,fontSize:15,cursor:busy?"default":"pointer",opacity:busy?.6:1}}>
@@ -6757,6 +6765,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
   const [password, setPassword] = useState("");
   const [name, setName] = useState(prefill?.name || "");
   const [role, setRole] = useState(prefill?.role || "player");
+  const [inviteCode, setInviteCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [resetSent, setResetSent] = useState(false);
@@ -6821,7 +6830,10 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
       if (mode === "signup") {
         if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
-        await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
+        // Checked locally first only to give a fast, kind error on a typo. The
+        // real check is server-side in redeem_invite_code().
+        if (!isValidInviteFormat(inviteCode)) throw new Error("Enter the 8-character invite code you were sent.");
+        await SB.signUp({ email: email.trim(), password, role, name: name.trim(), inviteCode });
         lsSetStr("rinkreads_has_signed_in_before", "1");
         logSignupComplete({ role, level: prefill?.level || null });
       } else if (mode === "forgot") {
@@ -7034,6 +7046,16 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Name</div>
               <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player's name"}
                 style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".6rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Invite code</div>
+              {/* Reformatted as they type, so a code copied with or without the
+                  dash, or in lowercase, all land the same way. */}
+              <input value={formatInviteCode(inviteCode)} onChange={e=>setInviteCode(normalizeInviteCode(e.target.value).slice(0,8))}
+                onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}}
+                placeholder="ABCD-EFGH" autoComplete="off" autoCapitalize="characters" spellCheck="false"
+                style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0,letterSpacing:".08em"}}/>
+              <div style={{fontSize:11,color:C.dimmer,marginTop:4}}>RinkReads is invite-only during the beta.</div>
             </div>
           </>
         )}
