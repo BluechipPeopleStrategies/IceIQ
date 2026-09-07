@@ -1,0 +1,98 @@
+{
+  "reviewer": "codex-independent-blind-reviewer",
+  "status": "provisional-independent-blind-review",
+  "reviewedAt": "2026-09-07",
+  "inputLimitation": "This review used blind.json only. The briefings may state or strongly imply the intended answer, so these are provisional reads, not qualified coach clearance, calibration, or Hockey Authority approval.",
+  "rows": [
+    {
+      "questionId": "draft26-u15-skate-001-q1",
+      "provisionalAnswer": "a",
+      "solve": "The lane from YOU to teammate 1 is farther from F1; the lane from YOU to teammate 2 runs close to F1.",
+      "teamPossessionDirection": "Navy/home has possession through YOU and attacks +x; F1 is away and teammate 1/2 are home.",
+      "geometryNotes": "Using the drawn coordinates and minimum distance to each straight lane, YOU-to-1 is about 6.2 units from F1 versus about 1.9 units for YOU-to-2.",
+      "alternativesAmbiguity": "The result assumes lane distance means minimum distance to the segment. A different definition, such as distance to the lane midpoint or an actual moving pass, is not specified.",
+      "arithmeticConcerns": "No material arithmetic issue under the segment-distance interpretation; the static scene does not model turn speed or pass timing."
+    },
+    {
+      "questionId": "draft26-u18-skate-002-q1",
+      "provisionalAnswer": "a",
+      "solve": "Track F1 first because F1 has the puck and is carrying toward the defended +x net; F2 is trailing.",
+      "teamPossessionDirection": "Gold/away has possession with F1 and attacks +x; Navy/home defends +x; YOU is home.",
+      "geometryNotes": "F1 is at x=6 and F2 at x=-2, consistent with F2 behind F1 in the stated attack direction.",
+      "alternativesAmbiguity": "The wording says YOU is on the net side of F1, but does not define whether that means goal-side for tracking or only a spatial relation. The puck carrier remains the clearest first threat.",
+      "arithmeticConcerns": "No material arithmetic issue; no speed, gap, or time-to-threat calculation is available."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q1",
+      "provisionalAnswer": "a",
+      "solve": "Blue line.",
+      "teamPossessionDirection": "YOU/home owns the puck; attack direction is not stated and is unnecessary for the landmark name.",
+      "geometryNotes": "The coordinates alone do not identify a rink line because rink dimensions and line locations are absent from the row.",
+      "alternativesAmbiguity": "The briefing explicitly says YOU is beside a blue line, so the answer is briefing-led rather than independently recoverable from the scene.",
+      "arithmeticConcerns": "Coordinate-to-landmark arithmetic cannot be checked from this row alone."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q1",
+      "provisionalAnswer": "a",
+      "solve": "A faceoff circle.",
+      "teamPossessionDirection": "YOU/home owns the puck; attack direction is not stated and is unnecessary for the landmark name.",
+      "geometryNotes": "The coordinates alone do not establish a circle because rink dimensions, circle center, radius, and rendering are absent.",
+      "alternativesAmbiguity": "The briefing explicitly says YOU is inside a red circle near one end, so the answer is briefing-led. A red circle could be described more precisely as an end-zone faceoff circle, but that option is not offered.",
+      "arithmeticConcerns": "No coordinate check is possible from the supplied row alone."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q1",
+      "provisionalAnswer": "a",
+      "solve": "After control, check space away from F1, including the support/pass-back option to YOU.",
+      "teamPossessionDirection": "Navy/home has the puck sequence and attacks +x; F1 is away and is between teammate 1 and the +x net.",
+      "geometryNotes": "Teammate 1 is at (10,3), F1 at (13,2.47), and the puck is not yet controlled; the stated setup places F1 on the netward line.",
+      "alternativesAmbiguity": "The prompt asks what space to check, while option a mixes a spatial scan with a specific pass-back action. A coach could prefer scanning all shoulders/support before naming the return pass.",
+      "arithmeticConcerns": "No material arithmetic issue; the lane relationship is stated in the briefing and movement/timing are not simulated."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q1",
+      "provisionalAnswer": "a",
+      "solve": "Teammate 1 is farther from F2; teammate 3 is nearly beside F2 and therefore the pressured option.",
+      "teamPossessionDirection": "Home teammates 1/2/3 contest the loose puck; attack direction is not stated; F2 is away.",
+      "geometryNotes": "Distance from F2 (9.5,-3.5) is about 18.0 units to teammate 1 (-6,8) versus about 0.7 units to teammate 3 (9,-3).",
+      "alternativesAmbiguity": "The question asks which teammate is farther from F2, while the coaching implication may be which support is safer. Those are related but not identical decisions.",
+      "arithmeticConcerns": "The coordinate comparison is clear; no travel speed, puck timing, or passing lane obstruction is modeled."
+    },
+    {
+      "questionId": "draft26-u11-cause-001-q1",
+      "provisionalAnswer": "a",
+      "solve": "No. F1 is on the opposite side of the YOU-to-1 passing lane, not between YOU and teammate 1.",
+      "teamPossessionDirection": "YOU/home has possession; attack direction is not stated; F1 is away and teammate 1 is home.",
+      "geometryNotes": "The cross-product sign for F1 relative to the YOU-to-1 vector is opposite the lane side; F1 is at (5,-4) while the lane trends from (0,0) to (8,5).",
+      "alternativesAmbiguity": "Between can mean collinear interception or simply occupying the corridor. Under either ordinary reading, F1 is not on the direct segment, but lane width is unspecified.",
+      "arithmeticConcerns": "No material arithmetic issue for the side-of-line test; a finite defender or passing-lane width could change a corridor judgment."
+    },
+    {
+      "questionId": "draft26-u11-cause-001-q2",
+      "provisionalAnswer": "free-text; no fixed option",
+      "solve": "Check the changed passing lane: locate F1, scan for an open alternate/support option, and reassess timing, lane clearance, and whether to pass, delay, or change direction.",
+      "teamPossessionDirection": "YOU/home has possession; attack direction is not stated; F1 is away and teammate 1 is home.",
+      "geometryNotes": "The baseline scene places F1 away from the original lane, then the hypothetical moves F1 into it; the revised geometry is described but not given as new coordinates.",
+      "alternativesAmbiguity": "This is an open explain item with no rubric or expected key in the blind input. Acceptable answers could emphasize scanning, a pass fake, delay, movement, or an alternate receiver.",
+      "arithmeticConcerns": "No arithmetic can verify the hypothetical because the post-move position and timing are unspecified."
+    },
+    {
+      "questionId": "draft26-u11-cause-002-q1",
+      "provisionalAnswer": "a",
+      "solve": "F1 is ahead of teammate 1 toward the -x net because F1 is at x=-10 and teammate 1 is at x=-6.",
+      "teamPossessionDirection": "Navy/home teammate 1 has possession and attacks -x; F1 is away and is the defender ahead toward the defended net.",
+      "geometryNotes": "The y offset does not reverse the stated attack-direction ordering; x is the relevant netward axis here.",
+      "alternativesAmbiguity": "If ahead means strictly on the direct net line rather than netward in attack direction, F1 is offset and the wording could be challenged. The prompt says toward the defended net, supporting the x-order reading.",
+      "arithmeticConcerns": "The x comparison is clear; no skating speed or gap measurement is supplied."
+    },
+    {
+      "questionId": "draft26-u11-cause-002-q2",
+      "provisionalAnswer": "a",
+      "solve": "Reassess whether to change direction or keep the puck away from F1 once the lane is occupied.",
+      "teamPossessionDirection": "Navy/home teammate 1 has possession and attacks -x; F1 is away and has stepped into the netward lane.",
+      "geometryNotes": "The hypothetical explicitly changes F1 from offset to occupying the lane from 1 to the -x net.",
+      "alternativesAmbiguity": "Option a combines two possible responses; the exact choice depends on support, pressure, and available escape space, none of which are simulated. Option b is unsafe as a general read because it ignores the newly occupied lane.",
+      "arithmeticConcerns": "No material arithmetic issue, but the post-change coordinates and timing are absent, so the best response cannot be narrowed beyond reassessment."
+    }
+  ]
+}
