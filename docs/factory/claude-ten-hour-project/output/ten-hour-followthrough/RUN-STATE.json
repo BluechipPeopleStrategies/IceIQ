@@ -3,7 +3,7 @@
   "startedAt": "2026-09-07T05:52:04Z",
   "finishedAt": "2026-09-07T07:45:00Z",
   "baselineCommit": "899e96f7a6c35e16422e6c9a99a1f9914d2f6d45",
-  "finalCommit": null,
+  "finalCommit": "1fbe7ab9542fae69df7666f211729d99fe7c7c4f",
   "qualification": "provisional-needs-qualified-review",
   "claims": [
     "U15/U18 skating-movement content genuinely absent across all 4 live catalogs (high confidence)",
@@ -15,8 +15,14 @@
   ],
   "changedFiles": "see integration-manifest.json (136 files: 5 modified, 131 new)",
   "tests": [
-    { "command": "node --test tools/build-full-curriculum-matrix.test.mjs", "exitCode": 0 },
-    { "command": "node --test tools/coaching-feedback-plugin.test.mjs", "exitCode": 0 }
+    {
+      "command": "node --test tools/build-full-curriculum-matrix.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --test tools/coaching-feedback-plugin.test.mjs",
+      "exitCode": 0
+    }
   ],
   "unexecutedChecks": [
     "Full browser-based UI testing (Playwright lock held by a concurrent session)",
@@ -40,12 +46,50 @@
   "executionMode": "until-completed",
   "status": "complete",
   "completionGates": {
-    "A": { "status": "complete", "evidence": ["intake-verification.json", "visual-inspection-log.md", "geometry-verification.json"] },
-    "B": { "status": "complete", "evidence": ["curriculum-matrix.json", "curriculum-matrix.csv", "curriculum-report.html"] },
-    "C": { "status": "complete", "evidence": ["draft-revisions.json", "source-ledger.json"] },
-    "D": { "status": "complete", "evidence": ["feedback-flow-report.md", "task-d-evidence/"] },
-    "E": { "status": "complete", "evidence": ["adversarial-cross-check.json", "next-authoring-queue.json"] },
-    "F": { "status": "complete", "evidence": ["integration-manifest.json", "REPORT-BACK-TO-CODEX.md"] }
+    "A": {
+      "status": "complete",
+      "evidence": [
+        "intake-verification.json",
+        "visual-inspection-log.md",
+        "geometry-verification.json"
+      ]
+    },
+    "B": {
+      "status": "complete",
+      "evidence": [
+        "curriculum-matrix.json",
+        "curriculum-matrix.csv",
+        "curriculum-report.html"
+      ]
+    },
+    "C": {
+      "status": "complete",
+      "evidence": [
+        "draft-revisions.json",
+        "source-ledger.json"
+      ]
+    },
+    "D": {
+      "status": "complete",
+      "evidence": [
+        "feedback-flow-report.md",
+        "task-d-evidence/"
+      ]
+    },
+    "E": {
+      "status": "complete",
+      "evidence": [
+        "adversarial-cross-check.json",
+        "next-authoring-queue.json"
+      ]
+    },
+    "F": {
+      "status": "complete",
+      "evidence": [
+        "integration-manifest.json",
+        "REPORT-BACK-TO-CODEX.md"
+      ]
+    }
   },
   "resumeInstruction": null
 }
