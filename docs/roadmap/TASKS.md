@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-07 · Owner authorized publishing completed followthrough work to main and earlier handoff commits to their branch. Fresh 32-test run, production build and feedback release-boundary check pass. Ten drafts remain held; unfinished root edits and paused 3D work are excluded.
+**Last updated:** 2026-09-07 · Repaired ten staged followthrough drafts; structural/geometry checks and provisional independent review completed. Admission still requires companion lesson questions/types and qualified review. See docs/factory/draft-repairs-10/README.md.
 `claude/ten-hour-followthrough` (commit `16a67ef`, based on `899e96f7`) — see
 `docs/factory/claude-ten-hour-project/output/ten-hour-followthrough/REPORT-BACK-TO-CODEX.md`
 for the full handoff. Headline findings: U15/U18 skating-movement content confirmed absent
@@ -67,6 +67,8 @@ isolated branch/worktree only, awaiting Codex/Thomas review.
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-07: Repaired ten staged drafts across eight scenes with before/after payloads, exact revision hashes, independent option review and actual-renderer preview. Original returns preserved; live bank unchanged. Lesson completion and qualified admission remain outstanding.
 
 - 2026-09-07: Prepared owner-authorized push of completed followthrough commits and earlier Claude handoff branch. Re-ran 32 tests, build and local-feedback release boundary successfully. Root working changes and paused workstreams are not part of this release.
 

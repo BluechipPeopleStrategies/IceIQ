@@ -1,0 +1,23 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+import {isCoachRoutePoint} from '../src/one-on-one/coachRouteSurfaceInput.js';
+import {makeScene,validateExperimentalBank} from '../src/one-on-one/experimentalBankCore.js';
+const dir='docs/factory/draft-repairs-10';const pack=JSON.parse(fs.readFileSync(dir+'/repairs.json','utf8'));
+const canonical=v=>Array.isArray(v)?v.map(canonical):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,canonical(v[k])])):v;
+const hash=v=>crypto.createHash('sha256').update(JSON.stringify(canonical(v))).digest('hex');
+const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const segment=(p,a,b)=>{const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy)));return distance(p,{x:a.x+t*dx,y:a.y+t*dy});};
+const scenes=new Map(),rows=[];assert.equal(pack.records.length,10);
+for(const r of pack.records){const a=r.after;assert.ok(a.setup.actors.every(isCoachRoutePoint));const ids=a.setup.actors.map(p=>p.id);assert.equal(new Set(ids).size,ids.length);assert.ok(ids.includes(a.focusActorId));assert.ok(a.setup.puck.owner?ids.includes(a.setup.puck.owner):isCoachRoutePoint(a.setup.puck));assert.ok(r.optionReviews.every(o=>o.reason));
+if(a.type!=='explain')assert.ok(a.answer.length===1&&a.answer.every(id=>a.options.some(o=>o.id===id)));else assert.equal(a.optional,true);
+const q=Object.fromEntries(['type','prompt','options','answer','basis','explanation','optional'].filter(k=>a[k]!==undefined).map(k=>[k,a[k]]));q.id=r.id;
+if(!scenes.has(a.scenarioId))scenes.set(a.scenarioId,{id:a.scenarioId,version:1,...Object.fromEntries(['ageBand','title','family','topic','objective','briefing','setup','focusActorId','cues','tags','limits','sources'].map(k=>[k,a[k]])),questions:[]});
+const s=scenes.get(a.scenarioId);assert.deepEqual(s.setup,a.setup,'shared scene setup differs');s.questions.push(q);
+r.beforeHash=hash(r.before);r.afterHash=hash(a);rows.push({id:r.id,afterHash:r.afterHash,validAnswerIds:true,actorsOnIce:true});}
+const a=pack.records.map(r=>r.after),actor=(i,id)=>a[i].setup.actors.find(a=>a.id===id);
+const origin=makeScene(a[0]).puck;const middle=segment(actor(0,'f1'),origin,actor(0,'gold1')),wall=segment(actor(0,'f1'),origin,actor(0,'gold2'));assert.ok(middle>wall+2);
+assert.ok(actor(1,'f2').x<actor(1,'f1').x&&actor(1,'you').x>actor(1,'f1').x);
+assert.ok(distance(actor(5,'gold1'),actor(5,'f2'))>distance(actor(5,'gold3'),actor(5,'f2'))+10);
+assert.ok(actor(8,'f1').x<actor(8,'gold1').x);
+const bank=[...scenes.values()],errors=validateExperimentalBank(bank);assert.ok(errors.every(e=>/six to ten questions required|question variety needs at least four types/.test(e)),JSON.stringify(errors));
+const result={status:'structural-and-geometry-checks-pass; admission-held',questions:10,scenes:bank.length,optionalReflections:1,rows,geometry:{u15LaneDistancesFromF1:{middle,wall}},admissionBlockers:errors,limitations:['Draft lessons have too few companion questions/types for bank admission.','No qualified independent coaching clearance.','Source guidance supports teaching themes, not exact keys or geometry.']};
+fs.writeFileSync(dir+'/repairs.json',JSON.stringify(pack,null,2)+'\n');fs.writeFileSync(dir+'/scenes.json',JSON.stringify(bank,null,2)+'\n');fs.writeFileSync(dir+'/validation.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({questions:10,scenes:bank.length,structuralChecks:'pass',expectedAdmissionBlockers:errors.length,geometry:result.geometry}));
