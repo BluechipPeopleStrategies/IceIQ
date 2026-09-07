@@ -37,6 +37,12 @@ the natural container for the whole path.
 7. **Copy goes to American spelling** ("practice", not "practise").
 8. **Peripheral features appear gradually over roughly the first five to seven real
    sessions**, rather than all at once on day one.
+9. **The progression must not be consumable in a week.** The intended arc is a single
+   configurable constant, about twelve weeks today and raised toward a full hockey season
+   as the bank grows. Worlds open early; mastery depth carries the long arc.
+10. **Recurring comprehension checks gate new territory.** A cumulative retention check
+    comes due off the spaced schedule; until it is passed no new world or concept opens,
+    while everything already open stays playable.
 
 ## Player experience
 
@@ -188,6 +194,88 @@ this design rejects elsewhere.
 player moving up an age band starts a fresh world progression but does not sit through
 the interface being introduced to them a second time.
 
+## Comprehension checks
+
+A recurring, cumulative retention check. This is the primary mechanism that makes the arc
+calendar bound, and the reason a limited bank can honestly fill a season: it makes
+revisiting earlier material the point rather than filler.
+
+**It is not the World Challenge, and the two must not blur:**
+
+| | World Challenge | Comprehension check |
+|---|---|---|
+| Asks | Have you learned this world? | Does it still stick weeks later? |
+| Drawn from | One world's concepts | Everything learned so far, weighted to weak and due |
+| Occurs | Once per world | Recurring, on an interval |
+| Opens | The next world | Continued advancement generally |
+
+**Interval comes from the spaced schedule, not a session counter.** Retention decays with
+time, not with sessions, so a check becomes due when enough previously learned items come
+due under the existing spaced mastery scheduling. The rhythm emerges from the player's
+real history rather than an arbitrary "every fifth session".
+
+**Composition and pass bar.** Ten questions drawn from concepts already learned in that
+age band, weighted toward the weak and the due. Passing is eight of ten. The bar is
+higher than the World Challenge's four of five because this is material the player has
+already met, so a higher standard is fair rather than punishing. Where fewer than ten
+learned items exist, the check uses what exists and the bar is "all but two", floor of
+one correct.
+
+**What a due or failed check blocks.** New territory only: no new world unlocks and no
+new concepts introduced until it is passed. Everything already open stays fully playable,
+and review of the due material is always available. A failed check names the specific
+concepts that were missed and routes directly to practising those, then allows an
+immediate retry. Retries are unlimited.
+
+This delivers "cannot move forward" without ever producing a dead end: there is always
+something to do, and always a visible path back to advancing.
+
+**Storage.** Per player and per age band, alongside unlock state, since what has been
+learned is band specific.
+
+## Pacing: the progression must not be consumable in a week
+
+Thomas, 2026-09-07: "I effectively want to make it so somebody can't really get
+everything the game offers in a week... maybe it's a month or three months as I build out
+content, but that's going to be important to me."
+
+**What the content actually supports today.** Questions per age band: U7 172, U9 252,
+U11 412, U13 400, U15 246, U18 166. At ten questions per session and two or three
+sessions a week, a U9 player exhausts every unique question in about 25 sessions, roughly
+ten weeks. U18 is thinner, around seven. A full year at that cadence is about 130
+sessions, or 1,300 question slots against 252 unique questions at U9, so repetition would
+have to carry about four fifths of a year. The bank supports roughly a quarter of a year
+of genuinely fresh questions, and the gap is widest exactly where the bands are thinnest.
+
+**Therefore the duration is not hardcoded.** A single constant expresses the intended
+arc, defaulting to about twelve weeks today, raised as the bank grows toward a full
+September to March season. Nothing else in the design changes when it moves.
+
+**The un-rushable property comes from the calendar, not from content.** Mastery of a
+concept requires practice days spread across calendar weeks, which is already how the
+existing spaced mastery system works. A player cannot compress that by playing more in
+one day, regardless of how many questions exist. This is why the depth layer, not the
+unlock chain, carries the long arc: six unlocks stretched over a year would mean one
+every two months and five locked doors for months at a time, which demotivates rather
+than paces.
+
+So worlds open early and often through their challenges, and the long arc is depth:
+each concept climbs mastery tiers through spaced return visits.
+
+**Graceful degradation is mandatory.** When a player has seen every available question in
+their band, the app shifts to mastery and review framing and says so honestly ("You have
+seen every read here. Now let's make them stick."). It must never present a locked door
+or a "come back tomorrow" with nothing behind it. A player who returns to find nothing
+new and no path does not feel paced, they feel stonewalled, and that is the failure mode
+that ends the season rather than filling it.
+
+**A pacing report, so content work is informed.** A `report:progression-pacing` script,
+following the existing `report:*` convention in `package.json`, reads the current bank
+and prints per age band: unique questions, estimated sessions of fresh content, estimated
+weeks at a stated cadence, and whether the band currently sustains the configured target.
+This is the signal for when there is enough content to raise the target, and it names
+which bands are starving.
+
 ## Backdrop
 
 Reuses the existing sprite at `/assets/journey/worlds-v1.png` with the same CSS variable
@@ -215,6 +303,14 @@ world.
   worlds, per-band isolation, and that unlocks never revoke.
 - `worldSessionCore.test.mjs`: sequencing returns a teach moment before reads for an
   unmet concept, prefers unseen questions, and terminates sensibly on a small world.
+- Comprehension check tests: a check comes due off the spaced schedule rather than a
+  session count; a due or failed check blocks new worlds and new concepts but leaves open
+  worlds playable; failing names the missed concepts and permits immediate retry; the
+  reduced bar applies when fewer than ten learned items exist; passing clears the block.
+- Pacing tests: the configured target constant actually drives the mastery requirements
+  rather than being decorative; a player cannot complete a concept's mastery inside one
+  day by volume alone; running out of fresh questions produces the review framing rather
+  than a locked door.
 - Disclosure tests: a visit with no answered question does not count; two visits inside
   thirty minutes count once; revealed features never un-reveal; the "Show everything"
   switch reveals all; age-band gating still suppresses a feature whose ladder step has
