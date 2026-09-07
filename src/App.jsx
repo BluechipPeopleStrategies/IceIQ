@@ -493,7 +493,6 @@ function lazyWithReload(factory) {
 const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
-const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const GoalBuilder = lazyWithReload(() => import("./goals/GoalBuilder.jsx"));
 const CoachAssessment = lazyWithReload(() => import("./coach/CoachAssessment.jsx"));
 const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
