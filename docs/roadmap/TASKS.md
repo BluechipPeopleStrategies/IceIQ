@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Owner removed the Claude ten-hour cutoff. Handoff now runs until A-F completion gates are satisfied, with resumable checkpoints and explicit blockers. Existing provisional-review, isolated-work and paused-workstream boundaries remain. Claude execution has not been launched here.
+**Last updated:** 2026-09-07 · Claude followthrough intake: 22 tests reproduced passing; delivery remains partial because browser feedback checks and a reported duplicate-submit defect are open. Coverage headline requires catalog/method qualification. No integration or deployment.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-07: Recorded `docs/factory/claude-followthrough-intake-2026-09-07.md`: independent test rerun, verified 10-vs-12 draft discrepancy, incomplete feedback gate and bounded completion queue. Preserved Claude return.
 
 - 2026-09-06: Replaced the Claude time limit with completion gates, explicit interruption/resume handling and a refreshed `RinkReads-Claude-Until-Completed.zip`.
 
