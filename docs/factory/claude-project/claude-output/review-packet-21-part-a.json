@@ -1,0 +1,826 @@
+{
+  "scenariosOwned": [
+    "exp26b-u11-024",
+    "exp26b-u11-025"
+  ],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q1",
+      "baseContentHash": "04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34",
+      "verdict": "repair",
+      "reason": "CONFIRMED GEOMETRY/ANSWER-KEY DEFECT, cross-checked against an already-vetted sibling scene with the identical coordinate. AUTHORING-CONTRACT.md fixes the right blue line at x=7.62. YOU (h1) is authored at x=10, i.e. 2.38m PAST the right blue line on the attacking-zone side (toward the net Navy attacks), computed directly from the setup. The keyed answer (b) 'Inside it toward centre ice' describes the neutral-zone side (x<7.62) -- the OPPOSITE of where YOU actually is. Option (a) 'Behind it toward the right net' is the geometrically correct description. This is not a guess: bank-snapshot.json's exp26-u11-024 ('Reset behind the blue line in a timing drill', a same-family precedent already in the live bank) places its own YOU at the SAME x=10 and keys the analogous question's answer as 'On the right attacking-zone side of the line' -- confirming x=10 is the attacking-zone side, matching option (a) here, not (b). The question's OWN explanation text ('YOU is inside the right blue line area in the +x attack picture; the reset asks for a move behind it') already describes the attacking-zone reading and does not support option (b) either -- this reads as an option-key mismatch (the wrong option letter was keyed), not a deliberately different teaching claim. Separately, this question's own text carries the recurring YOU-grammar defect ('Where is YOU' -> 'Where are YOU'; explanation 'YOU is' -> 'YOU are'), and the scene-level briefing/cues (shared by every question's hash) carry the same defect ('YOU is just inside the line' -> 'YOU are...'; cue 'YOU is near the right blue line.' -> 'YOU are...'), so grammar and geometry are marked fail for every question in this scenario until the scene-level text and this question's own key are corrected together. Fixed in the replacement: answer flipped to (a), prompt/explanation reworded to 'are', explanation now states the computed distance and direction explicitly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home/Navy) at (10,-3) facing 3.1 rad (toward -x).",
+          "F1 (h2, home/Navy) at (5,3) facing 0 (toward +x), owns the puck; carried-puck point computed at (6,3.7), confirmed on ice.",
+          "F2 (h3, home/Navy) at (3,-5) facing 0.",
+          "D1 (a1, away/Gold) at (14,0) facing 3.1.",
+          "Right blue line is x=7.62 (AUTHORING-CONTRACT.md constant); YOU's x=10 is 2.38m on the +x (attacking-zone/right-net) side of that line -- computed directly, not inferred."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. F1 carries near the right blue line; YOU are just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.'",
+          "Cue: 'The still scene does not make a full offside call.'"
+        ],
+        "unproven": [
+          "Whether F1 actually passes or the coach restarts the rep before or after YOU completes the reset -- this is a static freeze.",
+          "Any formal offside ruling -- the scene explicitly disclaims that call."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q2",
+      "baseContentHash": "9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210",
+      "verdict": "repair",
+      "reason": "This question's own text and key are sound: the coach's stated instruction and F1/F2's actual restart positions are the two facts that matter; a 'silent offside verdict from the still image' is correctly rejected as unsupported (the scene explicitly disclaims a formal call). No defect in this question's own content. It is marked repair only because it shares the scenario's briefing/cues (part of every question's hash), which carry the YOU-grammar defect described in q1's row ('YOU is' -> 'YOU are') -- grammar fails scenario-wide until that shared text is corrected. Unaffected otherwise by q1's answer-key fix or q4's geometry fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1 (YOU, F1, F2, D1); F1 owns the puck."
+        ],
+        "stated": [
+          "Briefing names the coach's reset instruction explicitly; cue confirms no formal offside call is being made from this freeze."
+        ],
+        "unproven": [
+          "Where F1/F2 will actually be positioned at the moment the coach restarts the rep -- this is a static freeze, not a recorded sequence."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could also ask whether D1's position affects the reset, though the scene's own teaching focus is the coach instruction and teammates' locations, not the opponent."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q3",
+      "baseContentHash": "db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e",
+      "verdict": "repair",
+      "reason": "The ordered steps (hear the instruction -> move behind the line under control -> re-check F1 before restarting) are a defensible, situation-specific routine: hearing the instruction necessarily precedes moving on it, and re-checking F1 before treating the rep as ready to restart is a sensible final step. This is not an artificial universal rule forcing scanning to wait; a player could begin moving while still processing the instruction, so some overlap is possible (noted in 'alternative'), but the given order is not wrong. No defect in this question's own content. Marked repair only for the scenario-wide grammar cascade described in q1's row (shared briefing/cues text).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1."
+        ],
+        "stated": [
+          "Briefing: 'The coach calls for a reset behind the line before the next rep.'"
+        ],
+        "unproven": [
+          "Whether a player who begins moving immediately upon hearing the instruction is doing something meaningfully different from this ordering -- overlap between hearing and moving is plausible and not penalized here."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Hearing the instruction and beginning the move can overlap in practice; the part that matters for this drill is completing the move and re-checking F1 before treating the rep as restarted."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q4",
+      "baseContentHash": "948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d",
+      "verdict": "repair",
+      "reason": "CONFIRMED GEOMETRY DEFECT, computed directly. The prompt asks to move YOU 'to an example reset point behind the right blue line,' i.e. back to the neutral-zone side (x<7.62, per q1's finding and the live-bank precedent exp26-u11-024's own analogous fix at x=6). The authored reference is (12.5,-3.5) -- x=12.5 is FARTHER into the attacking zone than YOU's own start (x=10), the opposite of a reset behind the line. The question's own explanation confirms the error rather than masking it: 'This point shifts YOU farther toward the right-net side,' which is explicitly the wrong direction for a 'reset behind the line.' Fixed in the replacement by moving the reference to (6,-3.5) -- confirmed on ice (isCoachRoutePoint), 4.03m from YOU's start (exceeds the 0.1m minimum-move rule), and on the neutral-zone side of the right blue line -- with the explanation rewritten to state the correct direction and distance. Grammar also fails via the scenario-wide cascade in q1's row (this question's own text has no YOU-grammar issue).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) starts at (10,-3). Authored reference (12.5,-3.5) is 2.53m farther onto the attacking-zone side of the right blue line (x=7.62), not behind it.",
+          "F1 (5,3), F2 (3,-5), D1 (14,0) unaffected by this question's own fix."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU to an example reset point behind the right blue line.'",
+          "Briefing's stated reset instruction is the same one q1 and q3 reference."
+        ],
+        "unproven": [
+          "Whether F1 or D1 remain literally 'visible' from any given point -- line-of-sight is not modeled by this renderer, so any such claim is qualitative, not computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Several neutral-zone points near (6,-3.5) would equally satisfy the reset; this is an illustrative example, not an exclusive correct spot."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q5",
+      "baseContentHash": "73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b",
+      "verdict": "repair",
+      "reason": "GRAMMAR DEFECT in this question's own prompt: 'F1 keeps waiting after YOU resets' should be 'F1 keeps waiting after YOU reset' (YOU takes the plural-form verb, never the third-person-singular '-s'). This is the single most recurring defect class named in this assignment. The keyed answer and its content are otherwise sound: re-checking F1's route and the coach's restart status is the correct response to a stalled wait, and the two distractors (assuming the pass must happen, inventing a formal rule call) are credible U11 misreadings. Fixed in the replacement by correcting 'resets' to 'reset'; also affected by the scenario-wide grammar cascade in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1; unaffected by q1/q4's geometry fixes."
+        ],
+        "stated": [
+          "Prompt introduces a hypothetical continuation ('F1 keeps waiting after YOU reset') not shown in the static freeze, explicitly flagged as a hypothetical rather than an observed fact."
+        ],
+        "unproven": [
+          "Whether the coach has in fact restarted the rep at this point -- the question asks the player to check this, not assume it."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also flag the wait to a coach directly rather than only self-checking F1's route, depending on team communication norms."
+    },
+    {
+      "scenarioId": "exp26b-u11-024",
+      "questionId": "exp26b-u11-024-q6",
+      "baseContentHash": "00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881",
+      "verdict": "repair",
+      "reason": "This reflection's own text is sound: it correctly identifies that timing and rule context are missing from a static freeze and correctly avoids treating the image as a formal ruling, consistent with the scene's own disclaiming cue. No defect in this question's own content or its (absent, correctly so for an explain-type) answer key. Marked repair only for the scenario-wide grammar cascade in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster and positions as q1; this reflection has no answer key by design."
+        ],
+        "stated": [
+          "Cue: 'The still scene does not make a full offside call.'"
+        ],
+        "unproven": [
+          "Any specific timing detail (exact moment feet/puck cross the line) that a formal offside call would require -- correctly left unresolved."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could instead ask what a linesman or referee would need to see (skate position at the exact moment the puck crosses) to make this concrete, rather than only naming 'timing and rule context' abstractly."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q1",
+      "baseContentHash": "b4a59381ace7fd29f61df69765ee01cb4fbdb26073bdec5d1df2174dac6baed7",
+      "verdict": "retain",
+      "reason": "Scene-basis question correctly identifies the coach's stop call as what changed the task, while the puck remains loose (owner:null in setup). Computed geometry confirms the puck sits almost exactly on the line between YOU (-7,1) and D1 (-2,3) -- perpendicular offset only 0.19m from that segment -- so 'loose between YOU and D1' is a verified, not merely asserted, spatial claim. Distractors (D1 touched the puck; F2 was assigned the puck before the stop) directly contradict the stated loose-puck fact and are credible misreadings, not absurd trivia. No roster, geometry, answer, feedback, age, source or grammar defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home/Navy) at (-7,1) facing 0.3 rad.",
+          "F2 (h2, home/Navy) at (-8,-4) facing 0.7 rad.",
+          "D1 (a1, away/Gold) at (-2,3) facing -2.7 rad.",
+          "Loose puck at (-4,2), owner:null -- computed perpendicular distance from the YOU-D1 segment is 0.19m, confirming the puck is genuinely between them, not just nearby."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. The puck is loose between YOU and D1 when the coach stops the rep. F2 is nearby. The stop changes the task even though no player has yet touched the puck.'"
+        ],
+        "unproven": [
+          "Who would have won the loose-puck battle had the coach not stopped it -- explicitly not claimed."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q2",
+      "baseContentHash": "ec6589319c1a8b3124cc019251aefdb5dfb2019f3d24d3ac5d67a84c535a9275",
+      "verdict": "retain",
+      "reason": "Correctly keys pausing and moving to the stated reset area as fitting the stop instruction, and correctly rejects continuing to battle for the loose puck as no longer the objective once the coach has stopped play. Matches the briefing's explicit statement that the stop changes the task despite no possession change. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1."
+        ],
+        "stated": [
+          "Briefing explicitly states the stop changes the task even without a possession change."
+        ],
+        "unproven": [
+          "Exactly where the 'stated reset area' is -- not numerically specified in this multi-select; q4 supplies one example point separately."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also communicate the stop to a nearby teammate before moving, depending on team habit."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q3",
+      "baseContentHash": "a6c3b227252784a1e4331a0a945d385bffba70ef9e3c8514d2bc0a12a52b14bb",
+      "verdict": "retain",
+      "reason": "The ordered steps (hear/acknowledge the stop -> leave the contest under control -> confirm the restart cue) reflect a genuine procedural dependency: acknowledging the stop must precede leaving a live puck battle, and confirming the restart logically follows disengaging, not the other way around. This is not an artificial universal rule about scanning; it is the specific order a stop-and-reset in mid-battle requires. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1."
+        ],
+        "stated": [
+          "Briefing: the coach 'stops the rep' while the puck is still loose and contested."
+        ],
+        "unproven": [
+          "The exact timing of when a player would fully disengage versus still watching the puck while leaving -- not modeled, and not required by this ordering."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player already backing off the puck when the whistle sounds need not treat 'hear the stop' and 'leave the contest' as two fully separate steps, provided both happen before the restart is confirmed."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q4",
+      "baseContentHash": "ff662f13c33cb60009b74faec8ec676202994128407c767ae029c051a7eecd90",
+      "verdict": "retain",
+      "reason": "Computed geometry confirms the reference point (-10,6) is well clear of the loose-puck contest: 7.21m from the puck (-4,2) and 8.54m from D1 (-2,3), versus YOU's start only 3.16m from the puck -- a genuine, verified separation, not merely asserted. Confirmed on ice (isCoachRoutePoint) and 5.83m from YOU's start, exceeding the minimum-move rule. Basis is correctly coaching (an example point, not an exclusive target).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference (-10,6): 7.21m from the loose puck (-4,2), 8.54m from D1 (-2,3), versus YOU's own start (-7,1) at only 3.16m from the puck -- a computed, confirmed separation."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU to an open reset point away from the loose-puck contest.'"
+        ],
+        "unproven": [
+          "Whether this exact point is the single best reset location -- explicitly one example among several that would work."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Any nearby point clear of the puck and D1 would satisfy the same reset purpose; this is not a unique target."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q5",
+      "baseContentHash": "d086ef65d73c0285b469660e4267b6245bd8c9d033f6453db04f872721d2ce83",
+      "verdict": "retain",
+      "reason": "Correctly identifies that a restart assigning F2 as carrier requires re-scanning F2's location, D1's pressure, and the new support job, rather than continuing the old loose-puck plan or assuming YOU owns the restart. This matches the scene's teaching point that the right decision can change even without a possession change at the moment of the stop. No defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F2 (h2) and D1 (a1) are both present in the roster and available to reference in this hypothetical restart."
+        ],
+        "stated": [
+          "Prompt hypothetical: 'The coach restarts with F2 as the puck carrier,' explicitly flagged as a new condition, not an observed fact from the freeze."
+        ],
+        "unproven": [
+          "F2's and D1's exact positions at the moment of this hypothetical restart -- not specified beyond their frozen coordinates, appropriately left open."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "YOU could also ask a teammate to confirm D1's pressure verbally rather than relying only on a visual scan, depending on team communication habits."
+    },
+    {
+      "scenarioId": "exp26b-u11-025",
+      "questionId": "exp26b-u11-025-q6",
+      "baseContentHash": "70c6a4cbddbc0956a003739171228dbe406bb8b015388744c86fb7c4c817d494",
+      "verdict": "retain",
+      "reason": "This reflection correctly explains that the coach's stop and the restart conditions can change the right decision independent of a puck touch, and correctly frames the follow-on read (possession, pressure, support) as something to re-check rather than assume. No defect found in this ungraded question.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1; this reflection has no answer key by design."
+        ],
+        "stated": [
+          "Briefing: 'The stop changes the task even though no player has yet touched the puck.'"
+        ],
+        "unproven": [
+          "No specific claim beyond the stated condition; appropriately open-ended for a reflection."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also point to a specific rule (e.g. an icing or offside condition tied to a whistle) as an example of a non-possession change, rather than only the general stop-and-restart case shown here."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u11-024",
+      "baseVersion": 1,
+      "baseScenarioHash": "9f9c85f68065e7ff84fed91616aa3d6a6145bd29ae0370e66b155f62ea7aec4a",
+      "replacement": {
+        "id": "exp26b-u11-024",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Reset behind the blue line",
+        "family": "neutral-reset-timing",
+        "topic": "Rink awareness",
+        "objective": "Use a practice reset location while separating it from a formal rule judgement.",
+        "briefing": "Navy attacks +x. F1 carries near the right blue line; YOU are just inside the line and F2 is behind the play. D1 is farther inside. The coach calls for a reset behind the line before the next rep.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -3,
+              "facing": 3.1
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The coach has stated a practice reset.",
+          "YOU are near the right blue line.",
+          "The still scene does not make a full offside call."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-024-q1",
+            "type": "choice",
+            "prompt": "Where are YOU relative to the right blue line in this practice?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Behind it toward the right net"
+              },
+              {
+                "id": "b",
+                "text": "Inside it toward centre ice"
+              },
+              {
+                "id": "c",
+                "text": "At the left goal line"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are past the right blue line (x=10 vs the line at x=7.62), on the attacking-zone side toward the right net, not toward centre ice; the coach's reset asks YOU to move back behind the line into the neutral zone."
+          },
+          {
+            "id": "exp26b-u11-024-q2",
+            "type": "multi",
+            "prompt": "Which two facts determine whether the reset is ready?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach's stated reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Where F1 and F2 are when the rep restarts"
+              },
+              {
+                "id": "c",
+                "text": "A silent offside verdict from the still image"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The practice instruction and player locations are visible cues. A formal call needs more timing information than this freeze."
+          },
+          {
+            "id": "exp26b-u11-024-q3",
+            "type": "sequence",
+            "prompt": "Arrange the stated reset steps.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hear the reset instruction"
+              },
+              {
+                "id": "b",
+                "text": "Move behind the blue line under control"
+              },
+              {
+                "id": "c",
+                "text": "Re-check F1 before starting again"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The sequence follows the coach instruction and checks the carrier before the next action."
+          },
+          {
+            "id": "exp26b-u11-024-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example reset point behind the right blue line.",
+            "actorId": "h1",
+            "reference": {
+              "x": 6,
+              "y": -3.5
+            },
+            "basis": "coaching",
+            "explanation": "This point is on the neutral-zone side of the right blue line (x=6 vs the line at x=7.62), away from F1, completing the coach's reset; several nearby neutral-zone points would work equally well."
+          },
+          {
+            "id": "exp26b-u11-024-q5",
+            "type": "choice",
+            "prompt": "F1 keeps waiting after YOU reset. What is the useful next check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 still has a reachable route and whether the coach has restarted the rep"
+              },
+              {
+                "id": "b",
+                "text": "Assume the pass must happen now"
+              },
+              {
+                "id": "c",
+                "text": "Make a full rule call from the picture"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The waiting changes the practice timing cue. Re-check F1 and the stated restart rather than inventing a formal ruling."
+          },
+          {
+            "id": "exp26b-u11-024-q6",
+            "type": "explain",
+            "prompt": "What information is still missing before a formal offside decision?",
+            "basis": "coaching",
+            "explanation": "The coach's reset is visible, but timing and rule context are not. Follow the drill instruction and avoid treating the freeze as a formal ruling."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-024-q1",
+        "exp26b-u11-024-q2",
+        "exp26b-u11-024-q3",
+        "exp26b-u11-024-q4",
+        "exp26b-u11-024-q5",
+        "exp26b-u11-024-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-024-q1"
+          ],
+          "issue": "Keyed answer (b, 'Inside it toward centre ice') contradicts computed geometry: YOU (h1) is at x=10, which is 2.38m past the right blue line (x=7.62) on the attacking-zone side, not the neutral-zone/centre-ice side. Confirmed against the live bank's own analogous scene (exp26-u11-024), which places YOU at the identical x=10 and keys its equivalent question 'On the right attacking-zone side of the line.' The question's own explanation text ('inside the right blue line area in the +x attack picture') already matched the attacking-zone reading and did not support the keyed option (b), indicating an option-letter mismatch rather than a deliberate alternate teaching claim. Also carries the YOU-grammar defect ('Where is YOU' / 'YOU is').",
+          "change": "Flipped the keyed answer from ['b'] to ['a']; reworded prompt 'Where is YOU' to 'Where are YOU'; rewrote the explanation to state the computed distance (x=10 vs line at x=7.62) and direction explicitly, replacing the prior 'YOU is inside... the reset asks for a move behind it' wording.",
+          "evidence": "questionContentHash before=04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34, after=c12bb56c379d05fcdc965988c142f977cab0f0d51090d31db7ba1bd24813fa00 (computed via docs/factory/claude-project/validation/tools/question-batch-core.mjs questionContentHash, Node-verified this session). Geometry: YOU.x=10, right blue line=7.62 (AUTHORING-CONTRACT.md), difference=2.38m toward +x/the right net, computed with Node this session. Precedent: bank-snapshot.json scenario exp26-u11-024, question exp26-u11-024-q1, keys 'On the right attacking-zone side of the line' for an actor at the identical x=10."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q4"
+          ],
+          "issue": "The reference point (12.5,-3.5) moves YOU 2.53m FARTHER into the attacking zone than YOU's own start (x=10), the opposite of the stated instruction ('an example reset point behind the right blue line'). The question's own explanation ('shifts YOU farther toward the right-net side') confirms the wrong direction rather than masking it.",
+          "change": "Moved the reference from {x:12.5,y:-3.5} to {x:6,y:-3.5} (neutral-zone side of the right blue line at x=7.62); rewrote the explanation to state the corrected direction and distance and to note several nearby points would work equally well, replacing the claim that the point is 'farther toward the right-net side.'",
+          "evidence": "questionContentHash before=948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d, after=c1762b8d2401f52146a62d61daea044f34efd340768691b580729ee817d5c414 (computed via question-batch-core.mjs this session). Geometry: new reference (6,-3.5) is 4.03m from YOU's start (10,-3) (exceeds the 0.1m minimum-move rule from experimentalBankCore.js validateExperimentalBank), confirmed on ice via isCoachRoutePoint, and x=6<7.62 places it on the neutral-zone side -- all computed with Node this session."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q5"
+          ],
+          "issue": "Subject-verb agreement defect: 'F1 keeps waiting after YOU resets' uses the third-person-singular verb form with YOU, which the assignment names as the single most recurring defect class.",
+          "change": "Corrected 'YOU resets' to 'YOU reset' in the prompt.",
+          "evidence": "questionContentHash before=73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b, after=b9ab9c50e604989f639b3fc995db2a956f46b535e2f515b7248a03b48a405cad (computed via question-batch-core.mjs this session)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-024-q1",
+            "exp26b-u11-024-q2",
+            "exp26b-u11-024-q3",
+            "exp26b-u11-024-q4",
+            "exp26b-u11-024-q5",
+            "exp26b-u11-024-q6"
+          ],
+          "issue": "Scene-level briefing ('YOU is just inside the line') and cue ('YOU is near the right blue line.') both carry the recurring YOU subject-verb defect. Because questionContentHash combines the scene (briefing/cues included) with each question, this scene-level text change alone changes every question's hash, so all six questions are listed as affected even though q2, q3 and q6's own question text was otherwise unaffected.",
+          "change": "Corrected 'YOU is just inside the line' to 'YOU are just inside the line' in the briefing, and 'YOU is near the right blue line.' to 'YOU are near the right blue line.' in the cues. No other scene-level field (actors, puck, focusActorId, tags, sources, limits) was touched.",
+          "evidence": "questionContentHash before/after pairs for q2 (9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210 -> e2f3fafdd49ce6adae757d874407c04f86c275bc41f447989725155cbc3ee9fc), q3 (db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e -> ced9dc63efac654132da96ed258ae681576049412643a98483f30743bbb3d4b6), q6 (00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881 -> 9050f8c272b60b20297d5996cb9f858124f08557c4a27690e0986d29fa2bb726) all change despite unchanged question-level text, confirming the scene-level cascade -- computed via question-batch-core.mjs this session."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-024-q1",
+            "contentHash": "c12bb56c379d05fcdc965988c142f977cab0f0d51090d31db7ba1bd24813fa00",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q2",
+            "contentHash": "e2f3fafdd49ce6adae757d874407c04f86c275bc41f447989725155cbc3ee9fc",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q3",
+            "contentHash": "ced9dc63efac654132da96ed258ae681576049412643a98483f30743bbb3d4b6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q4",
+            "contentHash": "c1762b8d2401f52146a62d61daea044f34efd340768691b580729ee817d5c414",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q5",
+            "contentHash": "b9ab9c50e604989f639b3fc995db2a956f46b535e2f515b7248a03b48a405cad",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26b-u11-024-q6",
+            "contentHash": "9050f8c272b60b20297d5996cb9f858124f08557c4a27690e0986d29fa2bb726",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: briefing/cues grammar corrected (YOU is -> YOU are), q1 answer key corrected to match computed geometry (attacking-zone side of the blue line), q4 reference point corrected to genuinely sit on the neutral-zone side, q5 verb agreement corrected. All seven checks re-verified against the replacement content, not assumed."
+          }
+        ]
+      }
+    }
+  ],
+  "replacementReview": {
+    "status": "self-checked",
+    "coverage": [
+      {
+        "questionId": "exp26b-u11-024-q1",
+        "contentHash": "c12bb56c379d05fcdc965988c142f977cab0f0d51090d31db7ba1bd24813fa00",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Answer now matches computed geometry (YOU at x=10 is on the attacking-zone side of the right blue line at x=7.62, matching option a); prompt/explanation use correct YOU-are grammar; explanation states the exact computed distance and direction. Re-validated with validateExperimentalBank (no errors) and isCoachRoutePoint on all actors this session."
+      },
+      {
+        "questionId": "exp26b-u11-024-q2",
+        "contentHash": "e2f3fafdd49ce6adae757d874407c04f86c275bc41f447989725155cbc3ee9fc",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Question text unchanged from base; now passes grammar because the shared scene-level briefing/cues were corrected. No other defect."
+      },
+      {
+        "questionId": "exp26b-u11-024-q3",
+        "contentHash": "ced9dc63efac654132da96ed258ae681576049412643a98483f30743bbb3d4b6",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Question text unchanged from base; now passes grammar because the shared scene-level briefing/cues were corrected. The sequence itself remains a defensible situation-specific order (see alternative note in the base coverage row)."
+      },
+      {
+        "questionId": "exp26b-u11-024-q4",
+        "contentHash": "c1762b8d2401f52146a62d61daea044f34efd340768691b580729ee817d5c414",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Reference point now sits on the neutral-zone side of the right blue line as the prompt requires, confirmed on ice and 4.03m from YOU's start (exceeds the 0.1m minimum); explanation now states the correct direction. Re-validated with validateExperimentalBank (no errors) and isCoachRoutePoint this session."
+      },
+      {
+        "questionId": "exp26b-u11-024-q5",
+        "contentHash": "b9ab9c50e604989f639b3fc995db2a956f46b535e2f515b7248a03b48a405cad",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Prompt corrected to 'YOU reset'; all other content unchanged and already sound."
+      },
+      {
+        "questionId": "exp26b-u11-024-q6",
+        "contentHash": "9050f8c272b60b20297d5996cb9f858124f08557c4a27690e0986d29fa2bb726",
+        "checks": {
+          "roster": "pass",
+          "geometry": "pass",
+          "answer": "pass",
+          "feedback": "pass",
+          "age": "pass",
+          "sources": "pass",
+          "grammar": "pass"
+        },
+        "reason": "Question text unchanged from base; now passes grammar because the shared scene-level briefing/cues were corrected. No other defect."
+      }
+    ]
+  },
+  "sourceChecks": [
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Read the exact cited pages directly (WebFetch's text extraction failed on this PDF, so the Read tool was used on the downloaded binary at printed pages 17-19 / PDF pages 23-25, per the assignment's PDF-fallback instruction). Confirms 'offsides' is listed as a rules topic and generic Individual Hockey Skills (skating, puck control, passing/receiving, shooting, goaltending) and Team Play concepts (offensive: 2-on-1/1-on-1/triangle offense; defensive: gap control, protect centre of ice, backchecking) are listed for the 10-and-Under age band. It does NOT contain this scenario's specific reset-timing procedure, exact coordinates, blue-line-side terminology, or answer key -- it supports only age/topic placement (that rink/rules awareness and reacting to a coach's stop/reset instruction are age-appropriate 10-and-Under topics), matching the source's own 'use' note in both scenarios. Both exp26b-u11-024 and exp26b-u11-025 cite this same single source.",
+      "jurisdiction": "USA (USA Hockey ADM); the app's own convention already treats this as supporting only general age/topic placement, not a Canadian rule certification.",
+      "ageFormat": "10-and-Under (maps to this bank's U11 band)",
+      "claim": "Age/topic placement only: rink/rules awareness and reacting to a coach's stop or restart instruction are appropriate 10-and-Under teaching topics. No exact tactical answer, coordinate, or terminology claim is attributed to this source."
+    }
+  ]
+}

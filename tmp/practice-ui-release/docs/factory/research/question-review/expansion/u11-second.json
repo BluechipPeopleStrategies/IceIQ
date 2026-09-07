@@ -1,0 +1,324 @@
+{
+  "reviewer": "luna-u13-second-u11",
+  "model": "gpt-5.6-luna",
+  "reviewedAt": "2026-09-05",
+  "coverage": [
+    {
+      "questionId": "exp26-u11-003-q8",
+      "scenarioId": "exp26-u11-003",
+      "scenarioVersion": 1,
+      "contentHash": "8f1d69a20252c53d9e689d89edb33d3656d14f004400a3f1cba6ff94b58b3dff",
+      "decision": "pass",
+      "reason": "Pass. The repaired multi-select now offers three scene-grounded responses: use the new lane, notice the space left for F2, or keep the old lane while D1 remains between the players. The first dummy-distractor concern is resolved without assuming a guaranteed result."
+    },
+    {
+      "questionId": "exp26-u11-004-q9",
+      "scenarioId": "exp26-u11-004",
+      "scenarioVersion": 1,
+      "contentHash": "58c2dcd0f9f517f5abd86b93b98aadb622ad522a3dc19a8bce1d17302dc0017c",
+      "decision": "pass",
+      "reason": "Pass. The repaired position prompt names a support point inferred from YOU, F2, and the direct return lane; it no longer depends on an unrendered shaded line. The reference is above that lane and keeps D1 visible."
+    },
+    {
+      "questionId": "exp26-u11-006-q10",
+      "scenarioId": "exp26-u11-006",
+      "scenarioVersion": 1,
+      "contentHash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+      "decision": "pass",
+      "reason": "Pass. The current rebound question asks for a conditional read before a second attempt, and its alternatives distinguish checking the rebound, net-side coverage, and teammate availability. It does not promise a result; static review cannot certify execution safety."
+    },
+    {
+      "questionId": "exp26-u11-018-q7",
+      "scenarioId": "exp26-u11-018",
+      "scenarioVersion": 1,
+      "contentHash": "356db9d8a76bb4e23d275e291f133bee6c8ea867bbca4978b0cb94c88f127e68",
+      "decision": "pass",
+      "reason": "Pass. The repair now names the right net, matching Navy's +x attack and the positions of F2 and YOU. The keyed call reports assignments and direction rather than claiming an outcome."
+    },
+    {
+      "questionId": "exp26-u11-018-q9",
+      "scenarioId": "exp26-u11-018",
+      "scenarioVersion": 1,
+      "contentHash": "67ad2ef17ef431154e2b259807988811884f58cf799a2eb7de34d7968ad2fa64",
+      "decision": "pass",
+      "reason": "Pass. The repair places YOU between F2 and the right net, consistent with the scene's attack direction; the explanation preserves F1 visibility and makes the recovery route conditional."
+    },
+    {
+      "questionId": "exp26-u11-024-q7",
+      "scenarioId": "exp26-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "adaf81b02ab8056dbf628b46c1f0ce8108439d3527568acc55712c7c4b50bc47",
+      "decision": "pass",
+      "reason": "Pass. The reset communication question is correctly framed as a drill instruction for YOU beyond the right blue line, with no formal offside ruling claimed."
+    },
+    {
+      "questionId": "exp26-u11-024-q8",
+      "scenarioId": "exp26-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "b97d9adcf4fe8f655222d19934cbc4fa005df5651a41e50400d99a495e42ced1",
+      "decision": "pass",
+      "reason": "Pass. The current options distinguish waiting for the coach, restarting unchanged, or changing the route; this follows the explicit practice condition and avoids inventing game-state certainty."
+    },
+    {
+      "questionId": "exp26-u11-024-q9",
+      "scenarioId": "exp26-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "53f3959b392321500194f6e9b0754c9689338be23f385c18b295883673af0631",
+      "decision": "pass",
+      "reason": "Pass. The repaired reference moves YOU to the neutral-zone side of the right blue line while keeping F1 visible, matching the stated reset geometry and explicitly scoping the point as illustrative."
+    },
+    {
+      "questionId": "exp26-u11-024-q10",
+      "scenarioId": "exp26-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "d73440742bbaa3d63b92b6884c70f8fb85f50d1a0c33e71b26dcb68027971163",
+      "decision": "pass",
+      "reason": "Pass. The question keeps the coach-controlled restart condition visible and asks for the next practice action; it does not turn the drill instruction into a universal timing or offside rule."
+    },
+    {
+      "questionId": "exp26b-u11-001-q5",
+      "scenarioId": "exp26b-u11-001",
+      "scenarioVersion": 1,
+      "contentHash": "239b267bba2dbfea32bc41a5e16ea98844e6b0d10d12a3461141a27f7d6d6e13",
+      "decision": "pass",
+      "reason": "Pass. The question uses the loose puck, D1's drop toward F2, and a protected carrier position to test scanning before an exit. The repaired alternatives are credible U11 mistakes and the answer remains conditional."
+    },
+    {
+      "questionId": "exp26b-u11-003-q2",
+      "scenarioId": "exp26b-u11-003",
+      "scenarioVersion": 1,
+      "contentHash": "418f1ea50d8690d9d5d515a9d394d4340fc49c1e82f84efe7c302de9c19b3e54",
+      "decision": "pass",
+      "reason": "Pass. The repaired prompt explicitly asks for three checks, and the answer now includes the lane, F1's access, and whether the old route remains blocked. Each check is observable from the named scene relationships."
+    },
+    {
+      "questionId": "exp26b-u11-004-q5",
+      "scenarioId": "exp26b-u11-004",
+      "scenarioVersion": 1,
+      "contentHash": "a063f313c69c3b11f82f5dd5e3616e0026fc06dd87375d08762c510baf82864c",
+      "decision": "revise",
+      "reason": "Revise. The keyed response is clear, but options b and c are near duplicates: both tell YOU to stay on the old return lane while F2 carries inside. That leaves the decision contrast too narrow after the first review.",
+      "severity": "P2",
+      "recommendedChange": "Replace option c with “Follow F2 into the middle without checking whether D1 can still pressure the carrier.”"
+    },
+    {
+      "questionId": "exp26b-u11-006-q4",
+      "scenarioId": "exp26b-u11-006",
+      "scenarioVersion": 1,
+      "contentHash": "ab567220f437810a07ae7e52b3c34d43c23c994cced9e95f514e9bb38b59e64e",
+      "decision": "pass",
+      "reason": "Pass. The repaired position prompt says “inside approach point near the loose puck” and the reference is near the puck while preserving the right net and D1 in view; it no longer makes the earlier above/below wording error."
+    },
+    {
+      "questionId": "exp26b-u11-006-q5",
+      "scenarioId": "exp26b-u11-006",
+      "scenarioVersion": 1,
+      "contentHash": "91354db0f231cd93c447f7393f287ef8253e663995cc584e080fbd097a326794",
+      "decision": "pass",
+      "reason": "Pass. The question correctly treats D1 reaching the puck first as a possession change and asks YOU to update support or pressure. The alternatives are plausible mistakes rather than impossible actions."
+    },
+    {
+      "questionId": "exp26b-u11-006-q6",
+      "scenarioId": "exp26b-u11-006",
+      "scenarioVersion": 1,
+      "contentHash": "912f1552625161a4bac8f62f792f4a468c5921e61dcb75f8ab9795d9edd7e02c",
+      "decision": "pass",
+      "reason": "Pass. The current item asks for evidence before a second shot and keeps the rebound/coverage read conditional. It is high-risk for execution interpretation, but the static question does not assert a guaranteed shot or contact outcome."
+    },
+    {
+      "questionId": "exp26b-u11-007-q5",
+      "scenarioId": "exp26b-u11-007",
+      "scenarioVersion": 1,
+      "contentHash": "d761f35cb6ad6929067a75b68583f9ba26c1aaeeae0cdfbcefe3d50e8971bff4",
+      "decision": "revise",
+      "reason": "Revise. The answer a is sound, but b and c both describe continuing the carry without checking the newly opened inside lane. The two distractors therefore test the same misconception.",
+      "severity": "P2",
+      "recommendedChange": "Replace option c with “Pass immediately to F2 even if D1 still blocks the inside lane.”"
+    },
+    {
+      "questionId": "exp26b-u11-008-q1",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "18d96b64e17bdc73a23951c74ab2de843a3664342c985d20667c341341ebe63b",
+      "decision": "revise",
+      "reason": "Revise. Both F2 (x=1) and D1 (x=-2) are farther along the +x direction than YOU (x=-8), so the singular prompt has two correct candidates even though D1 is keyed. The briefing does distinguish D1 as inside and F2 as wide.",
+      "severity": "P1",
+      "recommendedChange": "Rewrite the prompt as “Which player is ahead and inside YOU in this +x attack?” so D1 is uniquely supported by the stated scene relationship; retain answer [“b”]."
+    },
+    {
+      "questionId": "exp26b-u11-008-q2",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "248fb61aa335b66a52d1a05eda7e4820d6bd49f531ff824e8dd3cdf1078a2706",
+      "decision": "pass",
+      "reason": "Pass. The carry-decision item has two distinct observable cues, an open forward lane and D1's inside closure; the third option incorrectly treats F2's width as an automatic command. The current scene geometry supports the distinction."
+    },
+    {
+      "questionId": "exp26b-u11-008-q3",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "485cbc81b4acecaabf8bf0de4114e083b2a8786b2baa91ca7b4b7aedfb2362ed",
+      "decision": "pass",
+      "reason": "Pass. The question keeps the one-touch condition and asks what to scan before acting; it uses the actual carrier, defender, and support positions without adding an unseen player or outcome."
+    },
+    {
+      "questionId": "exp26b-u11-008-q4",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "32bc79c2601c04da299e6d5deb4695890e43c5309363ac0c84ffe06abf0a632a",
+      "decision": "pass",
+      "reason": "Pass. The position target moves YOU forward from the current point while retaining the named support and defender relationships. The prompt describes a meaningful support location rather than an unrendered graphic."
+    },
+    {
+      "questionId": "exp26b-u11-008-q5",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "c19dbe7967364d39ad230a4d6f95846f1068df33650a33b47d1b73ad6e807f83",
+      "decision": "pass",
+      "reason": "Pass. The current choice tests whether the player can re-check D1's movement and the lane before carrying; alternatives represent plausible overcommitment and forced-pass errors."
+    },
+    {
+      "questionId": "exp26b-u11-008-q6",
+      "scenarioId": "exp26b-u11-008",
+      "scenarioVersion": 1,
+      "contentHash": "2d251dfd1312562387ba05ab758cc02dd0f4e6da43bef917c1cc64c9bb3f7577",
+      "decision": "pass",
+      "reason": "Pass. The final item transfers the read to a changed lane and keeps the answer conditional on what D1 and F2 do; it does not claim the one-touch decision guarantees possession or scoring."
+    },
+    {
+      "questionId": "exp26b-u11-016-q2",
+      "scenarioId": "exp26b-u11-016",
+      "scenarioVersion": 1,
+      "contentHash": "f220ec47677031d6e0515e633a9b5eac80f2c8025be7a8614d32bff9795cf739",
+      "decision": "revise",
+      "reason": "Revise. This item is typed as multi-select but the current key contains only [\"a\"]. Option a is the sole defensible answer, while b and c are distractors, so the type and key disagree.",
+      "severity": "P2",
+      "recommendedChange": "Change type from “multi” to “choice” while retaining answer [\"a\"], or add a second genuinely correct preservation check."
+    },
+    {
+      "questionId": "exp26b-u11-017-q1",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "9e7b2d6182163f7d7565e0457ebc1421db72220c10e74202fb55f53c99f0b2d9",
+      "decision": "pass",
+      "reason": "Pass. The repaired prompt now asks for the nearer attacker after the missed reach, which is answerable from the current positions and avoids the prior incorrect left-net movement claim."
+    },
+    {
+      "questionId": "exp26b-u11-017-q2",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "315011b712059d98391c0d37b572eae4fdb375eede5d41490338cd16e7a1fe96",
+      "decision": "pass",
+      "reason": "Pass. The question uses Gold's -x attack and asks for a conditional defensive read; the keyed option follows the actual F1/F2 relationship in the scene."
+    },
+    {
+      "questionId": "exp26b-u11-017-q3",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "3884e7ea62af6dbf5305e0788754a17f51c3cd71eeefcbb37f12bfc24293e559",
+      "decision": "pass",
+      "reason": "Pass. The current item tests whether YOU protects the inside route while tracking the carrier, with options grounded in the displayed attackers and no invented possession change."
+    },
+    {
+      "questionId": "exp26b-u11-017-q4",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "c6df92c3461182c01d561f25122afef69eabc96adba107bba34c2193ea85c8a4",
+      "decision": "pass",
+      "reason": "Pass. The position move is meaningful relative to the left-net attack and the named attackers; the reference does not rely on an unrendered lane or hidden player."
+    },
+    {
+      "questionId": "exp26b-u11-017-q5",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "258fa08c37839c77b186a4225806642b258f6110c61700a38036a8ab3d34801b",
+      "decision": "pass",
+      "reason": "Pass. The communication choices distinguish a useful inside call from chasing wide or freezing the original position, and they remain conditional on F1/F2 movement."
+    },
+    {
+      "questionId": "exp26b-u11-017-q6",
+      "scenarioId": "exp26b-u11-017",
+      "scenarioVersion": 1,
+      "contentHash": "adeefb23974cf7ac32aca34df63266d7309baa41ad638985ecac03d353d419fa",
+      "decision": "pass",
+      "reason": "Pass. The transfer question asks what to re-check after the missed reach and preserves uncertainty about the next carrier action; it is age-appropriate and scene-grounded."
+    },
+    {
+      "questionId": "exp26b-u11-018-q2",
+      "scenarioId": "exp26b-u11-018",
+      "scenarioVersion": 1,
+      "contentHash": "01ee168bf7b7d847637d0a8f8f4f6222bfdea83b423d64c2b5e4f80336f4669e",
+      "decision": "pass",
+      "reason": "Pass. The repaired option now sends F2 toward the left net, matching Gold's -x attack. The second keyed cue, D1 staying with F1, gives a separate coverage check."
+    },
+    {
+      "questionId": "exp26b-u11-021-q5",
+      "scenarioId": "exp26b-u11-021",
+      "scenarioVersion": 1,
+      "contentHash": "6e4b1cd252dc761e44ca6329533ee545c385cc2067af77a9cda24fec1487ba68",
+      "decision": "pass",
+      "reason": "Pass. With D1 in the shooting line and F2 clearly reachable, the cross-ice pass is a reasonable new read. The alternatives are credible carry/shot errors and the prompt does not guarantee completion."
+    },
+    {
+      "questionId": "exp26b-u11-023-q1",
+      "scenarioId": "exp26b-u11-023",
+      "scenarioVersion": 1,
+      "contentHash": "7ac8e5ed34f06ec79ace82b34992071ba0dd8dd3df817ec2d3b4dcfdf0fbf796",
+      "decision": "pass",
+      "reason": "Pass; the first concern is rejected by the exact coordinates. The loose puck is at (23,-9), F2 is at (19,-9), so F2 is 4.00 m away; YOU at (21,-5) is sqrt(20)=4.47 m away. F2 is genuinely closer, matching answer a and the explanation; no ownership assumption is needed."
+    },
+    {
+      "questionId": "exp26b-u11-024-q1",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "04f30416817551cfe0978290a51bbbddad1c3933c9a0c51572cb5d9e3d5bcf34",
+      "decision": "pass",
+      "reason": "Pass. The item follows the explicit practice setup with YOU just inside the right blue line and asks for the reset-side instruction; it is scoped to the coach's drill rather than presented as a formal offside judgment."
+    },
+    {
+      "questionId": "exp26b-u11-024-q2",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "9c8cbeac8a966d63af7d8953e24c885a8420b486fbb95f8456ea837329f4d210",
+      "decision": "pass",
+      "reason": "Pass. The communication choice uses the actual reset condition and distinguishes a useful call from claiming the drill is already complete or ignoring the coach."
+    },
+    {
+      "questionId": "exp26b-u11-024-q3",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "db7e668156c7213acffd4032baa61f8ade95835f12d60303c17da0f546b5497e",
+      "decision": "pass",
+      "reason": "Pass. The question tests what to check before the coach restarts, using F1 and the reset location without inventing a timing rule."
+    },
+    {
+      "questionId": "exp26b-u11-024-q4",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "948a1a328a2b243de9b3ed83cfd23ac5a8a5150e64e74572da2710be6f426a2d",
+      "decision": "pass",
+      "reason": "Pass. The position reference places YOU on the reset side with F1 visible, and the explanation ties that point to the practice instruction rather than a rendered line claim."
+    },
+    {
+      "questionId": "exp26b-u11-024-q5",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "73985727e04a780bd6ab41504c0471bcdf3c5e868f0b3e92dec16ee0554a528b",
+      "decision": "pass",
+      "reason": "Pass. The current choice asks what to do while waiting for the coach and keeps the drill state explicit; distractors are plausible premature restart behaviors."
+    },
+    {
+      "questionId": "exp26b-u11-024-q6",
+      "scenarioId": "exp26b-u11-024",
+      "scenarioVersion": 1,
+      "contentHash": "00c785ff19ef762887d30bcfdabdfa7d8eb134ad6f98b93a2e51697828bc5881",
+      "decision": "pass",
+      "reason": "Pass. The transfer item correctly says a formal timing/offside conclusion needs more information, preserving the boundary between observable setup and coaching instruction."
+    }
+  ],
+  "limits": [
+    "AI coaching review, not human approval; no rendered-image certification.",
+    "Static JSON review cannot certify renderer appearance, animation, timing, skating execution, contact safety, or local team policy.",
+    "Tactical suggestions are coaching prompts rather than universal systems; explicit drill conditions remain scoped to their scene."
+  ]
+}

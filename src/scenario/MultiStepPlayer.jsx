@@ -57,7 +57,7 @@ export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
       <div style={{ fontSize: 11, color: C.dimmer, fontFamily: FONT.body, marginBottom: ".3rem" }}>
         Read {state.path.length}
       </div>
-      <ScenarioRenderer scenario={frame} playerId={playerId} onAnswer={handleAnswer} />
+      <ScenarioRenderer key={state.nodeId} scenario={frame} playerId={playerId} onAnswer={handleAnswer} />
       {reveal && (
         <Card style={{ marginTop: ".6rem", background: C.purpleDim, border: `1px solid ${C.purpleBorder}` }}>
           {reveal.route && reveal.route.outcome && (

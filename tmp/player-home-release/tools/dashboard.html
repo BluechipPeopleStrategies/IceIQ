@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RinkReads Question Bank — Editor</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --bg-elev: #111a2e;
+    --bg-card: #151f38;
+    --border: #232b4d;
+    --text: #e6eaff;
+    --dim: #94a3b8;
+    --dimmer: #64748b;
+    --dimmest: rgba(148,163,184,0.12);
+    --accent: #fc4c02;
+    --accent-dim: rgba(252,76,2,0.15);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --gold: #fbbf24;
+    --gold-dim: rgba(251,191,36,0.15);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.15);
+    --blue: #5ba4e8;
+    --blue-dim: rgba(91,164,232,0.15);
+    --purple: #a855f7;
+    --purple-dim: rgba(168,85,247,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, sans-serif; min-height: 100vh; font-size: 14px; }
+  code { background: var(--dimmest); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  button {
+    background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
+    border-radius: 7px; padding: 5px 10px; font-size: 12px; font-family: inherit;
+    cursor: pointer; transition: border .15s, background .15s, transform .08s;
+    white-space: nowrap;
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:active:not(:disabled) { transform: scale(0.97); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #0b1220; font-weight: 700; }
+  button.primary:hover { background: #ff6a22; }
+  button.ghost { background: transparent; }
+  button.keep { color: var(--green); border-color: rgba(34,197,94,0.35); }
+  button.keep.active { background: var(--green-dim); color: var(--green); border-color: var(--green); }
+  button.flag { color: var(--gold); border-color: rgba(251,191,36,0.35); }
+  button.flag.active { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
+  button.kill { color: var(--red); border-color: rgba(239,68,68,0.35); }
+  button.kill.active { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+  input, select, textarea {
+    background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
+    border-radius: 7px; padding: 6px 10px; font-size: 13px; font-family: inherit; outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { width: 100%; resize: vertical; min-height: 50px; }
+
+  header {
+    padding: .75rem 1rem; border-bottom: 1px solid var(--border);
+    background: rgba(11,18,32,0.95);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .header-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  h1 { font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; }
+  .sub { font-size: 11px; color: var(--dim); }
+  .spacer { flex: 1; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .25rem;
+    padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700;
+    background: var(--dimmest); color: var(--dim);
+  }
+  .badge.green { background: var(--green-dim); color: var(--green); }
+  .badge.gold { background: var(--gold-dim); color: var(--gold); }
+  .badge.red { background: var(--red-dim); color: var(--red); }
+
+  main { max-width: 1400px; margin: 0 auto; padding: .75rem 1rem; }
+
+  .empty {
+    text-align: center; padding: 4rem 2rem; color: var(--dim);
+    background: var(--bg-elev); border: 1px dashed var(--border); border-radius: 14px;
+  }
+  .empty h2 { font-size: 1.4rem; margin-bottom: .6rem; color: var(--text); }
+
+  .summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: .5rem; margin-bottom: .75rem;
+  }
+  .stat {
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px;
+    padding: .55rem .75rem;
+  }
+  .stat-label { font-size: 9px; letter-spacing: .1em; color: var(--dimmer); text-transform: uppercase; font-weight: 700; }
+  .stat-value { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-top: 2px; line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--dim); margin-top: 3px; }
+
+  .filter-bar {
+    display: flex; gap: .45rem; flex-wrap: wrap; align-items: center;
+    padding: .55rem .65rem; background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: .75rem; position: sticky; top: 58px; z-index: 19;
+  }
+  .filter-bar label { font-size: 10px; letter-spacing: .08em; color: var(--dimmer); text-transform: uppercase; font-weight: 700; }
+  .chip {
+    padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer;
+    background: var(--dimmest); color: var(--dim); border: 1px solid transparent;
+    -webkit-user-select: none; user-select: none;
+  }
+  .chip:hover { color: var(--text); }
+  .chip.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+  .chip.keep.active { background: var(--green-dim); color: var(--green); border-color: var(--green); }
+  .chip.flag.active { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
+  .chip.kill.active { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+
+  .bulk-bar {
+    display: none; gap: .5rem; align-items: center; padding: .5rem .75rem;
+    background: var(--accent-dim); border: 1px solid var(--accent);
+    border-radius: 8px; margin-bottom: .75rem; font-size: 12px;
+  }
+  .bulk-bar.visible { display: flex; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  thead { background: var(--bg-card); }
+  th, td { padding: .5rem .6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  th { font-size: 10px; letter-spacing: .1em; color: var(--dimmer); font-weight: 700; text-transform: uppercase; }
+  tr.q-row:hover td { background: rgba(252,76,2,0.04); }
+  tr.q-row.expanded td { background: rgba(252,76,2,0.06); }
+  tr.q-row.kept td { border-left: 2px solid var(--green); }
+  tr.q-row.flagged td { border-left: 2px solid var(--gold); }
+  tr.q-row.killed td { border-left: 2px solid var(--red); opacity: 0.55; text-decoration: line-through; }
+  tr.q-row.killed td:first-child { text-decoration: none; }
+  td.clickable { cursor: pointer; }
+  td.trunc { max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  td input[type="checkbox"] { cursor: pointer; transform: scale(1.15); }
+
+  .row-actions {
+    display: flex; gap: 3px; flex-wrap: nowrap;
+  }
+  .row-actions button {
+    padding: 3px 7px; font-size: 11px; min-width: 26px;
+  }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 4px;
+    font-size: 9px; letter-spacing: .06em; font-weight: 700; text-transform: uppercase;
+    margin-right: 3px;
+  }
+  .pill-type { background: var(--blue-dim); color: var(--blue); }
+  .pill-rink { background: var(--purple-dim); color: var(--purple); }
+  .pill-multi { background: var(--accent-dim); color: var(--accent); }
+  .pill-polished { background: var(--green-dim); color: var(--green); }
+  .pill-cat { background: var(--dimmest); color: var(--dim); }
+
+  .detail { background: #0d1424; padding: .75rem 1rem; border-left: 2px solid var(--accent); }
+  .detail-actions { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .7rem; }
+  .detail-actions button { font-size: 11px; padding: 4px 10px; }
+  .detail pre {
+    margin: .4rem 0 0; padding: .6rem .75rem; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; font-family: ui-monospace, monospace; font-size: 11.5px;
+    color: var(--text); overflow-x: auto; white-space: pre-wrap; max-height: 320px; overflow-y: auto;
+  }
+  .detail-grid { display: grid; grid-template-columns: 120px 1fr; gap: .35rem .75rem; font-size: 12px; align-items: start; }
+  .detail-grid .k { color: var(--dimmer); font-weight: 600; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding-top: 6px; }
+  .detail-grid .v { color: var(--text); }
+  .editable {
+    cursor: text; padding: 4px 8px; border-radius: 6px; border: 1px dashed transparent;
+    transition: background .12s, border-color .12s; line-height: 1.5;
+  }
+  .editable:hover { background: var(--dimmest); border-color: var(--dimmer); }
+  .edit-input { width: 100%; font-family: inherit; font-size: 12px; padding: 6px 8px; }
+  .choice-card {
+    display: flex; align-items: center; gap: .6rem; padding: .55rem .75rem;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    margin: 0 0 .35rem; font-size: 13px; line-height: 1.4; color: var(--text);
+  }
+  .choice-card.correct {
+    background: rgba(34,197,94,0.08); border-color: var(--green); border-width: 1.5px;
+  }
+  .choice-card .ltr {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--dimmest);
+    color: var(--dim); font-size: 11px; font-weight: 800; display: inline-flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .choice-card.correct .ltr { background: var(--green); color: #0b1220; }
+  .choice-card .text { flex: 1; }
+  .choice-card .ok-badge {
+    background: var(--green); color: #0b1220; font-size: 9px; letter-spacing: .08em;
+    text-transform: uppercase; font-weight: 800; padding: 2px 8px; border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .pagination { display: flex; justify-content: center; gap: .3rem; margin: 1rem 0; flex-wrap: wrap; }
+  .pagination button { min-width: 32px; padding: 4px 8px; font-size: 12px; }
+  .pagination button.active { background: var(--accent); color: #0b1220; font-weight: 700; border-color: var(--accent); }
+
+  /* Floating action dock — pins to the bottom of the viewport whenever
+     a question is expanded, so the reviewer can Keep/Flag/Kill without
+     scrolling back up through the iframe + detail fields. */
+  .action-dock {
+    position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    display: none; gap: .4rem; align-items: center;
+    padding: .55rem .75rem; background: rgba(11,18,32,0.96);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    z-index: 40; font-size: 12px; max-width: calc(100vw - 2rem);
+    flex-wrap: nowrap; overflow-x: auto;
+  }
+  .action-dock.visible { display: flex; }
+  .action-dock .dock-meta {
+    display: flex; flex-direction: column; min-width: 0; margin-right: .35rem;
+    padding-right: .6rem; border-right: 1px solid var(--border);
+  }
+  .action-dock .dock-id { font-size: 11px; color: var(--text); font-weight: 800; white-space: nowrap; }
+  .action-dock .dock-sub { font-size: 9px; color: var(--dim); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+  .action-dock button { padding: 5px 11px; font-size: 12px; }
+  .toast {
+    position: fixed; top: 1rem; right: 1rem; border-radius: 10px; padding: .7rem 1rem;
+    font-size: 13px; z-index: 50; max-width: 380px; animation: slide-in .2s;
+  }
+  .toast.error { background: var(--red-dim); border: 1px solid var(--red); color: var(--red); }
+  .toast.success { background: var(--green-dim); border: 1px solid var(--green); color: var(--green); }
+  @keyframes slide-in { from { transform: translateX(8px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <h1>🏒 RinkReads Bank — Editor</h1>
+    <span id="dirty-badge" class="badge" style="display:none;"></span>
+    <div class="spacer"></div>
+    <input type="file" id="file-input" accept=".json" style="display:none">
+    <button type="button" onclick="document.getElementById('file-input').click()">📁 Load</button>
+    <button type="button" id="btn-export" disabled onclick="exportBank()">💾 Export</button>
+    <button type="button" id="btn-add" disabled onclick="addQuestion()">➕ New</button>
+    <button type="button" id="btn-reset-edits" disabled onclick="resetEdits()">↺ Reset edits</button>
+    <button type="button" id="btn-clear" disabled onclick="clearBank()">✕ Close</button>
+  </div>
+  <div id="file-status" class="sub" style="margin-top:.35rem; min-height:1em;"></div>
+</header>
+
+<main>
+  <div id="empty-state" class="empty">
+    <h2>Load the bank to begin</h2>
+    <p>Click <b>Load</b> above and pick <code>src/data/questions.json</code>, or drag the file anywhere on this page.</p>
+    <p style="margin-top:.5rem; font-size:12px;">Status (keep / flag / kill) and text edits persist in browser storage until you Export or Reset.</p>
+  </div>
+
+  <div id="action-dock" class="action-dock"></div>
+
+  <div id="dashboard" style="display:none;">
+    <div class="summary" id="summary"></div>
+    <div class="filter-bar" id="filters"></div>
+    <div class="bulk-bar" id="bulk-bar"></div>
+    <table id="qtable">
+      <thead>
+        <tr>
+          <th style="width:32px;"><input type="checkbox" id="select-all" onchange="toggleSelectAll()"></th>
+          <th style="width:90px">ID</th>
+          <th style="width:60px">Age</th>
+          <th style="width:60px">Type</th>
+          <th style="width:100px">Cat</th>
+          <th>Question</th>
+          <th style="width:120px">Tags</th>
+          <th style="width:200px">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="qtable-body"></tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</main>
+
+<script>
+// ─────────────────────────────────────────────
+// Constants
+// ─────────────────────────────────────────────
+const LS_STATUS = "rinkreads_dash_status_v2";   // { [questionId]: "keep"|"flag"|"kill" }
+const LS_EDITS  = "rinkreads_dash_edits_v2";    // { [questionId]: { q?, sit?, tip?, why?, cat?, d? } }
+const LS_ADDS   = "rinkreads_dash_adds_v2";     // array of new questions added in this session
+
+const PAGE_SIZE = 50;
+const AGE_ORDER = [
+  "U7 / Initiation", "U9 / Novice", "U11 / Atom",
+  "U13 / Peewee", "U15 / Bantam", "U18 / Midget",
+];
+const RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
+
+// ─────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────
+let BANK = null;                      // { [level]: [q, ...] }
+let FILTERS = { age: "", type: "", cat: "", tag: "", status: "", search: "" };
+let PAGE = 0;
+let EXPANDED = new Set();             // ids currently expanded
+let LAST_EXPANDED_ID = null;          // most recent expansion → drives the action dock
+let SELECTED = new Set();             // ids checkboxed
+let STATUS = loadLS(LS_STATUS, {});
+let EDITS  = loadLS(LS_EDITS, {});
+
+// ─────────────────────────────────────────────
+// LS helpers
+// ─────────────────────────────────────────────
+function loadLS(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || "") || fallback; }
+  catch { return fallback; }
+}
+function saveLS(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+}
+
+// ─────────────────────────────────────────────
+// Status workflow
+// ─────────────────────────────────────────────
+function setStatus(id, status) {
+  if (status === null || status === undefined || status === "") delete STATUS[id];
+  else STATUS[id] = status;
+  saveLS(LS_STATUS, STATUS);
+  updateDirtyBadge();
+  renderSummary();
+  renderTableRow(id);
+  renderDock();
+}
+function toggleStatus(id, status) {
+  const newStatus = STATUS[id] === status ? null : status;
+  setStatus(id, newStatus);
+  // Reviewer flow: applying a status (not clearing one) on the currently
+  // expanded question auto-advances to the next filtered question.
+  if (newStatus !== null && EXPANDED.has(id)) advanceToNext(id);
+}
+
+// Find the question that comes after `currentId` in the active filter
+// list, expand it, scroll it into view. If currentId is the last row,
+// just collapse and don't expand anything.
+function advanceToNext(currentId) {
+  const rows = filteredRows();
+  const idx = rows.findIndex(r => r.q.id === currentId);
+  EXPANDED.delete(currentId);
+  if (idx === -1 || idx >= rows.length - 1) {
+    // No next — collapse + render. Dock follows whatever else is expanded.
+    LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+    renderTable();
+    return;
+  }
+  // Page-jump if the next row is on a different page.
+  const nextIdx = idx + 1;
+  const nextPage = Math.floor(nextIdx / PAGE_SIZE);
+  if (nextPage !== PAGE) PAGE = nextPage;
+  const nextId = rows[nextIdx].q.id;
+  EXPANDED.add(nextId);
+  LAST_EXPANDED_ID = nextId;
+  renderTable();
+  // Scroll the newly-expanded row into view (behind the sticky header).
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-qid="${cssEscape(nextId)}"]`);
+    if (row) row.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 30);
+}
+
+function cssEscape(s) {
+  if (window.CSS && CSS.escape) return CSS.escape(s);
+  return String(s).replace(/[\W]/g, "\\$&");
+}
+function bulkStatus(status) {
+  for (const id of SELECTED) {
+    if (status === null) delete STATUS[id];
+    else STATUS[id] = status;
+  }
+  saveLS(LS_STATUS, STATUS);
+  SELECTED.clear();
+  updateDirtyBadge();
+  render();
+}
+
+// ─────────────────────────────────────────────
+// Text edits
+// ─────────────────────────────────────────────
+function editField(id, key, value) {
+  if (!EDITS[id]) EDITS[id] = {};
+  EDITS[id][key] = value;
+  saveLS(LS_EDITS, EDITS);
+  updateDirtyBadge();
+}
+function getField(q, key) {
+  return (EDITS[q.id] && EDITS[q.id][key] !== undefined) ? EDITS[q.id][key] : q[key];
+}
+function resetEdits() {
+  if (!confirm("Clear all status flags + text edits? (Won't affect the loaded bank until you export.)")) return;
+  STATUS = {}; EDITS = {};
+  saveLS(LS_STATUS, STATUS); saveLS(LS_EDITS, EDITS);
+  updateDirtyBadge();
+  render();
+  successToast("All edits cleared.");
+}
+function updateDirtyBadge() {
+  const statusCount = Object.keys(STATUS).length;
+  const editCount = Object.keys(EDITS).length;
+  const badge = document.getElementById("dirty-badge");
+  const btnReset = document.getElementById("btn-reset-edits");
+  const total = statusCount + editCount;
+  if (total === 0) {
+    badge.style.display = "none";
+    btnReset.disabled = true;
+  } else {
+    badge.style.display = "inline-flex";
+    badge.className = "badge gold";
+    badge.innerHTML = `⚐ ${statusCount} status · ${editCount} edited`;
+    btnReset.disabled = false;
+  }
+}
+
+// ─────────────────────────────────────────────
+// File IO
+// ─────────────────────────────────────────────
+document.getElementById("file-input").addEventListener("change", (e) => {
+  const f = e.target.files?.[0];
+  if (f) loadFile(f);
+  e.target.value = "";
+});
+
+async function loadFile(file) {
+  setFileStatus(`Loading <code>${escHtml(file.name)}</code>…`, "dim");
+  try {
+    let text = await file.text();
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    text = text.trim();
+    if (!text) throw new Error("File is empty.");
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      const m = /at position (\d+)/.exec(e.message);
+      if (m) {
+        const pos = parseInt(m[1], 10);
+        const context = text.slice(Math.max(0, pos - 40), Math.min(text.length, pos + 40));
+        throw new Error(`${e.message}\nNear: …${context}…`);
+      }
+      throw e;
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error('Expected a level-keyed object (e.g. {"U11 / Atom": [...]} ).');
+    }
+    for (const [lvl, rows] of Object.entries(parsed)) {
+      if (!Array.isArray(rows)) throw new Error(`Level "${lvl}" is not an array.`);
+    }
+    BANK = parsed;
+    setFileStatus(
+      `✓ Loaded <code>${escHtml(file.name)}</code> — <b>${countQuestions()}</b> rows across <b>${Object.keys(BANK).length}</b> ages.`,
+      "green"
+    );
+    ["btn-export","btn-add","btn-clear"].forEach(id => document.getElementById(id).disabled = false);
+    document.getElementById("empty-state").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    PAGE = 0;
+    EXPANDED.clear();
+    LAST_EXPANDED_ID = null;
+    SELECTED.clear();
+    updateDirtyBadge();
+    render();
+  } catch (e) {
+    errorToast("Could not parse file: " + e.message);
+    setFileStatus(`✗ Load failed: ${escHtml(e.message)}`, "red");
+  }
+}
+
+function exportBank() {
+  if (!BANK) return;
+  // Build the output: apply edits, drop "kill" status, keep everything else.
+  const out = {};
+  let kept = 0, killed = 0, edited = 0;
+  for (const [lvl, rows] of Object.entries(BANK)) {
+    const outRows = [];
+    for (const q of rows) {
+      if (STATUS[q.id] === "kill") { killed++; continue; }
+      const edits = EDITS[q.id];
+      if (edits) {
+        const merged = { ...q, ...edits };
+        outRows.push(merged);
+        edited++;
+      } else {
+        outRows.push(q);
+      }
+      kept++;
+    }
+    if (outRows.length > 0) out[lvl] = outRows;
+  }
+  const text = JSON.stringify(out, null, 2) + "\n";
+  const blob = new Blob([text], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "questions.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  successToast(`Exported: ${kept} kept · ${killed} killed · ${edited} edited`);
+}
+
+function clearBank() {
+  if (Object.keys(STATUS).length + Object.keys(EDITS).length > 0) {
+    if (!confirm("You have pending edits. Close anyway?")) return;
+  }
+  BANK = null;
+  ["btn-export","btn-add","btn-clear"].forEach(id => document.getElementById(id).disabled = true);
+  document.getElementById("empty-state").style.display = "block";
+  document.getElementById("dashboard").style.display = "none";
+  setFileStatus("", "");
+}
+
+function countQuestions() {
+  if (!BANK) return 0;
+  let n = 0;
+  for (const lvl of Object.keys(BANK)) n += (BANK[lvl] || []).length;
+  return n;
+}
+
+// ─────────────────────────────────────────────
+// Row ops
+// ─────────────────────────────────────────────
+function addQuestion() {
+  if (!BANK) return;
+  const lvl = FILTERS.age || "U11 / Atom";
+  if (!BANK[lvl]) BANK[lvl] = [];
+  const id = `new_${Date.now().toString(36)}`;
+  const newQ = { id, cat: "Coachability", pos: ["F","D"], d: 1, type: "mc",
+    q: "New question — tap to edit.",
+    choices: ["Correct answer.", "Wrong answer.", "Wrong answer.", "Wrong answer."],
+    correct: 0,
+    tip: "Tip for this question.",
+    why: "Why the correct answer is correct." };
+  BANK[lvl].push(newQ);
+  EXPANDED.add(id);
+  LAST_EXPANDED_ID = id;
+  successToast(`Added new question ${id} to ${lvl}`);
+  render();
+}
+
+function duplicateQuestion(id) {
+  const found = allRows().find(r => r.q.id === id);
+  if (!found) return;
+  const merged = { ...found.q, ...(EDITS[id] || {}) };
+  const newId = `${id}_copy${Math.random().toString(36).slice(2, 6)}`;
+  const dup = { ...merged, id: newId };
+  BANK[found.level].push(dup);
+  EXPANDED.add(newId);
+  LAST_EXPANDED_ID = newId;
+  successToast(`Duplicated → ${newId}`);
+  render();
+}
+
+function deleteQuestion(id) {
+  if (!confirm(`Delete question ${id} from the bank? (Can't undo without re-loading.)`)) return;
+  for (const lvl of Object.keys(BANK)) {
+    BANK[lvl] = BANK[lvl].filter(q => q.id !== id);
+  }
+  delete STATUS[id]; delete EDITS[id];
+  saveLS(LS_STATUS, STATUS); saveLS(LS_EDITS, EDITS);
+  EXPANDED.delete(id); SELECTED.delete(id);
+  if (LAST_EXPANDED_ID === id) LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+  updateDirtyBadge();
+  successToast(`Deleted ${id}`);
+  render();
+}
+
+function moveToAge(id, toLevel) {
+  const found = allRows().find(r => r.q.id === id);
+  if (!found || found.level === toLevel) return;
+  BANK[found.level] = BANK[found.level].filter(q => q.id !== id);
+  if (!BANK[toLevel]) BANK[toLevel] = [];
+  BANK[toLevel].push(found.q);
+  successToast(`Moved ${id} to ${toLevel.split(" / ")[0]}`);
+  render();
+}
+
+function toggleMultiAge(id, level) {
+  const found = allRows().find(r => r.q.id === id);
+  if (!found) return;
+  // Read current levels from the merged view (q + EDITS) so successive
+  // clicks accumulate. Reading found.q.levels alone was stale and caused
+  // each click to overwrite the previous one.
+  const editedLevels = EDITS[id] && Array.isArray(EDITS[id].levels) ? EDITS[id].levels : null;
+  const baseLevels = editedLevels
+    || (Array.isArray(found.q.levels) ? found.q.levels : null)
+    || [found.level];
+  const cur = [...baseLevels];
+  const idx = cur.indexOf(level);
+  if (idx >= 0) cur.splice(idx, 1);
+  else cur.push(level);
+  // Always include the primary level — toggling it off doesn't make sense.
+  if (!cur.includes(found.level)) cur.push(found.level);
+  // If only the primary level remains, remove the field entirely.
+  if (cur.length === 1 && cur[0] === found.level) {
+    if (EDITS[id]) {
+      delete EDITS[id].levels;
+      if (Object.keys(EDITS[id]).length === 0) delete EDITS[id];
+      saveLS(LS_EDITS, EDITS);
+      updateDirtyBadge();
+    }
+  } else {
+    editField(id, "levels", cur);
+  }
+  renderTableRow(id);
+}
+
+function bumpDifficulty(id, delta) {
+  const found = allRows().find(r => r.q.id === id);
+  if (!found) return;
+  const cur = (EDITS[id] && EDITS[id].d !== undefined) ? EDITS[id].d : (found.q.d || 1);
+  const next = Math.max(1, Math.min(3, cur + delta));
+  editField(id, "d", next);
+  renderTableRow(id);
+}
+
+function setCategory(id, cat) {
+  editField(id, "cat", cat);
+  renderTableRow(id);
+}
+
+function copyJson(id) {
+  const found = allRows().find(r => r.q.id === id);
+  if (!found) return;
+  const merged = { ...found.q, ...(EDITS[id] || {}) };
+  navigator.clipboard.writeText(JSON.stringify(merged, null, 2))
+    .then(() => successToast(`Copied ${id}`))
+    .catch(() => errorToast("Clipboard blocked."));
+}
+
+function copyId(id) {
+  navigator.clipboard.writeText(id)
+    .then(() => successToast(`Copied ${id}`))
+    .catch(() => errorToast("Clipboard blocked."));
+}
+
+// ─────────────────────────────────────────────
+// Bulk select
+// ─────────────────────────────────────────────
+function toggleRowSelect(id) {
+  if (SELECTED.has(id)) SELECTED.delete(id);
+  else SELECTED.add(id);
+  renderBulkBar();
+}
+
+function toggleSelectAll() {
+  const rows = filteredRows();
+  const allSelected = rows.every(r => SELECTED.has(r.q.id));
+  if (allSelected) {
+    for (const r of rows) SELECTED.delete(r.q.id);
+  } else {
+    for (const r of rows) SELECTED.add(r.q.id);
+  }
+  renderTable();
+  renderBulkBar();
+}
+
+// ─────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────
+function allRows() {
+  if (!BANK) return [];
+  const out = [];
+  const orderedLevels = AGE_ORDER.concat(Object.keys(BANK).filter(k => !AGE_ORDER.includes(k)));
+  for (const lvl of orderedLevels) {
+    const rows = BANK[lvl] || [];
+    for (const q of rows) out.push({ level: lvl, q });
+  }
+  return out;
+}
+
+function filteredRows() {
+  return allRows().filter(({ level, q }) => {
+    if (FILTERS.age && level !== FILTERS.age) return false;
+    const t = q.type || "mc";
+    if (FILTERS.type) {
+      if (FILTERS.type === "rink") {
+        if (!RINK_TYPES.includes(t) && !q.rink) return false;
+      } else if (t !== FILTERS.type) return false;
+    }
+    if (FILTERS.cat) {
+      const cat = getField(q, "cat");
+      if (cat !== FILTERS.cat) return false;
+    }
+    if (FILTERS.tag === "multi" && !(Array.isArray(q.levels) && q.levels.length > 1)) return false;
+    if (FILTERS.tag === "polished") {
+      const polished = Array.isArray(q.idealPath) || (Array.isArray(q.targets) && q.targets.some(t => t && t.verdict));
+      if (!polished) return false;
+    }
+    if (FILTERS.status) {
+      const s = STATUS[q.id];
+      if (FILTERS.status === "none" && s) return false;
+      if (FILTERS.status !== "none" && s !== FILTERS.status) return false;
+    }
+    if (FILTERS.search) {
+      const s = FILTERS.search.toLowerCase();
+      const edits = EDITS[q.id] || {};
+      const blob = [q.id, edits.q || q.q, edits.sit || q.sit, edits.cat || q.cat, edits.tip || q.tip, edits.why || q.why]
+        .filter(Boolean).join(" ").toLowerCase();
+      if (!blob.includes(s)) return false;
+    }
+    return true;
+  });
+}
+
+function render() {
+  if (!BANK) return;
+  renderSummary();
+  renderFilters();
+  renderBulkBar();
+  renderTable();
+}
+
+function renderSummary() {
+  const rows = allRows();
+  const total = rows.length;
+  const multi = rows.filter(r => Array.isArray(r.q.levels) && r.q.levels.length > 1).length;
+  const rink = rows.filter(r => RINK_TYPES.includes(r.q.type) || r.q.rink).length;
+  const polished = rows.filter(r => Array.isArray(r.q.idealPath) || (Array.isArray(r.q.targets) && r.q.targets.some(t => t && t.verdict))).length;
+  const kept = rows.filter(r => STATUS[r.q.id] === "keep").length;
+  const flagged = rows.filter(r => STATUS[r.q.id] === "flag").length;
+  const killed = rows.filter(r => STATUS[r.q.id] === "kill").length;
+  const byAge = AGE_ORDER.map(lvl => ({ lvl, n: (BANK[lvl] || []).length })).filter(x => x.n > 0);
+  const byAgeHtml = byAge.map(x => `<div><b>${x.n}</b> ${escHtml(x.lvl.split(" / ")[0])}</div>`).join("");
+
+  document.getElementById("summary").innerHTML = `
+    <div class="stat"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-sub">rows</div></div>
+    <div class="stat" style="border-left:3px solid var(--green);"><div class="stat-label">Kept</div><div class="stat-value" style="color:var(--green);">${kept}</div><div class="stat-sub">keep</div></div>
+    <div class="stat" style="border-left:3px solid var(--gold);"><div class="stat-label">Flagged</div><div class="stat-value" style="color:var(--gold);">${flagged}</div><div class="stat-sub">needs review</div></div>
+    <div class="stat" style="border-left:3px solid var(--red);"><div class="stat-label">Killed</div><div class="stat-value" style="color:var(--red);">${killed}</div><div class="stat-sub">drop on export</div></div>
+    <div class="stat"><div class="stat-label">Multi-age</div><div class="stat-value">${multi}</div><div class="stat-sub">${total ? Math.round(multi/total*100) : 0}% tagged</div></div>
+    <div class="stat"><div class="stat-label">Rink</div><div class="stat-value">${rink}</div><div class="stat-sub">interactive</div></div>
+    <div class="stat"><div class="stat-label">Polished</div><div class="stat-value">${polished}</div><div class="stat-sub">idealPath / verdicts</div></div>
+    <div class="stat" style="grid-column: span 2;">
+      <div class="stat-label">By age</div>
+      <div style="display:flex; gap:.7rem; flex-wrap:wrap; margin-top:3px; font-size:11px; color:var(--dim);">${byAgeHtml}</div>
+    </div>
+  `;
+}
+
+function renderFilters() {
+  const rows = allRows();
+  const ages = [...new Set(rows.map(r => r.level))].filter(Boolean);
+  const types = [...new Set(rows.map(r => r.q.type || "mc"))].sort();
+  const cats = [...new Set(rows.map(r => getField(r.q, "cat")).filter(Boolean))].sort();
+
+  const chip = (label, value, active, group, cls = "") =>
+    `<span class="chip ${cls} ${active ? "active" : ""}" data-group="${group}" data-value="${escAttr(value)}">${escHtml(label)}</span>`;
+
+  document.getElementById("filters").innerHTML = `
+    <input id="search-input" placeholder="Search id, text, tip…" style="min-width:200px;" value="${escAttr(FILTERS.search)}">
+    <select id="age-select">
+      <option value="">All ages</option>
+      ${ages.map(a => `<option value="${escAttr(a)}" ${FILTERS.age === a ? "selected" : ""}>${escHtml(a)}</option>`).join("")}
+    </select>
+    <select id="type-select">
+      <option value="">All types</option>
+      <option value="rink" ${FILTERS.type === "rink" ? "selected" : ""}>Any Rink</option>
+      ${types.map(t => `<option value="${escAttr(t)}" ${FILTERS.type === t ? "selected" : ""}>${escHtml(t)}</option>`).join("")}
+    </select>
+    <select id="cat-select">
+      <option value="">All cats</option>
+      ${cats.map(c => `<option value="${escAttr(c)}" ${FILTERS.cat === c ? "selected" : ""}>${escHtml(c)}</option>`).join("")}
+    </select>
+    <span style="flex:1;"></span>
+    <label>Status:</label>
+    ${chip("Any", "", !FILTERS.status, "status")}
+    ${chip("Unreviewed", "none", FILTERS.status === "none", "status")}
+    ${chip("✓ Keep", "keep", FILTERS.status === "keep", "status", "keep")}
+    ${chip("⚑ Flag", "flag", FILTERS.status === "flag", "status", "flag")}
+    ${chip("✗ Kill", "kill", FILTERS.status === "kill", "status", "kill")}
+    <span style="width:1px; height:20px; background:var(--border);"></span>
+    <label>Tag:</label>
+    ${chip("Any", "", !FILTERS.tag, "tag")}
+    ${chip("Multi-age", "multi", FILTERS.tag === "multi", "tag")}
+    ${chip("Polished", "polished", FILTERS.tag === "polished", "tag")}
+  `;
+
+  document.getElementById("search-input").addEventListener("input", (e) => {
+    FILTERS.search = e.target.value; PAGE = 0; renderTable();
+  });
+  document.getElementById("age-select").addEventListener("change", (e) => { FILTERS.age = e.target.value; PAGE = 0; render(); });
+  document.getElementById("type-select").addEventListener("change", (e) => { FILTERS.type = e.target.value; PAGE = 0; render(); });
+  document.getElementById("cat-select").addEventListener("change", (e) => { FILTERS.cat = e.target.value; PAGE = 0; render(); });
+  document.querySelectorAll(".filter-bar .chip").forEach(el => {
+    el.addEventListener("click", () => {
+      const group = el.dataset.group;
+      FILTERS[group] = el.dataset.value;
+      PAGE = 0;
+      render();
+    });
+  });
+}
+
+function renderBulkBar() {
+  const bar = document.getElementById("bulk-bar");
+  if (SELECTED.size === 0) {
+    bar.classList.remove("visible");
+    bar.innerHTML = "";
+    return;
+  }
+  bar.classList.add("visible");
+  bar.innerHTML = `
+    <b>${SELECTED.size}</b> selected
+    <span style="flex:1;"></span>
+    <button type="button" class="keep" onclick="bulkStatus('keep')">✓ Keep all</button>
+    <button type="button" class="flag" onclick="bulkStatus('flag')">⚑ Flag all</button>
+    <button type="button" class="kill" onclick="bulkStatus('kill')">✗ Kill all</button>
+    <button type="button" onclick="bulkStatus(null)">↺ Clear status</button>
+    <button type="button" class="ghost" onclick="SELECTED.clear(); render();">✕ Deselect</button>
+  `;
+}
+
+function renderTable() {
+  const rows = filteredRows();
+  const total = rows.length;
+  const start = PAGE * PAGE_SIZE;
+  const end = Math.min(total, start + PAGE_SIZE);
+  const slice = rows.slice(start, end);
+
+  const body = document.getElementById("qtable-body");
+  body.innerHTML = slice.map(r => rowHTML(r)).join("");
+
+  // Pagination.
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const pg = document.getElementById("pagination");
+  if (pages <= 1) {
+    pg.innerHTML = total === 0
+      ? `<div style="text-align:center; padding:2rem; color:var(--dim);">No questions match the current filters.</div>`
+      : "";
+  } else {
+    const buttons = [];
+    buttons.push(`<button type="button" ${PAGE === 0 ? "disabled" : ""} onclick="setPage(${PAGE - 1})">‹</button>`);
+    const around = [0, PAGE - 1, PAGE, PAGE + 1, pages - 1].filter(p => p >= 0 && p < pages);
+    const set = [...new Set(around)].sort((a, b) => a - b);
+    let last = -2;
+    for (const p of set) {
+      if (p - last > 1) buttons.push(`<span style="padding:6px; color:var(--dimmer);">…</span>`);
+      buttons.push(`<button type="button" class="${PAGE === p ? "active" : ""}" onclick="setPage(${p})">${p + 1}</button>`);
+      last = p;
+    }
+    buttons.push(`<button type="button" ${PAGE >= pages - 1 ? "disabled" : ""} onclick="setPage(${PAGE + 1})">›</button>`);
+    pg.innerHTML = buttons.join("");
+  }
+
+  document.getElementById("select-all").checked = slice.length > 0 && slice.every(r => SELECTED.has(r.q.id));
+  renderDock();
+}
+
+function renderTableRow(id) {
+  // Partial re-render: rebuild the whole table for now; it's fast enough
+  // at <50 rows/page and keeps the code path simple.
+  renderTable();
+  renderBulkBar();
+  renderSummary();
+}
+
+function rowHTML({ level, q }) {
+  const t = q.type || "mc";
+  const cat = getField(q, "cat") || "";
+  const isMulti = Array.isArray(q.levels) && q.levels.length > 1;
+  const isRink = RINK_TYPES.includes(t) || !!q.rink;
+  const isPolished = Array.isArray(q.idealPath) || (Array.isArray(q.targets) && q.targets.some(tg => tg && tg.verdict));
+  const qText = getField(q, "q") || getField(q, "sit") || "(no text)";
+  const tags = [
+    isRink ? `<span class="pill pill-rink">rink</span>` : "",
+    isMulti ? `<span class="pill pill-multi">${q.levels.length}ages</span>` : "",
+    isPolished ? `<span class="pill pill-polished">polished</span>` : "",
+  ].filter(Boolean).join("");
+  const expanded = EXPANDED.has(q.id);
+  const ageShort = level.split(" / ")[0] || level;
+  const status = STATUS[q.id] || "";
+  const hasEdits = !!EDITS[q.id];
+  const isSelected = SELECTED.has(q.id);
+  const rowClass = `q-row ${expanded ? "expanded" : ""} ${status ? status + "ed" : ""}`;
+
+  return `
+    <tr class="${rowClass}" data-qid="${escAttr(q.id)}">
+      <td onclick="event.stopPropagation(); toggleRowSelect('${escAttr(q.id)}'); renderTable();"><input type="checkbox" ${isSelected ? "checked" : ""}></td>
+      <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')"><code>${escHtml(q.id || "")}</code>${hasEdits ? ' <span style="color:var(--gold); font-size:10px;">●</span>' : ""}</td>
+      <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')">${escHtml(ageShort)}</td>
+      <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')"><span class="pill pill-type">${escHtml(t)}</span></td>
+      <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')"><span class="pill pill-cat">${escHtml(cat)}</span></td>
+      <td class="clickable trunc" onclick="toggleExpand('${escAttr(q.id)}')">${escHtml(qText)}</td>
+      <td>${tags}</td>
+      <td>
+        <div class="row-actions">
+          <button type="button" class="keep ${status === "keep" ? "active" : ""}" title="Keep"
+            onclick="event.stopPropagation(); toggleStatus('${escAttr(q.id)}', 'keep');">✓</button>
+          <button type="button" class="flag ${status === "flag" ? "active" : ""}" title="Flag for review"
+            onclick="event.stopPropagation(); toggleStatus('${escAttr(q.id)}', 'flag');">⚑</button>
+          <button type="button" class="kill ${status === "kill" ? "active" : ""}" title="Kill (remove on export)"
+            onclick="event.stopPropagation(); toggleStatus('${escAttr(q.id)}', 'kill');">✗</button>
+          <button type="button" title="Edit (expand)" onclick="event.stopPropagation(); toggleExpand('${escAttr(q.id)}');">✎</button>
+          <button type="button" title="Duplicate" onclick="event.stopPropagation(); duplicateQuestion('${escAttr(q.id)}');">⎘</button>
+          <button type="button" title="Copy JSON" onclick="event.stopPropagation(); copyJson('${escAttr(q.id)}');">⧉</button>
+        </div>
+      </td>
+    </tr>
+    ${expanded ? `<tr><td colspan="8"><div class="detail">${detailHTML(q, level)}</div></td></tr>` : ""}
+  `;
+}
+
+function detailHTML(q, primaryLevel) {
+  const id = q.id;
+  const curQ = getField(q, "q") || "";
+  const curSit = getField(q, "sit") || "";
+  const curTip = getField(q, "tip") || "";
+  const curWhy = getField(q, "why") || "";
+  const curCat = getField(q, "cat") || "";
+  const curD = (EDITS[id] && EDITS[id].d !== undefined) ? EDITS[id].d : (q.d || 1);
+  // Pull the merged levels list (EDITS overrides q.levels) so the chip
+  // highlights stay in sync between successive clicks.
+  const editedLevels = EDITS[id] && Array.isArray(EDITS[id].levels) ? EDITS[id].levels : null;
+  const mergedLevels = editedLevels || (Array.isArray(q.levels) ? q.levels : null) || [primaryLevel];
+  const activeLevels = new Set(mergedLevels.length ? mergedLevels : [primaryLevel]);
+  const catOptions = getAllCats();
+  const ageOptions = AGE_ORDER;
+  const merged = { ...q, ...(EDITS[id] || {}) };
+  // For most types `correct`/`ok` is a single index; for `multi` it's an
+  // array of indices. We fall back to a Set so the renderer below can do
+  // membership checks uniformly.
+  const correctSet = new Set(
+    Array.isArray(q.correct) ? q.correct
+      : typeof q.correct === "number" ? [q.correct]
+      : typeof q.ok === "number" ? [q.ok]
+      : []
+  );
+  const correct = typeof q.correct === "number" ? q.correct : q.ok;
+  const isMulti = q.type === "multi";
+  const choices = Array.isArray(q.choices) && q.choices.length
+    ? q.choices
+    : (Array.isArray(q.opts) ? q.opts : null);
+
+  return `
+    <div class="detail-actions">
+      <button type="button" class="keep ${STATUS[id] === "keep" ? "active" : ""}" onclick="toggleStatus('${escAttr(id)}', 'keep')">✓ Keep</button>
+      <button type="button" class="flag ${STATUS[id] === "flag" ? "active" : ""}" onclick="toggleStatus('${escAttr(id)}', 'flag')">⚑ Flag</button>
+      <button type="button" class="kill ${STATUS[id] === "kill" ? "active" : ""}" onclick="toggleStatus('${escAttr(id)}', 'kill')">✗ Kill</button>
+      <span style="width:1px; background:var(--border); margin:0 4px;"></span>
+      <button type="button" onclick="duplicateQuestion('${escAttr(id)}')">⎘ Duplicate</button>
+      <button type="button" onclick="copyJson('${escAttr(id)}')">⧉ Copy JSON</button>
+      <button type="button" onclick="copyId('${escAttr(id)}')">#️⃣ Copy ID</button>
+      <button type="button" class="kill" onclick="deleteQuestion('${escAttr(id)}')">🗑 Delete</button>
+      <span style="flex:1;"></span>
+      <button type="button" class="ghost" onclick="toggleExpand('${escAttr(id)}')">Close ✕</button>
+    </div>
+
+    ${renderRinkPreview(merged)}
+
+    <div class="detail-grid">
+      <div class="k">Question</div>
+      <div class="v"><div class="editable" contenteditable="true" oninput="editField('${escAttr(id)}','q', this.textContent)">${escHtml(curQ)}</div></div>
+
+      ${curSit !== "" || q.sit !== undefined ? `
+      <div class="k">Situation</div>
+      <div class="v"><div class="editable" contenteditable="true" oninput="editField('${escAttr(id)}','sit', this.textContent)">${escHtml(curSit)}</div></div>
+      ` : ""}
+
+      <div class="k">Tip</div>
+      <div class="v"><div class="editable" contenteditable="true" oninput="editField('${escAttr(id)}','tip', this.textContent)">${escHtml(curTip)}</div></div>
+
+      <div class="k">Why</div>
+      <div class="v"><div class="editable" contenteditable="true" oninput="editField('${escAttr(id)}','why', this.textContent)">${escHtml(curWhy)}</div></div>
+
+      <div class="k">Category</div>
+      <div class="v">
+        <select onchange="setCategory('${escAttr(id)}', this.value)">
+          ${catOptions.map(c => `<option value="${escAttr(c)}" ${c === curCat ? "selected" : ""}>${escHtml(c)}</option>`).join("")}
+        </select>
+      </div>
+
+      <div class="k">Difficulty</div>
+      <div class="v">
+        <button type="button" onclick="bumpDifficulty('${escAttr(id)}', -1)">−</button>
+        <span style="margin:0 8px; font-weight:700;">${curD}</span>
+        <button type="button" onclick="bumpDifficulty('${escAttr(id)}', 1)">+</button>
+        <span style="margin-left:8px; color:var(--dim); font-size:11px;">1 = Easy · 2 = Medium · 3 = Hard</span>
+      </div>
+
+      <div class="k">Age (primary)</div>
+      <div class="v">
+        ${ageOptions.map(a => `
+          <button type="button" style="margin-right:3px;"
+            class="${a === primaryLevel ? "primary" : ""}"
+            onclick="moveToAge('${escAttr(id)}', '${escAttr(a)}')">${escHtml(a.split(" / ")[0])}</button>
+        `).join("")}
+      </div>
+
+      <div class="k">Also runs at</div>
+      <div class="v">
+        ${ageOptions.map(a => a === primaryLevel ? "" : `
+          <button type="button" class="${activeLevels.has(a) ? "primary" : ""}" style="margin-right:3px;"
+            onclick="toggleMultiAge('${escAttr(id)}', '${escAttr(a)}')">
+            ${activeLevels.has(a) ? "✓" : "+"} ${escHtml(a.split(" / ")[0])}
+          </button>
+        `).join("")}
+      </div>
+
+      ${choices ? `
+      <div class="k">${isMulti ? "Choices · select all correct" : "Choices"}</div>
+      <div class="v">
+        ${choices.map((c, i) => {
+          const isCorrect = correctSet.has(i);
+          return `
+          <div class="choice-card ${isCorrect ? "correct" : ""}">
+            <span class="ltr">${String.fromCharCode(65 + i)}</span>
+            <span class="text">${escHtml(String(c))}</span>
+            ${isCorrect ? '<span class="ok-badge">✓ Correct</span>' : ""}
+          </div>
+        `;}).join("")}
+      </div>` : ""}
+
+      ${q.type === "tf" ? `
+      <div class="k">Answer</div>
+      <div class="v">
+        <div class="choice-card ${q.ok ? "correct" : ""}">
+          <span class="ltr">T</span><span class="text">True</span>
+          ${q.ok ? '<span class="ok-badge">✓ Correct</span>' : ""}
+        </div>
+        <div class="choice-card ${!q.ok ? "correct" : ""}">
+          <span class="ltr">F</span><span class="text">False</span>
+          ${!q.ok ? '<span class="ok-badge">✓ Correct</span>' : ""}
+        </div>
+      </div>
+      ` : ""}
+
+      <div class="k">Raw JSON</div>
+      <div class="v">
+        <pre>${escHtml(JSON.stringify(merged, null, 2))}</pre>
+      </div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// Inline rink preview — vanilla SVG re-implementation of the app's
+// RinkReadsRink + markers. Good enough for visual review of top-down scenes
+// (zone-click, multi-tap, hot-spots, lane-select, drag-target, path-draw,
+// sequence-rink, drag-place). POV questions show a badge placeholder
+// since they need RinkReadsPOVRink which we can't easily port.
+// ─────────────────────────────────────────────
+const VIEW_BOX = {
+  full:    "0 0 600 300",
+  left:    "0 0 300 300",
+  right:   "300 0 300 300",
+  neutral: "213 0 174 300",
+};
+function rinkShell(view = "full") {
+  const vb = VIEW_BOX[view] || VIEW_BOX.full;
+  // 600x300 rink. Blue lines at 240 and 360. Red center at 300. Goals at 15/585.
+  const shell = `
+    <rect x="8" y="8" width="584" height="284" rx="36"
+      fill="#eaf1ff" stroke="#8ba7d8" stroke-width="1.4" opacity="0.32"/>
+    <line x1="300" y1="8" x2="300" y2="292" stroke="#dc2626" stroke-width="2" opacity="0.55"/>
+    <line x1="240" y1="8" x2="240" y2="292" stroke="#1e5799" stroke-width="3" opacity="0.6"/>
+    <line x1="360" y1="8" x2="360" y2="292" stroke="#1e5799" stroke-width="3" opacity="0.6"/>
+    <line x1="15"  y1="8" x2="15"  y2="292" stroke="#dc2626" stroke-width="1.4" opacity="0.45"/>
+    <line x1="585" y1="8" x2="585" y2="292" stroke="#dc2626" stroke-width="1.4" opacity="0.45"/>
+    <circle cx="300" cy="150" r="34" fill="none" stroke="#dc2626" stroke-width="1.2" opacity="0.5"/>
+    <rect x="5"   y="140" width="10" height="30" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.7"/>
+    <rect x="585" y="140" width="10" height="30" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.7"/>
+  `;
+  return { vb, shell };
+}
+
+function markerSvg(m) {
+  if (!m || typeof m.x !== "number" || typeof m.y !== "number") return "";
+  // Sizes match the app's RinkReadsRink.jsx so the dashboard preview is
+  // visually identical to what users see in-app. Players r=6, goalie is
+  // a vertical ellipse, puck is a small dark ellipse, number markers
+  // share the player size.
+  const fills = { attacker: "#E24B4A", defender: "#2C2C2A", teammate: "#1D9E75", player: "#185FA5", coach: "#BA7517" };
+  const labels = { attacker: "X", defender: "D", teammate: "T", player: "O", coach: "C" };
+
+  if (m.type === "puck") {
+    // Standard display puck — matches RinkReadsRink.jsx (rx=4, ry=1.6).
+    return `<g transform="translate(${m.x},${m.y})">
+      <ellipse cx="0" cy="0.4" rx="4" ry="1.6" fill="#2C2C2A" stroke="#fff" stroke-width="0.4"/>
+    </g>`;
+  }
+  if (m.type === "goalie") {
+    const correctRing = m.correct === true ? `<ellipse cx="0" cy="0" rx="9" ry="11" fill="none" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.85"/>` : "";
+    return `<g transform="translate(${m.x},${m.y})">
+      ${correctRing}
+      <ellipse cx="0" cy="0" rx="4.8" ry="6.2" fill="#444441" stroke="#fff" stroke-width="0.7"/>
+      <text x="0" y="1.9" text-anchor="middle" fill="#fff" font-size="5.6" font-weight="700" font-family="ui-sans-serif,system-ui,sans-serif">G</text>
+    </g>`;
+  }
+  if (m.type === "number") {
+    return `<g transform="translate(${m.x},${m.y})">
+      <circle cx="0" cy="0" r="6" fill="#EEEDFE" stroke="#3C3489" stroke-width="0.7"/>
+      <text x="0" y="1.9" text-anchor="middle" fill="#3C3489" font-size="5.6" font-weight="700" font-family="ui-sans-serif,system-ui,sans-serif">${escHtml(m.label || "1")}</text>
+    </g>`;
+  }
+  if (m.type === "text") {
+    return `<g transform="translate(${m.x},${m.y})">
+      <text x="0" y="1.8" text-anchor="middle" fill="#2C2C2A" font-size="6.5" font-weight="700" font-family="ui-sans-serif,system-ui,sans-serif">${escHtml(m.label || "Text")}</text>
+    </g>`;
+  }
+
+  const fill = fills[m.type] || "#185FA5";
+  const text = m.label || labels[m.type] || "";
+  const isYou = m.label === "YOU" || m.label === "ME";
+  const playerRadius = isYou ? 7 : 6;
+  const isDefender = m.type === "defender";
+  const patternId = isDefender ? `def-stripes-${Math.round(m.x)}-${Math.round(m.y)}` : null;
+  const correctRing = m.correct === true ? `<circle cx="0" cy="0" r="${playerRadius + 3}" fill="none" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.85"/>` : "";
+  return `
+    <g transform="translate(${m.x},${m.y})">
+      ${isDefender ? `<defs>
+        <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="2" height="2">
+          <rect width="2" height="2" fill="${fill}"/>
+          <line x1="0" y1="0" x2="0" y2="2" stroke="#5a5a58" stroke-width="0.6"/>
+        </pattern>
+      </defs>` : ""}
+      ${correctRing}
+      <circle cx="0" cy="0" r="${playerRadius}" fill="${isDefender ? `url(#${patternId})` : fill}" stroke="#fff" stroke-width="${isYou ? 1.0 : 0.7}"/>
+      <text x="0" y="2" text-anchor="middle" fill="#fff" font-size="5.6" font-weight="700" font-family="ui-sans-serif,system-ui,sans-serif">${escHtml(text)}</text>
+    </g>
+  `;
+}
+
+function typeSpecificSvg(q) {
+  const out = [];
+  const t = q.type;
+  // drag-target — render puckStart as the red puck (matches in-app drag handle).
+  if (t === "drag-target" && q.puckStart && typeof q.puckStart.x === "number") {
+    out.push(`<g transform="translate(${q.puckStart.x},${q.puckStart.y})">
+      <ellipse cx="0" cy="1" rx="10" ry="3.5" fill="#ef4444" stroke="#fff" stroke-width="1.2"/>
+    </g>`);
+  }
+  // drag-target / hot-spots — circle targets.
+  if (Array.isArray(q.targets) && (t === "drag-target" || t === "pov-pick" && false)) {
+    for (const tgt of q.targets) {
+      if (tgt?.x == null) continue;
+      const color = tgt.verdict === "best" ? "#22c55e"
+        : tgt.verdict === "good" || tgt.verdict === "okay" ? "#eab308"
+        : tgt.verdict === "worst" ? "#ef4444"
+        : "#5ba4e8";
+      out.push(`<circle cx="${tgt.x}" cy="${tgt.y}" r="${tgt.radius || 26}"
+        fill="${color}20" stroke="${color}" stroke-width="1.5" stroke-dasharray="4 2.5"/>`);
+      if (tgt.label || tgt.verdict) {
+        out.push(`<text x="${tgt.x}" y="${tgt.y + 4}" text-anchor="middle"
+          font-size="10" font-weight="700" fill="${color}">${escHtml(tgt.label || tgt.verdict)}</text>`);
+      }
+    }
+  }
+  // hot-spots.
+  if (Array.isArray(q.spots)) {
+    for (const s of q.spots) {
+      if (s?.x == null) continue;
+      const color = s.correct ? "#22c55e" : "#64748b";
+      out.push(`<circle cx="${s.x}" cy="${s.y}" r="14"
+        fill="${color}28" stroke="${color}" stroke-width="1.5" stroke-dasharray="3 2"/>`);
+      if (s.correct) out.push(`<text x="${s.x}" y="${s.y + 3}" text-anchor="middle" font-size="10" fill="#22c55e" font-weight="800">✓</text>`);
+    }
+  }
+  // zone-click — polygons or circles.
+  if (Array.isArray(q.zones)) {
+    for (const z of q.zones) {
+      const color = z.correct ? "#22c55e" : "#5ba4e8";
+      if (z.shape === "circle" && z.x != null) {
+        out.push(`<circle cx="${z.x}" cy="${z.y}" r="${z.radius || 30}"
+          fill="${color}20" stroke="${color}" stroke-width="1.3" stroke-dasharray="4 2.5"/>`);
+      } else if (Array.isArray(z.points)) {
+        const pts = z.points.map(p => `${p.x},${p.y}`).join(" ");
+        out.push(`<polygon points="${pts}" fill="${color}1F" stroke="${color}" stroke-width="1.3" stroke-dasharray="4 2.5"/>`);
+        // Label near polygon centroid.
+        const cx = z.points.reduce((a, p) => a + p.x, 0) / z.points.length;
+        const cy = z.points.reduce((a, p) => a + p.y, 0) / z.points.length;
+        if (z.correct) out.push(`<text x="${cx}" y="${cy + 3}" text-anchor="middle" font-size="11" fill="#22c55e" font-weight="800">✓</text>`);
+      }
+    }
+  }
+  // lane-select — lines between two points (or polyline if waypoints).
+  if (Array.isArray(q.lanes)) {
+    for (const l of q.lanes) {
+      const x1 = l.x1 ?? l.from?.x;
+      const y1 = l.y1 ?? l.from?.y;
+      const x2 = l.x2 ?? l.to?.x;
+      const y2 = l.y2 ?? l.to?.y;
+      if (x1 == null) continue;
+      const ok = l.clear || l.correct;
+      const color = ok ? "#22c55e" : "#ef4444";
+      const hasWaypoints = Array.isArray(l.waypoints) && l.waypoints.length > 0;
+      if (hasWaypoints) {
+        const points = [[x1, y1], ...l.waypoints.map(w => [w.x, w.y]), [x2, y2]];
+        const d = "M " + points.map(p => `${p[0]},${p[1]}`).join(" L ");
+        out.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="14" stroke-opacity="0.35" stroke-linecap="round" stroke-linejoin="round"/>`);
+        out.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round"/>`);
+      } else {
+        out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="14" stroke-opacity="0.35" stroke-linecap="round"/>`);
+        out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="2" stroke-dasharray="6 4"/>`);
+      }
+    }
+  }
+  // sequence-rink — numbered markers.
+  if (q.type === "sequence-rink" && Array.isArray(q.markers)) {
+    // path between ordered markers
+    const ordered = [...q.markers].filter(m => typeof m.order === "number").sort((a, b) => a.order - b.order);
+    if (ordered.length > 1) {
+      const pts = ordered.map(m => `${m.x},${m.y}`).join(" L ");
+      out.push(`<path d="M ${pts}" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="5 3" opacity="0.6"/>`);
+    }
+    for (const m of q.markers) {
+      out.push(markerSvg(m));
+      if (typeof m.order === "number") {
+        out.push(`<circle cx="${m.x + 12}" cy="${m.y - 12}" r="7" fill="#fbbf24"/>
+          <text x="${m.x + 12}" y="${m.y - 9}" text-anchor="middle" font-size="9" font-weight="800" fill="#0b1220">${m.order}</text>`);
+      }
+    }
+  } else if (q.type === "multi-tap" && Array.isArray(q.markers)) {
+    for (const m of q.markers) {
+      const correctRing = m.correct === true ? `<circle cx="${m.x}" cy="${m.y}" r="16" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-dasharray="3 2"/>` : "";
+      out.push(correctRing);
+      out.push(markerSvg(m));
+    }
+  }
+  // path-draw — start / target / avoid + idealPath.
+  if (q.type === "path-draw") {
+    if (q.start) {
+      out.push(`<circle cx="${q.start.x}" cy="${q.start.y}" r="${q.start.radius || 26}"
+        fill="rgba(91,164,232,0.2)" stroke="#5ba4e8" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="${q.start.x}" y="${q.start.y + 3}" text-anchor="middle" font-size="9" fill="#5ba4e8" font-weight="700">start</text>`);
+    }
+    if (q.target) {
+      out.push(`<circle cx="${q.target.x}" cy="${q.target.y}" r="${q.target.radius || 30}"
+        fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="${q.target.x}" y="${q.target.y + 3}" text-anchor="middle" font-size="9" fill="#22c55e" font-weight="700">target</text>`);
+    }
+    if (Array.isArray(q.avoid)) {
+      for (const a of q.avoid) {
+        out.push(`<circle cx="${a.x}" cy="${a.y}" r="${a.radius || 20}"
+          fill="rgba(239,68,68,0.12)" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="3 2"/>
+          <text x="${a.x}" y="${a.y + 3}" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="700">avoid</text>`);
+      }
+    }
+    if (Array.isArray(q.idealPath) && q.idealPath.length > 1) {
+      const d = q.idealPath.map((p, i) => (i === 0 ? "M" : "L") + ` ${p.x} ${p.y}`).join(" ");
+      out.push(`<path d="${d}" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="5 3" opacity="0.9"/>`);
+    }
+  }
+  // drag-place — slots (positions) + a chip legend we'll tack on below.
+  if (q.type === "drag-place" && Array.isArray(q.slots)) {
+    for (const s of q.slots) {
+      out.push(`<circle cx="${s.x}" cy="${s.y}" r="${s.tol || 22}"
+        fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="1.3" stroke-dasharray="4 2.5"/>
+        <text x="${s.x}" y="${s.y + 3}" text-anchor="middle" font-size="10" fill="#22c55e" font-weight="700">${escHtml(s.id || "")}</text>`);
+    }
+  }
+  // puckStart for drag-target.
+  if (q.puckStart?.x != null) {
+    out.push(`<ellipse cx="${q.puckStart.x}" cy="${q.puckStart.y + 1}" rx="10" ry="3.5" fill="#ef4444" stroke="#fff" stroke-width="1.2"/>`);
+  }
+  return out.join("\n");
+}
+
+function livePreviewSvg(qid) {
+  const url = `https://rinkreads.com/#q=${encodeURIComponent(qid)}`;
+  return `
+    <div style="margin-bottom:.75rem;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.3rem;">
+        <div style="font-size:10px; letter-spacing:.08em; color:var(--dimmer); font-weight:700; text-transform:uppercase;">Live preview — actual app rendering</div>
+        <a href="${url}" target="_blank" rel="noopener" style="font-size:11px; color:var(--accent); text-decoration:none;">Open ↗</a>
+      </div>
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; overflow:hidden; height:560px;">
+        <iframe src="${url}"
+          style="width:100%; height:100%; border:none; background:var(--bg); display:block;"
+          loading="lazy" referrerpolicy="no-referrer"
+          title="Question preview ${escAttr(qid)}"></iframe>
+      </div>
+    </div>
+  `;
+}
+
+function renderRinkPreview(q) {
+  // Real app render via iframe — this is what the user actually sees.
+  const live = livePreviewSvg(q.id);
+  const isPov = q.type === "pov-mc" || q.type === "pov-pick";
+  if (isPov) {
+    return live + `
+      <div style="margin-bottom:.75rem; padding:.5rem .75rem; background:var(--bg-card); border:1px dashed var(--purple); border-radius:10px; font-size:11.5px; color:var(--dim);">
+        <b style="color:var(--purple);">POV scene.</b> Can't re-render inline here — see live preview above for the real view.
+        <div style="margin-top:.25rem; color:var(--dimmer); font-size:11px;">
+          camera: ${q.pov?.camera ? `x=${q.pov.camera.x}, y=${q.pov.camera.y}, z=${q.pov.camera.z}` : "default"} · role: ${q.pov?.povRole || "skater"}
+        </div>
+      </div>
+    `;
+  }
+  const rink = q.rink || {};
+  // Non-rink MC/TF questions get the iframe only; no diagram.
+  if (!rink || (!rink.markers && !q.targets && !q.zones && !q.lanes && !q.spots && !q.markers && !q.start && !q.slots)) {
+    return live;
+  }
+  const view = rink.view || "full";
+  const { vb, shell } = rinkShell(view);
+  const rinkMarkers = (rink.markers || []).map(markerSvg).join("\n");
+  const typeLayer = typeSpecificSvg(q);
+  return live + `
+    <div style="margin-bottom:.75rem;">
+      <div style="font-size:10px; letter-spacing:.08em; color:var(--dimmer); font-weight:700; text-transform:uppercase; margin-bottom:.3rem;">Scene diagram (authoring aid)</div>
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:.35rem;">
+        <svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto; max-height:260px; display:block;">
+          ${shell}
+          ${rinkMarkers}
+          ${typeLayer}
+        </svg>
+      </div>
+      <div style="font-size:11px; color:var(--dim); margin-top:.3rem;">
+        ${view} view · ${(rink.markers || []).length} marker${(rink.markers || []).length === 1 ? "" : "s"}
+        ${q.zones ? " · " + q.zones.length + " zones" : ""}
+        ${q.targets ? " · " + q.targets.length + " targets" : ""}
+        ${q.spots ? " · " + q.spots.length + " spots" : ""}
+        ${q.lanes ? " · " + q.lanes.length + " lanes" : ""}
+        ${q.idealPath ? " · ideal path" : ""}
+      </div>
+    </div>
+  `;
+}
+
+function getAllCats() {
+  const cats = new Set();
+  for (const lvl of Object.keys(BANK || {})) {
+    for (const q of BANK[lvl] || []) if (q.cat) cats.add(q.cat);
+  }
+  return [...cats].sort();
+}
+
+function toggleExpand(id) {
+  if (EXPANDED.has(id)) {
+    EXPANDED.delete(id);
+    if (LAST_EXPANDED_ID === id) {
+      // Pin the dock to whatever is still expanded, if anything.
+      LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+    }
+  } else {
+    EXPANDED.add(id);
+    LAST_EXPANDED_ID = id;
+  }
+  renderTable();
+}
+
+// ─────────────────────────────────────────────
+// Floating action dock — pinned keep/flag/kill for the open question.
+// ─────────────────────────────────────────────
+function renderDock() {
+  const dock = document.getElementById("action-dock");
+  if (!dock) return;
+  // Pick the open question to anchor on. Prefer LAST_EXPANDED_ID; fall
+  // back to any remaining expanded id if state drifted.
+  let id = LAST_EXPANDED_ID;
+  if (!id || !EXPANDED.has(id)) id = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+  if (!id) {
+    dock.classList.remove("visible");
+    dock.innerHTML = "";
+    return;
+  }
+  const found = (allRows() || []).find(r => r.q.id === id);
+  if (!found) {
+    dock.classList.remove("visible");
+    dock.innerHTML = "";
+    return;
+  }
+  const { level, q } = found;
+  const status = STATUS[id] || "";
+  const ageShort = (level || "").split(" / ")[0] || level || "";
+  const t = q.type || "mc";
+  dock.innerHTML = `
+    <div class="dock-meta">
+      <div class="dock-id">${escHtml(id)}</div>
+      <div class="dock-sub">${escHtml(ageShort)} · ${escHtml(t)}</div>
+    </div>
+    <button type="button" class="keep ${status === "keep" ? "active" : ""}" title="Keep + next"
+      onclick="toggleStatus('${escAttr(id)}', 'keep')">✓ Keep</button>
+    <button type="button" class="flag ${status === "flag" ? "active" : ""}" title="Flag + next"
+      onclick="toggleStatus('${escAttr(id)}', 'flag')">⚑ Flag</button>
+    <button type="button" class="kill ${status === "kill" ? "active" : ""}" title="Kill + next"
+      onclick="toggleStatus('${escAttr(id)}', 'kill')">✗ Kill</button>
+    <button type="button" class="ghost" title="Close" onclick="toggleExpand('${escAttr(id)}')">✕</button>
+  `;
+  dock.classList.add("visible");
+}
+
+function setPage(p) { PAGE = p; renderTable(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+// ─────────────────────────────────────────────
+// Utility
+// ─────────────────────────────────────────────
+function setFileStatus(html, tone) {
+  const el = document.getElementById("file-status");
+  el.innerHTML = html;
+  el.style.color = tone === "red" ? "var(--red)" : tone === "green" ? "var(--green)" : "var(--dim)";
+}
+function errorToast(msg) {
+  const el = document.createElement("div");
+  el.className = "toast error"; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 6000);
+}
+function successToast(msg) {
+  const el = document.createElement("div");
+  el.className = "toast success"; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+function escHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escAttr(s) { return escHtml(s); }
+
+// Drop-anywhere support.
+window.addEventListener("dragover", (e) => { e.preventDefault(); });
+window.addEventListener("drop", (e) => {
+  e.preventDefault();
+  const f = e.dataTransfer?.files?.[0];
+  if (f) loadFile(f);
+});
+
+updateDirtyBadge();
+</script>
+
+</body>
+</html>

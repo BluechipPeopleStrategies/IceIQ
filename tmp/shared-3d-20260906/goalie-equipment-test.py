@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('src/visuals/FirstPersonEquipment.test.mjs');s=p.read_text().replace("for(const aspect of [16/9,.6]) {","for(const aspect of [16/9,.6]) for(const goalie of [false,true]) {").replace("buildHockeyPlayerRig({view:'first-person',stage});","buildHockeyPlayerRig({view:'first-person',stage,goalie});").replace("for(const name of ['equipment-pants','equipment-carbon']){", "for(const name of [goalie?'equipment-cream':'equipment-pants','equipment-carbon']){",1);p.write_text(s)

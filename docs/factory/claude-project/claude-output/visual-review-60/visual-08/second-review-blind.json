@@ -1,0 +1,39 @@
+{
+  "packetId": "visual-08",
+  "reviewer": "second-reviewer (Claude Sonnet 5, claude-sonnet-5) -- same model family as lead, disclosed limitation. NOT qualified to clear (4/8 calibration misses).",
+  "method": "Solved from packets/visual-08-manifest.json + packets/visual-08-blind.json only, no live render access.",
+  "answers": [
+    {
+      "questionId": "exp26b-u13-020-q5",
+      "myAnswer": "b",
+      "reasoning": "YOU=(5,8). Gold1=(20,-5): dist=sqrt(15^2+13^2)=19.85. Gold2=(8,7): dist=sqrt(3^2+1^2)=3.16. Gold2 is far closer to YOU, matching the briefing's 'Gold 2 is high' near the third-player position."
+    },
+    {
+      "questionId": "exp26-u15-001-q2",
+      "myAnswer": ["a", "b", "c"],
+      "reasoning": "This is a procedural checklist question, not a coordinate comparison -- formed independent judgment rather than only checking the lead's reasoning. (a) 'F3 has taken the agreed high-cover responsibility' is literally the drill's own named condition ('YOU may pinch only while F3 covers your high position') -- this is the central check regardless of whether it is CURRENTLY satisfied (the briefing says it is not, but the CHECK still belongs on the list; the question asks which checks belong, not which are true). (b) checking whether the wall contest actually leaves a reachable puck route is a basic feasibility check before committing to a pinch -- belongs. (c) checking D2's position for defender coordination is a standard partner-recovery check before a defenseman pinches -- belongs. (d) 'F2 remaining low has filled the high-cover job assigned to F3' does NOT belong, for two independent reasons: first, it substitutes a specifically-unassigned player (F2) for the role the drill rule explicitly assigns to F3 -- satisfying a rule by a different, unnamed actor is not the same check as verifying the named actor did it. Second, it is internally self-contradictory: F2's actual position is (24,-4), far from the high/point area (YOU sits at y=8; F2 sits at y=-4, clearly LOW in the zone) -- a player who is confirmed to be remaining low cannot simultaneously be occupying the 'high-cover' job by definition. Both the role-substitution problem and the geometric self-contradiction independently rule out (d)."
+    },
+    {
+      "questionId": "exp26-u15-002-q5",
+      "myAnswer": "a",
+      "reasoning": "Verified roster mapping first, per coordinator's flag: A1/A2/A3/A4 (team='away') map to Gold1/Gold2/Gold3/Gold4 by index -- confirmed via briefing's 'Gold 1 is the nearest penalty killer': A1=(20,5) is 4.47 from YOU(18,9), clearly the closest away skater (A2=9.43, A3=13.04, A4=8.94), matching A1=Gold1. F3=(21,-1). Gold2/A2=(23,1): dist=2.83. Gold3/A3=(17,-4): dist=5.0. Gold4/A4=(14,1): dist=7.28. Gold2 is closest to F3's slot position -- answer (a)."
+    },
+    {
+      "questionId": "exp26-u15-002-q7",
+      "myAnswer": "a",
+      "reasoning": "YOU/puck=(18,9), F2=(24,6), F3=(21,-1), Gold1/A1=(20,5). Line YOU-F2: d=(6,-3), vec=(2,-4), cross=6*-4-(-3)*2=-18, perp=18/6.708=2.68, t=24/45=0.533 (valid). Line YOU-F3: d2=(3,-10), vec=(2,-4), cross2=3*-4-(-10)*2=8, perp=8/10.44=0.77, t2=46/109=0.422 (valid). Gold1 is much nearer the F3 line (0.77) than the F2 line (2.68) -- answer (a)."
+    },
+    {
+      "questionId": "exp26-u15-005-q5",
+      "myAnswer": "a",
+      "reasoning": "Navy attacks +x (right net), so navy's own net is at -x. D1.x=10 is far lower than F3.x=24 -- D1 starts much farther back toward Navy's own net. Answer (a) D1."
+    },
+    {
+      "questionId": "exp26-u15-007-q5",
+      "myAnswer": "a",
+      "reasoning": "YOU=(-4,6), F1=(8,7). Gold1/A1=(0,6): vec=(4,0), cross=12*0-1*4=-4, perp=4/12.04=0.33, t=48/145=0.331 (valid, in-segment). Gold3/A3=(11,-2): vec=(15,-8), cross=12*-8-1*15=-111, perp=9.22, t=172/145=1.186 (outside segment, so real nearest-point distance is to F1 itself: sqrt(3^2+9^2)=9.49, similar magnitude). Either way Gold1 (0.33) is roughly 28x closer to the YOU-F1 line than Gold3 -- answer (a) Gold1."
+    }
+  ],
+  "grammarCheck": "Read all 6 prompts aloud -- no YOU-subject verbs present in this packet's prompts, so no agreement issue to check either way.",
+  "rosterVerification": "Confirmed A1-A4 (team='away') map to Gold1-Gold4 by index in exp26-u15-002, independently verified via the briefing's 'Gold 1 is the nearest penalty killer' claim matching A1's actual distance to YOU (4.47, closest of the four)."
+}

@@ -92,7 +92,7 @@ export default function RinkDiscovery({ onBack }) {
         <div className="rd-tools"><button type="button" aria-expanded={hint} onClick={() => setHint(value => !value)}>{hint ? 'Hide hint' : 'Show a hint'}</button>{ttsSupported() && <><button type="button" onClick={() => speakParts([prompt.prompt, hint ? prompt.hint : 'Tap it on the rink, or choose its number below.'], { rate: .82 })}>Read aloud</button><button type="button" onClick={stopSpeaking}>Stop reading</button></>}</div>
         {hint && <p className="rd-hint">{prompt.hint}</p>}
       </div>
-      <ScenarioRinkView title="Explore the whole rink" state={FRAME} bounds={GEOMETRY.bounds} hideZoneLines={false} showBothGoals labelledActors={false} overlays={OVERLAYS} onIcePoint={interactive ? answer : undefined}
+      <ScenarioRinkView ageBand="U7" questionId={prompt.id} startingView={prompt.startingView} title="Explore the whole rink" state={FRAME} puckPresentation={prompt.puckPresentation} bounds={GEOMETRY.bounds} hideZoneLines={false} showBothGoals labelledActors={false} overlays={OVERLAYS} onIcePoint={interactive ? answer : undefined}
         fallback={<DiscoveryBoard questionId={prompt.id} onPoint={interactive ? answer : undefined} />} />
       <div className="rd-choices" role="group" aria-label="Choose a numbered spot on the rink">{SPOTS.map(spot => <button type="button" key={spot.id} disabled={!interactive} onClick={() => answer(spot)} aria-label={`Choose spot ${spot.label}`}>{spot.label}</button>)}</div>
       <div className="rd-feedback" aria-live="polite" aria-atomic="true">

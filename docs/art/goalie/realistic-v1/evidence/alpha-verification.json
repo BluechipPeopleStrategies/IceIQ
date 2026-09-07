@@ -1,0 +1,256 @@
+{
+  "method": "Actual PNG alpha checks after final visually inspected refinement",
+  "sourceSha256": "13cd3839a3f5fbcf9ec90288b4dee73c9a67d8ddf3bc56f8aadfc9920a12a73f",
+  "parts": [
+    {
+      "part": "torso",
+      "mode": "RGBA",
+      "size": [
+        489,
+        400
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "helmet",
+      "mode": "RGBA",
+      "size": [
+        284,
+        422
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "catcher",
+      "mode": "RGBA",
+      "size": [
+        398,
+        391
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "blocker",
+      "mode": "RGBA",
+      "size": [
+        290,
+        394
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "pad-left",
+      "mode": "RGBA",
+      "size": [
+        197,
+        405
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "pad-right",
+      "mode": "RGBA",
+      "size": [
+        197,
+        405
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "sleeve",
+      "mode": "RGBA",
+      "size": [
+        147,
+        408
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    },
+    {
+      "part": "pants",
+      "mode": "RGBA",
+      "size": [
+        354,
+        410
+      ],
+      "sha256Matches": true,
+      "paddingTransparent": true,
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleSourceRgbPreserved": true
+    }
+  ],
+  "whitePadAndWebSamples": [
+    {
+      "part": "pad-left",
+      "sourcePoint": [
+        235,
+        500
+      ],
+      "outputPoint": [
+        85,
+        43
+      ],
+      "alpha": 255,
+      "expected": 255,
+      "passed": true
+    },
+    {
+      "part": "pad-left",
+      "sourcePoint": [
+        190,
+        788
+      ],
+      "outputPoint": [
+        40,
+        331
+      ],
+      "alpha": 255,
+      "expected": 255,
+      "passed": true
+    },
+    {
+      "part": "pad-right",
+      "sourcePoint": [
+        740,
+        500
+      ],
+      "outputPoint": [
+        143,
+        43
+      ],
+      "alpha": 255,
+      "expected": 255,
+      "passed": true
+    },
+    {
+      "part": "pad-right",
+      "sourcePoint": [
+        745,
+        788
+      ],
+      "outputPoint": [
+        148,
+        331
+      ],
+      "alpha": 255,
+      "expected": 255,
+      "passed": true
+    },
+    {
+      "part": "catcher",
+      "sourcePoint": [
+        1190,
+        82
+      ],
+      "outputPoint": [
+        248,
+        50
+      ],
+      "alpha": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "part": "catcher",
+      "sourcePoint": [
+        1180,
+        107
+      ],
+      "outputPoint": [
+        238,
+        75
+      ],
+      "alpha": 0,
+      "expected": 0,
+      "passed": true
+    }
+  ],
+  "runtimePngBytes": 1553727,
+  "allPassed": true,
+  "torsoRigSeparationSamples": [
+    {
+      "outputPoint": [
+        50,
+        220
+      ],
+      "expected": 0,
+      "alpha": 0,
+      "label": "left fixed sleeve removed",
+      "passed": true
+    },
+    {
+      "outputPoint": [
+        440,
+        250
+      ],
+      "expected": 0,
+      "alpha": 0,
+      "label": "right fixed sleeve removed",
+      "passed": true
+    },
+    {
+      "outputPoint": [
+        240,
+        180
+      ],
+      "expected": 255,
+      "alpha": 255,
+      "label": "chest preserved",
+      "passed": true
+    },
+    {
+      "outputPoint": [
+        110,
+        50
+      ],
+      "expected": 255,
+      "alpha": 255,
+      "label": "shoulder cap preserved",
+      "passed": true
+    }
+  ]
+}

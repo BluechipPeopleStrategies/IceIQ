@@ -10,35 +10,35 @@ class VisualBoundary extends Component {
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 
-export default function ReadSequenceBoard({ view, onViewChange, fallbackBoard, ...scene }) {
+export default function ReadSequenceBoard({ fallbackBoard: deferredBoard, onUnavailable, onAvailabilityChange, ...scene }) {
   const [failed, setFailed] = useState(false);
+  const [renderAttempt, setRenderAttempt] = useState(0);
   const [wide, setWide] = useState(false);
   const descriptionId = useId();
   const fail = useCallback(() => {
     setFailed(true);
-    onViewChange('board');
-  }, [onViewChange]);
-  const show3d = view === '3d' && !failed;
+    onAvailabilityChange?.(false);
+    onUnavailable?.();
+  }, [onUnavailable, onAvailabilityChange]);
+  const retry = () => { setRenderAttempt(value => value + 1); setFailed(false); };
+  const show3d = !failed;
+  const unavailable = <div className="rs-visual-fallback" role="status"><p>The rink could not load. Your choices are still here. Try opening the rink again.</p><button type="button" onClick={retry}>Retry 3D rink</button></div>;
   const carrier = scene.state.actors.find(actor => actor.id === scene.state.puck.owner);
   const carrierName = carrier?.label || carrier?.name || carrier?.id;
   const possession = carrierName === 'YOU' ? 'You have the puck.' : carrierName ? `${carrierName} has the puck.` : scene.playing ? 'Watch the puck as the play continues.' : 'The puck is loose. No player has possession.';
 
   return <div className="rs-visual-board" aria-describedby={descriptionId}>
     <div className="rs-view-bar">
-      <div role="group" aria-label="Rink presentation">
-        <button type="button" aria-pressed={show3d} disabled={failed} onClick={() => onViewChange('3d')}>3D rink</button>
-        <button type="button" aria-pressed={!show3d} onClick={() => onViewChange('board')}>Tactical board</button>
-      </div>
+      <span>3D rink</span>
       {show3d && <button type="button" className="rs-view-fit" aria-pressed={wide} onClick={() => setWide(value => !value)}>{wide ? 'Focus on the play' : 'Show more ice'}</button>}
     </div>
-    {failed && <p className="rs-visual-fallback" role="status">The 3D view is unavailable in this browser. You can continue on the tactical board.</p>}
     {show3d
-      ? <VisualBoundary onFailure={fail} fallback={fallbackBoard}>
-          <Suspense fallback={<div className="rs-visual-loading"><p role="status">Preparing the rink…</p>{fallbackBoard}</div>}>
-            <ReadSequenceScene {...scene} wide={wide} onFailure={fail} />
+      ? <VisualBoundary key={renderAttempt} onFailure={fail} fallback={unavailable}>
+          <Suspense fallback={<div className="rs-visual-loading"><p role="status">Preparing the rink…</p></div>}>
+            <ReadSequenceScene {...scene} wide={wide} onFailure={fail} onPending={() => onAvailabilityChange?.(false)} onReady={() => onAvailabilityChange?.(true)} />
           </Suspense>
         </VisualBoundary>
-      : fallbackBoard}
+      : unavailable}
     {show3d && <div className="rs-scene-legend" aria-hidden="true"><span><i className="home" />Attack</span><span><i className="away" />Defend</span><span><i className="puck" />Puck</span></div>}
     <p id={descriptionId} className="rs-visual-description">{possession} Attack toward the net.</p>
   </div>;

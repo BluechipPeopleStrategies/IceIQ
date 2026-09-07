@@ -1,0 +1,1600 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "luna-u13-rebuild",
+  "changedAt": "2026-09-05T20:21:51.711Z",
+  "sourceFiles": {
+    "base": "src/one-on-one/experimental-bank/u13.json",
+    "scenarios": "src/one-on-one/experimental-expansion/u13-scenarios.json",
+    "additions": "src/one-on-one/experimental-expansion/u13-additions.json"
+  },
+  "changes": [
+    {
+      "questionId": "exp26b-u13-002-q1",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "choice",
+        "prompt": "Which player has the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The puck is assigned to D1, so YOU’s job is support; if possession changes, the support read resets.",
+        "id": "exp26b-u13-002-q1"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which player has the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The puck is assigned to D1, so YOU’s job is support; if possession changes, the support read resets.",
+        "id": "exp26b-u13-002-q1"
+      },
+      "beforeContentHash": "5c3f797a2df10c9d08e0dd29194f8bb18ca4f2b7620b3f294384bc1e5b4e6ccb",
+      "afterContentHash": "5c3f797a2df10c9d08e0dd29194f8bb18ca4f2b7620b3f294384bc1e5b4e6ccb",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": false
+    },
+    {
+      "questionId": "exp26b-u13-002-q2",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "multi",
+        "prompt": "Which two details make YOU a useful hinge?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A visible lane between D1 and D2"
+          },
+          {
+            "id": "b",
+            "text": "Distance that keeps you available below pressure"
+          },
+          {
+            "id": "c",
+            "text": "Standing directly on D1’s route"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A separated middle lane connects the defenders and leaves D1 room to carry; standing on D1’s route removes the support option.",
+        "id": "exp26b-u13-002-q2"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two details make YOU a useful hinge?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A visible lane between D1 and D2"
+          },
+          {
+            "id": "b",
+            "text": "Distance that keeps you available below pressure"
+          },
+          {
+            "id": "c",
+            "text": "Standing directly on D1’s route"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A separated middle lane connects the defenders and leaves D1 room to carry; standing on D1’s route removes the support option.",
+        "id": "exp26b-u13-002-q2"
+      },
+      "beforeContentHash": "4f5d4467b4ec85704d8d49b0d44f8140a38e5e2014a36333306e90b81be2db73",
+      "afterContentHash": "4f5d4467b4ec85704d8d49b0d44f8140a38e5e2014a36333306e90b81be2db73",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": false
+    },
+    {
+      "questionId": "exp26b-u13-002-q3",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "sequence",
+        "prompt": "Order one hinge-support read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "See D1’s pressure"
+          },
+          {
+            "id": "b",
+            "text": "Show a middle passing lane"
+          },
+          {
+            "id": "c",
+            "text": "Adjust if Gold 1 closes it"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure determines room; showing the lane gives a second outlet; a closed lane requires a new angle.",
+        "id": "exp26b-u13-002-q3"
+      },
+      "after": {
+        "type": "sequence",
+        "prompt": "Order one hinge-support read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "See D1’s pressure"
+          },
+          {
+            "id": "b",
+            "text": "Show a middle passing lane"
+          },
+          {
+            "id": "c",
+            "text": "Adjust if Gold 1 closes it"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure determines room; showing the lane gives a second outlet; a closed lane requires a new angle.",
+        "id": "exp26b-u13-002-q3"
+      },
+      "beforeContentHash": "b2b06ff351dc4108764d8477625b97620b08d60665986ea79380894299f0bfd9",
+      "afterContentHash": "b2b06ff351dc4108764d8477625b97620b08d60665986ea79380894299f0bfd9",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": false
+    },
+    {
+      "questionId": "exp26b-u13-002-q4",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU into an example hinge lane below D1 and inside Gold 1.",
+        "basis": "coaching",
+        "explanation": "The lower inside spot gives D1 a short connection without copying the corner route; if Gold 1 cuts inside, widen or drop to keep a lane.",
+        "actorId": "n1",
+        "reference": {
+          "x": -21,
+          "y": 2
+        },
+        "id": "exp26b-u13-002-q4"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU into an example hinge lane inside Gold 1 and clear of D1’s puck route.",
+        "basis": "coaching",
+        "explanation": "The inside spot gives D1 a short connection without copying the corner route; if Gold 1 cuts inside, widen or drop to keep a lane.",
+        "actorId": "n1",
+        "reference": {
+          "x": -21,
+          "y": 2
+        },
+        "id": "exp26b-u13-002-q4"
+      },
+      "beforeContentHash": "d8da2cf07286102dd1b7e38fbdccf1bfbdda92de940b179ebec325eae064af52",
+      "afterContentHash": "8519cf6b37ceae82de6caedafd05d31971c9d4c19e8f8a1f5d2759bf8058dd39",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26b-u13-002-q5",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "choice",
+        "prompt": "If Gold 1 steps into the middle lane, what is a useful change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Slide to a new support angle while D1 protects the puck"
+          },
+          {
+            "id": "b",
+            "text": "Stay hidden behind Gold 1 and call for a pass"
+          },
+          {
+            "id": "c",
+            "text": "Skate through D1’s stick lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 1 removes the original hinge, so changing angle preserves an outlet; if the middle reopens, return without crowding D1.",
+        "id": "exp26b-u13-002-q5"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "If Gold 1 steps into the middle lane, what is a useful change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Slide to a new support angle while D1 protects the puck"
+          },
+          {
+            "id": "b",
+            "text": "Stay hidden behind Gold 1 and call for a pass"
+          },
+          {
+            "id": "c",
+            "text": "Skate through D1’s stick lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 1 removes the original hinge, so changing angle preserves an outlet; if the middle reopens, return without crowding D1.",
+        "id": "exp26b-u13-002-q5"
+      },
+      "beforeContentHash": "da9e6661169f90522d99deb257953d1e304681793d49ffd34cfdfeeeb0c80d8d",
+      "afterContentHash": "da9e6661169f90522d99deb257953d1e304681793d49ffd34cfdfeeeb0c80d8d",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": false
+    },
+    {
+      "questionId": "exp26b-u13-002-q6",
+      "scenarioId": "exp26b-u13-002",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "explain",
+        "prompt": "How does your support help D1 even when D1 does not pass?",
+        "basis": "coaching",
+        "explanation": "A visible hinge makes Gold 1 respect a second lane, giving D1 time to carry or connect to D2; if pressure ignores you, D1 can use the space.",
+        "id": "exp26b-u13-002-q6"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "How does your support help D1 even when D1 does not pass?",
+        "basis": "coaching",
+        "explanation": "A visible hinge makes Gold 1 respect a second lane, giving D1 time to carry or connect to D2; if pressure ignores you, D1 can use the space.",
+        "id": "exp26b-u13-002-q6"
+      },
+      "beforeContentHash": "937d32dd3c924070a19c8450fde462ca29e45d4191c0b72a24a17fab1fdb4404",
+      "afterContentHash": "937d32dd3c924070a19c8450fde462ca29e45d4191c0b72a24a17fab1fdb4404",
+      "reason": "Corrected the q4 relation to the visible reference while preserving the valid completed rim retrieval and carried-puck state.",
+      "contentChanged": false
+    },
+    {
+      "questionId": "exp26-u13-021-q1",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q1",
+        "type": "choice",
+        "prompt": "What is the puck state at the board battle?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Loose and contested"
+          },
+          {
+            "id": "b",
+            "text": "Securely on F2’s stick"
+          },
+          {
+            "id": "c",
+            "text": "Already back at centre ice"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The puck marker is separate from F1 and Gold 1, as the briefing states.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-021-q1",
+        "type": "choice",
+        "prompt": "What is the puck state at the board battle?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Loose and contested"
+          },
+          {
+            "id": "b",
+            "text": "Securely on F2’s stick"
+          },
+          {
+            "id": "c",
+            "text": "Already back at centre ice"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The puck marker is separate from F1 and Gold 1, as the briefing states.",
+        "basis": "scene"
+      },
+      "beforeContentHash": "4203c9c5b846ebef64db84912375e89c622995d3d81c4f0271c7c25714c34063",
+      "afterContentHash": "7d16904f646604b249a7a3ba3db9bafc920023fdcfb4de57d6b19b8c0c4ea556",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q2",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q2",
+        "type": "multi",
+        "prompt": "Which two jobs could high support serve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Guaranteed possession merely by standing high"
+          },
+          {
+            "id": "b",
+            "text": "Help against a counterattack if Gold wins"
+          },
+          {
+            "id": "c",
+            "text": "An outlet if Navy wins control"
+          }
+        ],
+        "answer": [
+          "b",
+          "c"
+        ],
+        "explanation": "High support can preserve options in either outcome, but does not win the battle itself.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-021-q2",
+        "type": "multi",
+        "prompt": "Which two jobs could high support serve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Guaranteed possession merely by standing high"
+          },
+          {
+            "id": "b",
+            "text": "Help against a counterattack if Gold wins"
+          },
+          {
+            "id": "c",
+            "text": "An outlet if Navy wins control"
+          }
+        ],
+        "answer": [
+          "b",
+          "c"
+        ],
+        "explanation": "High support can preserve options in either outcome, but does not win the battle itself.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "6df1405c4352dbc3b62b1fde71863a21a6eca6fc00da21d5d4a854eff88a1bc7",
+      "afterContentHash": "81c7eca7940c3e0a4a3cccf15a71b2396467ab2f5a00d2c933350c806805021b",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q3",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q3",
+        "type": "sequence",
+        "prompt": "Arrange a read from high support behind the battle.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Track who controls the puck"
+          },
+          {
+            "id": "b",
+            "text": "Check the high-slot space and opposing outlet"
+          },
+          {
+            "id": "c",
+            "text": "Adjust to the actual winner"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The high role is this exercise’s stated plan; a coach may assign a different forecheck elsewhere."
+      },
+      "after": {
+        "id": "exp26-u13-021-q3",
+        "type": "sequence",
+        "prompt": "Arrange a read from high support behind the battle.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Track who controls the puck"
+          },
+          {
+            "id": "b",
+            "text": "Check the high-slot space and opposing outlet"
+          },
+          {
+            "id": "c",
+            "text": "Adjust to the actual winner"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The high role is this exercise’s stated plan; a coach may assign a different forecheck elsewhere."
+      },
+      "beforeContentHash": "cd674b334beda7aaef5097cc6785ae2e292eebef825802c190c1c89d9e2c1f19",
+      "afterContentHash": "3d37b8cb06609aedd61d814abdab3d2871dd295a7075b1d3b33b505ebcc40b28",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q4",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q4",
+        "type": "position",
+        "prompt": "Move YOU to a useful high-slot support example without joining the scrum.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 15,
+          "y": 0
+        },
+        "basis": "coaching",
+        "explanation": "The reference keeps separation from the wall contest and access to middle ice. Other distances may suit the play."
+      },
+      "after": {
+        "id": "exp26-u13-021-q4",
+        "type": "position",
+        "prompt": "Move YOU to a useful high-slot support example without joining the scrum.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 15,
+          "y": 0
+        },
+        "basis": "coaching",
+        "explanation": "The reference keeps separation from the wall contest and access to middle ice. Other distances may suit the play."
+      },
+      "beforeContentHash": "0244cb13629604c7650fb195d2af7044ac7cf6c6c1817f8d930dc929be9b9fa5",
+      "afterContentHash": "2cb0ea0966b4242c129a2bbeb79599c7ba3752c81981343c50f9cd57fb972aae",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q5",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q5",
+        "type": "choice",
+        "prompt": "If F1 wins clean possession and looks inside, what could you offer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "An automatic move into F1’s crowded wall space"
+          },
+          {
+            "id": "b",
+            "text": "A visible high-slot option"
+          },
+          {
+            "id": "c",
+            "text": "A claim that the puck remains loose"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "Control permits an attacking read, but you still need a reachable lane.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-021-q5",
+        "type": "choice",
+        "prompt": "If F1 wins clean possession and looks inside, what could you offer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "An automatic move into F1’s crowded wall space"
+          },
+          {
+            "id": "b",
+            "text": "A visible high-slot option"
+          },
+          {
+            "id": "c",
+            "text": "A claim that the puck remains loose"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "Control permits an attacking read, but you still need a reachable lane.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "7676cbc371c3948516ba9aeef633fe520ce9206508fe60c1736f016599ec106e",
+      "afterContentHash": "dbdd779be9740f0c3c52b3c11e3f171fee40c4023b8f108ecf35dbb3ee014cfd",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q6",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-021-q6",
+        "type": "explain",
+        "prompt": "Explain why the high forward’s position matters before the battle is decided.",
+        "basis": "coaching",
+        "explanation": "Describe both the possible outlet and defensive recovery roles, using the opponent’s location."
+      },
+      "after": {
+        "id": "exp26-u13-021-q6",
+        "type": "explain",
+        "prompt": "Explain why the high forward’s position matters before the battle is decided.",
+        "basis": "coaching",
+        "explanation": "Describe both the possible outlet and defensive recovery roles, using the opponent’s location."
+      },
+      "beforeContentHash": "d176cc210cd37b67a49033b1684a5eedbb4a653d62a5bdbd9c4945303b10d6b9",
+      "afterContentHash": "2a18c23e390eb6ace06f0fe667b63933bcfcaf0c75d3cf9a8a990556e76cb88b",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q7",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "choice",
+        "prompt": "Which Navy player is assigned the high support role?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU"
+          },
+          {
+            "id": "b",
+            "text": "F1"
+          },
+          {
+            "id": "c",
+            "text": "F2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "YOU is the assigned high Navy forward supporting above the loose-puck battle; if F1 wins, offer the high outlet, while a Gold win changes YOU to recovery.",
+        "id": "exp26-u13-021-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which Navy player is assigned the high support role?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU"
+          },
+          {
+            "id": "b",
+            "text": "F1"
+          },
+          {
+            "id": "c",
+            "text": "F2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "YOU is the assigned high Navy forward supporting above the loose-puck battle; if F1 wins, offer the high outlet, while a Gold win changes YOU to recovery.",
+        "id": "exp26-u13-021-q7"
+      },
+      "beforeContentHash": "4af67e6b5e1f51c427f1e3c30688999f54400436ab410b606632e4a969a37a3a",
+      "afterContentHash": "93f9dd7f56a4d51c1431a9925ff95f60013caf80f267c9aa3b4254c70fea01cc",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q8",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "multi",
+        "prompt": "Which two jobs can high support serve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Be a reset if F1 wins it"
+          },
+          {
+            "id": "b",
+            "text": "Recover inside if Gold wins it"
+          },
+          {
+            "id": "c",
+            "text": "Join F1’s exact board lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "High separation supports either possession outcome; joining the battle removes balance.",
+        "id": "exp26-u13-021-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two jobs can high support serve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Be a reset if F1 wins it"
+          },
+          {
+            "id": "b",
+            "text": "Recover inside if Gold wins it"
+          },
+          {
+            "id": "c",
+            "text": "Join F1’s exact board lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "High separation supports either possession outcome; joining the battle removes balance.",
+        "id": "exp26-u13-021-q8"
+      },
+      "beforeContentHash": "29d1778353144d557cd0249a17349f9694e42f157fbb3abdd42d1fcea7ff01a2",
+      "afterContentHash": "178b0ea8c4a446b8674216c2e77a382fcc585170edd28f4b76f8bcb2385318b4",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q9",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU slightly higher and inside, above the board battle.",
+        "basis": "coaching",
+        "explanation": "The high-inside position keeps both puck outcomes visible and protects the middle; if F1 wins cleanly, lower into the next support lane.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 13,
+          "y": -1
+        },
+        "id": "exp26-u13-021-q9"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU slightly higher and inside, above the board battle.",
+        "basis": "coaching",
+        "explanation": "The high-inside position keeps both puck outcomes visible and protects the middle; if F1 wins cleanly, lower into the next support lane.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 13,
+          "y": -1
+        },
+        "id": "exp26-u13-021-q9"
+      },
+      "beforeContentHash": "5732df4911b476f575114508f8482c3cb12195fee672cdb2fc5fa2f61d804537",
+      "afterContentHash": "e244a43046ac0f438d6cbf918cc00a7c4e4a73a8c4ce0f4c3b03b96328ea6b8d",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-021-q10",
+      "scenarioId": "exp26-u13-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "explain",
+        "prompt": "Why should high support remain useful before the battle is decided?",
+        "basis": "coaching",
+        "explanation": "Ownership is unknown, so a balanced position can attack or recover without guessing; once control is clear, move to the new job.",
+        "id": "exp26-u13-021-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "Why should high support remain useful before the battle is decided?",
+        "basis": "coaching",
+        "explanation": "Ownership is unknown, so a balanced position can attack or recover without guessing; once control is clear, move to the new job.",
+        "id": "exp26-u13-021-q10"
+      },
+      "beforeContentHash": "b8ebd969de29d67f96a94fb66330b44f36c919732590a9cd565486352416dc56",
+      "afterContentHash": "bbeba59668b581124c2f984a7c0b63027146aea27a7522dfd1621103001a1876",
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q1",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q1",
+        "type": "choice",
+        "prompt": "Which task did the coach assign YOU after the draw?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Remain in C’s inside position"
+          },
+          {
+            "id": "b",
+            "text": "Evaluate a faceoff rule violation"
+          },
+          {
+            "id": "c",
+            "text": "Pursue the loose puck near the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The assignment is explicitly stated and applies only to this exercise.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-025-q1",
+        "type": "choice",
+        "prompt": "Which task did the coach assign YOU after the draw?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Remain in C’s inside position"
+          },
+          {
+            "id": "b",
+            "text": "Evaluate a faceoff rule violation"
+          },
+          {
+            "id": "c",
+            "text": "Pursue the loose puck near the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The assignment is explicitly stated and applies only to this exercise.",
+        "basis": "scene"
+      },
+      "beforeContentHash": "6949355489ae4b37bbca5516c381ea94fa92aaab2488fbc1df80cf4d448f19d2",
+      "afterContentHash": "7d909734a3829c95e74bd541891ba022514a584aa83463294de8d8ae89f4fda5",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q2",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q2",
+        "type": "multi",
+        "prompt": "Which two facts should update that plan?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether C’s inside support remains available"
+          },
+          {
+            "id": "b",
+            "text": "Who gains control first"
+          },
+          {
+            "id": "c",
+            "text": "The assumption that all faceoffs use this arrangement"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "A planned role still responds to possession and support.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-025-q2",
+        "type": "multi",
+        "prompt": "Which two facts should update that plan?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether C’s inside support remains available"
+          },
+          {
+            "id": "b",
+            "text": "Who gains control first"
+          },
+          {
+            "id": "c",
+            "text": "The assumption that all faceoffs use this arrangement"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "A planned role still responds to possession and support.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "08e8011c681ba5b6ee0be714c36bd0f984a9bd4bd66ae97192e46acf33cd6389",
+      "afterContentHash": "cf58a85e4a55c8f8ce48b7ffd79897ac7aaae7fce786e1d6986dd1dac3f2fe8b",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q3",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q3",
+        "type": "sequence",
+        "prompt": "Arrange one follow-up to this draw.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate the loose puck"
+          },
+          {
+            "id": "b",
+            "text": "Check the opponent and assigned support"
+          },
+          {
+            "id": "c",
+            "text": "Pursue or adjust to the actual control"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The sequence is a suggested response under the stated drill plan, not a universal faceoff play."
+      },
+      "after": {
+        "id": "exp26-u13-025-q3",
+        "type": "sequence",
+        "prompt": "Arrange one follow-up to this draw.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate the loose puck"
+          },
+          {
+            "id": "b",
+            "text": "Check the opponent and assigned support"
+          },
+          {
+            "id": "c",
+            "text": "Pursue or adjust to the actual control"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The sequence is a suggested response under the stated drill plan, not a universal faceoff play."
+      },
+      "beforeContentHash": "b07156d1830d552f64c6b2a13cdb02462c2b33aa676e24b070168a6265d60e61",
+      "afterContentHash": "c277192de90260bf09576c5d6d7afe710edd7439d0ced777146485a94f1e9433",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q4",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q4",
+        "type": "position",
+        "prompt": "Move YOU toward an example retrieval position near the side boards.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -14,
+          "y": 8
+        },
+        "basis": "coaching",
+        "explanation": "This follows the stated role without moving onto C. Actual reach and timing remain unvalidated."
+      },
+      "after": {
+        "id": "exp26-u13-025-q4",
+        "type": "position",
+        "prompt": "Move YOU toward an example retrieval position near the side boards.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -14,
+          "y": 10.5
+        },
+        "basis": "coaching",
+        "explanation": "This follows the stated role without moving onto C. Actual reach and timing remain unvalidated."
+      },
+      "beforeContentHash": "9e273bd90760a11c5e55b5e5784af07abadb75cfb9ba0a61d59bb1a1e7505a31",
+      "afterContentHash": "95ed3c08f3b220300421856c4d1d7665cf93f4df6f0b3628b8acdb59d7d54bd6",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q5",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 controls the puck before you arrive, what should you do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reassess pressure and C’s support"
+          },
+          {
+            "id": "b",
+            "text": "Act as if the draw was already won by Navy"
+          },
+          {
+            "id": "c",
+            "text": "Follow the retrieval route with no new read"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The opponent’s control changes the action even when the pre-draw plan was clear.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-025-q5",
+        "type": "choice",
+        "prompt": "If Gold 1 controls the puck before you arrive, what should you do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reassess pressure and C’s support"
+          },
+          {
+            "id": "b",
+            "text": "Act as if the draw was already won by Navy"
+          },
+          {
+            "id": "c",
+            "text": "Follow the retrieval route with no new read"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The opponent’s control changes the action even when the pre-draw plan was clear.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "d3321655cc90c8a8bd48380521038e79ed400909f5f2b3cd2cdb8ad35254a515",
+      "afterContentHash": "a9d4b4cf20fc2b749899bdda1353c5bafd2bbee76af53748bec9e66431340f74",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q6",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-025-q6",
+        "type": "explain",
+        "prompt": "Why does knowing a faceoff plan not remove the need to read the puck?",
+        "basis": "coaching",
+        "explanation": "A plan assigns starting responsibilities; the bounce, opponent and possession decide what is possible next."
+      },
+      "after": {
+        "id": "exp26-u13-025-q6",
+        "type": "explain",
+        "prompt": "Why does knowing a faceoff plan not remove the need to read the puck?",
+        "basis": "coaching",
+        "explanation": "A plan assigns starting responsibilities; the bounce, opponent and possession decide what is possible next."
+      },
+      "beforeContentHash": "9f1056c8d7e2099d2abcb1d890578906bc0b9e5eb346ba81058c99ef0a6ff851",
+      "afterContentHash": "1dcf3b1ecf1f11ec0ac08a84dd0663d6347251183063d4db7b2782221825cc26",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q7",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "choice",
+        "prompt": "Which Navy teammate should YOU keep inside as you pursue the loose puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "C"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "C is the Navy teammate assigned to stay inside, so YOU can pursue toward the boards without losing the middle; if Gold 1 controls first, recover instead of completing the old route.",
+        "id": "exp26-u13-025-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which Navy teammate should YOU keep inside as you pursue the loose puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "C"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "C is the Navy teammate assigned to stay inside, so YOU can pursue toward the boards without losing the middle; if Gold 1 controls first, recover instead of completing the old route.",
+        "id": "exp26-u13-025-q7"
+      },
+      "beforeContentHash": "3e83e0afc47db923eda6fa9e68d08c24ed18adc78662725c1e32c6a15595afe4",
+      "afterContentHash": "7866870a71a6f3d6a70118225ff2bf1ebae0a89cd88183bbc4db9e177b92e728",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q8",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "multi",
+        "prompt": "Which two facts should update that faceoff plan?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The puck remains loose"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1’s route to the puck"
+          },
+          {
+            "id": "c",
+            "text": "The faceoff was in the previous period"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Loose ownership and Gold 1’s route decide whether pursuit remains useful; period history does not.",
+        "id": "exp26-u13-025-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two facts should update that faceoff plan?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The puck remains loose"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1’s route to the puck"
+          },
+          {
+            "id": "c",
+            "text": "The faceoff was in the previous period"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Loose ownership and Gold 1’s route decide whether pursuit remains useful; period history does not.",
+        "id": "exp26-u13-025-q8"
+      },
+      "beforeContentHash": "c26964285ba83344d06dc9daeaf508e9688a87d2faeb1a3cc6b9968367ee3782",
+      "afterContentHash": "696b3ddf80a12e7e787d1a0fb114371f4cc357999bd857e2a07a0bf7d44c66d2",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q9",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU toward the side-board puck while keeping C’s inside lane visible.",
+        "basis": "coaching",
+        "explanation": "The board-side route follows the assignment and leaves C inside; if Gold reaches the puck, stop the chase and support coverage.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -15,
+          "y": 8
+        },
+        "id": "exp26-u13-025-q9"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU toward the side-board puck while keeping C’s inside lane visible.",
+        "basis": "coaching",
+        "explanation": "The board-side route follows the assignment and leaves C inside; if Gold reaches the puck, stop the chase and support coverage.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -15,
+          "y": 10.6
+        },
+        "id": "exp26-u13-025-q9"
+      },
+      "beforeContentHash": "f3ffebfed8ca662c7d2fc566957670fffc06662833ec867165b20762fc4acdef",
+      "afterContentHash": "4e2f060b4256f3ad6efeb75f4ad94ce75f1f087af4a1aef382525159e7a4f896",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    },
+    {
+      "questionId": "exp26-u13-025-q10",
+      "scenarioId": "exp26-u13-025",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "explain",
+        "prompt": "Why does a faceoff plan still require a puck read?",
+        "basis": "coaching",
+        "explanation": "The plan describes an intended first job, but the loose puck and opponent route can change ownership; if Gold wins it, recover instead of completing the old route.",
+        "id": "exp26-u13-025-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "Why does a faceoff plan still require a puck read?",
+        "basis": "coaching",
+        "explanation": "The plan describes an intended first job, but the loose puck and opponent route can change ownership; if Gold wins it, recover instead of completing the old route.",
+        "id": "exp26-u13-025-q10"
+      },
+      "beforeContentHash": "b9df708e75f83f0fb546c1df63e61ca425d5247f412b84917d94e2a8ad4dce65",
+      "afterContentHash": "7e5ba79ea704430aafaae8d9e545a5ead2bd58107279d6bff316a9bdaa4ac136",
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read.",
+      "contentChanged": true
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26b-u13-002",
+      "beforeVersion": 2,
+      "afterVersion": 3,
+      "before": {
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 retrieved a rim at the left corner. YOU is low middle, D2 is higher, and Gold 1 steers the carrier toward the wall.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 0,
+              "facing": 1.8
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -26,
+              "y": -8,
+              "facing": 0.3
+            },
+            {
+              "id": "n3",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 7,
+              "facing": 2.4
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": -23,
+              "y": -3,
+              "facing": 2.8
+            }
+          ],
+          "puck": {
+            "owner": "n2",
+            "x": -25.252,
+            "y": -7.036
+          }
+        }
+      },
+      "after": {
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 retrieved a rim at the left corner. YOU is low middle, D2 is higher, and Gold 1 steers the carrier toward the wall.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 0,
+              "facing": 1.8
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -26,
+              "y": -8,
+              "facing": 0.3
+            },
+            {
+              "id": "n3",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 7,
+              "facing": 2.4
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": -23,
+              "y": -3,
+              "facing": 2.8
+            }
+          ],
+          "puck": {
+            "owner": "n2",
+            "x": -25.252,
+            "y": -7.036
+          }
+        }
+      },
+      "reason": "No puck move: the briefing describes a past rim retrieval, so the current carried puck inside the zone is valid. Only q4’s “below D1” relation conflicted with its reference."
+    },
+    {
+      "scenarioId": "exp26-u13-021",
+      "beforeVersion": 1,
+      "afterVersion": 2,
+      "before": {
+        "briefing": "F1 and Gold 1 contest a loose puck along the attacking-zone side boards. F2 is closer to Gold’s net than they are. YOU are the high forward; this exercise assigns YOU to support higher than the battle until control changes. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 12,
+              "y": 1,
+              "facing": 0.6107259643892086
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": 8,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 25,
+              "y": 5,
+              "facing": 2.356194490192345
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": 9,
+              "facing": -2.356194490192345
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": -3,
+              "facing": 1.0714496051147666
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 22,
+            "y": 8
+          }
+        }
+      },
+      "after": {
+        "briefing": "F1 and Gold 1 contest a loose puck along the attacking-zone side boards. F2 is closer to Gold’s net than they are. YOU are the high forward; this exercise assigns YOU to support higher than the battle until control changes. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 12,
+              "y": 1,
+              "facing": 0.6107259643892086
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": 11.3,
+              "facing": 0.464
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 25,
+              "y": 5,
+              "facing": 2.356194490192345
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": 11.8,
+              "facing": 3.142
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": -3,
+              "facing": 1.0714496051147666
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 22,
+            "y": 11.8
+          }
+        }
+      },
+      "reason": "Moved the current loose-puck board battle and its two contesting players to the upper side board so the live “along the side boards” wording is visible; preserved the high-support teaching roles."
+    },
+    {
+      "scenarioId": "exp26-u13-025",
+      "beforeVersion": 1,
+      "afterVersion": 2,
+      "before": {
+        "briefing": "This even-strength practice draw has already occurred. The coach asked YOU, the winger, to pursue a loose puck toward the side boards while C stays inside. The puck remains loose; no faceoff violation is being assessed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 8,
+              "facing": 2.819842099193151
+            },
+            {
+              "id": "home-skater-2",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 2,
+              "facing": 1.2924966677897853
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -4,
+              "facing": 1.0768549578753155
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -14,
+              "y": 5,
+              "facing": 1.8157749899217608
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -19,
+              "y": -1,
+              "facing": 1.1902899496825317
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -15,
+            "y": 9
+          }
+        }
+      },
+      "after": {
+        "briefing": "This even-strength practice draw has already occurred. The coach asked YOU, the winger, to pursue a loose puck toward the side boards while C stays inside. The puck remains loose; no faceoff violation is being assessed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -12,
+              "y": 10.8,
+              "facing": 2.82
+            },
+            {
+              "id": "home-skater-2",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 2,
+              "facing": 1.2924966677897853
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -4,
+              "facing": 1.0768549578753155
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -14,
+              "y": 5,
+              "facing": 1.8157749899217608
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -19,
+              "y": -1,
+              "facing": 1.1902899496825317
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -15,
+            "y": 11.8
+          }
+        }
+      },
+      "reason": "Moved the current loose puck and YOU’s approach to the upper side board so the live “toward the side boards” wording is visible; preserved C’s inside support and the conditional possession read."
+    }
+  ],
+  "limits": [
+    "The completed retrieval in exp26b-u13-002 was intentionally preserved.",
+    "No other rim, wall or board-language rows were changed."
+  ]
+}

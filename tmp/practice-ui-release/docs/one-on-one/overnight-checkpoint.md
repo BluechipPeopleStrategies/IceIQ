@@ -1,0 +1,62 @@
+# RinkReads overnight checkpoint
+
+## Current release — September 5, 08:01 Edmonton
+
+`86c250c` is live. [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/FsJJk7ijaGTkxB7A66Vm4Y4fYKFY) completed successfully. The shared review now includes rotatable 3D guided/coach/SGS scenes, individual player facing and visible sticks, connected puck-state fixes, a 1v1–5v5 positioning draft catalog and the U7 rink tour. Planning: [SGS plan](SGS-PLAN.md). Scope and limits: [SGS visual review](sgs-visual-review.md).
+
+325 practice tests, 18 bank-content, 41 young-view and 8 identity checks pass; the production build passes. At the public HTTPS origin and 390 px, the review loaded all eight images; three new/current scene images matched their committed hashes. The default 1v1 completed three real choices/reasons and restored exact saved JSON after reload. The U7 on-rink circle and blue-line buttons succeeded. Fourteen prior non-SGS local records retained the same combined hash. No page exceptions or horizontal overflow occurred in these checked flows. A fresh screenshot corrects an offscreen WebGL capture artifact in the U7 review image; this does not change the app.
+
+[Open Scenario Lab](https://ice-iq.vercel.app/?arena=sgs#practice-arena) · [Open U7 rink discovery](https://ice-iq.vercel.app/?arena=sgs&sgs=discover#practice-arena) · [Review](https://ice-iq.vercel.app/review/)
+
+The 640 entries are draft configurations of two families; none is newly AI/physics-approved or admitted to the live bank. Remaining work is coach calibration, broader validated families/ages, production character rigs, remaining legacy 3D migration and physical iPad verification. The older 7 a.m. target was superseded by Thomas's instruction to continue; do not infer a new schedule from these historical notes.
+
+## Earlier verification history
+
+Updated September 5, 2026, 06:15 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
+
+## Continue from here
+
+**Latest completed slice: Thomas said ALL scenarios.** The broad visual pass is live in `22782f6`, verified at 06:15 Edmonton. Shared decorative SVG and Canvas art now covers quiz/scenario primitives, coach/curriculum/connected tactical/recall boards, animated plays and Gym. All 41 image assets serving 133 bank questions were refreshed from exact source geometry; the bank, manifest and SCENES block hashes are unchanged. Read-only BoardInspection/ScenarioImage dialogs zoom the whole composition; no extra WebGL. Legacy image coordinates and actor/ice layer alignment are fixed. Snapshot gold cue is preserved by gray defenders. **265 tests and production build pass.** Root has browser QA evidence and removed temporary fixture files. All 41 live source images match committed hashes. Public phone board/picture inspection, a source answer and exact reload, eleven older saved records, and 320/390 px review layouts passed with no page errors or failed requests. Verification records are finalized; use the remaining overnight time for another bounded quality slice. See `all-scenario-visuals.md` and the September 5 all-scenario plan. The previously deployed release follows for context.
+
+**Previous release complete: `cf96277`, U13 worked comparison and 3D connected-read presentation.** Vercel succeeded and live phone verification finished at 05:34 Edmonton. Thomas requested higher-quality scenario visuals. The new lazy scene renders the same canonical actors/puck with procedural navy/gold skaters, goalie, ice/light, readable labels and targets, broadcast desktop and end-zone phone framing. Tactical board remains available; actual local context loss returns there without losing answers. U13 adds four worked Shoot/Carry paths, separate records and actual-branch recall. All 15 local paths, native route touch, no-point scrolling, frozen pixels, view switching and fallback/save/reload passed. Final 320 px grid and target-clamping fixes passed. **243 tests and build pass.** Live native F2/route touch, numeric endpoint, completion, exact download/full reload and recall opening passed with three older records unchanged; no errors, failed requests or overflow. Finish committing the verification record if modified, then choose the next bounded slice. See `connected-read-visual-design.md`, `u13-lane-switch-design.md`, `phone-preview.md` and `verification.md`.
+
+**Prior verified releases:** `2b5ae75` U11 wording (04:30 Edmonton), `106ec3e` Coach Lab routes. Existing U11 canonical fixture and saved outputs remain unchanged. Do not repeat these completed slices.
+
+Thomas asked whether everything was still getting worked on. Root answered yes and continued this slice. The broader build is still active; no claim that the commercial app, production animation or AI judging is finished.
+
+## Completed work to preserve
+
+- **Phone review:** https://ice-iq.vercel.app/review/ and `/#practice-arena`, `/#brain-gym`, `/#shootout-before`, `/#shootout-now`, `/review/characters/`, `/#one-on-one`, `/#legacy-two-on-one`. No localhost or shared Wi-Fi requirement. These are explicitly labelled prototype review routes; main-app navigation and account/tier gates are unchanged.
+- **U11 connected reads:** default opening action plus reason, branch-specific target and an off-puck placement or support route plus reason. Seven real authored paths, replay, separate final reflection and optional single-D1 changed-cue comparison. No tactical score. Optional final-position AI is hidden for support-route reflections and has no configured live key.
+- **U9 connected reads:** four simpler pass/carry paths, generic visible players with only YOU tagged, optional device speech and short reasons. Age-scoped saved reflections; unfinished work survives age switches in memory. U11 definition, branch outputs and AI payloads retain their golden fixture. U9 has no AI or changed-cue comparison.
+- **Learner support routes:** up to 12 points from the selected branch's exact off-puck Start; touch/numeric Add, Undo/Clear, pause/manual inspection, saved route and explanation. Only that support marker moves; other actors and puck stay frozen. Implemented in both U9/U11.
+- **Actual-branch recall (`8a2a5e9`, live verified 03:17):** three exact branch freezes, U9 opening fixed and U11 all-three order. Touch/keyboard movement, larger pictures, optional speech/note, separate bound local records/download. Check chronology only; Show the order persists help immediately. Original U9/U11 hockey reflections are unchanged. 208 tests at that release.
+- **Coach Questions:** 12 ready examples, two per U7-U18 age; independent opening/reference/attempt, action or positioning, explanation, ghost/side-by-side comparison, source/open rubric, local save/reopen/import/export. Goalies fixed in this question format. Guided curriculum has 24 draft lessons/48 paired MC-TF questions, age filtering, personas and one-time credit. Source bank, scenarios and animated plays remain intact.
+- **Coach Lab director (`106ec3e`):** 1v1-5v5 templates, add/remove, freeze, time keys, save/reopen/import/export, plus new pending player-route editor. Capture exact paused Start; full/broadcast 3D or full-rink SVG and numeric points; timing/facing controls; isolated preview; explicit Apply/Cancel; one-step Undo invalidated by later edits. Apply replaces only the selected player's remaining keys and holds the finish; earlier motion, other actor keys, source metadata and puck ownership remain. Unfrozen goalies may have director routes. Animate play follows keys; Play this setup uses separate live simulation from zero. No timed pass-transfer authoring.
+- **Phone/coach input (`cabeee0`, live verified 02:46):** prompt above rink on stacked layouts; successful choices return there without scroll during editing/playback. Focused running rink alone captures play keys; Escape pauses, paused Tab navigates, Resume retains frame. Coordinate editing pauses the clock, preserves negative decimals and never commits incomplete blank/minus as zero.
+- **Brain Gym:** all 12 games/scoring/adaptation retained. Shootout/Best Option improved 3D, six accessible shot targets, corrected geometry and real 2D fallback on context loss; completed/hidden 3D unmounts. Eleven non-Shootout instructions audited against actual tasks with honest discussion prompts. Source notes: `brain-gym-copy-review.md`.
+- **Brand:** BlueChip navy #0B1A33, gold #C9A24B, bone #F5EFE6, slate #5B6675; local Playfair Display and Inter; glass panels/buttons/pills. Secondary text checks >=4.9:1 on three shared navy surfaces. Goals/skills sample views checked, not every authenticated journey.
+- **Characters:** four native 1254 px actual RGBA navy/gold skater/goalie references with visible light skin, plus a 40-clip brief. References are not rigged assets or animation atlases. No purchases; old R19-era work untouched.
+
+## Verification and boundaries
+
+**Current:** 265 practice tests pass; build and all-scenario public verification are complete in `all-scenario-visuals.md`. Current U13/3D checks and fixes are recorded in `verification.md`; release build and live evidence follow there. The older Coach Lab director checks at its 225-test release included actual touch, both cameras, SVG/numeric input, no-point page scrolling, nonzero Start, preview/pause/reduced motion, Apply/Cancel/Undo exact JSON, frozen/goalie guards, movement and save/export/full reload. Preserve those completed checks without presenting them as new connected-read evidence.
+
+Prior integrated scenario-engine suite passed; current route slice does not modify that engine. Existing chunk/import, clock-deprecation and splash-preload warnings remain. Browser viewport and browser-generated touch evidence is not a physical phone/iPad or child comprehension test.
+
+Hosted practice uses fixed `practice-preview` identity with device-local saves. Development follows the active player. Records do not sync between devices; older animated telemetry remains device-global. Server-only local judge adapter is mocked/tested, but neither local nor hosted preview has a live key; unavailable is returned before sending AI. No paid calls or assets.
+
+New content and geometry stay coach-review drafts, not admitted curriculum. The original quiz's existing mixed-age `ALL_AGES_MODE` policy remains unresolved. Do not silently alter that policy or claim age validation. Authoritative source notes are in `docs/library`; the concept interaction map preserves their provenance and limits.
+
+## Next useful bounded work
+
+1. All-scenario visuals and U13/3D publication and live verification are complete. Continue bounded quality/source work; do not redo this release. The untracked `read-scene-phone-initial.png` is an obsolete first iteration, not release evidence.
+2. U13 is live as a coach-review worked comparison. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that teaching tradeoff. No U13 AI, changed-cue support, tactical grade or age validation is implied.
+3. Route-to-question integration, timed passes, richer prediction/changed-cue sequences and remaining ages need bounded designs. Live AI, whole-sequence judging, cloud persistence, main-app navigation, physical-device performance, coach/player comprehension, curriculum admission and rigged character motion remain open.
+4. At 7:00 a.m., stop this overnight run and leave a self-contained review with working hosted links, deployed changes, actual checks and material limits. Keep `morning-review.md` and the canonical `docs/roadmap/TASKS.md` current.
+
+## Workspace
+
+Work in `C:/Users/mtsli/IceIQ` on main. CLAUDE.md authorises scoped commit/push after checks with `Co-Authored-By: Codex <noreply@openai.com>`. Never stage -A or dot. Preserve pre-existing untracked `.playwright-mcp/`, `docs/design/`, `public/assets/3d/`, `tools/blender/` and the pending U13 faceoff/trap seed files. Do not write memory. The commit hook syncs Obsidian.
+
+Verify running servers before relying on session IDs; current dev 5184 and production preview 5185. Full reload after bundle changes. Root owns the browser. The three agents are idle after scoped helper/surface/docs/review work and can receive a new independent bounded task.

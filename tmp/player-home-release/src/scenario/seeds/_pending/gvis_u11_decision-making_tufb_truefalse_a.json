@@ -1,0 +1,104 @@
+{
+  "id": "gvis_u11_decision-making_tufb_truefalse_a",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "themes": [
+    "decision-making",
+    "pass-selection",
+    "vision",
+    "offensive-zone"
+  ],
+  "cat": "Offensive Zone",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "tag": "YOU",
+      "x": 0.93,
+      "y": 0.7
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.932,
+      "y": 0.698
+    },
+    {
+      "id": "slot_lw",
+      "kind": "teammate",
+      "tag": "LW",
+      "x": 0.8,
+      "y": 0.4
+    },
+    {
+      "id": "wall_c",
+      "kind": "teammate",
+      "tag": "C",
+      "x": 0.88,
+      "y": 0.27
+    },
+    {
+      "id": "ld",
+      "kind": "teammate",
+      "tag": "LD",
+      "x": 0.65,
+      "y": 0.22
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.87,
+      "y": 0.33
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.65,
+      "y": 0.28
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "You have the puck in the corner. True or False: the half-wall teammate above you has a clean passing lane right now. Tap the zone you would actually pass to."
+  },
+  "correct": {
+    "kind": "point",
+    "zoneId": "oz-slot"
+  },
+  "mc": {
+    "opts": [
+      "True",
+      "False"
+    ],
+    "ok": 1
+  },
+  "feedback": {
+    "right": "False — good read. X1 is parked directly in the lane from your corner to the half-wall, cutting off that pass. The LW drifting into the slot has a clear route.",
+    "wrong": "Look at X1 before you commit — that defender sits right in the corner-to-half-wall lane and intercepts it. The slot is the clean outlet here."
+  },
+  "tip": "Trace the full lane before you pass, not just the distance. A defender two strides off the boards can still cut off a short wall pass.",
+  "why": "X1 closes the corner-to-half-wall lane. The slot LW is uncontested from this angle, making it the only safe release.",
+  "read": {
+    "cue": "X1 stands in the direct lane from the corner to the half-wall teammate",
+    "decoy": {
+      "x": 0.88,
+      "y": 0.27
+    }
+  },
+  "stemId": "gvis_u11_decision-making_tufb",
+  "nodeId": "u11.decision-making",
+  "levels": [
+    "U11 / Atom"
+  ]
+}

@@ -1,0 +1,637 @@
+{
+  "reviewer": "second independent lane / GPT-5.6 Luna",
+  "reviewKind": "sequence finding adjudication",
+  "reviewedAt": "2026-09-05",
+  "sourceHashes": {
+    "src/one-on-one/experimentalBankCore.js": "07d031ee1c2f2fa25f99ff1b68c224c392d327fdd07aaaf61dcdc54fbe62a272",
+    "src/one-on-one/experimental-bank/u9.json": "1a8eea9314c618c27eea8cea0f83cd31d36566a87783a96b440efa1cdf7eaaa7",
+    "src/one-on-one/experimental-bank/u11.json": "464c5da2259f4eeaa0a3144841fdc275dfaa6b5ffcbb0e279f0b39a104041a0f",
+    "src/one-on-one/experimental-bank/u13.json": "5945ffcaf32b8ee864b4c60210a9397dd0eeaa9adce42720c68b336fec5d1672",
+    "src/one-on-one/experimental-bank/u15.json": "b865b4fed220a503ea010331a9fa5f676c26d96a2f1f73a9f9738862e20ca985",
+    "src/one-on-one/experimental-bank/u18.json": "62648eab345059d2728930e187753016dda209979839cce602d3f6fd19b26923"
+  },
+  "coverageCounts": {
+    "requiredQuestionIds": 79,
+    "retained": 55,
+    "rejected": 24
+  },
+  "actionableQueueCount": 55,
+  "retainedQuestionIds": [
+    "exp26-u9-006-q3",
+    "exp26-u11-001-q3",
+    "exp26-u11-006-q3",
+    "exp26-u11-007-q3",
+    "exp26-u11-008-q3",
+    "exp26-u11-009-q3",
+    "exp26-u11-010-q3",
+    "exp26-u11-011-q3",
+    "exp26-u11-012-q3",
+    "exp26-u11-017-q3",
+    "exp26-u11-018-q3",
+    "exp26-u11-021-q3",
+    "exp26-u11-022-q3",
+    "exp26-u11-023-q3",
+    "exp26-u11-024-q3",
+    "exp26-u11-025-q3",
+    "exp26-u13-001-q3",
+    "exp26-u13-002-q3",
+    "exp26-u13-003-q3",
+    "exp26-u13-004-q3",
+    "exp26-u13-005-q3",
+    "exp26-u13-006-q3",
+    "exp26-u13-007-q3",
+    "exp26-u13-008-q3",
+    "exp26-u13-009-q3",
+    "exp26-u13-010-q3",
+    "exp26-u13-011-q3",
+    "exp26-u13-012-q3",
+    "exp26-u13-013-q3",
+    "exp26-u13-014-q3",
+    "exp26-u13-015-q3",
+    "exp26-u13-016-q3",
+    "exp26-u13-017-q3",
+    "exp26-u13-018-q3",
+    "exp26-u13-019-q3",
+    "exp26-u13-020-q3",
+    "exp26-u13-021-q3",
+    "exp26-u13-022-q3",
+    "exp26-u13-023-q3",
+    "exp26-u13-024-q3",
+    "exp26-u13-025-q3",
+    "exp26-u15-001-q3",
+    "exp26-u15-006-q3",
+    "exp26-u15-007-q3",
+    "exp26-u15-011-q3",
+    "exp26-u15-012-q3",
+    "exp26-u15-013-q3",
+    "exp26-u15-015-q3",
+    "exp26-u18-001-q3",
+    "exp26-u18-002-q3",
+    "exp26-u18-003-q3",
+    "exp26-u18-005-q3",
+    "exp26-u18-006-q3",
+    "exp26-u18-009-q3",
+    "exp26-u18-010-q3"
+  ],
+  "results": [
+    {
+      "questionId": "exp26-u9-006-q3",
+      "scenarioId": "exp26-u9-006",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The corner pickup puts Find the loose puck before Look for pressure and support although Gold1 is approaching from inside; pressure scanning can overlap the approach and should be a final pre-touch check, so this order can cue puck fixation."
+    },
+    {
+      "questionId": "exp26-u9-010-q3",
+      "scenarioId": "exp26-u9-010",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "This is a multi question, not a sequence question; the earlier grouped flag was a false positive."
+    },
+    {
+      "questionId": "exp26-u9-013-q3",
+      "scenarioId": "exp26-u9-013",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "These are explicit U9 line-change events, making their order the actual scoped teaching target."
+    },
+    {
+      "questionId": "exp26-u9-014-q3",
+      "scenarioId": "exp26-u9-014",
+      "scenarioVersion": 2,
+      "status": "reject",
+      "reason": "These are explicit goalie-freeze restart events, making their order the actual scoped rule target."
+    },
+    {
+      "questionId": "exp26-u11-001-q3",
+      "scenarioId": "exp26-u11-001",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Find the pressure and outlet -> Approach and control the loose puck -> Check whether the outlet is still available are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-002-q3",
+      "scenarioId": "exp26-u11-002",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Check the space behind you -> Receive the pass under control -> Choose the next action using the updated space form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-003-q3",
+      "scenarioId": "exp26-u11-003",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Notice the blocked line -> Move into a different passing angle -> Check whether F1 can still see and reach you form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-004-q3",
+      "scenarioId": "exp26-u11-004",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Recognize that F2 now has possession -> Find space outside the old return line -> Show a new option and read D1 again form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-005-q3",
+      "scenarioId": "exp26-u11-005",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Notice the forward pressure -> Offer a visible option behind it -> Reassess after F1 chooses pass or carry form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-006-q3",
+      "scenarioId": "exp26-u11-006",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Locate the loose puck -> Check the approach and establish control if possible -> Reassess a shot or pass are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-007-q3",
+      "scenarioId": "exp26-u11-007",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice which side D1 threatens -> Keep control while using available space -> Recheck the outlet or escape are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-008-q3",
+      "scenarioId": "exp26-u11-008",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Find an available route -> Carry under control while observing D1 -> Choose again as the gap changes are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-009-q3",
+      "scenarioId": "exp26-u11-009",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice the traffic before reaching it -> Choose a turn you can control -> Look again as you leave the turn are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-010-q3",
+      "scenarioId": "exp26-u11-010",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Offer a target in available space -> Control the incoming puck -> Read D1 before the next pass or carry are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-011-q3",
+      "scenarioId": "exp26-u11-011",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice the blocked direct line -> Agree on a possible board route and receiving area -> Read the actual rebound before the next touch are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-012-q3",
+      "scenarioId": "exp26-u11-012",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Locate the puck after the miss -> Approach with awareness of D1 -> Choose the next action once control is available are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-013-q3",
+      "scenarioId": "exp26-u11-013",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Identify the blocker and the support option -> Choose a controlled action supported by those cues -> Read the defence again after the puck moves form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-014-q3",
+      "scenarioId": "exp26-u11-014",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Notice your position in F1’s line -> Choose a useful nearby role or receiving angle -> Recheck as F1 changes the puck position form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-015-q3",
+      "scenarioId": "exp26-u11-015",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Locate carrier, support and defended goal -> Choose an inside position you can maintain -> Adjust when the carrier’s movement changes form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-016-q3",
+      "scenarioId": "exp26-u11-016",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Read F1’s direction and the inside space -> Approach from an angle that protects that space -> Update the approach if F1 turns or passes form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-017-q3",
+      "scenarioId": "exp26-u11-017",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize that the first challenge is over. -> Turn and move toward a useful defensive route. -> Recheck the puck and the second attacker as you recover. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-018-q3",
+      "scenarioId": "exp26-u11-018",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify who is pressuring the carrier. -> Find the separate runner and choose an inside recovery route. -> Keep checking for a pass or a changed assignment. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-019-q3",
+      "scenarioId": "exp26-u11-019",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Notice which team now controls the puck. -> Identify the pressure teammate and the separate runner. -> Recover toward the defended end while checking for a pass. form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-020-q3",
+      "scenarioId": "exp26-u11-020",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Locate the carrier and the likely outlet. -> Choose an approach that considers the inside passing route. -> Adjust as the carrier turns or moves the puck. form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u11-021-q3",
+      "scenarioId": "exp26-u11-021",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Scan the defender, receiver and net. -> Choose an option that fits the current lanes and pressure. -> After the puck moves, look for the next support or rebound job. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-022-q3",
+      "scenarioId": "exp26-u11-022",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Check the loose puck and the assigned contest. -> Find a visible support lane away from the same contest. -> React to the team that actually wins control. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-023-q3",
+      "scenarioId": "exp26-u11-023",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize F2’s retrieval job. -> Find a separated support position and check D1. -> Offer a target if F2 gains control, then update with the next play. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-024-q3",
+      "scenarioId": "exp26-u11-024",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Return to the neutral-zone side of the right blue line. -> Check that the coach has released the next action. -> Continue the new support route while watching F1 and pressure. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u11-025-q3",
+      "scenarioId": "exp26-u11-025",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize the rep has ended. -> Control movement while checking nearby skaters. -> Listen for the next setup or coaching cue. are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-001-q3",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Look over your shoulder -> Approach while checking pressure -> Control the puck and reassess the outlet are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-002-q3",
+      "scenarioId": "exp26-u13-002",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice the blocked strong side -> Check and communicate with D2 -> Use the reverse only if that route remains available are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-003-q3",
+      "scenarioId": "exp26-u13-003",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify Gold 1’s blocking position -> Move to change the passing angle -> Look back and prepare to receive are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-004-q3",
+      "scenarioId": "exp26-u13-004",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read Gold 1’s approach -> Move closer to Navy’s net and inside W -> Prepare for a pass or another change are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-005-q3",
+      "scenarioId": "exp26-u13-005",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Check who controls the puck -> Check the remaining threat near the net -> Move to support the outcome you actually see are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-006-q3",
+      "scenarioId": "exp26-u13-006",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice F1’s high position -> Offer a deeper middle target -> Adjust as D1 chooses a route are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-007-q3",
+      "scenarioId": "exp26-u13-007",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Confirm D2 has received -> Move beneath the new carrier -> Present an option and read the next pass are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-008-q3",
+      "scenarioId": "exp26-u13-008",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify F1’s wide route -> Check middle ice and defenders -> Move on a different useful route are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-009-q3",
+      "scenarioId": "exp26-u13-009",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice the carrier slowing -> Check an open support pocket -> Adjust arrival to remain an option are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-010-q3",
+      "scenarioId": "exp26-u13-010",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read the puck carrier -> Find available space near the front -> Present the stick and watch the puck are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-011-q3",
+      "scenarioId": "exp26-u13-011",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice Gold 1 in the lane -> Check movement and passing options -> Use the option that remains available are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-012-q3",
+      "scenarioId": "exp26-u13-012",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Confirm the pass arrived -> Scan the next support space -> Move and become visible again are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-013-q3",
+      "scenarioId": "exp26-u13-013",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify the pressure side -> Check the space for a turn -> Protect possession and look for the next option are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-014-q3",
+      "scenarioId": "exp26-u13-014",
+      "scenarioVersion": 2,
+      "status": "retain",
+      "reason": "The actions Locate the carrier and net -> Check speed and recovering help -> Adjust while keeping a useful defensive position are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-015-q3",
+      "scenarioId": "exp26-u13-015",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Notice Gold 1’s route and your net -> Choose an inside approach -> Update when Gold 1 passes or changes direction are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-016-q3",
+      "scenarioId": "exp26-u13-016",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Locate Gold 2 and the net -> Check the puck and possible pass -> Adjust while renewing both views are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-017-q3",
+      "scenarioId": "exp26-u13-017",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify who has the puck -> Check the uncovered inside threat -> Recover toward a useful net-side relationship are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-018-q3",
+      "scenarioId": "exp26-u13-018",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Find the loose puck -> Check the immediate opponent and goalie -> Choose a controlled next action if you can reach it are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-019-q3",
+      "scenarioId": "exp26-u13-019",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize the new puck owner -> Locate the next attacking threat -> Recover or pressure according to available support are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-020-q3",
+      "scenarioId": "exp26-u13-020",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Check D1’s contest -> Locate Gold 2 and available cover -> Communicate before changing responsibility are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-021-q3",
+      "scenarioId": "exp26-u13-021",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Track who controls the puck -> Check the high-slot space and opposing outlet -> Adjust to the actual winner are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-022-q3",
+      "scenarioId": "exp26-u13-022",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Identify the defender crossing the route -> Change your angle through useful space -> Show the target and reassess are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-023-q3",
+      "scenarioId": "exp26-u13-023",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read the bounce and approaching pressure -> Establish control if there is time -> Recheck the forward option are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-024-q3",
+      "scenarioId": "exp26-u13-024",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Observe the contested touch -> Identify the actual puck owner -> Commit to the useful support job are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u13-025-q3",
+      "scenarioId": "exp26-u13-025",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Locate the loose puck -> Check the opponent and assigned support -> Pursue or adjust to the actual control are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-001-q3",
+      "scenarioId": "exp26-u15-001",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read the wall contest -> Confirm the assigned high cover -> Pinch or recover based on the updated picture are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-002-q3",
+      "scenarioId": "exp26-u15-002",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Identify Gold 1’s two nearby responsibilities -> Observe which route pressure closes -> Use or recreate an available connection form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-003-q3",
+      "scenarioId": "exp26-u15-003",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Track the puck’s new side -> Identify the teammate applying pressure -> Adjust inside coverage while communicating form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-004-q3",
+      "scenarioId": "exp26-u15-004",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Read the loose puck and contest -> Secure or support the recovery -> Organize the next attacking option form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-005-q3",
+      "scenarioId": "exp26-u15-005",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Confirm F2’s reception -> Check the available high space -> Reoffer high support behind the continuing attack form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-006-q3",
+      "scenarioId": "exp26-u15-006",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Hear and verify the carrier coverage -> Locate the inside support threat -> Recover in relation to that threat are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-007-q3",
+      "scenarioId": "exp26-u15-007",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read the covered forward routes -> Check D2 and the lateral connection -> Reset or choose another available play are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-008-q3",
+      "scenarioId": "exp26-u15-008",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Track the carrier’s side change -> Confirm the pressure responsibility -> Maintain the slot assignment while adjusting form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-009-q3",
+      "scenarioId": "exp26-u15-009",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Notice F2 joining low -> Check the open high-slot pocket -> Reoffer high support behind the puck form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-010-q3",
+      "scenarioId": "exp26-u15-010",
+      "scenarioVersion": 2,
+      "status": "reject",
+      "reason": "The actions Read the first shooting-lane defender -> Check the net-front picture -> Choose a shot or another available option form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-011-q3",
+      "scenarioId": "exp26-u15-011",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Scan the approaching forechecker -> Prepare to receive the goalie’s pass -> Control or redirect according to the actual lane are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-012-q3",
+      "scenarioId": "exp26-u15-012",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Update Gold 1’s position -> Compare shot, pass and carry possibilities -> Choose an available play before pressure changes again are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-013-q3",
+      "scenarioId": "exp26-u15-013",
+      "scenarioVersion": 2,
+      "status": "retain",
+      "reason": "The actions Watch the contest and puck direction -> Check C and the opposing support -> Move to the next useful touch or containment position are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u15-014-q3",
+      "scenarioId": "exp26-u15-014",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Confirm available teammates -> Assess pressure and controlled options -> Choose a play and communicate the next support need form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u15-015-q3",
+      "scenarioId": "exp26-u15-015",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize the crowded slot route -> Compare low and high outlets -> Use an available connection and reoffer are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-001-q3",
+      "scenarioId": "exp26-u18-001",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Confirm time, score and available support -> Compare pressure on each controlled option -> Choose and communicate the next support job are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-002-q3",
+      "scenarioId": "exp26-u18-002",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Check the remaining clock and immediate lanes -> Compare the available shot and connecting pass -> Commit to a feasible attempt and support its next touch are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-003-q3",
+      "scenarioId": "exp26-u18-003",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Read the entry defenders -> Compare the immediate chance with retained possession -> Attack or settle according to the available picture are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-004-q3",
+      "scenarioId": "exp26-u18-004",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Identify the moving low threat -> Communicate who will cover it -> Adjust after coverage is confirmed form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u18-005-q3",
+      "scenarioId": "exp26-u18-005",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Confirm controlled possession -> Check covering support and Gold 3 -> Join or hold according to the updated picture are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-006-q3",
+      "scenarioId": "exp26-u18-006",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize Gold 2’s shift -> Check the newly affected forward route -> Choose or retain possession based on actual availability are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-007-q3",
+      "scenarioId": "exp26-u18-007",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Confirm D1’s low rotation -> Check the vacated point and exit threats -> Occupy useful high support and communicate form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u18-008-q3",
+      "scenarioId": "exp26-u18-008",
+      "scenarioVersion": 1,
+      "status": "reject",
+      "reason": "The actions Confirm the actual puck owner -> Identify the uncovered inside threat -> Take the assigned support role and communicate form a coherent staged or explicitly assigned routine in this scenario. The explanation scopes it as a suggestion or plan, so there is no specific hockey error or harmful rigid-order claim to queue."
+    },
+    {
+      "questionId": "exp26-u18-009-q3",
+      "scenarioId": "exp26-u18-009",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Scan the forward option before arrival -> Update the lane and puck quality -> Redirect or control according to what remains available are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    },
+    {
+      "questionId": "exp26-u18-010-q3",
+      "scenarioId": "exp26-u18-010",
+      "scenarioVersion": 1,
+      "status": "retain",
+      "reason": "The actions Recognize Gold 1’s control -> Check pressure and the next outlet -> Recover or support the new defensive picture are conditional, overlapping, or timing-dependent in this scenario; the ordered interaction can still imply that the first action must finish before the next. Retain for a targeted variety rewrite only if a branch, multi-select, or reflection would better teach this stated read."
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "All 79 IDs from the prior grouped finding were checked against current question type, complete objective or briefing and all option texts plus explanation.",
+    "Coaching-basis responses are not objectively scored by experimentalBankCore.js.",
+    "No bank or app edits were made; no rendering was certified."
+  ]
+}

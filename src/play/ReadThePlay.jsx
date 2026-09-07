@@ -3,11 +3,14 @@
 // plays -> tap to run one in AnimatedPlay -> every interaction logged through
 // the standard animated-play telemetry. No new rink primitives.
 import { useMemo, useState } from "react";
-import { C, FONT, StickyHeader, BackBtn } from "../shared.jsx";
+import { FONT, StickyHeader, BackBtn } from "../shared.jsx";
 import { playsForAge } from "./playCatalog.js";
 import AnimatedPlay from "./AnimatedPlay.jsx";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { classifyPlayFamily } from "./playFamilies.js";
+import { resolveKind } from './questionKinds.js';
+import RinkIcon from '../ui/RinkIcon.jsx';
+import './ReadThePlay.css';
 
 // Player-facing family name for a play's concept tag. Never show the raw
 // concept string (e.g. "off-puck-support-offense", "backcheck-recovery") --
@@ -24,12 +27,21 @@ export function bandFromLevel(level) {
   return String(level || "").trim().split(/[\s/]/)[0] || "";
 }
 
+export function playCardDetails(play) {
+  const reads = Object.values(play.nodes).filter(node => node.ask && !node.terminal && !node.autoNext);
+  const kind = resolveKind(reads[0]);
+  const formats = { 'read-mc': ['Choose the play', 'play'], 'lane-pick': ['Pick a spot', 'target'], 'spot-mistake': ['Spot the mistake', 'scan'], verdict: ['Make the call', 'shield'], 'predict-next': ['Read what comes next', 'map'] };
+  const [format, icon] = formats[kind] || ['Read the play', 'play'];
+  return { format, icon, reads: reads.length, family: familyLabel(play) };
+}
+
 export default function ReadThePlay({ player, onBack }) {
   const band = bandFromLevel(player?.level);
   const plays = useMemo(() => playsForAge(band), [band]);
   const [active, setActive] = useState(null);
   // Bump to refresh per-play summaries after a run ends.
   const [statsBump, setStatsBump] = useState(0);
+  const [family, setFamily] = useState('all');
 
   const stats = useMemo(() => {
     const m = {};
@@ -41,6 +53,11 @@ export default function ReadThePlay({ player, onBack }) {
   // Falling off the end returns to the list rather than dead-ending.
   const activeIndex = active ? plays.findIndex((p) => p.id === active.id) : -1;
   const nextPlay = activeIndex >= 0 ? plays[activeIndex + 1] : null;
+  const families = [...new Set(plays.map(familyLabel).filter(Boolean))];
+  const visible = family === 'all' ? plays : plays.filter(play => familyLabel(play) === family);
+  const practised = plays.filter(play => stats[play.id]?.answers > 0).length;
+  const totalAnswers = plays.reduce((sum, play) => sum + (stats[play.id]?.answers || 0), 0);
+  const featured = plays.find(play => !stats[play.id]?.answers) || plays[0];
 
   function leaveActivePlay(destination) {
     // The run that just ended has written its events; refresh the per-play
@@ -50,38 +67,36 @@ export default function ReadThePlay({ player, onBack }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, color: C.white, fontFamily: FONT.body, paddingBottom: 80 }}>
+    <div className="rtp-screen" style={{ fontFamily: FONT.body }}>
       <StickyHeader>
-        <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div className="rtp-header">
           <BackBtn onClick={() => (active ? leaveActivePlay(null) : onBack())} />
-          <div style={{ flex: 1, fontFamily: FONT.display, fontWeight: 800, fontSize: "1.1rem" }}>
-            🏒 Read the Play
-          </div>
-          <div style={{ fontSize: 11, color: C.dim, fontWeight: 700, letterSpacing: ".08em" }}>{band}</div>
+          <span className="rtp-header-icon"><RinkIcon name="scan" size={22}/></span>
+          <div className="rtp-header-title" style={{ fontFamily: FONT.display }}>Read the Play</div>
+          <span className="rtp-age">{band}</span>
         </div>
       </StickyHeader>
 
-      <div style={{ padding: "1.25rem", maxWidth: 560, margin: "0 auto" }}>
+      <div className={`rtp-content ${active ? 'is-playing' : ''}`}>
         {active ? (
-          <AnimatedPlay
+          <><div className="rtp-active-heading"><span>{familyLabel(active)}</span><h1 style={{ fontFamily: FONT.display }}>{active.title}</h1></div><AnimatedPlay
             key={active.id + "-" + band}
             play={active}
             ageBand={band}
             onEvent={(e) => logAnimatedPlayEvent(e)}
             onNext={() => leaveActivePlay(nextPlay)}
             nextLabel={nextPlay ? "Next play →" : "Done — back to all plays"}
-          />
+          /></>
         ) : plays.length === 0 ? (
-          <div style={{ color: C.dim, fontSize: 14, lineHeight: 1.5 }}>
-            No plays for your age group yet — new plays are added all the time. Check back soon.
-          </div>
+          <div className="rtp-empty"><RinkIcon name="book" size={38}/><h1>No plays in this collection yet.</h1><p>Go back to your learning activities to find more for {band || 'your age group'}.</p></div>
         ) : (
           <>
-            <div style={{ fontSize: 13, color: C.dim, marginBottom: "1rem", lineHeight: 1.5 }}>
-              Watch the play develop, then make the read before the whistle. Replay any play as often as you want.
-            </div>
-            {plays.map((p) => {
+            <section className="rtp-intro"><div><span className="rtp-eyebrow">SEE IT. READ IT. PLAY IT.</span><h1 style={{ fontFamily: FONT.display }}>The next move<br/><em>starts with your read.</em></h1><p>Watch the players. Find the opening. Make your choice and see what happens next.</p></div><div className="rtp-practice-stats" aria-label="Recent practice on this device"><div><strong>{plays.length}</strong><span>situations to explore</span></div><div><strong>{practised}</strong><span>practised recently</span></div><div><strong>{totalAnswers}</strong><span>recent decisions</span></div></div></section>
+            {featured && <button type="button" className="rtp-featured" data-featured-play={featured.id} onClick={()=>setActive(featured)}><span className="rtp-feature-art" aria-hidden="true"><RinkIcon name={playCardDetails(featured).icon} size={48}/><span className="rtp-feature-orbit"/></span><span className="rtp-feature-copy"><span className="rtp-eyebrow">{stats[featured.id]?.answers ? 'REVISIT A READ' : 'TRY A FRESH READ'}</span><strong style={{fontFamily:FONT.display}}>{featured.title}</strong><small>{playCardDetails(featured).format} · {familyLabel(featured)}</small></span><span className="rtp-start">Play <RinkIcon name="arrow" size={18}/></span></button>}
+            <div className="rtp-list-heading"><div><span className="rtp-eyebrow">YOUR PLAYBOOK</span><h2 style={{fontFamily:FONT.display}}>Pick your next situation.</h2></div><label>Skill<select aria-label="Filter plays by skill" value={family} onChange={event=>setFamily(event.target.value)}><option value="all">All skills</option>{families.map(value=><option key={value} value={value}>{value}</option>)}</select></label></div>
+            <div className="rtp-play-grid">{visible.map(p => {
               const s = stats[p.id];
+              const details = playCardDetails(p);
               const done = s && s.answers > 0;
               // A play with one read used to report "1/1 reads", which counts
               // the attempt instead of saying how it went — and reads as
@@ -90,39 +105,26 @@ export default function ReadThePlay({ player, onBack }) {
               // actually more than one read to tally.
               const allCorrect = done && s.correct === s.answers;
               const statusText = !done
-                ? "New"
+                ? "Ready to play"
                 : s.answers === 1
                 ? (allCorrect ? "Read it ✓" : "Missed it")
                 : `${s.correct} of ${s.answers} correct`;
-              const statusColor = !done ? C.dim : allCorrect ? "#7ad78f" : "#E0B98A";
               return (
                 <button
                   key={p.id}
+                  type="button"
+                  data-play-id={p.id}
                   onClick={() => setActive(p)}
-                  style={{
-                    width: "100%", display: "block", textAlign: "left",
-                    background: "linear-gradient(135deg,rgba(122,215,143,.12),rgba(122,215,143,.03))",
-                    border: "1px solid rgba(122,215,143,.3)", borderRadius: 14,
-                    padding: ".85rem 1rem", cursor: "pointer", color: C.white,
-                    fontFamily: FONT.body, marginBottom: ".7rem",
-                  }}
+                  className={`rtp-play-card ${done ? allCorrect ? 'is-correct' : 'is-practised' : ''}`}
                 >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".6rem" }}>
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 800 }}>{p.title}</div>
-                      {familyLabel(p) && (
-                        <div style={{ fontSize: 11, color: C.dim, marginTop: 2, textTransform: "capitalize" }}>
-                          {familyLabel(p)}
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ fontSize: 11, color: statusColor, fontWeight: 700, whiteSpace: "nowrap" }}>
-                      {statusText}
-                    </div>
-                  </div>
+                  <span className="rtp-card-top"><span className="rtp-card-icon"><RinkIcon name={details.icon} size={25}/></span><span className="rtp-status">{done&&allCorrect&&<RinkIcon name="check" size={13}/>} {statusText}</span></span>
+                  <span className="rtp-card-family">{details.family}</span>
+                  <strong className="rtp-card-title" style={{fontFamily:FONT.display}}>{p.title}</strong>
+                  <span className="rtp-card-bottom"><span>{details.format}<small>{details.reads} {details.reads===1?'read':'connected reads'}</small></span><span className="rtp-card-arrow"><RinkIcon name="arrow" size={18}/></span></span>
                 </button>
               );
-            })}
+            })}</div>
+            <p className="rtp-device-note">Recent practice is saved on this device. Replay any situation whenever you want.</p>
           </>
         )}
       </div>

@@ -1,0 +1,77 @@
+{
+  "packetId": "visual-04",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26b-u11-002", "questionId": "exp26b-u11-002-q2", "scenarioVersion": 3,
+      "contentHash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry, ahead/behind relative to attack direction",
+      "blindAnswer": ["a","b"], "keyedAnswer": ["a","b"], "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms F1 clearly behind YOU (toward the defending end), D1 ahead and more central, F2 clearly ahead (not behind, correctly excluding the false distractor). Interactively tested live: selecting a+b returned 'Yep, you got it.' with explanation matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-002-q2_desktop-1365x900.png","sha256":"124e5fd7d16c60e6ac8f1c4e0b2b599cc48b3feb4095cf51b6a205af39dd7da2"},
+        {"viewport":"390x844","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-002-q2_phone-390x844_scene.png","sha256":"80569cfe82246c19382ce06697cda72c2ffd2b5536617b7d053cb79e91133bd1"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": ["D1 is ahead of YOU and nearer the middle","F1 is behind YOU toward Navy's defending end"], "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u11-004", "questionId": "exp26b-u11-004-q5", "scenarioVersion": 3,
+      "contentHash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (defender exactly on one line)",
+      "blindAnswer": "b", "keyedAnswer": "b", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 sits almost exactly on the F2-to-YOU line (matches manifest: perpendicular distance computes to exactly 0), while the F2-to-F1 line clears D1 visibly. Interactively tested live: selecting 'the line from F2's puck to F1' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-004-q5_desktop-1365x900.png","sha256":"ca3e200c1e8eaf764bbe18377dae8a0585881e5540774a034dd2dae98c7f692c"},
+        {"viewport":"390x844","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-004-q5_phone-390x844_scene.png","sha256":"6f0aab0468e2377376b15018e415082688b267188b38536f9f376533019a40da"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "The line from F2's puck to F1", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u11-011", "questionId": "exp26b-u11-011-q5", "scenarioVersion": 3,
+      "contentHash": "ffc46f508bc0e775a4d8639596610c3074d32ed22e8faa0829520125396e13ba", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (tight vs. wide clearance)",
+      "blindAnswer": "b", "keyedAnswer": "b", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 clustered tightly with F1/YOU (matches manifest's ~0.57-unit clearance to the F1-YOU line) while F2 sits well off to the side (matches ~2.83-unit clearance to F1-F2). Interactively tested live: selecting 'the line from F1's puck to F2' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-011-q5_desktop-1365x900.png","sha256":"02086f7142dd5ff20a08ef86c285dc9f5ba4a0027e06f39c699264cafa232324"},
+        {"viewport":"390x844","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-011-q5_phone-390x844_scene.png","sha256":"8164667bf66a37df243481d463eaec583907a53299da97fb255ccc3cda2f4e07"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "The line from F1's puck to F2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u11-013", "questionId": "exp26b-u11-013-q5", "scenarioVersion": 3,
+      "contentHash": "0a16cc58e067d656769eda4d37d024648fba18efa4cd5ff4e3e4983fcd388668", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "hypothetical cause-effect over defender repositioning",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1's original position sits exactly on the puck-to-net line (matches manifest, zero clearance), consistent with the briefing. Interactively tested live: selecting 'a shot toward the net' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-013-q5_desktop-1365x900.png","sha256":"87fcacf2326ed3d480c8201c26472213bc0e9d9aeade2569b166e0cc96740be2"},
+        {"viewport":"390x844","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-013-q5_phone-390x844_scene.png","sha256":"6b8a38208cb389066ab691eb0ba8fca1d1e880faf487c596dc415a51a3ff7a91"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "A shot toward the net", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26b-u11-018", "questionId": "exp26b-u11-018-q5", "scenarioVersion": 3,
+      "contentHash": "0e8050c8640a9a36052c2d0726287d408e3ea2984e2971a514a85d14c637cba3", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "roster (reversed team-label convention for this scene) + side-of-middle geometry",
+      "blindAnswer": "b", "keyedAnswer": "b", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms F2 on YOU's side of the middle (same general area), F1 across with D1. Roster explicitly double-checked before scoring: in this scene YOU and D1 are both home/navy, F1 and F2 are both away/gold -- a reversal of the D1=away convention used in most other packets. Interactively tested live: selecting 'F2' returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-018-q5_desktop-1365x900.png","sha256":"e3be1edf781d4e0a39ea466fb831f29f2964b68049adfa70392b0855c43e884d"},
+        {"viewport":"390x844","screenshotPath":"output/visual-04/screenshots/v04_exp26b-u11-018-q5_phone-390x844_scene.png","sha256":"e8e5ec95a72d42c3377577ab1638f96664a9fe267edafe3e13f6ea856c64144b"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "F2", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-04-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "note": "Every one of the 5 targets in this packet was interactively tested live (unlike prior packets where only a representative subset was tested) -- this packet happened to align with remaining U11 sub-families not yet exercised interactively, so full coverage was cheap to obtain."
+}

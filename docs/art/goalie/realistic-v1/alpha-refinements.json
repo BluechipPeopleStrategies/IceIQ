@@ -1,0 +1,25 @@
+{
+  "sourceSha256": "13cd3839a3f5fbcf9ec90288b4dee73c9a67d8ddf3bc56f8aadfc9920a12a73f",
+  "coordinateFrame": "original 1774x887 source pixels",
+  "reason": "Restore inspected white pad interiors that IS-Net made translucent; remove painted background only within the catcher web aperture region; remove fixed hanging jersey sleeves because the rig supplies animated sleeves. No global white threshold.",
+  "parts": {
+    "torso": {
+      "preserveOriginalBounds": true,
+      "clipPolygon": [[28,30],[517,30],[517,95],[453,95],[439,115],[415,135],[399,173],[393,246],[404,334],[418,407],[418,429],[123,429],[125,405],[139,333],[152,245],[147,173],[129,137],[106,114],[94,95],[28,95]]
+    },
+    "pad-left": {
+      "silhouettePolygon": [[170,463],[328,464],[334,466],[338,475],[340,506],[341,555],[340,642],[340,735],[339,816],[338,842],[334,851],[328,855],[178,856],[168,854],[161,850],[158,841],[156,815],[157,771],[158,731],[156,690],[157,641],[157,595],[156,562],[157,518],[158,479],[160,468]]
+    },
+    "pad-right": {
+      "silhouettePolygon": [[621,464],[772,463],[780,466],[785,475],[788,514],[787,586],[787,651],[788,716],[787,782],[786,832],[784,846],[779,853],[769,856],[622,856],[613,853],[608,846],[605,829],[603,797],[604,759],[604,714],[603,669],[604,620],[605,585],[605,545],[607,501],[609,476],[613,467]]
+    },
+    "catcher": {
+      "neutralRemoval": {
+        "polygons": [[[1121,75],[1180,67],[1223,78],[1251,101],[1220,150],[1193,183],[1144,183],[1123,155]],[[1238,99],[1282,106],[1300,148],[1270,183],[1240,186],[1215,176]]],
+        "channelSpreadMax": 18,
+        "brightStart": 185,
+        "brightTransparent": 239
+      }
+    }
+  }
+}

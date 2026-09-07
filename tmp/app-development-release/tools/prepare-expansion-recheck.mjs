@@ -1,0 +1,16 @@
+import {writeFileSync,readdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {readBankFiles,readJson,projectRoot} from './experimental-bank-files.mjs';
+import {questionContentHash} from './question-batch-core.mjs';
+const lane=process.argv[2];if(!/^[a-z0-9-]+$/.test(lane||''))throw Error('Pass a review lane.');
+const dir=join(projectRoot,'docs/factory/research/question-review/expansion');
+const first=readJson(join(dir,`${lane}-first.json`)),second=readJson(join(dir,`${lane}-second.json`));
+const previous=new Map(second.coverage.map(r=>[r.questionId,r]));
+for(const file of readdirSync(dir).filter(f=>f.startsWith(`${lane}-`)&&f.endsWith('-recheck.json')))for(const row of readJson(join(dir,file)).coverage||[])previous.set(row.questionId,row);
+const {bank}=readBankFiles();
+const current=new Map(bank.flatMap(s=>s.questions.map(q=>[q.id,{s,q,hash:questionContentHash(s,q)}])));
+const selected=first.coverage.filter(r=>{const two=previous.get(r.questionId),now=current.get(r.questionId);return now.hash!==(two?.contentHash||r.contentHash)||two?.decision&&two.decision!=='pass';});
+const ids=new Set(selected.map(r=>r.questionId));
+const manifest=selected.map(r=>({...r,firstReviewer:first.reviewer,firstContentHash:r.contentHash,previousReview:previous.get(r.questionId)||null,contentHash:current.get(r.questionId).hash}));
+writeFileSync(join(dir,`${lane}-recheck-input.json`),JSON.stringify({instruction:'Independently check the final current content and complete scene. Keep the earlier receipts immutable. Every listed ID needs a current-hash pass or an actionable revision. This can serve as the second review for a newly discovered repair.',assignedQuestionIds:[...ids],manifest,scenarios:bank.filter(s=>s.questions.some(q=>ids.has(q.id)))},null,2)+'\n');
+console.log(JSON.stringify({lane,questions:ids.size}));

@@ -160,6 +160,20 @@ test('orthographic projection contains all rink corners and 2.1m player height o
   }
 });
 
+test('Rink side is a lower spectator view while retaining the rink and full skater height', () => {
+  for (const definition of definitions) {
+    const bounds = getReadSceneBounds(definition);
+    for (const aspect of [.38, 390 / 440, 1, 1536 / 850, 3.2]) {
+      const view = getReadSceneCamera(bounds, aspect, 'rink-side');
+      const direction = new Vector3(...view.position).sub(new Vector3(...view.target)).normalize();
+      const elevation = Math.asin(direction.y) * 180 / Math.PI;
+      assert.ok(elevation > 20 && elevation < 40, 'Rink side should show the players from a lower spectator angle.');
+      assertFits(bounds, view);
+      assert.notDeepEqual(view.position, getReadSceneCamera(bounds, aspect, 'broadcast').position);
+    }
+  }
+});
+
 test('portrait attacks up and landscape attacks right, with stable orientation and readable phone scale', () => {
   const bounds = getReadSceneBounds(U13_READ_SEQUENCE);
   assert.ok(bounds, 'Camera inputs require authored bounds');

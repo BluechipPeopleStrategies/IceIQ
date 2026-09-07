@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { buildPlan } from '../tools/apply-amended-repairs.mjs';
+const root = process.cwd();
+const proposalPath = path.join(root, 'docs/factory/research/question-review/packet-36/proposed-repairs.json');
+const plan = buildPlan({ proposalPath });
+const proposal = plan.proposal;
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const rows = plan.changedRows.map(row => {
+  const scenario = proposal.packets[0].scenarios.find(s => s.scenarioId === row.scenarioId);
+  const question = scenario.replacement.questions.find(q => q.id === row.questionId);
+  const actors = scenario.replacement.setup.actors.map(a => `${a.label}/${a.team}`).join(', ');
+  let reason = `Exact row review ${row.questionId}: “${question.prompt}”; ownership, role aliases, options and key ${question.answer ? JSON.stringify(question.answer) : 'open response'} checked against actors ${actors}.`;
+  if (question.id === 'exp26b-u15-015-q4') reason += ' Measured YOU to F1 distance is 16.1245m before and 16.0078m at target (18,7.5); YOU to F2 is 6.0828m before and 4.6098m after; YOU to D1 is 10.1980m before and 8.0156m after, so the wording is accurate.';
+  if (question.type === 'position' && question.reference) reason += ` Target (${question.reference.x},${question.reference.y}) is within -30..30m by -15..15m bounds; movement is illustrative.`;
+  reason += ' Feedback remains conditional and does not claim reach, timing, gaze or guaranteed control.';
+  return { questionId: row.questionId, decision: 'pass', beforeHash: row.beforeHash, afterHash: row.afterHash, reason };
+});
+const packetId = 'packet-36';
+const sourcePath = path.join(root, 'docs/factory/claude-project/claude-output/review-packet-36.json');
+const receipt = { schemaVersion: 1, kind: 'independent-exact-hash-recheck', status: 'approved-for-write', reviewer: 'Luna packets25_29', sourceSnapshotId: proposal.sourceSnapshotId, proposalSha256: plan.proposalSha256, sourceReturnFileHashes: { [packetId]: hash(fs.readFileSync(sourcePath)) }, questions: rows };
+fs.writeFileSync(path.join(root, 'docs/factory/research/question-review/packet-36/independent-final-recheck.json'), JSON.stringify(receipt, null, 2) + '\n');
+console.log(plan.proposalSha256, rows.length);

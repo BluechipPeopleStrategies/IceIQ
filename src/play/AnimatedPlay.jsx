@@ -1,29 +1,20 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
-import { motionStyle } from "./motionVocabulary.js";
-import { motionPathD, motionTimings, visibleMotions as visibleMotionsFor } from "./motionGeometry.js";
-import { tokenSpec } from "./tokenSystem.js";
 import { resolveKindForAge, watchChainInfo } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
-import { ActorTapTargets } from "./ActorTapTargets.jsx";
 import { CoachFeedback } from "./CoachFeedback.jsx";
 import { coachFeedbackHeadline } from "./coachFeedbackTone.js";
 import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
 import { getCoachForQuestion } from "../coachPersonas.js";
-import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
+import ScenarioRinkView from "../visuals/ScenarioRinkView.jsx";
+import { animatedRinkBounds, animatedRinkOverlays, animatedZoneChoice, sampleAnimatedRink } from "./animatedRinkAdapter.js";
+import { useAnimatedRinkPlayback } from "./useAnimatedRinkPlayback.js";
+import { animatedActionIntents } from "./animatedActionIntents.js";
+import RinkIcon from '../ui/RinkIcon.jsx';
+import './AnimatedPlay.css';
 
-const TEAM_FILL = {
-  home: "#0B1A33",
-  away: "#C9A24B",
-};
-
-const VIEWS = {
-  full: "0 0 200 85",
-  "half-right": "104 0 96 85",
-  "half-left": "0 0 96 85",
-};
 
 // Display-order shuffle for button-rendered answer options (read-mc, verdict,
 // predict-next). A catalog-wide audit (2026-07-30) found the correct answer
@@ -162,120 +153,6 @@ function cueLabelForAge(cue, profile) {
   return cue.label || "";
 }
 
-function RinkBackdrop() {
-  const id = `ap-ice-${React.useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
-  return (
-    <g aria-hidden="true" pointerEvents="none">
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2=".2" y2="1"><stop stopColor="#FFFFFF" /><stop offset=".48" stopColor="#F7FCFF" /><stop offset="1" stopColor="#EAF5FC" /></linearGradient>
-        <clipPath id={`${id}-clip`}><rect x="2" y="2" width="196" height="81" rx="27" /></clipPath>
-      </defs>
-      <rect x="2" y="2" width="196" height="81" rx="27" fill={`url(#${id})`} stroke="#0B1A33" strokeWidth="1.4" />
-      <g clipPath={`url(#${id}-clip)`} fill="none" stroke="#6B99B8" strokeWidth=".15" opacity=".10">
-        {Array.from({ length: 14 }, (_, i) => <path key={i} d={`M${(i * 17) % 193},${(i * 23) % 81}q7 -2 15 1`} />)}
-      </g>
-      <rect x="3.1" y="3.1" width="193.8" height="78.8" rx="26" fill="none" stroke="#C6DEEC" strokeWidth=".45" />
-      <rect x="99.2" y="2" width="1.6" height="81" fill="#D3233E" />
-      <rect x="74" y="2" width="2" height="81" fill="#1E63B5" />
-      <rect x="124" y="2" width="2" height="81" fill="#1E63B5" />
-      <rect x="11" y="9" width="0.7" height="67" fill="#D3233E" />
-      <rect x="188.3" y="9" width="0.7" height="67" fill="#D3233E" />
-      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#D3233E" strokeWidth="0.6" />
-      <g fill="none" stroke="#D3233E" strokeWidth="0.6">
-        <circle cx="169" cy="22" r="13" />
-        <circle cx="169" cy="63" r="13" />
-        <circle cx="31" cy="22" r="13" />
-        <circle cx="31" cy="63" r="13" />
-      </g>
-      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#C5E2F5" stroke="#D3233E" strokeWidth="0.5" />
-      <rect x="189" y="39" width="4" height="7" fill="#FFFFFF" stroke="#D3233E" strokeWidth="1" />
-      <path d="M190 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
-      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#C5E2F5" stroke="#D3233E" strokeWidth="0.5" />
-      <rect x="7" y="39" width="4" height="7" fill="#FFFFFF" stroke="#D3233E" strokeWidth="1" />
-      <path d="M8 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
-    </g>
-  );
-}
-
-function RoutePath({ motion, trail, delayMs }) {
-  const style = motionStyle(motion.kind);
-  const pathD = motionPathD(motion);
-  // Ghost trails (skate routes on terminal nodes) get a faded, dashed,
-  // arrow-tipped treatment so the route that produced the outcome is
-  // visible without competing with pass/shot/blocked lanes.
-  const marker = trail
-    ? "url(#ap-arrow-skate)"
-    : motion.kind === "pass" || motion.kind === "shot" ? `url(#ap-arrow-${motion.kind})` : undefined;
-  return (
-    <g className="ap-motion-in" style={{ opacity: 0, animation: "ap-motion-in .5s ease forwards", animationDelay: `${delayMs || 0}ms` }}>
-      <path
-        d={pathD}
-        fill="none"
-        stroke={style.stroke}
-        strokeWidth={trail ? 0.9 : motion.kind === "skate" ? 1.05 : motion.kind === "blocked" ? 1.7 : style.width}
-        strokeDasharray={trail ? "1.2 2.2" : style.dash}
-        markerEnd={marker}
-        opacity={trail ? 0.38 : motion.kind === "skate" ? 0.55 : motion.kind === "blocked" ? 0.6 : 0.95}
-      />
-    </g>
-  );
-}
-
-function ActorToken({ actor, ageBand, isDecisionActor }) {
-  const spec = tokenSpec({ actor, ageBand, isDecisionActor });
-  const profile = profileForAge(ageBand);
-  const showInteriorLabel = profile.token === "symbol" && spec.role === "goalie";
-  const fill = TEAM_FILL[spec.team] || TEAM_FILL.home;
-  const labelFill = spec.team === "home" ? "#FFFFFF" : "#0B1A33";
-
-  if (spec.role === "goalie") {
-    return (
-      <g>
-        <rect x="-4.5" y="-5" width="9" height="10" rx="2.3" fill={spec.representation === "symbol" ? fill : "#F5EFE6"} stroke="#FFFFFF" strokeWidth="0.8" />
-        {spec.representation !== "symbol" && <HockeyPlayerArt radius={4.4} team={spec.team} goalie />}
-        {showInteriorLabel && <><rect x="-1.6" y="-1.4" width="3.2" height="3.4" rx=".4" fill={fill} /><text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text></>}
-      </g>
-    );
-  }
-
-  if (spec.representation === "symbol") {
-    if (spec.role === "defender") {
-      return (
-        <g stroke="#0B1A33" strokeWidth="1.2" strokeLinecap="round">
-          <line x1="-3.4" y1="-3.4" x2="3.4" y2="3.4" />
-          <line x1="-3.4" y1="3.4" x2="3.4" y2="-3.4" />
-        </g>
-      );
-    }
-    return <circle r={spec.role === "puckCarrier" ? 4.2 : 3.5} fill="none" stroke="#0B1A33" strokeWidth="1.2" />;
-  }
-
-  if (spec.representation === "figure") {
-    return (
-      <g>
-        <circle r={isDecisionActor ? 5.5 : 5} fill="#F5EFE6" stroke="#FFFFFF" strokeWidth="0.9" />
-        <HockeyPlayerArt radius={isDecisionActor ? 5.1 : 4.6} team={spec.team} />
-        {isDecisionActor && <circle r="7" fill="none" stroke="#C9A24B" strokeWidth="1" strokeDasharray="2 1.5" />}
-      </g>
-    );
-  }
-
-  return (
-    <g>
-      <circle r={isDecisionActor ? 5.2 : 4.5} fill="#F5EFE6" stroke="#FFFFFF" strokeWidth="0.75" />
-      <HockeyPlayerArt radius={isDecisionActor ? 4.8 : 4.2} team={spec.team} />
-      {isDecisionActor && <circle r="6.8" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
-      {spec.role === "defender" && (
-        <g stroke="#0B1A33" strokeWidth=".7" strokeLinecap="round">
-          <circle r="1.8" fill="#F5EFE6" stroke="none" />
-          <line x1="-1.1" y1="-1.1" x2="1.1" y2="1.1" />
-          <line x1="-1.1" y1="1.1" x2="1.1" y2="-1.1" />
-        </g>
-      )}
-    </g>
-  );
-}
-
 function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onReplay, onNext, nextLabel }) {
   if (!node.terminal) return null;
   const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
@@ -299,10 +176,10 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
         <div
           role="status"
           style={{
-            background: pickedOption.ok ? "#E8F7EE" : "#FFF2E5",
+            background: pickedOption.ok ? "#1b463a80" : "#65452a70",
             border: `1px solid ${pickedOption.ok ? "#2E8B57" : "#C26A1B"}`,
             borderRadius: 9,
-            color: "#0B1A33",
+            color: pickedOption.ok ? "#c0ebcf" : "#f2d2b3",
             marginBottom: 10,
             padding: "9px 11px",
           }}
@@ -325,18 +202,14 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
         {onNext && (
           <button
             onClick={onNext}
-            style={{ background: "#C9A24B", color: "#0B1A33", border: "none", borderRadius: 9, padding: "9px 16px", fontSize: 13.5, cursor: "pointer", fontWeight: 900 }}
+            className="ap-control is-primary"
           >
             {nextLabel || "Next play →"}
           </button>
         )}
         <button
           onClick={onReplay}
-          style={
-            onNext
-              ? { background: "transparent", color: "#0B1A33", border: "1px solid #CDD5E0", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 700 }
-              : { background: "#0B1A33", color: "#FFFFFF", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 800 }
-          }
+          className={`ap-control ${onNext ? '' : 'is-primary'}`}
         >
           Replay
         </button>
@@ -369,8 +242,18 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
   // Per node: the flag is about one read, so it clears when the play moves on
   // and the acknowledgement doesn't linger over the next question.
   const [unclearFlagged, setUnclearFlagged] = useState(false);
-  const [entered, setEntered] = useState(false);
-  const [showMotion, setShowMotion] = useState(false);
+  const [sceneAvailable, setSceneAvailable] = useState(false);
+  const [playbackPaused, setPlaybackPaused] = useState(false);
+  const [replayVersion, setReplayVersion] = useState(0);
+  const [pendingNext, setPendingNext] = useState(null);
+  const [tapIntent, setTapIntent] = useState(null);
+  const everReadyRef = useRef(false), sceneAvailableRef = useRef(false), answerLockRef = useRef(false);
+  const onAvailabilityChange = useCallback(available => {
+    sceneAvailableRef.current = available === true;
+    setSceneAvailable(available === true);
+    if (available) everReadyRef.current = true;
+    else if (everReadyRef.current) setPlaybackPaused(true);
+  }, []);
   const startedAtRef = useRef(Date.now());
   const watchedChainsRef = useRef(new Set());
 
@@ -387,46 +270,31 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
   // on every re-render -- so a button doesn't jump under the player's finger
   // mid-decision, but a fresh question (or a replay of the same one) gets an
   // independent order each time.
-  const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts]);
+  const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts, replayVersion]);
+  const choreographyKey = `${node.autoNext?.next || ''}:${node.autoNext?.ms ?? ''}`;
+  const playbackKey = `${play.id}:${nodeId}:${ageBand}:${replayVersion}:${choreographyKey}`;
+  const playback = useAnimatedRinkPlayback(node, playbackKey, sceneAvailable, playbackPaused, sceneAvailableRef);
 
   useEffect(() => {
-    let enterTimer;
-    let motionTimer;
-    let advanceTimer;
-    let loopTimer;
-
-    function runCycle() {
-      setEntered(false);
-      setShowMotion(false);
-      motionTimer = setTimeout(() => setShowMotion(true), 500);
-      enterTimer = setTimeout(() => setEntered(true), 950);
-    }
-
     startedAtRef.current = Date.now();
-    setJudgePick(null);
-    setUnclearFlagged(false);
-    runCycle();
-
-    if (!node.terminal && node.autoNext) {
-      advanceTimer = setTimeout(() => {
-        const nextNode = play.nodes[node.autoNext.next];
-        if (!nextNode?.autoNext) watchedChainsRef.current.add(`${play.id}:${node.autoNext.next}`);
-        setNodeId(node.autoNext.next);
-      }, node.autoNext.ms ?? 2600);
-    } else if (!node.terminal) {
-      loopTimer = setInterval(runCycle, 4200);
-    }
-
-    return () => {
-      clearTimeout(enterTimer);
-      clearTimeout(motionTimer);
-      clearTimeout(advanceTimer);
-      clearInterval(loopTimer);
-    };
-  }, [nodeId, play.id, ageBand, node.terminal, node.autoNext?.next, node.autoNext?.ms]);
+    setJudgePick(null); setUnclearFlagged(false); setTapIntent(null); answerLockRef.current = false;
+  }, [playbackKey]);
+  useEffect(() => {
+    if (!sceneAvailable || playbackPaused || !playback.watchFinished || !node.autoNext) return;
+    const nextNode = play.nodes[node.autoNext.next];
+    if (!nextNode?.autoNext) watchedChainsRef.current.add(`${play.id}:${node.autoNext.next}`);
+    setNodeId(node.autoNext.next);
+  }, [playback.watchFinished, sceneAvailable, playbackPaused, nodeId, node.autoNext?.next, node.autoNext?.ms]);
+  useEffect(() => {
+    if (!pendingNext || !sceneAvailable || playbackPaused) return undefined;
+    const timer = setTimeout(() => {
+      setNodeId(pendingNext.id); setPicked(null); setJudgePick(null); setPendingNext(null);
+    }, pendingNext.delay);
+    return () => clearTimeout(timer);
+  }, [pendingNext, sceneAvailable, playbackPaused]);
 
   function choose(opt, index) {
-    if (picked !== null || node.terminal) return;
+    if (!sceneAvailableRef.current || answerLockRef.current || picked !== null || node.terminal || !playback.canAnswer || node.autoNext) return;
     const ms = Date.now() - startedAtRef.current;
     setLastKind(kind);
 
@@ -437,6 +305,8 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
     }
 
     setPicked(index);
+    setTapIntent(null);
+    answerLockRef.current = true;
     setPickedOption(opt);
     const coach = coachOverride || getCoachForQuestion({ id: `${play.id}:${nodeId}`, cat: play.coachCategory });
     const reinforcement = loadCoachReinforcement();
@@ -452,19 +322,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
     });
     if (kind === "verdict" && judgePick) {
       onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });
-      setTimeout(() => {
-        setNodeId(judgePick.next);
-        setPicked(null);
-        setJudgePick(null);
-      }, judgePick.ok && opt.ok ? 750 : 1050);
+      setPendingNext({ id: judgePick.next, delay: judgePick.ok && opt.ok ? 750 : 1050 });
       return;
     }
 
     onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: opt.id, ok: !!opt.ok, ms });
-    setTimeout(() => {
-      setNodeId(opt.next);
-      setPicked(null);
-    }, opt.ok ? 750 : 1050);
+    setPendingNext({ id: opt.next, delay: opt.ok ? 750 : 1050 });
   }
 
   function replay() {
@@ -475,133 +338,53 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
     setJudgePick(null);
     setLastKind(null);
     setCoachFeedback(null);
+    setPendingNext(null); setReplayVersion(value => value + 1); setPlaybackPaused(false); answerLockRef.current = false;
     onEvent?.({ playId: play.id, nodeId: play.start, event: "replay", ms: 0 });
   }
 
-  const positions = (!entered && node.enter) ? node.enter : node.pos;
-  const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;
-  const shownMotions = visibleMotionsFor(node);
-  const timings = motionTimings(shownMotions.map((entry) => entry.motion));
-  const cueLabel = node.cue ? cueLabelForAge(node.cue, profile) : "";
-  // The plate was a fixed 20-unit rect sized for one short word. Now that it
-  // carries the full cue label, the plate has to follow the text or the copy
-  // spills off the white background.
-  const cueWidth = Math.max(20, cueLabel.length * 1.85 + 6);
+  const labels = Object.fromEntries(play.actors.map(actor => [actor.id, actorDisplayLabel(actor, youId === actor.id, profile)]));
+  const frame = sampleAnimatedRink(play, node, playback.progress, youId, labels);
+  const bounds = useMemo(() => animatedRinkBounds(play), [play]);
+  const cueLabel = node.cue ? cueLabelForAge(node.cue, profile) : '';
+  const overlays = animatedRinkOverlays(node, { elapsed: playback.elapsed, kind, cueLabel, young: profile.token === 'figure' });
+  const canChoose = playback.canAnswer && picked === null && !node.terminal && !node.autoNext;
+  const actorChoices = kind === 'spot-mistake' ? node.ask?.opts || [] : [];
+  const actionIntents = kind === 'read-mc' ? animatedActionIntents(play, node) : [];
+  function chooseActor(id) {
+    if (!sceneAvailableRef.current || !canChoose) return;
+    const intent = actionIntents.find(item => item.kind === 'pass' && item.actorId === id);
+    if (intent) { setTapIntent(intent); return; }
+    const index = actorChoices.findIndex(option => option.actorId === id); if (index >= 0) choose(actorChoices[index], index);
+  }
+  function chooseGoal(side) { if (sceneAvailableRef.current && canChoose) { const intent = actionIntents.find(item => item.kind === 'shoot' && item.goalSide === side); if (intent) setTapIntent(intent); } }
+  function chooseZone(point) { const match = animatedZoneChoice(node, point, { young: profile.token === 'figure' }); if (match) choose(match.option, match.index); }
 
   return (
-    <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
-      <style>{`
-        @keyframes ap-motion-in { to { opacity: 1; } }
-        @media (prefers-reduced-motion: reduce) {
-          .ap-motion-in { animation: none !important; opacity: 1 !important; }
-        }
-      `}</style>
-      <svg viewBox={VIEWS[play.view] || VIEWS.full} style={{ width: "100%", height: "auto", display: "block" }}>
-        <defs>
-          {["skate", "pass", "shot"].map((motionKind) => (
-            <marker key={motionKind} id={`ap-arrow-${motionKind}`} markerWidth="4" markerHeight="4" refX="3.6" refY="2" orient="auto" markerUnits="userSpaceOnUse">
-              <path d="M0,0 L4,2 L0,4 Z" fill="#0B1A33" />
-            </marker>
-          ))}
-          <filter id="ap-shadow" x="-40%" y="-40%" width="180%" height="180%">
-            <feDropShadow dx="0" dy="0.7" stdDeviation="0.7" floodColor="#0B1A33" floodOpacity="0.35" />
-          </filter>
-        </defs>
-        <RinkBackdrop />
-        {node.cue && cueLabel && (
-          <g data-testid="rink-cue-marker">
-            <rect
-              x={(node.cue.x || 150) - cueWidth / 2}
-              y={(node.cue.y || 32) - 5}
-              width={cueWidth}
-              height="9"
-              rx="4.5"
-              fill="#FFFFFF"
-              stroke="#C9A24B"
-              strokeWidth="0.9"
-              opacity="0.96"
-            />
-            <text
-              x={node.cue.x || 150}
-              y={(node.cue.y || 32) + 1.1}
-              textAnchor="middle"
-              fontSize="3.15"
-              fill="#0B1A33"
-              fontWeight="900"
-            >
-              {cueLabel}
-            </text>
-          </g>
-        )}
+    <div className="animated-play">
+      <ScenarioRinkView state={frame} bounds={bounds} title={`${play.title}. ${youId ? 'Your player is marked YOU.' : 'Watch the play.'}`}
+        ageBand={ageBand} questionId={`${play.id}:${nodeId}`} questionEntryToken={replayVersion} startingView={node.ask?.startingView ?? node.startingView}
+        focusActorId={youId} playing={playback.playing} time={playback.elapsed / 1000} overlays={overlays}
+        onAvailabilityChange={onAvailabilityChange} hideZoneLines={['U7', 'U9'].includes(ageBand)}
+        showBothGoals={play.view !== 'half-right' && play.view !== 'half-left'}
+        selectableIds={canChoose ? [...actorChoices.map(option => option.actorId), ...actionIntents.filter(intent => intent.kind === 'pass').map(intent => intent.actorId)] : []} onActorAnswer={chooseActor}
+        passActorIds={canChoose ? actionIntents.filter(intent => intent.kind === 'pass').map(intent => intent.actorId) : []}
+        onGoalAnswer={canChoose && actionIntents.some(intent => intent.kind === 'shoot') ? chooseGoal : undefined}
+        onIcePoint={canChoose && kind === 'lane-pick' ? chooseZone : undefined} />
+      {cueLabel && <p data-testid="rink-cue-marker" className="ap-cue">{cueLabel}</p>}
+      {youId && <p className="ap-identity">YOU: {actorMap[youId]?.label || youId} · {decisionRoleLabel(actorMap[youId])}</p>}
+      {!!actionIntents.length && <p className="ap-help">You can also tap your teammate for a pass, or tap the net for a shot. Check your choice before confirming.</p>}
+      {tapIntent && <div role="group" aria-label="Confirm rink choice" className="ap-confirm">
+        <p role="status" style={{ margin: '0 0 10px' }}>Your play: <b>{optionTextForAge(tapIntent.option, actorMap, profile)}</b></p>
+        <button type="button" className="ap-control is-primary" disabled={!canChoose} onClick={() => choose(tapIntent.option, displayOpts.findIndex(option => option.id === tapIntent.option.id))}>Confirm play</button>{' '}
+        <button type="button" className="ap-control" onClick={() => setTapIntent(null)}>Change my choice</button>
+      </div>}
+      {!sceneAvailable ? <p role="status" className="ap-help">The play is paused until the rink is ready.</p>
+        : playbackPaused ? <button type="button" className="ap-control" onClick={() => setPlaybackPaused(false)}>Continue play</button>
+        : playback.reducedMotion && playback.elapsed < playback.duration ? <button type="button" className="ap-control" onClick={playback.finish}>Show the next position</button>
+        : playback.playing ? <button type="button" className="ap-control" onClick={() => setPlaybackPaused(true)}>Pause play</button> : null}
 
-        {showMotion && shownMotions.map(({ motion, trail }, index) => (
-          <RoutePath key={`${motion.kind}-${index}`} motion={motion} trail={trail} delayMs={timings[index].delayMs} />
-        ))}
-        {(node.overlays || []).map((overlay, index) => {
-          if (overlay.kind === "freeze") {
-            return (
-              <g key={`freeze-${index}`}>
-                <circle cx={overlay.x} cy={overlay.y} r="6" fill="none" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />
-              </g>
-            );
-          }
-          if (overlay.kind === "target") {
-            return <circle key={`target-${index}`} cx={overlay.x} cy={overlay.y} r={overlay.r || 5} fill="none" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />;
-          }
-          return null;
-        })}
-        {!node.terminal && kind === "lane-pick" && (node.ask.opts || []).map((opt, index) => {
-          if (!opt.zone) return null;
-          const [zx, zy, zr] = opt.zone;
-          // Zone radii in play data are authored for the U7/U9 playground look.
-          // Trainer bands always use the tighter ring regardless of data radius.
-          const zoneR = profile.token === "figure" ? (zr ?? 6) : 4.5;
-          return (
-            <g
-              key={`choice-zone-${opt.id}`}
-              onClick={() => choose(opt, index)}
-              style={{ cursor: picked !== null ? "default" : "pointer" }}
-              opacity={picked !== null ? 0.45 : 0.9}
-            >
-              <circle cx={zx} cy={zy} r={zoneR} fill="#FFFFFF" stroke="#C9A24B" strokeWidth="1.2" strokeDasharray="2 1.5" />
-              <text x={zx} y={zy + 1.8} textAnchor="middle" fontSize="3.15" fill="#0B1A33" fontWeight="900">{index + 1}</text>
-            </g>
-          );
-        })}
-        {play.actors.map((actor) => {
-          const p = positions[actor.id];
-          if (!p) return null;
-          const isDecisionActor = youId === actor.id;
-          return (
-            <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
-              <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
-              {/* Keep YOU through every outcome. Trainer labels sit above the
-                  equipment so the name and the figure remain readable. */}
-              {(isDecisionActor || profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie") || (profile.token === "token" && actor.role !== "defender")) && (
-                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" stroke="#FFFFFF" strokeWidth=".8" strokeLinejoin="round" paintOrder="stroke" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
-              )}
-            </g>
-          );
-        })}
-        {displayedPuck && (
-          <g transform={`translate(${displayedPuck[0]},${displayedPuck[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }}>
-            <circle r="1.35" fill="#111111" stroke="#FFFFFF" strokeWidth="0.35" />
-            <ellipse cy="-.35" rx=".8" ry=".3" fill="#5B6675" />
-          </g>
-        )}
-        {!node.terminal && kind === "spot-mistake" && (
-          <ActorTapTargets
-            options={node.ask.opts}
-            positions={positions}
-            picked={picked}
-            disabled={picked !== null}
-            onChoose={choose}
-          />
-        )}
-      </svg>
-
-      <div style={{ padding: "8px 4px 2px" }}>
-        <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: ".5px", textTransform: "uppercase", color: profile.accent }}>
+      <div className="ap-question-panel">
+        <div className="ap-eyebrow">
           {/* This branched on an actor ID, not a role, so everything not
               literally named "F1" was labelled "support read" — including the
               backchecker, both forecheckers, all three gap-control D, and the
@@ -610,12 +393,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
           {profile.label}{youId ? ` - ${decisionRoleLabel(actorMap[youId])}` : ""}
         </div>
         {node.terminal && lastKind === "predict-next" && pickedOption && (
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6575", margin: "4px 0 2px" }}>
+          <div className="ap-help" style={{ margin: "4px 0 2px" }}>
             You predicted: {optionTextForAge(pickedOption, actorMap, profile)}. Watch what actually happens.
           </div>
         )}
         {!node.terminal && (
-          <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
+          <div className="ap-question" style={{ fontSize: profile.big ? 21 : 18 }}>
             {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
           </div>
         )}
@@ -623,14 +406,16 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} onNext={onNext} nextLabel={nextLabel} />
         ) : node.autoNext ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>
+            <div className="ap-help">Watch the play…</div>
             {["U13", "U15", "U18"].includes(ageBand) && watchedChainsRef.current.has(`${play.id}:${watchChainInfo(play, nodeId).endNodeId}`) && (
               <button
+                disabled={!sceneAvailable || playbackPaused}
                 onClick={() => {
+                  if (!sceneAvailable || playbackPaused) return;
                   onEvent?.({ playId: play.id, nodeId, event: "watch_skip", ms: Date.now() - startedAtRef.current });
                   setNodeId(watchChainInfo(play, nodeId).endNodeId);
                 }}
-                style={{ background: "transparent", border: "1px solid #CDD5E0", borderRadius: 8, color: "#4B5563", padding: "5px 10px", fontSize: 12, cursor: "pointer" }}>
+                className="ap-control">
                 Skip to the question
               </button>
             )}
@@ -641,22 +426,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
           // answer beyond the small numbered dashed circles. This both
           // states the interaction and gives the screen real content to
           // fill the space a button list would otherwise occupy.
-          <div style={{
-            display: "flex", alignItems: "center", gap: 10,
-            padding: profile.big ? "14px 16px" : "11px 14px",
-            borderRadius: profile.big ? 14 : 10,
-            border: "1px dashed #C9A24B",
-            background: "#FBF6EA",
-            marginTop: 2,
-          }}>
-            <span aria-hidden="true" style={{ fontSize: profile.big ? 26 : 20, lineHeight: 1 }}>👆</span>
-            <span style={{ fontSize: profile.big ? 15 : 13, fontWeight: 700, color: "#7A5A17", lineHeight: 1.35 }}>
+          <div className="ap-rink-instruction">
+            <RinkIcon name="target" size={24}/>
+            <span style={{ fontSize: profile.big ? 15 : 13, fontWeight: 700, lineHeight: 1.35 }}>
               {profile.token === "figure"
                 ? "Tap a spot on the ice to pick."
                 : "Tap a numbered spot on the ice to make your read."}
             </span>
           </div>
-        ) : kind === "spot-mistake" ? null : (
+        ) : kind === "spot-mistake" ? (
+          <div role="group" aria-label="Choose a player" className="ap-direct-choices">{actorChoices.map((opt, index) => <button type="button" className="ap-answer" key={opt.id} disabled={!canChoose} onClick={() => choose(opt, index)}>{optionTextForAge(opt, actorMap, profile)}</button>)}</div>
+        ) : (
           displayOpts
             .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
             .map((opt, index) => {
@@ -665,20 +445,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
             const showOk = isPicked && opt.ok && !suppressImmediateFeedback;
             const showBad = isPicked && !opt.ok && !suppressImmediateFeedback;
             return (
-              <button key={opt.id} onClick={() => choose(opt, index)} disabled={picked !== null}
+              <button key={opt.id} data-answer-id={opt.id} onClick={() => choose(opt, index)} disabled={!canChoose}
+                className={`ap-answer ${showOk ? 'is-correct' : showBad ? 'is-incorrect' : ''}`}
                 style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  fontFamily: "inherit",
                   fontSize: profile.big ? 16 : 13.5,
                   padding: profile.big ? "13px 14px" : "10px 12px",
-                  margin: "7px 0",
-                  borderRadius: profile.big ? 14 : 10,
                   cursor: picked !== null ? "default" : "pointer",
-                  border: `${showOk ? 2 : 1}px solid ${showOk ? "#0B6B3A" : showBad ? "#A32D2D" : "#CDD5E0"}`,
-                  background: showOk ? "#F2FAF5" : showBad ? "#FDF3F1" : "#FFFFFF",
-                  color: showOk ? "#155F38" : showBad ? "#7A2A1C" : "#2F3747",
                   fontWeight: showOk ? 800 : 600,
                 }}>
                 {profile.token === "figure" && opt.icon ? (
@@ -689,16 +461,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
                 ) : (
                   <>{optionTextForAge(opt, actorMap, profile)}{showOk ? " - right read" : ""}</>
                 )}
-                {showBad && opt.no && !suppressImmediateFeedback && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{playerFacingTextForAge(opt.no, profile)}</div>}
+                {showBad && opt.no && !suppressImmediateFeedback && <div style={{ fontSize: 12, marginTop: 5, fontWeight: 500 }}>{playerFacingTextForAge(opt.no, profile)}</div>}
               </button>
             );
           })
         )}
+        {!node.terminal && !node.autoNext && kind === 'lane-pick' && <div role="group" aria-label="Choose a numbered spot" className="ap-direct-choices">{(node.ask?.opts || []).map((opt, index) => <button type="button" className="ap-answer" key={opt.id} data-answer-id={opt.id} disabled={!canChoose} onClick={() => choose(opt, index)}>{index + 1}. {optionTextForAge(opt, actorMap, profile)}</button>)}</div>}
         {/* Judge-why surfacing: once the justify answer lands, show the coaching
             copy authored on the judge pick (why/no) — it never had a display
             path, and showing it earlier would leak the justify answer. */}
         {kind === "verdict" && judgePick && picked !== null && (judgePick.why || judgePick.no) && (
-          <div style={{ fontSize: 12.5, marginTop: 8, padding: "8px 10px", borderRadius: 8, background: judgePick.ok ? "#F2FAF5" : "#FFF7EF", border: `1px solid ${judgePick.ok ? "#9CCFB2" : "#E0B98A"}`, color: judgePick.ok ? "#155F38" : "#7A4A1C", lineHeight: 1.45 }}>
+          <div className={`ap-call-feedback ${judgePick.ok ? 'is-correct' : 'is-incorrect'}`}>
             <span style={{ fontWeight: 800 }}>Your call: {optionTextForAge(judgePick, actorMap, profile)}.</span>{" "}
             {playerFacingTextForAge(judgePick.why || judgePick.no, profile)}
           </div>
@@ -710,7 +483,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
             telemetry — and it hands off to the Feedback widget, which is where
             the detail that actually fixes a play gets written. */}
         {unclearFlagged ? (
-          <div style={{ marginTop: 10, fontSize: 11.5, color: "#6B7280", lineHeight: 1.45 }}>
+          <div className="ap-help" style={{ marginTop: 10 }}>
             Thanks — flagged. Tap <strong>Feedback</strong> (bottom right) to tell us what was confusing.
           </div>
         ) : (
@@ -719,7 +492,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
               setUnclearFlagged(true);
               onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current });
             }}
-            style={{ marginTop: 10, background: "none", border: "none", padding: 0, color: "#8792A5", fontSize: 11.5, textDecoration: "underline", cursor: "pointer", fontFamily: "inherit" }}
+            className="ap-report-link"
           >
             This read wasn't clear
           </button>

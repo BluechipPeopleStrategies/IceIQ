@@ -1,0 +1,1111 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-34",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q1",
+      "baseContentHash": "4707edf68999fd43f097ada8d85e58fabb053e6432767724e414b594f0b9dcf5",
+      "verdict": "repair",
+      "reason": "Own defect: distractor option b read 'YOU has already pinched' (subject-verb error). Also inherits the scene-level fixes to this scenario's briefing (invented F1 possession contradicting the loose puck, 'YOU is' grammar, and the false 'two defenders' geometry claim) since briefing/setup are part of every question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (11,8) facing 0.2, inside the offensive zone past the +x blue line (7.62).",
+          "D2 (h2) at (10,-5), also near the blue line, opposite side of centre from YOU.",
+          "F1 (h3) at (21,9); puck is loose (owner:null) at (20,10), 1.41m from F1.",
+          "Away actors A1 (23,8), A2 (16,4), A3 (20,-3 in the original file)."
+        ],
+        "stated": [
+          "Briefing names D2 as high support (matches cue).",
+          "Cue: 'the cover is a stated practice condition, not an outcome.'"
+        ],
+        "unproven": [
+          "Whether YOU will actually pinch.",
+          "Whether F1 or a Gold skater wins the loose puck."
+        ]
+      },
+      "alternative": null,
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q2",
+      "baseContentHash": "f48f38b5ba23379c2c375e273a9d168ea745c624b69e8815fa2672700f69f58f",
+      "verdict": "repair",
+      "reason": "No defect in this question's own prompt/options/explanation. Its hash changes only because it inherits the scenario's briefing/setup repair (invented F1 possession, 'YOU is' grammar, false two-defenders geometry). Content rechecked and remains sound after the fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D2 (h2) at (10,-5); YOU (h1) at (11,8).",
+          "F1 (h3) at (21,9) near the loose puck at (20,10)."
+        ],
+        "stated": [
+          "Objective: join the attack only when high cover and puck route support the pinch."
+        ],
+        "unproven": [
+          "Whether the recovery lane stays open once YOU commits."
+        ]
+      },
+      "alternative": "A player might also treat 'is the recovery lane itself still open' as a third relevant check; the keyed two answers (D2's cover, F1's puck access) are a minimum, not an exhaustive list.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q3",
+      "baseContentHash": "0eec6b90973a819d361e01c72f3201fcdd40782eeffe4710514d5cea74d9f70b",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content. Sequence order (check cover/route, step down while cover holds, re-check) is a legitimate before/during/after routine, not an artificial 'stop scanning' order banned by the authoring contract, so it needed no rewrite. Hash changes only from the inherited scenario-level fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1/q2."
+        ],
+        "stated": [
+          "The cover and route are declared conditions, not a guaranteed pinch."
+        ],
+        "unproven": [
+          "Whether the final re-check ever changes the outcome in this specific rep."
+        ]
+      },
+      "alternative": "A team that has pre-declared 'D2 always covers on a pinch' as a fixed rule could treat the checks as continuous rather than a strict before/after sequence; this scene states no such fixed rule, so the taught order (check, commit, re-check) remains the safer default.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q4",
+      "baseContentHash": "a4e4db508acb066165e12272803f3299ea292bd077603c9556e13b49105bea34",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content. Reference point (10.5,7.2) is on the ice, genuinely moves YOU (not a near-zero shift), and keeps D2 visible. Hash changes only from the inherited scenario-level fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU moves from (11,8) to the example (10.5,7.2), a real but conservative shift toward the blue line."
+        ],
+        "stated": [
+          "This is one example location, not an exclusive correct dot (per position-question contract)."
+        ],
+        "unproven": [
+          "Whether this exact point is reachable in real time from the starting spot."
+        ]
+      },
+      "alternative": "Any point that keeps YOU near the blue line with D2 visible works, e.g. (10,7.5) is equally defensible; (10.5,7.2) is only one illustration.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q5",
+      "baseContentHash": "c3505f27749596b437feb29950595093c21c32243ab1b421e46007a9d1630a85",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content; the hypothetical (D2 pulled low) is explicitly introduced, not assumed from the still frame. Hash changes only from the inherited scenario-level fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D2 at (10,-5) in the base scene; the 'pulled low' condition is a stated hypothetical change, not a rendered fact."
+        ],
+        "stated": [
+          "D2 no longer covers the same space (hypothetical premise of the question)."
+        ],
+        "unproven": [
+          "Exactly where D2 moves to, or whether Gold actually pressures immediately."
+        ]
+      },
+      "alternative": "Some systems teach a delayed release rather than an immediate hold/recover; still, once D2's cover is compromised, holding the line or recovering is the lower-risk default response taught here.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-001",
+      "questionId": "exp26b-u15-001-q6",
+      "baseContentHash": "008d8724568915e5ca882d33c334a11e4fb8489dc8a233cb30f7a17bfcf09832",
+      "verdict": "repair",
+      "reason": "Own defect: explanation named three cues (D2 as cover, the puck route, the recovery lane) then said 'if either support cue disappears' -- 'either' is only correct for exactly two items, so it contradicted its own list. Also inherits the scenario-level briefing/geometry fixes.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as the rest of the scenario."
+        ],
+        "stated": [
+          "This is a reflection (basis: coaching, no answer key)."
+        ],
+        "unproven": [
+          "No response length or specific wording is graded."
+        ]
+      },
+      "alternative": "A player might instead name puck-support numbers or time-and-space as the deciding cues; the model answer (D2's cover, the puck route, the recovery lane) is a suggested synthesis, not the only correct one.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q1",
+      "baseContentHash": "8d8cb2109114a8d44f074fef2235d39f1b514cbbcfd205b428cf2b2f29cf44e6",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content (puck.owner='h1' matches the keyed answer 'YOU'). Hash changes only because it inherits the scenario's briefing/cues grammar fix ('YOU has'->'YOU have', 'YOU owns'->'YOU own'). Rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "puck: {owner:'h1'}; YOU (h1) at (18,9)."
+        ],
+        "stated": [
+          "Briefing: 'YOU has the puck near the right half wall' (grammar defect, fixed to 'YOU have')."
+        ],
+        "unproven": [
+          "Nothing further; possession is a directly stated/visible fact."
+        ]
+      },
+      "alternative": null,
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q2",
+      "baseContentHash": "e0a21d41acd0dbd5a1d018452db617ccc192c16df0323e6562386ec7b05e6159",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content. Gold 1 (a2, label 'A1', team away) is genuinely near the corridor between YOU (18,9) and F2 (24,6): x=20 is between 18 and 24, y=5 is close to (within ~1-3m of) the direct line's y-range, a reasonable coaching description of coverage rather than a false claim. Hash changes only from the inherited scenario-level grammar fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (a2) at (20,5); F3 (h3) at (21,-1) is the alternative inside receiver."
+        ],
+        "stated": [
+          "Cue: 'Gold 1 sits between YOU and F2.'"
+        ],
+        "unproven": [
+          "Whether Gold 1 will actually pressure the pass; no motion is simulated."
+        ]
+      },
+      "alternative": "A player could also cite F2's ability to one-touch the puck as a supporting cue; the two-answer key (Gold 1's position, F3's lane) is a minimum, not exhaustive.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q3",
+      "baseContentHash": "53ebc6665831e54a44124c35a00100abdaacc006e79a82ed7ec8732f0d2f75d0",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content. The sequence (identify pressure/receivers, move the puck, re-check the new lane) is a legitimate before/during/after routine, not a rigid 'stop scanning' order. Hash changes only from the inherited scenario-level grammar fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1/q2."
+        ],
+        "stated": [
+          "The pass is a tool to move coverage, per the explanation."
+        ],
+        "unproven": [
+          "Whether moving the puck actually shifts Gold 1 in this specific rep."
+        ]
+      },
+      "alternative": "A team running a fixed umbrella structure might treat 'identify receivers' and 'move the puck' as near-simultaneous rather than strictly sequential; the taught order here is a suggested routine, not a scored timeline.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q4",
+      "baseContentHash": "85348f43ee66e7aeafb7fd85f0f11968f3ccb0e881a83cd88bb0f4b8a93497ca",
+      "verdict": "repair",
+      "reason": "No new defect found; this question was already repaired and independently re-reviewed in prior packets (older-repairs.json moved the reference from (19.5,8.1) to (16,9); older-second.json / luna-youth-second-older passed the exact resulting hash). Re-audited again here and still sound. Hash changes from this pass only because it inherits the scenario's briefing/cues grammar fix; the position reference itself is unchanged.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU moves from (18,9) to (16,9), a real, meaningful shift along the half wall toward the blue line."
+        ],
+        "stated": [
+          "Explanation already discloses this is an angle comparison, not a guaranteed open pass, and tells the learner to recheck the defender and F3."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually reacts to the shift; not simulated."
+        ]
+      },
+      "alternative": "A smaller or larger shift along the half wall could also open a usable angle; (16,9) is one illustrative point, not the only correct one.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q5",
+      "baseContentHash": "936ca2bf8e393dd49642d00108831cfe6fd4d930707f3a279c79264d4dc5e752",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content; the hypothetical (Gold 1 commits toward F2) is explicitly introduced, not assumed. Hash changes only from the inherited scenario-level grammar fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Base positions from the scene, prior to the stated hypothetical shift."
+        ],
+        "stated": [
+          "Gold 1 commits toward F2 (stated premise of this question, not a rendered fact)."
+        ],
+        "unproven": [
+          "Whether F3 or the wall lane is actually open after the shift; not simulated."
+        ]
+      },
+      "alternative": "Some coaches would have YOU pre-commit to F3 as a rule once Gold 1 shifts; the safer default taught here is to re-scan rather than assume the lane is open.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "questionId": "exp26b-u15-002-q6",
+      "baseContentHash": "befef0599a10748742cfe631642e04827590e81f8056d5941e0b92575782ff3f",
+      "verdict": "repair",
+      "reason": "No defect in this question's own content (reflection, no answer key). Hash changes only from the inherited scenario-level grammar fix; rechecked and sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as the rest of the scenario."
+        ],
+        "stated": [
+          "Reflection is optional and ungraded."
+        ],
+        "unproven": [
+          "No response length or specific wording is graded."
+        ]
+      },
+      "alternative": "A player might instead describe the goal-line seam or a slot presence as the key space; the half wall is the model answer, not the only teaching point.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u15-001",
+      "baseVersion": 1,
+      "baseScenarioHash": "e84543ba87491a4c2fd5102adba98fb98651cabb31afbdc2814ecfedd1722468",
+      "replacement": {
+        "id": "exp26b-u15-001",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Pinch with a visible cover",
+        "family": "pinch-cover-read",
+        "topic": "Offensive blue line",
+        "objective": "Join the attack only when the high cover and puck route support the pinch.",
+        "briefing": "YOU are near the offensive blue line with D2 high support; F1 is below near the loose puck, and Gold has two defenders between the puck and net.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 8,
+              "facing": 0.2
+            },
+            {
+              "id": "h2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -5,
+              "facing": 1
+            },
+            {
+              "id": "h3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": 9,
+              "facing": 2.3
+            },
+            {
+              "id": "a1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": 8,
+              "facing": 2.5
+            },
+            {
+              "id": "a2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": 4,
+              "facing": 1
+            },
+            {
+              "id": "a3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": -3,
+              "facing": 1.6
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 20,
+            "y": 10
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The puck is loose below YOU.",
+          "D2 is high support.",
+          "The cover is a stated practice condition, not an outcome."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 20, Offensive Zone Play",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-001-q1",
+            "type": "choice",
+            "prompt": "What is directly stated about the high cover?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D2 is the named high support"
+              },
+              {
+                "id": "b",
+                "text": "YOU have already pinched"
+              },
+              {
+                "id": "c",
+                "text": "Gold has lost possession"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "D2 is identified as high support; the loose puck and still frame do not prove a completed pinch."
+          },
+          {
+            "id": "exp26b-u15-001-q2",
+            "type": "multi",
+            "prompt": "Which two checks belong before stepping down?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D2 can cover behind YOU"
+              },
+              {
+                "id": "b",
+                "text": "Whether F1 can keep or recover the puck"
+              },
+              {
+                "id": "c",
+                "text": "Whether the blue line itself makes the pinch safe"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Cover and puck access explain why the pinch may fit; the line alone does not remove the recovery risk."
+          },
+          {
+            "id": "exp26b-u15-001-q3",
+            "type": "sequence",
+            "prompt": "Arrange a supported-pinch read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check D2 and the puck route"
+              },
+              {
+                "id": "b",
+                "text": "Step down while D2’s cover still protects the recovery lane"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the puck and high space"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The cover and route set the conditions; the final scan decides whether to continue or recover."
+          },
+          {
+            "id": "exp26b-u15-001-q4",
+            "type": "position",
+            "prompt": "Move YOU to a conservative high position with D2 visible.",
+            "actorId": "h1",
+            "reference": {
+              "x": 10.5,
+              "y": 7.2
+            },
+            "basis": "coaching",
+            "explanation": "This keeps YOU near the line while preserving the high support relationship."
+          },
+          {
+            "id": "exp26b-u15-001-q5",
+            "type": "choice",
+            "prompt": "D2 is pulled low by a changing puck route. What should YOU reconsider?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Hold high or recover until cover is restored"
+              },
+              {
+                "id": "b",
+                "text": "Pinch farther because D2 is busy"
+              },
+              {
+                "id": "c",
+                "text": "Assume F1 will win the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D2 no longer covers the same space, so the safer branch is to preserve the line or recover while scanning F1."
+          },
+          {
+            "id": "exp26b-u15-001-q6",
+            "type": "explain",
+            "prompt": "Which three cues make this pinch supported rather than merely aggressive?",
+            "basis": "coaching",
+            "explanation": "Name D2 as the cover, the reachable puck route, and the recovery lane. If any of these support cues disappears, keep the blue line protected."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u15-001-q1",
+        "exp26b-u15-001-q2",
+        "exp26b-u15-001-q3",
+        "exp26b-u15-001-q4",
+        "exp26b-u15-001-q5",
+        "exp26b-u15-001-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u15-001-q1",
+            "exp26b-u15-001-q2",
+            "exp26b-u15-001-q3",
+            "exp26b-u15-001-q4",
+            "exp26b-u15-001-q5",
+            "exp26b-u15-001-q6"
+          ],
+          "issue": "Briefing said 'YOU is near the offensive blue line' (subject-verb error) and 'F1 carries below' while the stored puck is loose (owner:null) at (20,10) -- an invented-possession contradiction between the briefing text and the actual scene state, the same failure class flagged historically for exp26-u7-001-q7/-q8.",
+          "change": "Rewrote the briefing to: 'YOU are near the offensive blue line with D2 high support; F1 is below near the loose puck, and Gold has two defenders between the puck and net.' Cues were left untouched -- they already correctly described the puck as loose.",
+          "evidence": "setup.puck = {owner:null,x:20,y:10}; no actor owns the puck. F1 (h3) is at (21,9), 1.41m from the puck (near it, not owning it)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-001-q1",
+            "exp26b-u15-001-q2",
+            "exp26b-u15-001-q3",
+            "exp26b-u15-001-q4",
+            "exp26b-u15-001-q5",
+            "exp26b-u15-001-q6"
+          ],
+          "issue": "Briefing claimed 'Gold has two defenders between the puck and net,' but computed against stored coordinates only one Gold skater (A1 at (23,8)) had x between the puck's x=20 and the net line at x=27.13; A2 (16,4) sits behind the puck (x<20, not between) and A3 was at (20,-3), level with the puck (x=20, not >20, so also not between).",
+          "change": "Moved A3 from (20,-3) to (22,-3), facing unchanged, so a second Gold skater is genuinely positioned between the puck and net, making the briefing's 'two defenders' claim literally true. A3 is not named or referenced in any question's prompt/options/explanation, so no question wording needed to change for this fix.",
+          "evidence": "Puck (20,10); net line x=27.13. Before: away actors with 20<x<27.13 = {A1(23,8)} = 1 (script-verified). After: {A1(23,8), A3(22,-3)} = 2 (script-verified with validateExperimentalBank returning zero structural errors)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-001-q1"
+          ],
+          "issue": "Distractor option b read 'YOU has already pinched' (subject-verb error), the same recurring grammar defect class found across 30+ prior packets, here inside a distractor rather than the prompt.",
+          "change": "Corrected to 'YOU have already pinched.'",
+          "evidence": "Option b text in the original file (baseContentHash 4707edf68999fd43f097ada8d85e58fabb053e6432767724e414b594f0b9dcf5)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-001-q6"
+          ],
+          "issue": "Explanation named three distinct cues (D2 as cover, the reachable puck route, the recovery lane) then said 'if either support cue disappears' -- 'either' is only correct for exactly two items, contradicting its own three-item list.",
+          "change": "Changed 'either' to 'any of these' so the sentence correctly covers all three named cues.",
+          "evidence": "Explanation text in the original file (baseContentHash 008d8724568915e5ca882d33c334a11e4fb8489dc8a233cb30f7a17bfcf09832)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u15-001-q1",
+            "contentHash": "759e887ec238f52906a3cd7f60035051f2d202aa6af0e316f90444225effdc2d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Briefing and option b now use correct YOU-verb agreement; puck/possession claim now matches the loose puck; D-actor geometry now supports the 'two defenders' claim. Answer key (a) still matches the directly stated fact that D2 is high support."
+          },
+          {
+            "questionId": "exp26b-u15-001-q2",
+            "contentHash": "435ec4829fe5f69fd9ed0765f36eb8981e4bc1dac7b4ac0ba562851852844b3f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "No question-specific defect; content unchanged apart from inherited scene fixes. Answer (a,b) still correctly reflects the two supported checks."
+          },
+          {
+            "questionId": "exp26b-u15-001-q3",
+            "contentHash": "72dc35bedda0e31af0b093d4a7c099255a33f4a83559b8836368637026bb2e57",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Sequence order remains a legitimate check/commit/re-check routine, not a rigid ban on overlapping scans; unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-001-q4",
+            "contentHash": "d9dcff03ada03d5f8dbfaaa331e2fa079b9cb13abda762f018090288b2de5d0b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reference (10.5,7.2) confirmed on ice and a real movement from YOU's start point by validateExperimentalBank / isCoachRoutePoint; unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-001-q5",
+            "contentHash": "08b856424b812555462b0a93bfc0fc9324db4923a445d613ddf811f9dad69630",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Hypothetical is explicitly introduced in the prompt; unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-001-q6",
+            "contentHash": "34191a07a818ecede6209c8dccffd4b9be706d04bf3b66ea6268811a6ce3cd11",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "'either' corrected to 'any of these,' now consistent with the three named cues. Reflection format correctly carries no answer key."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u15-002",
+      "baseVersion": 1,
+      "baseScenarioHash": "b1c4fed56b6faef3976c43cebbe689790ee924507f1ae5e8f543d0cf6240687a",
+      "replacement": {
+        "id": "exp26b-u15-002",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Draw one penalty killer",
+        "family": "powerplay-draw-out",
+        "topic": "Power-play support",
+        "objective": "Move the puck to shift one penalty killer while keeping a second receiver available.",
+        "briefing": "YOU have the puck near the right half wall; F2 is low, F3 is inside, and Gold 1 is between YOU and F2. The scene gives a local passing choice, not a prescribed formation.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 18,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": 6,
+              "facing": 2.6
+            },
+            {
+              "id": "h3",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": -1,
+              "facing": 1.8
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 11,
+              "y": 3,
+              "facing": 0.7
+            },
+            {
+              "id": "a2",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": 5,
+              "facing": 2
+            },
+            {
+              "id": "a3",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": 1,
+              "facing": 2.1
+            }
+          ],
+          "puck": {
+            "owner": "h1"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "YOU own the puck at the half wall.",
+          "Gold 1 sits between YOU and F2.",
+          "F3 is an inside receiver."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usa-special-teams-2015",
+            "title": "Special Teams Tactics with Mike Guentzel",
+            "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+            "section": "Youth power-play advice / creating 2-on-1s",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-002-q1",
+            "type": "choice",
+            "prompt": "Which player currently owns the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The setup assigns the puck to YOU, so the local read starts from the half wall."
+          },
+          {
+            "id": "exp26b-u15-002-q2",
+            "type": "multi",
+            "prompt": "Which two cues support moving the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1's position relative to F2"
+              },
+              {
+                "id": "b",
+                "text": "F3's reachable inside lane"
+              },
+              {
+                "id": "c",
+                "text": "The power play fixes every receiver in place"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Coverage and support make the puck move useful; the structure still changes as Gold shifts."
+          },
+          {
+            "id": "exp26b-u15-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a local power-play read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify the pressure and two receivers"
+              },
+              {
+                "id": "b",
+                "text": "Move the puck to change the coverage"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the next lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The pass is a tool to move coverage, then the new lane must be read again."
+          },
+          {
+            "id": "exp26b-u15-002-q4",
+            "type": "position",
+            "prompt": "Move YOU a little toward the blue line along the half wall to compare a different diagonal to F3.",
+            "actorId": "h1",
+            "reference": {
+              "x": 16,
+              "y": 9
+            },
+            "basis": "coaching",
+            "explanation": "Backing along the wall changes the diagonal around Gold 1 while keeping both receivers in view. It illustrates an angle change, not a guaranteed open pass; recheck the defender and F3 before using it."
+          },
+          {
+            "id": "exp26b-u15-002-q5",
+            "type": "choice",
+            "prompt": "Gold 1 commits toward F2 after your angle change. What deserves a fresh check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F3 or the original wall lane is now reachable"
+              },
+              {
+                "id": "b",
+                "text": "Force F2 because the defender moved"
+              },
+              {
+                "id": "c",
+                "text": "Stay on the same angle without scanning"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 1's commitment changes both receiving relationships; choose only after checking the new lane."
+          },
+          {
+            "id": "exp26b-u15-002-q6",
+            "type": "explain",
+            "prompt": "Name the half-wall space and explain how changing your angle can affect two receivers.",
+            "basis": "coaching",
+            "explanation": "The half wall gives YOU a carrier reference; changing the line can pull Gold 1 and expose F3 or F2, depending on which route stays open."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u15-002-q1",
+        "exp26b-u15-002-q2",
+        "exp26b-u15-002-q3",
+        "exp26b-u15-002-q4",
+        "exp26b-u15-002-q5",
+        "exp26b-u15-002-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u15-002-q1",
+            "exp26b-u15-002-q2",
+            "exp26b-u15-002-q3",
+            "exp26b-u15-002-q4",
+            "exp26b-u15-002-q5",
+            "exp26b-u15-002-q6"
+          ],
+          "issue": "Briefing read 'YOU has the puck near the right half wall' (subject-verb error).",
+          "change": "Corrected to 'YOU have the puck near the right half wall; F2 is low, F3 is inside, and Gold 1 is between YOU and F2. The scene gives a local passing choice, not a prescribed formation.'",
+          "evidence": "Briefing text in the original file."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-002-q1",
+            "exp26b-u15-002-q2",
+            "exp26b-u15-002-q3",
+            "exp26b-u15-002-q4",
+            "exp26b-u15-002-q5",
+            "exp26b-u15-002-q6"
+          ],
+          "issue": "cues[0] read 'YOU owns the puck at the half wall.' (subject-verb error).",
+          "change": "Corrected to 'YOU own the puck at the half wall.'",
+          "evidence": "cues array index 0 in the original file."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u15-002-q1",
+            "contentHash": "9f57ec652c58430a2326fa823432a1eb21ee1f9b93385ba816fac131606813a4",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Briefing/cues now use correct YOU-verb agreement. puck.owner='h1' still matches the keyed answer 'YOU'."
+          },
+          {
+            "questionId": "exp26b-u15-002-q2",
+            "contentHash": "127b09ff5ba96ae645152e96c6db093bc61087d03202df4efbbb83b5ac0d0c69",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "No question-specific defect; content unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-002-q3",
+            "contentHash": "1d5a4c1015ca2f4bf8a99c7c5ae1516b7cfb8d109ed78fe1147fdbdce5eacefa",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Sequence order remains a legitimate check/act/re-check routine; unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-002-q4",
+            "contentHash": "239ea8579b117dec149e85f6345ebb23761f9e807ad61c84460310d1c72ff9ff",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reference (16,9) already independently re-reviewed in prior packets (older-repairs.json, older-second.json / luna-youth-second-older pass); unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-002-q5",
+            "contentHash": "3adc0dd7fb49af6732d8219f5fd1a6385f0bb9902b7922bb37f2891b866f8b63",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Hypothetical (Gold 1 commits toward F2) is explicitly introduced; unchanged apart from inherited scene fixes."
+          },
+          {
+            "questionId": "exp26b-u15-002-q6",
+            "contentHash": "fc33893ecf42939996c8b113b55b7c116e6abb8f144e41404fafd50624d96498",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reflection format correctly carries no answer key; unchanged apart from inherited scene fixes."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched the PDF and read the page-20 slide titled 'Offensive Zone Play.' It states: 'Defensemen need to be part of the offensive attack... Pinch \"leap down\" decisions within your system. If support from F2 maintain gap and holding OZ blueline... Weak Side D down in slot, Strong Side D across blue,' and (prior slide) 'Support your partner and be staggered in the OZ.' This genuinely supports the scenario's stated principle (pinch only when partner cover/support holds); it does not certify these exact coordinates, a guaranteed pinch outcome, or a single mandatory system.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General defenceman-development deck, not age-labelled on this slide; used elsewhere in this bank for U13-U18 content. Consistent with U15 use here.",
+      "claim": "A defenceman's decision to pinch/join the attack should be conditioned on partner cover and support holding the blue line, not a guaranteed-safe action."
+    },
+    {
+      "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched the article (required a browser User-Agent; a plain fetch returned HTTP 403). Coach Mike Guentzel states youth power plays should 'still be teaching to create 2-on-1s,' that puck movement at the youth level often works 'around the half-wall or around the goal line,' and that a good power play makes 'one guy who's responsible for two guys' have more to think about. An editor's note also states USA Hockey 'strongly recommends refraining from detailed and lengthy instructing on special teams tactics/systems until the 14U age classification at the earliest,' which supports introducing this content at U15 rather than younger. Supports the scenario's stated principle of moving the puck to shift one defender while keeping a second receiver open; does not certify this exact formation or player count as the only correct setup.",
+      "jurisdiction": "USA (USA Hockey)",
+      "ageFormat": "Explicitly discusses youth (14U+) special-teams coaching, consistent with the U15 age band used here.",
+      "claim": "At the youth level, power-play puck movement should aim to create a 2-on-1 (or similar local advantage) by shifting one defender's attention while a second receiver stays available, often via half-wall or below-the-goal-line puck movement."
+    }
+  ],
+  "remainingQuestionIds": []
+}

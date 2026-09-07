@@ -141,6 +141,18 @@ test('every static curriculum board renders explicit stick equipment and authore
   }
 });
 
+test('explicit 3D curriculum mode stays 3D for puckless scenes and never invents a centre-ice puck', () => {
+  const visual = structuredClone(questions[0].visual);
+  visual.actors.forEach(actor => { actor.hasPuck = false; });
+  try {
+    globalThis.__rrCurriculumPose = { art: [], scenes: [] };
+    const html = renderToStaticMarkup(createElement(CurriculumBoard, { visual, title: 'Puckless rink feature', sceneView: true }));
+    assert.equal(globalThis.__rrCurriculumPose.scenes.length, 1);
+    assert.equal(globalThis.__rrCurriculumPose.scenes[0].state.puck, null);
+    assert.doesNotMatch(html, /data-puck-locator/);
+  } finally { delete globalThis.__rrCurriculumPose; }
+});
+
 test('SVG and 3D consume the same authored headings without changing the puck, player identities or data', () => {
   const before = JSON.stringify(pack);
   try {
@@ -152,7 +164,7 @@ test('SVG and 3D consume the same authored headings without changing the puck, p
       assert.equal(capture.art.length, question.visual.actors.length);
       const carrier = question.visual.actors.find(actor => actor.hasPuck);
       assert.deepEqual(capture.scenes[0].state.puck, { owner: carrier.id, x: carrier.x + 1, y: carrier.y + .58 });
-      assert.match(html, /class="gc-puck" cx="1" cy="\.58"/);
+      assert.match(html, /data-puck-locator="true" transform="translate\(1 0\.58\)"/);
       question.visual.actors.forEach((actor, index) => {
         const sprite = capture.art[index], scene = capture.scenes[0].state.actors[index];
         assert.ok(Math.abs(sprite.facing - actor.facing * 180 / Math.PI) < 1e-10, `${question.id}/${actor.id}: SVG degrees`);

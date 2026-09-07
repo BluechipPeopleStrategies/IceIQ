@@ -1,0 +1,14 @@
+import fs from 'node:fs';import crypto from 'node:crypto';
+import{readBankFiles}from'./packets-production-release/tools/experimental-bank-files.mjs';
+import{questionContentHash}from'./packets-production-release/tools/question-batch-core.mjs';
+const root='C:/Users/mtsli/IceIQ',dir=root+'/tmp/packets-production-release/docs/factory/coaching-panel/pilot-2026-09-06';fs.mkdirSync(dir,{recursive:true});
+const cal=JSON.parse(fs.readFileSync(root+'/tmp/packets-production-release/docs/factory/calibration/skating-movement-2026-09-06.json'));
+const scenarios=[...cal.candidates,readBankFiles().bank.find(s=>s.id==='exp26-u11-001')];
+const write=(n,v)=>fs.writeFileSync(dir+'/'+n,JSON.stringify(v,null,2)+'\n');
+write('snapshot.json',{status:'frozen-pilot-not-human-approved',scenarios});
+write('blind-questions.json',{instructions:'Solve before opening snapshot.json. Record your answer, scene evidence, uncertainty and defensible options. Keys, explanations and reference positions are withheld.',scenarios:scenarios.map(s=>({id:s.id,version:s.version,ageBand:s.ageBand,title:s.title,objective:s.objective,briefing:s.briefing,setup:s.setup,focusActorId:s.focusActorId,questions:s.questions.map(({answer,explanation,reference,...q})=>q)}))});
+write('manifest.json',{createdAt:new Date().toISOString(),status:'pilot',questions:scenarios.flatMap(s=>s.questions.map(q=>({scenarioId:s.id,scenarioVersion:s.version,questionId:q.id,hash:questionContentHash(s,q),type:q.type,basis:q.basis,optionIds:(q.options||[]).map(o=>o.id)})))});
+for(const f of ['cases.json','answer-key.json'])fs.copyFileSync(root+'/docs/factory/claude-review-calibration/'+f,dir+'/historical-'+f);
+fs.copyFileSync(root+'/docs/factory/CLAUDE-REVIEW-UPDATE.md',dir+'/HISTORICAL-CHECKS.md');
+write('provenance.json',{historicalFiles:['cases.json','answer-key.json'].map(f=>({source:'docs/factory/claude-review-calibration/'+f,sha256:crypto.createHash('sha256').update(fs.readFileSync(root+'/docs/factory/claude-review-calibration/'+f)).digest('hex')})),counts:{scenes:scenarios.length,questions:scenarios.flatMap(s=>s.questions).length}});
+console.log(dir);

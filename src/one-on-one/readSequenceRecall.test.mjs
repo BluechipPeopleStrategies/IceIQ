@@ -94,7 +94,7 @@ test('recall rejects incomplete, replaying, corrupt and cross-scenario sessions'
     { ...good, scenarioId: u11 }, { ...good, version: 'unknown' },
     { ...good, first: { action: 'shoot', reason } },
     { ...good, second: { targetId: 'keep-puck' } },
-    { ...good, third: { ...good.third, reason: '' } },
+    { ...good, third: { ...good.third, reason: null } },
     { ...good, third: { ...good.third, actorId: 'D1' } },
     { ...good, third: { ...good.third, route: [] } },
   ];

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "principles": [
+    {
+      "id": "every-referenced-actor-visible",
+      "text": "Every actor named in the prompt, made selectable (interaction.from), or named as the answer (correct.ids) must exist in actors[] AND be visibly placed on the picture. Never reference an id that is anonymous or off-scene."
+    },
+    {
+      "id": "one-distinct-correct",
+      "text": "When the answer is one of several same-kind actors, the correct one must be the ONLY actor in the geometrically distinct zone the concept targets (e.g. the open lane, the blind side, the back post). If two candidates are equally valid by position, the question is broken: move actors so exactly one is correct."
+    },
+    {
+      "id": "meaningful-separation",
+      "text": "No two non-puck actors may sit within ~0.10 of each other; every player must read as a distinct, tappable token. The puck rides its carrier (the renderer nudges it to the carrier's edge), so place the puck on the carrier's coordinates, not floating."
+    },
+    {
+      "id": "defenders-on-real-lines",
+      "text": "Place each defender where it would really be for its job: a defender pressuring the puck-carrier sits on or within ~0.05 of the puck-to-net line at a 1-3 stride closing distance; a defender covering a lane sits in that lane. Never float a defender in dead space off any threat."
+    },
+    {
+      "id": "goalie-realism",
+      "text": "The goalie hugs the near post on the puck-to-net line, centered for the puck's position — not drifted to the far post or off the goal line."
+    },
+    {
+      "id": "static-vs-motion",
+      "text": "A still picture shows a frozen moment. If the read depends on movement ('developing', 'where they are moving'), add facing or path cues to the relevant actors. Never pair motion language with a positions-only snapshot, and for anticipation concepts freeze the moment the pattern BEGINS, not after it has fully formed."
+    },
+    {
+      "id": "age-appropriate-count",
+      "text": "Cap decision-driving actors to what the age can hold: about 5 total for U7/U9, a few more for older bands. Reduce peripheral actors to a single static beat; every extra token raises working-memory load without improving the read."
+    },
+    {
+      "id": "one-read-only",
+      "text": "The scene depicts exactly ONE read for the target concept. Do not add actors or threats that introduce a second decision or let the player solve it by elimination for the wrong reason."
+    }
+  ]
+}

@@ -1,0 +1,1161 @@
+import { createClient } from "@supabase/supabase-js";
+
+// Error-handling conventions for this module:
+//
+//   Writes (saveX / createX / updateX / signX):
+//     - If `supabase` is null (env vars missing), return a no-op sentinel
+//       (null / undefined) and do not throw — the app works offline.
+//     - If the network call errors, THROW the Supabase error so callers can
+//       map it to a user-visible message.
+//
+//   Reads (getX / listX):
+//     - Return the expected shape on success (e.g. array, object, string).
+//     - Return the empty/null equivalent on failure and log via `warn` so
+//       errors surface in DevTools without crashing the UI. Do NOT throw
+//       from reads — the render tree doesn't want to branch on read errors.
+//
+//   Telemetry (recordX):
+//     - Best-effort fire-and-forget. Silent catch by design, annotated.
+
+const url = import.meta.env.VITE_SUPABASE_URL;
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+function warn(context, error) {
+  if (error) console.warn(`[RinkReads/supabase] ${context}:`, error.message || error);
+}
+
+if (!url || !key) {
+  console.warn("[RinkReads] Supabase env vars missing — auth/sync disabled. Copy .env.example to .env and fill in your Supabase project URL and anon key.");
+}
+
+export const supabase = (url && key) ? createClient(url, key, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    // Bypass the navigator.locks auth-token lock: in dev (React StrictMode
+    // double-mounts the tree) it orphans and stalls every auth call ~5s,
+    // freezing screens that make several auth calls on load (e.g. the review
+    // deck). A no-op lock is fine for this single-user app.
+    lock: async (_name, _acquireTimeout, fn) => fn(),
+  },
+}) : null;
+
+export const hasSupabase = !!supabase;
+
+// ─────────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────────
+export async function signUp({ email, password, role, name }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const signupTimeoutMs = 12000;
+  const signupPromise = supabase.auth.signUp({ email, password });
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`RinkReads signup timed out after ${signupTimeoutMs}ms`)), signupTimeoutMs);
+  });
+
+  const { data, error } = await Promise.race([signupPromise, timeoutPromise]);  if (error) throw error;
+
+  let authData = data;
+
+  // In some environments signUp creates the user but does not leave the
+  // browser with an active session. Fall back to sign-in so the UI can
+  // continue instead of returning to the create-account screen.
+  if (!authData?.session && email && password) {
+    const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInErr) {
+      warn("sign-in after signup", signInErr);
+    } else if (signInData?.user) {
+      authData = signInData;
+    }
+  }
+
+  const user = authData?.user || data?.user;
+
+  if (user) {
+    // Profile creation should not make a successful auth signup look failed.
+    // Use upsert so repeat attempts do not explode on duplicate profile rows.
+    const { error: pErr } = await supabase.from("profiles").upsert({
+      id: user.id,
+      role,
+      name,
+    }, { onConflict: "id" });
+
+    if (pErr) warn("profile upsert after signup", pErr);
+  }
+
+  return authData;
+}
+
+export async function signIn({ email, password }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+export async function signOut() {
+  if (!supabase) return;
+  await supabase.auth.signOut();
+}
+
+export async function getSession() {
+  if (!supabase) return null;
+  const { data } = await supabase.auth.getSession();
+  return data.session;
+}
+
+export function onAuthChange(callback) {
+  if (!supabase) return { subscription: { unsubscribe: () => {} } };
+  // Pass the event name through. Callers need to distinguish a real sign-in
+  // from a routine TOKEN_REFRESHED, which fires on a timer and previously
+  // triggered a full profile reload that replaced `player` wholesale.
+  return supabase.auth.onAuthStateChange((event, session) => callback(session, event));
+}
+
+// Fires when the user lands via a password-reset email link. The app uses
+// this to route them to the "set new password" screen — without it, the
+// reset link just logs the user in with their old password unchanged.
+//
+// Race-condition note: detectSessionInUrl=true causes Supabase to process
+// the recovery hash during createClient init, firing PASSWORD_RECOVERY
+// before any React component can subscribe. Past events don't replay on
+// subscribe, so a naive useEffect listener misses the event entirely.
+//
+// We work around this by subscribing at module init (below) and storing
+// the recovery flag + session. Callers via onPasswordRecovery() get fired
+// immediately if the event already happened, or on next firing otherwise.
+let _recoveryFired = false;
+let _recoverySession = null;
+const _recoveryListeners = new Set();
+
+if (supabase) {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      _recoveryFired = true;
+      _recoverySession = session;
+      for (const fn of _recoveryListeners) {
+        try { fn(session); } catch (e) { warn("onPasswordRecovery callback", e); }
+      }
+    }
+  });
+}
+
+export function onPasswordRecovery(callback) {
+  if (!supabase) return { subscription: { unsubscribe: () => {} } };
+  if (_recoveryFired) {
+    // Event already fired before this subscriber registered. Fire async so
+    // callers' state updates happen on the next tick rather than during render.
+    Promise.resolve().then(() => callback(_recoverySession));
+  }
+  _recoveryListeners.add(callback);
+  return {
+    subscription: {
+      unsubscribe: () => { _recoveryListeners.delete(callback); },
+    },
+  };
+}
+
+export async function updatePassword(newPassword) {
+  if (!supabase) throw new Error("Supabase not configured");
+  // 15s timeout so a hung request can't trap the UI in an infinite spinner.
+  // Recovery sessions are short-lived and can fail silently if expired.
+  const update = supabase.auth.updateUser({ password: newPassword });
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out — your reset link may have expired. Request a new one from the sign-in page.")), 15000)
+  );
+  const { error } = await Promise.race([update, timeout]);
+  if (error) {
+    if (/session/i.test(error.message)) {
+      throw new Error("Your reset link expired. Request a new one from the sign-in page.");
+    }
+    throw error;
+  }
+}
+
+// ─────────────────────────────────────────────
+// PROFILE
+// ─────────────────────────────────────────────
+export async function getProfile(userId) {
+  if (!supabase) return null;
+  const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
+  if (error) { warn("getProfile", error); return null; }
+  return data;
+}
+
+// Create the caller's own profile row. Used by the finish-setup recovery screen
+// when an authenticated user has no profiles row -- signup can leave that state
+// behind if the profile write never ran (the 2026-08-02 signup deadlock did
+// exactly that, and three production accounts are still stranded by it).
+//
+// Upsert rather than insert so a retry is harmless. RLS allows this: schema.sql's
+// "insert own profile" policy is `with check (auth.uid() = id)`, so a signed-in
+// user may write their own row and no one else's.
+// INSERT, not upsert, and the difference is a data-corruption bug.
+//
+// This is called by the finish-setup recovery screen, whose role selector
+// defaults to "player". An upsert makes that default authoritative: if a row
+// already exists -- or appears while the form is open, which is exactly what
+// happens when a brand-new signup races the profiles write -- ON CONFLICT DO
+// UPDATE overwrites the real role and name with the form's. A coach who
+// completed that form was silently downgraded to a player, and nothing logged
+// it.
+//
+// Insert-then-adopt keeps the property the upsert was reaching for (a retry is
+// harmless) without ever overwriting a row this screen did not create: on a
+// duplicate-key collision the existing row wins and is returned as-is.
+export async function ensureOwnProfile({ id, role, name }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { data, error } = await supabase.from("profiles")
+    .insert({ id, role, name })
+    .select()
+    .single();
+  if (!error) return data;
+  // 23505 = unique_violation. The row appeared between our check and our write,
+  // so somebody else's write is the truth. Adopt it rather than clobber it.
+  if (error.code === "23505") {
+    const existing = await getProfile(id);
+    if (existing) return existing;
+  }
+  throw error;
+}
+
+export async function updateProfile(userId, patch) {
+  if (!supabase) return null;
+  const { data, error } = await supabase.from("profiles")
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("id", userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// ─────────────────────────────────────────────
+// TEAMS
+// ─────────────────────────────────────────────
+export async function createTeam({ coachId, name, level, season }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const code = generateTeamCode();
+  const { data, error } = await supabase.from("teams")
+    .insert({ coach_id: coachId, name, level, season, code })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getCoachTeams(coachId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("teams").select("*").eq("coach_id", coachId).order("created_at", { ascending: false });
+  if (error) { warn("getCoachTeams", error); return []; }
+  return data || [];
+}
+
+// The free-text region a coach sets on a team. Substituted into the top rungs of
+// the self-rating scale ("Among the best in my age group in Edmonton"). Nullable
+// and normally absent -- renderAnchor() drops the clause when it is missing, so
+// leaving this unset is a supported state, not a broken one.
+export async function updateTeamRegion(teamId, region) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const value = String(region || "").trim();
+  const { data, error } = await supabase.from("teams")
+    .update({ region: value || null })
+    .eq("id", teamId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getPlayerTeams(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_members")
+    .select("team_id, teams(*)")
+    .eq("player_id", playerId);
+  if (error) { warn("getPlayerTeams", error); return []; }
+  return (data || []).map(r => r.teams).filter(Boolean);
+}
+
+// HOTFIX 2026-08-02: joining goes through the join_team_by_code() RPC.
+//
+// Migration 0022 is already applied to production. It removed the blanket
+// "authenticated can lookup team by code" policy on teams (which despite its
+// name checked no code at all and let any signed-in user read every team row
+// including its join code) and the direct self-insert path on team_members.
+//
+// The old implementation below did select-then-insert from the client, so with
+// 0022 live a player who is not already a coach or member of that team reads
+// ZERO rows and gets "Team not found" for a perfectly valid code. This restores
+// joining.
+//
+// The RPC is SECURITY DEFINER, so it can look the code up without that blanket
+// read policy existing, and it derives the player from auth.uid() rather than
+// trusting a caller-supplied id.
+//
+// playerId is kept in the signature for call-site compatibility and is
+// verified against the session rather than sent; the RPC ignores it.
+export async function joinTeamByCode(playerId, code) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("Sign in to join a team");
+  if (playerId && session.user.id !== playerId) {
+    throw new Error("Signed-in player does not match the join request");
+  }
+  const { data, error } = await supabase.rpc("join_team_by_code", { p_code: code });
+  // The RPC raises 'Team not found' for a bad code; surface it as-is so the
+  // existing UI copy keeps working.
+  if (error) throw new Error(error.message.includes("Team not found") ? "Team not found" : error.message);
+  return data;
+}
+
+export async function getTeamRoster(teamId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_members")
+    .select("player_id, profiles(*)")
+    .eq("team_id", teamId);
+  if (error) { warn("getTeamRoster", error); return []; }
+  return (data || []).map(r => r.profiles).filter(Boolean);
+}
+
+function generateTeamCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let c = "";
+  for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
+  return c;
+}
+
+// ─────────────────────────────────────────────
+// QUIZ SESSIONS
+// ─────────────────────────────────────────────
+export async function saveQuizSession(playerId, { results, score, sessionLength }) {
+  if (!supabase) return null;
+  const { data, error } = await supabase.from("quiz_sessions")
+    .insert({ player_id: playerId, results, score, session_length: sessionLength })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getPlayerSessions(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("quiz_sessions")
+    .select("*").eq("player_id", playerId).order("completed_at", { ascending: true });
+  if (error) { warn("getPlayerSessions", error); return []; }
+  return data || [];
+}
+
+// Bulk-fetch quiz history for every player on a coach's roster. RLS policy
+// `coach reads team sessions` (schema.sql) permits this when auth.uid() is
+// the coach of a team the player is on. Returns a map of
+// { playerId: [{ results, score, date }] } suitable for attaching to roster
+// rows before calling calcTeamCompetencyAverages().
+export async function getTeamQuizHistory(playerIds) {
+  if (!supabase || !Array.isArray(playerIds) || !playerIds.length) return {};
+  const { data, error } = await supabase.from("quiz_sessions")
+    .select("player_id, results, score, completed_at")
+    .in("player_id", playerIds)
+    .order("completed_at", { ascending: true });
+  if (error) { warn("getTeamQuizHistory", error); return {}; }
+  const byPlayer = {};
+  for (const row of data || []) {
+    if (!byPlayer[row.player_id]) byPlayer[row.player_id] = [];
+    byPlayer[row.player_id].push({
+      results: row.results,
+      score: row.score,
+      date: (row.completed_at || "").slice(0, 10),
+      completed_at: row.completed_at,
+    });
+  }
+  return byPlayer;
+}
+
+// ─────────────────────────────────────────────
+// GOALS
+// ─────────────────────────────────────────────
+export async function saveGoal(playerId, category, goalData) {
+  if (!supabase) return null;
+  const { data, error } = await supabase.from("goals")
+    .upsert({
+      player_id: playerId,
+      category,
+      goal: goalData.goal,
+      s: goalData.S, m: goalData.M, a: goalData.A, r: goalData.R, t: goalData.T,
+      completed: !!goalData.completed,
+      updated_at: new Date().toISOString(),
+    })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getPlayerGoals(playerId) {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from("goals").select("*").eq("player_id", playerId);
+  if (error) { warn("getPlayerGoals", error); return {}; }
+  const out = {};
+  (data || []).forEach(g => {
+    out[g.category] = { goal: g.goal, S: g.s, M: g.m, A: g.a, R: g.r, T: g.t, completed: g.completed };
+  });
+  return out;
+}
+
+// ─────────────────────────────────────────────
+// SELF RATINGS
+// ─────────────────────────────────────────────
+export async function saveSelfRatings(playerId, ratings) {
+  if (!supabase) return;
+  const rows = Object.entries(ratings)
+    .filter(([_, v]) => v !== null && v !== undefined)
+    .map(([skill_id, value]) => ({ player_id: playerId, skill_id, value, updated_at: new Date().toISOString() }));
+  if (!rows.length) return;
+  const { error } = await supabase.from("self_ratings").upsert(rows);
+  if (error) throw error;
+}
+
+export async function getSelfRatings(playerId) {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from("self_ratings").select("skill_id, value").eq("player_id", playerId);
+  if (error) { warn("getSelfRatings", error); return {}; }
+  const out = {};
+  (data || []).forEach(r => { out[r.skill_id] = r.value; });
+  return out;
+}
+
+// ─────────────────────────────────────────────
+// COACH RATINGS
+// ─────────────────────────────────────────────
+export async function saveCoachRatingsForPlayer(coachId, playerId, ratings, notes) {
+  if (!supabase) return;
+  const rows = Object.entries(ratings)
+    .filter(([_, v]) => v)
+    .map(([skill_id, value]) => ({
+      coach_id: coachId, player_id: playerId, skill_id, value,
+      note: notes?.[skill_id] || null,
+      updated_at: new Date().toISOString(),
+    }));
+  if (!rows.length) return;
+  const { error } = await supabase.from("coach_ratings").upsert(rows);
+  if (error) throw error;
+}
+
+export async function getCoachRatingsForPlayer(playerId) {
+  if (!supabase) return { ratings: {}, notes: {} };
+  const { data, error } = await supabase.from("coach_ratings")
+    .select("skill_id, value, note")
+    .eq("player_id", playerId);
+  if (error) { warn("getCoachRatingsForPlayer", error); return { ratings: {}, notes: {} }; }
+  const ratings = {}, notes = {};
+  (data || []).forEach(r => { ratings[r.skill_id] = r.value; if (r.note) notes[r.skill_id] = r.note; });
+  return { ratings, notes };
+}
+
+// Private coach notes per player. Reuses the coach_ratings table with a
+// sentinel skill_id so no new migration is needed — the RLS policies that
+// already govern coach_ratings apply unchanged (coach can only read/write
+// their own rows for players on a team they coach).
+const COACH_NOTE_SENTINEL = "__general_notes__";
+
+export async function saveCoachPlayerNote(coachId, playerId, note) {
+  if (!supabase) return;
+  const row = {
+    coach_id: coachId,
+    player_id: playerId,
+    skill_id: COACH_NOTE_SENTINEL,
+    value: "note",
+    note: note || null,
+    updated_at: new Date().toISOString(),
+  };
+  const { error } = await supabase.from("coach_ratings").upsert(row);
+  if (error) throw error;
+}
+
+export async function getCoachPlayerNote(playerId) {
+  if (!supabase) return "";
+  const { data, error } = await supabase.from("coach_ratings")
+    .select("note")
+    .eq("player_id", playerId)
+    .eq("skill_id", COACH_NOTE_SENTINEL)
+    .maybeSingle();
+  if (error) { warn("getCoachPlayerNote", error); return ""; }
+  return data?.note || "";
+}
+
+// ─────────────────────────────────────────────
+// ASSIGNMENTS (coach → team homework)
+// ─────────────────────────────────────────────
+// `target_players` is null when the assignment is for the whole team; a uuid[]
+// when it's scoped to specific players. RLS enforces that only team members
+// in the target audience can read the row.
+
+export async function createAssignment(coachId, teamId, { title, description, dueDate, targetPlayers }) {
+  if (!supabase) return null;
+  const row = {
+    coach_id: coachId,
+    team_id: teamId,
+    title: title?.trim(),
+    description: description?.trim() || null,
+    due_date: dueDate || null,
+    target_players: Array.isArray(targetPlayers) && targetPlayers.length ? targetPlayers : null,
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from("assignments").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateAssignment(assignmentId, patch) {
+  if (!supabase) return null;
+  const row = {
+    ...patch,
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from("assignments").update(row).eq("id", assignmentId).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteAssignment(assignmentId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("assignments").delete().eq("id", assignmentId);
+  if (error) throw error;
+}
+
+export async function getAssignmentsForTeam(teamId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignments")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("created_at", { ascending: false });
+  if (error) { warn("getAssignmentsForTeam", error); return []; }
+  return data || [];
+}
+
+// Player-side: RLS filters down to assignments where the player is a member
+// of the team AND either the whole-team row or targeted explicitly.
+export async function getAssignmentsForPlayer(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignments")
+    .select("*, teams(name, level)")
+    .order("created_at", { ascending: false });
+  if (error) { warn("getAssignmentsForPlayer", error); return []; }
+  return data || [];
+}
+
+export async function markAssignmentComplete(assignmentId, playerId, note) {
+  if (!supabase) return;
+  const row = {
+    assignment_id: assignmentId,
+    player_id: playerId,
+    completed_at: new Date().toISOString(),
+    note: note || null,
+  };
+  const { error } = await supabase.from("assignment_completions").upsert(row);
+  if (error) throw error;
+}
+
+export async function unmarkAssignmentComplete(assignmentId, playerId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("assignment_completions")
+    .delete()
+    .eq("assignment_id", assignmentId)
+    .eq("player_id", playerId);
+  if (error) throw error;
+}
+
+export async function getCompletionsForPlayer(playerId) {
+  if (!supabase) return new Set();
+  const { data, error } = await supabase.from("assignment_completions")
+    .select("assignment_id")
+    .eq("player_id", playerId);
+  if (error) { warn("getCompletionsForPlayer", error); return new Set(); }
+  return new Set((data || []).map(r => r.assignment_id));
+}
+
+export async function getCompletionsForAssignment(assignmentId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignment_completions")
+    .select("player_id, completed_at, note")
+    .eq("assignment_id", assignmentId);
+  if (error) { warn("getCompletionsForAssignment", error); return []; }
+  return data || [];
+}
+
+// ─────────────────────────────────────────────
+// TEAM CHALLENGES (coach-authored fixed quiz + team leaderboard)
+// ─────────────────────────────────────────────
+
+export async function createTeamChallenge(coachId, teamId, { title, questionIds, dueDate }) {
+  if (!supabase) return null;
+  const row = {
+    coach_id: coachId,
+    team_id: teamId,
+    title: title?.trim(),
+    question_ids: Array.isArray(questionIds) ? questionIds : [],
+    due_date: dueDate || null,
+  };
+  const { data, error } = await supabase.from("team_challenges").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteTeamChallenge(challengeId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("team_challenges").delete().eq("id", challengeId);
+  if (error) throw error;
+}
+
+export async function getTeamChallenges(teamId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_challenges")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("created_at", { ascending: false });
+  if (error) { warn("getTeamChallenges", error); return []; }
+  return data || [];
+}
+
+// Player-side: list every challenge visible to the player (RLS filters by
+// team membership). Includes team name for card display.
+export async function getChallengesForPlayer(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_challenges")
+    .select("*, teams(name, level)")
+    .order("created_at", { ascending: false });
+  if (error) { warn("getChallengesForPlayer", error); return []; }
+  return data || [];
+}
+
+export async function submitChallengeResult(challengeId, playerId, { score, results }) {
+  if (!supabase) return;
+  const row = {
+    challenge_id: challengeId,
+    player_id: playerId,
+    score: Math.round(score),
+    results,
+  };
+  const { error } = await supabase.from("challenge_results").upsert(row);
+  if (error) throw error;
+}
+
+export async function getChallengeResults(challengeId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("challenge_results")
+    .select("player_id, score, completed_at, profiles(name)")
+    .eq("challenge_id", challengeId)
+    .order("score", { ascending: false });
+  if (error) { warn("getChallengeResults", error); return []; }
+  return (data || []).map(r => ({
+    player_id: r.player_id,
+    score: r.score,
+    completed_at: r.completed_at,
+    name: r.profiles?.name || "",
+  }));
+}
+
+export async function getChallengeCompletionsForPlayer(playerId) {
+  if (!supabase) return new Set();
+  const { data, error } = await supabase.from("challenge_results")
+    .select("challenge_id").eq("player_id", playerId);
+  if (error) { warn("getChallengeCompletionsForPlayer", error); return new Set(); }
+  return new Set((data || []).map(r => r.challenge_id));
+}
+
+// ─────────────────────────────────────────────
+// TRAINING SESSIONS (off-ice log, coach-visible on TEAM tier)
+// ─────────────────────────────────────────────
+// Storage is dual-write: the player's local LS cache stays the primary
+// record (it works offline and doesn't need auth), and each save fires a
+// background upsert here so coaches can read the team's activity. Read
+// shape mirrors utils/trainingLog.js so the CoachTrainingSection can use
+// the same getTrainingSummary() helper against the remote rows.
+
+export async function saveTrainingSessionRemote(playerId, session) {
+  if (!supabase || !playerId) return;
+  // Silent best-effort — a failed Supabase write must NOT break the LS save
+  // the player already did. Coaches just see slightly stale data.
+  try {
+    const row = {
+      player_id: playerId,
+      session_date: session.date || new Date().toISOString().slice(0, 10),
+      type: session.type,
+      value: Number(session.value) || 0,
+      unit: session.unit || "min",
+      label: session.label || null,
+      notes: session.notes || null,
+      coach: session.coach || null,
+      price: (session.price === null || session.price === undefined || session.price === "") ? null : Number(session.price),
+    };
+    await supabase.from("training_sessions").insert(row);
+  } catch { /* silent */ }
+}
+
+export async function getTrainingSessionsForPlayer(playerId) {
+  if (!supabase || !playerId) return [];
+  const { data, error } = await supabase.from("training_sessions")
+    .select("session_date, type, value, unit, label, notes, coach, price")
+    .eq("player_id", playerId)
+    .order("session_date", { ascending: false })
+    .limit(200);
+  if (error) { warn("getTrainingSessionsForPlayer", error); return []; }
+  // Reshape to match the LS "sessions" array shape so existing summary
+  // helpers work unchanged.
+  return (data || []).map(r => ({
+    date: r.session_date,
+    type: r.type,
+    value: Number(r.value),
+    unit: r.unit,
+    ...(r.label ? { label: r.label } : {}),
+    ...(r.notes ? { notes: r.notes } : {}),
+    ...(r.coach ? { coach: r.coach } : {}),
+    ...(r.price ? { price: Number(r.price) } : {}),
+  }));
+}
+
+// ─────────────────────────────────────────────
+// QUIZ FEEDBACK (post-results "what would you like more of?" prompt)
+// ─────────────────────────────────────────────
+// Best-effort write — failures are swallowed so a Supabase hiccup never
+// breaks the post-quiz experience. The card is purely opt-in anyway.
+export async function recordQuizFeedback(playerId, { choice, note, score, level }) {
+  if (!supabase || !playerId || !choice) return null;
+  try {
+    const { data, error } = await supabase.from("quiz_feedback").insert({
+      player_id: playerId,
+      choice,
+      note: note ? note.trim().slice(0, 500) : null,
+      score: Number.isFinite(score) ? Math.round(score) : null,
+      level: level || null,
+    }).select().single();
+    if (error) { warn("recordQuizFeedback", error); return null; }
+    return data;
+  } catch (e) { warn("recordQuizFeedback", e); return null; }
+}
+
+// ─────────────────────────────────────────────
+// PLAYTEST FEEDBACK (dev-bypass in-app feedback; owner-only via RLS)
+// ─────────────────────────────────────────────
+// A real write (not fire-and-forget): returns { ok, data } or { ok:false, error }
+// so the widget can confirm the upload to the owner. RLS restricts inserts to the
+// owner emails, so a non-owner / signed-out session gets an error here.
+export async function savePlaytestFeedback({
+  screen, drill, category, note, context, screenshot, appVersion,
+} = {}) {
+  if (!supabase) return { ok: false, error: "offline" };
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    const authorId = userData && userData.user ? userData.user.id : null;
+    const { data, error } = await supabase.from("playtest_feedback").insert({
+      author_id: authorId,
+      screen: screen || null,
+      drill: drill || null,
+      category: category || null,
+      note: note || null,
+      context: context || null,
+      screenshot: screenshot || null,
+      app_version: appVersion || null,
+    }).select().single();
+    if (error) { warn("savePlaytestFeedback", error); return { ok: false, error: error.message }; }
+    return { ok: true, data };
+  } catch (e) {
+    warn("savePlaytestFeedback", e);
+    return { ok: false, error: e.message || String(e) };
+  }
+}
+
+// ─────────────────────────────────────────────
+// QUESTION RESULTS (per-rep, source for the Hockey IQ score)
+// ─────────────────────────────────────────────
+import { computeHockeyIQ, WINDOW_DAYS } from "./utils/hockeyIQ.js";
+
+export async function recordQuestionResult(playerId, {
+  questionId, correct, timeTakenMs, difficulty, zone, skill, answeredAt,
+}) {
+  if (!supabase || !playerId) return null;
+  const row = {
+    player_id: playerId,
+    question_id: questionId,
+    correct: !!correct,
+    time_taken_ms: Number.isFinite(timeTakenMs) ? Math.round(timeTakenMs) : null,
+    difficulty: Number(difficulty) || 1,
+    zone: zone || null,
+    skill: skill || null,
+    ...(answeredAt ? { answered_at: answeredAt } : {}),
+  };
+  const { data, error } = await supabase.from("question_results").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getQuestionResultsWindow(playerId, days = WINDOW_DAYS) {
+  if (!supabase || !playerId) return [];
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const { data, error } = await supabase.from("question_results")
+    .select("correct, time_taken_ms, difficulty, zone, skill, answered_at")
+    .eq("player_id", playerId)
+    .gte("answered_at", since)
+    .order("answered_at", { ascending: true });
+  if (error) { warn("getQuestionResultsWindow", error); return []; }
+  return (data || []).map(r => ({
+    correct: r.correct,
+    time_taken_ms: r.time_taken_ms,
+    difficulty: r.difficulty,
+    zone: r.zone,
+    skill: r.skill,
+    answered_at: r.answered_at,
+  }));
+}
+
+// Returns { score, status, reps, ewma, trend, bestWindow }. See
+// utils/hockeyIQ.js for the shape and formula. Pulls a 60-day window
+// (2x WINDOW_DAYS) so the trend lookback can compute against fully
+// populated EWMAs at asOf - 30d.
+export async function calculateHockeyIQ(playerId) {
+  if (!playerId) return { score: null, status: "calibrating", reps: 0, ewma: null, trend: null, bestWindow: null };
+  const results = await getQuestionResultsWindow(playerId, WINDOW_DAYS * 2);
+  return computeHockeyIQ(results, new Date());
+}
+
+// ─────────────────────────────────────────────
+// QUESTION STATS (aggregate % correct across all users)
+// ─────────────────────────────────────────────
+// Telemetry — intentionally silent. Stats are best-effort and must never
+// block or crash a session. No warn() here on purpose.
+export async function recordQuestionAnswer(questionId, correct) {
+  if (!supabase || !questionId) return;
+  try {
+    await supabase.rpc("record_question_answer", {
+      p_question_id: questionId,
+      p_correct: !!correct,
+    });
+  } catch { /* telemetry — silent by design */ }
+}
+
+// Telemetry — silent by design (see recordQuestionAnswer).
+export async function recordQuestionAnswersBatch(answers) {
+  if (!supabase || !answers?.length) return;
+  try {
+    await supabase.rpc("record_question_answers_batch", {
+      p_answers: JSON.stringify(answers.map(a => ({ question_id: a.questionId, correct: !!a.correct })))
+    });
+  } catch { /* telemetry — silent by design */ }
+}
+
+export async function getQuestionStats() {
+  if (!supabase) return {};
+  const { data, error } = await supabase.from("question_stats").select("question_id, attempts, correct");
+  if (error) { warn("getQuestionStats", error); return {}; }
+  const out = {};
+  (data || []).forEach(r => {
+    out[r.question_id] = { attempts: r.attempts, correct: r.correct };
+  });
+  return out;
+}
+
+// ─────────────────────────────────────────────
+// QUESTION REPORTS (users flag bad questions)
+// ─────────────────────────────────────────────
+export async function reportQuestion({ userId, questionId, level, reason, detail }) {
+  if (!supabase) return false;
+  const { error } = await supabase.from("question_reports").insert({
+    user_id: userId || null,
+    question_id: questionId,
+    level,
+    reason,
+    detail: detail || null,
+  });
+  if (error) { warn("question_reports write", error); return false; }
+  return true;
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: QUESTION REPORTS
+// ─────────────────────────────────────────────
+// RLS NOTE: The admin user needs a policy on question_reports that allows
+// SELECT and UPDATE for their auth.uid(). Example policy:
+//   CREATE POLICY "Admin can read all reports"
+//     ON question_reports FOR SELECT
+//     USING (auth.uid() = '<your-admin-user-uuid>');
+//   CREATE POLICY "Admin can update all reports"
+//     ON question_reports FOR UPDATE
+//     USING (auth.uid() = '<your-admin-user-uuid>');
+
+export async function getQuestionReports() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("question_reports")
+    .select("*")
+    .order("resolved", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) { warn("getQuestionReports", error); return []; }
+  return data || [];
+}
+
+export async function resolveReport(reportId) {
+  if (!supabase) return false;
+  const { error } = await supabase
+    .from("question_reports")
+    .update({ resolved: true })
+    .eq("id", reportId);
+  if (error) { warn("question_reports write", error); return false; }
+  return true;
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: REVIEW QUESTIONS (curation workspace)
+// ─────────────────────────────────────────────
+// Admin-only RLS via auth.jwt() ->> 'email' = mtslifka@gmail.com.
+// See supabase/migration_0004_review_questions.sql.
+
+export async function listReviewQuestions() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("review_questions")
+    .select("*")
+    .order("age", { ascending: true })
+    .order("id", { ascending: true });
+  if (error) { warn("listReviewQuestions", error); return []; }
+  return data || [];
+}
+
+export async function updateReviewQuestionCurrent(id, current) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ current, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { warn("updateReviewQuestionCurrent", error); return null; }
+  return data;
+}
+
+export async function setReviewQuestionStatus(id, status) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { warn("setReviewQuestionStatus", error); return null; }
+  return data;
+}
+
+export async function resetReviewQuestion(id) {
+  if (!supabase) return null;
+  // Fetch original first, then overwrite current with it and clear status.
+  const { data: row, error: fErr } = await supabase
+    .from("review_questions")
+    .select("original")
+    .eq("id", id)
+    .single();
+  if (fErr || !row) { warn("resetReviewQuestion.fetch", fErr); return null; }
+  const newCurrent = row.original || { type: "mc", cat: "", sit: "", opts: [], ok: 0, tip: "" };
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ current: newCurrent, status: "unreviewed", updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { warn("resetReviewQuestion.update", error); return null; }
+  return data;
+}
+
+export async function createReviewQuestion({ age, level, current, id }) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .insert({
+      id,
+      age,
+      level,
+      original: null,
+      current,
+      status: "unreviewed",
+      created_in_tool: true,
+    })
+    .select()
+    .single();
+  if (error) { warn("createReviewQuestion", error); return null; }
+  return data;
+}
+
+// ─────────────────────────────────────────────
+// ADMIN DASHBOARD: questions + pov_images
+// ─────────────────────────────────────────────
+// New unified content store. See supabase/migration_0012_admin_schema.sql.
+// Reads/writes here require profiles.is_admin = true (RLS gate).
+
+export async function listAdminQuestions() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .order("type",       { ascending: true })
+    .order("age_groups", { ascending: true })
+    .order("id",         { ascending: true });
+  if (error) { warn("listAdminQuestions", error); return []; }
+  return data || [];
+}
+
+export async function listAdminPovImages() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("pov_images")
+    .select("*")
+    .order("archetype", { ascending: true })
+    .order("variant",   { ascending: true });
+  if (error) { warn("listAdminPovImages", error); return []; }
+  return data || [];
+}
+
+const QUESTION_PATCH_COLUMNS = [
+  "age_groups", "format", "difficulty", "question_text", "options",
+  "correct_answer", "explanation", "concepts", "status", "is_auto_graded",
+  "hotspot_coords", "sequence_items", "linked_image_id", "flagged_reason",
+  "killed_at",
+];
+
+export async function updateAdminQuestion(id, patch) {
+  if (!supabase) return null;
+  const clean = {};
+  for (const k of QUESTION_PATCH_COLUMNS) if (k in patch) clean[k] = patch[k];
+  if (Object.keys(clean).length === 0) return null;
+  const { data, error } = await supabase
+    .from("questions")
+    .update(clean)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { warn("updateAdminQuestion", error); return null; }
+  return data;
+}
+
+export async function bulkUpdateAdminQuestions(ids, patch) {
+  if (!supabase || !ids?.length) return [];
+  const clean = {};
+  for (const k of QUESTION_PATCH_COLUMNS) if (k in patch) clean[k] = patch[k];
+  if (Object.keys(clean).length === 0) return [];
+  const { data, error } = await supabase
+    .from("questions")
+    .update(clean)
+    .in("id", ids)
+    .select();
+  if (error) { warn("bulkUpdateAdminQuestions", error); return []; }
+  return data || [];
+}
+
+export async function killAdminQuestion(id) {
+  return updateAdminQuestion(id, { status: "Killed", killed_at: new Date().toISOString() });
+}
+
+export async function unkillAdminQuestion(id, restoreStatus = "Draft") {
+  return updateAdminQuestion(id, { status: restoreStatus, killed_at: null });
+}
+
+// ── Scenario review (mobile /review deck) ───────────────────────────────
+export async function upsertScenarioReview({ scenario_id, verdict, note, board_hash }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("scenario_reviews").upsert(
+    {
+      scenario_id,
+      reviewer_email: email,
+      verdict,
+      note: note || null,
+      board_hash: board_hash || null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "scenario_id,reviewer_email" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listMyReviews() {
+  if (!supabase) return { ok: false, rows: [] };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, rows: [] };
+  const { data, error } = await supabase
+    .from("scenario_reviews")
+    .select("scenario_id,verdict,note,board_hash,updated_at")
+    .eq("reviewer_email", email);
+  return error ? { ok: false, rows: [] } : { ok: true, rows: data || [] };
+}
+
+export async function listCoachReviews() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("coach_reviews")
+    .select("scenario_id,verdict,confidence,notes,convened,board_hash,reviewed_at");
+  return error ? [] : (data || []);
+}
+
+export async function listFeedbackLog() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("feedback_log")
+    .select("scenario_id,node,iteration,source,feedback,change,created_at")
+    .order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}
+
+// Owner queues a request for more questions on a scene; generation is batched
+// offline (Decision-Test-constrained + coach-vetted). Needs a signed-in owner.
+export async function createQuestionRequest({ scenario_id, stem_id, preset, note }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_requests").insert({
+    scenario_id, stem_id: stem_id || scenario_id, preset, note: note || null, requester_email: email,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+// Dashboard edit-in-place: a JSON patch merged over the base question at runtime.
+export async function upsertQuestionOverride({ question_id, patch }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_overrides").upsert(
+    { question_id, patch, editor_email: email, updated_at: new Date().toISOString() },
+    { onConflict: "question_id" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listQuestionOverrides() {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("question_overrides").select("question_id,patch,updated_at");
+  return error ? [] : (data || []);
+}
+
+// Unresolved player flags from the app, for the dashboard. (Owner-read-all
+// requires the owner-email policy in migration 0017; until then this returns
+// whatever RLS allows — empty when there are no players.)
+export async function listQuestionReports() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("question_reports")
+    .select("question_id,reason,detail,created_at")
+    .eq("resolved", false)
+    .order("created_at", { ascending: false });
+  return error ? [] : (data || []);
+}
+
+export async function listQuestionRequests() {
+  if (!supabase) return [];
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return [];
+  const { data, error } = await supabase
+    .from("question_requests")
+    .select("id,scenario_id,stem_id,preset,note,status,created_at")
+    .eq("status", "open").order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}
+

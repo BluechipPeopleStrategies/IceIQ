@@ -1,0 +1,6 @@
+import fs from 'node:fs';
+const f='docs/factory/research/question-review/packet-36/root-review.md';let s=fs.readFileSync(f,'utf8');s+='\n## Independent adjudication\n\nLuna independently checked the final proposal. An initial allegation that the F1 distance stayed constant was rejected after direct coordinate measurement: 16.1245154966m before, 16.0078105936m after. The reviewer remeasured from the serialized file and approved the exact proposal bytes. Human coach approval remains outstanding.\n';fs.writeFileSync(f,s.split(/\r?\n/).map(l=>l.trimEnd()).join('\n').trimEnd()+'\n');
+s=fs.readFileSync('tmp/prepare-packet35-release.mjs','utf8').replaceAll('packet-35','packet-36').replaceAll('packet35','packet36').replace('2026-09-06-packets-21-34-production.md','2026-09-06-packets-35-36-production.md').replace("'build-question-review-summary.mjs'","'build-question-review-summary.mjs','packet-geometry-regressions.test.mjs'");
+const start=s.indexOf("const line='");const end=s.indexOf(";\n",start);
+s=s.slice(0,start)+"const line='2026-09-06 · Packets 21–35 are deployed and verified. Packet 36 repairs five scenes / 30 affected question versions after independent exact-content review; isolated release checks are underway. Supabase stays deferred.'"+s.slice(end);
+fs.writeFileSync('tmp/prepare-packet36-release.mjs',s);

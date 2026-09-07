@@ -1,0 +1,373 @@
+{
+  "scenariosOwned": ["exp26b-u11-013"],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q1",
+      "baseContentHash": "ec692968bfc4a323cd90ee7bfb936c0729c7d499d69cea54ccdda36d13f51b2c",
+      "verdict": "repair",
+      "reason": "Question content itself is sound (D1 is exactly collinear with YOU's centre (16,0) and the goalie/net (26,0), perpendicular distance 0.000m, verified by computing the line YOU->goalie against D1's position), but every question in this scenario is displayed beneath the scenario briefing, which reads 'YOU controls the puck...' -- a subject-verb agreement error (should be 'YOU control'). That defect fails the grammar check for this question and every sibling. Fixed in the version-2 replacement; only the briefing text changed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Navy (home) attacks +x; the app's own overhead board labels this 'Navy attacks the right net' and its viewBox renders +x to the right with no flip, so 'the right net' in this prompt is the net near x=27.13.",
+          "YOU (h1) is at (16,0) facing 0 rad (toward +x), owns the puck; the renderer's carried-puck formula places the visible puck at (17, 0.7).",
+          "D1 (a1) is at (20,0), facing ~3.1 rad (toward -x, i.e. facing back at YOU); computed exactly collinear with YOU's centre (16,0) and the goalie (26,0) -- perpendicular distance 0.000m.",
+          "F2 (h2) is at (18,8), well off that line (about 8m of lateral separation).",
+          "G is at (26,0) facing ~3.1 rad (toward the play)."
+        ],
+        "stated": [
+          "Briefing: 'D1 is between YOU and the net' and 'F2 is low and wide' -- both match the computed geometry.",
+          "Cue: 'D1 occupies the straight shooting line.'"
+        ],
+        "unproven": [
+          "Whether a shot would score, whether the goalie would save it, and any completed pass are not established by this static scene.",
+          "F2's facing direction does not establish where F2 is looking; no question relies on it."
+        ]
+      },
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    },
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q2",
+      "baseContentHash": "39392870f733b7744cc352670d954683c15a5d2bb75848a7c3302352ce03d4b8",
+      "verdict": "repair",
+      "reason": "Question content is sound: options (a) D1's lane position and (b) F2's availability if D1 moves are both real, checkable cues; (c) 'A promise that the lane will clear' is a credible wrong answer illustrating false certainty rather than an absurd joke option, consistent with the coaching aim of rejecting guaranteed outcomes. Only defect is the shared scenario briefing's 'YOU controls' grammar error displayed above this question. Fixed in the v2 replacement.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1, 20,0) sits on the direct YOU-to-net line; F2 (h2, 18,8) is 8m off that line -- both cues are genuine, checkable scene facts."
+        ],
+        "stated": [
+          "Briefing: 'If D1 moves, the lane and support read change together' -- the stated premise for reading both cues jointly."
+        ],
+        "unproven": [
+          "Whether the lane will actually clear or stay open after any movement is not established; option (c) names exactly that unproven claim as the wrong answer."
+        ]
+      },
+      "alternative": "A coach could instead ask a player to name the exact ice location where the lane would open, rather than which two categories of cue to combine; pairing D1's lane position with F2's availability is one defensible way to phrase 'read together,' not the only one.",
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    },
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q3",
+      "baseContentHash": "28b20a41369fcd9c9a4243a1e279658ab8736daa0dac60d854065b92edb9c763",
+      "verdict": "repair",
+      "reason": "Sequence type with basis:coaching, so per reviewResponse() in experimentalBankCore.js this is never objectively graded (matched stays null; the app always shows 'A coaching suggestion' regardless of the order chosen). This mirrors the calibration-adjudicated treatment of U13-010 q3 ('the coaching response is not an objectively scored timeline'), so an identify->check->choose order here does not impose an artificial mandatory scan-then-act rule. Only defect is the shared briefing grammar error.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 and F2 are both present and identifiable actors in the scene."
+        ],
+        "stated": [
+          "Explanation: 'The carrier waits for the updated lane, then chooses among the still-reachable options' -- a coaching aid, not an enforced timeline."
+        ],
+        "unproven": [
+          "That scanning must fully complete before checking the lane, or that this exact three-step order is the only valid one, is not asserted or enforced by the app (basis:coaching means the response is never marked wrong)."
+        ]
+      },
+      "alternative": "A player could scan D1 and F2 continuously rather than as a discrete first step; the point is that a shot/pass/protect decision only makes sense after checking the lane, not that scanning must finish first.",
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    },
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q4",
+      "baseContentHash": "c8fc1150791d0567a02df6eefd6f967e4e5f4a3bc387a13ff9f9080d8832ea4e",
+      "verdict": "repair",
+      "reason": "Position question moves the correct actor (h1/YOU) by 2.2m, well past the 0.1m minimum-movement floor. Computed check: from YOU's original centre (16,0), the perpendicular offset of D1 from the YOU-to-net line is 0.000m (D1 directly blocks); from the reference point (16,2.2), that offset grows to 1.289m (using the carried-puck point instead: 1.840m) -- a real, meaningful angle change, not a token move. basis:coaching correctly avoids certifying a shot. Only defect is the shared briefing grammar error.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actor h1 (YOU) exists at (16,0); reference point (16,2.2) is on the ice (isCoachRoutePoint confirmed) and is 2.2m from YOU's current position.",
+          "Moving YOU to (16,2.2) increases D1's perpendicular distance from the YOU-net line from 0.000m to 1.289m (measuring from the actor centre) -- D1 is no longer directly in the way."
+        ],
+        "stated": [
+          "Explanation: 'This point changes the line from YOU to the net and keeps F2 in the scene; it does not certify a shot' -- correctly hedged."
+        ],
+        "unproven": [
+          "Whether this new angle is actually open for a shot in real play (goalie reaction, D1 recovering) is not established by a static scene; the schema has no timed-movement model."
+        ]
+      },
+      "alternative": "Any point that removes D1 from the direct YOU-net line while keeping F2 in the picture illustrates the same lesson equally well -- e.g. (15.5,2) or (16,3) -- this is one example, not the exclusive correct dot.",
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    },
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q5",
+      "baseContentHash": "ac82c99519c397957f81734066a1ed2654ac9cc09ccc1c0d9bd9e04254060e61",
+      "verdict": "repair",
+      "reason": "Prompt explicitly introduces its hypothetical ('D1 moves toward F2 and the direct lane opens') rather than inferring it silently, consistent with the calibration precedent on explicit hypotheticals (U7-001 q10). Correct answer (a) asks the player to re-check the lane/support rather than assuming a guaranteed shot; wrong options (b, force a shot without checking; c, ignore F2) are genuine tactical errors, not word-game distractors. Only defect is the shared briefing grammar error.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 and F2 both exist as actors; the base scene has D1 collinear with the YOU-net line (0.000m offset), so 'D1 moves ... and the direct lane opens' is a stated change from that baseline, not a claim about the static image itself."
+        ],
+        "stated": [
+          "Prompt explicitly states the hypothetical movement and its result ('the direct lane opens') as a given condition for this question only."
+        ],
+        "unproven": [
+          "That the lane, once open, actually supports a successful shot or pass is not asserted -- option (a) only asks whether it 'deserves a new look,' not that it is guaranteed to work."
+        ]
+      },
+      "alternative": "A player could also decide to delay or protect the puck if pressure is arriving from elsewhere; the lesson is checking before acting, not that a shot or pass is guaranteed to succeed once the lane opens.",
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    },
+    {
+      "scenarioId": "exp26b-u11-013",
+      "questionId": "exp26b-u11-013-q6",
+      "baseContentHash": "73972e541543118eafa92ad7fa91d4d2fe0f38d231adf0abd5df2267ece4e6be",
+      "verdict": "repair",
+      "reason": "Optional reflection (basis:coaching, no answer key, no writing requirement or scoring penalty) -- this is the scenario's only explain question, matching the at-most-one-reflection-per-scenario rule (typeCounts.explain:1). No hockey defect found. Only defect is the shared briefing grammar error displayed above it.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Both the slot (near the D1/net line) and the half wall (toward F2's side) are real, distinguishable ice areas relative to D1, the net and F2 in this scene."
+        ],
+        "stated": [],
+        "unproven": [
+          "There is no single correct written answer; this is a reflection prompt with no answer key."
+        ]
+      },
+      "alternative": "A player might instead say the slot offers a straighter, shorter shot while the half wall offers a wider passing angle and more time to make a play -- both are defensible framings of the same cue.",
+      "sourceUrls": ["https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u11-013",
+      "baseVersion": 1,
+      "baseScenarioHash": "0ceb23baffaa706f9b4bd7c2fc9de47be4bd49fbb80336a4378b3eb6ccf3a718",
+      "replacement": {
+        "id": "exp26b-u11-013",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Open the shooting lane",
+        "family": "slot-lane-change",
+        "topic": "Shooting",
+        "objective": "Reassess a shooting lane when a defender moves toward another attacker.",
+        "briefing": "Navy attacks +x. YOU control the puck high in the right-side lane; D1 is between YOU and the net. F2 is low and wide. If D1 moves, the lane and support read change together.",
+        "setup": {
+          "actors": [
+            { "id": "h1", "label": "YOU", "team": "home", "role": "skater", "x": 16, "y": 0, "facing": 0 },
+            { "id": "h2", "label": "F2", "team": "home", "role": "skater", "x": 18, "y": 8, "facing": -2.6 },
+            { "id": "a1", "label": "D1", "team": "away", "role": "skater", "x": 20, "y": 0, "facing": 3.1 },
+            { "id": "g", "label": "G", "team": "away", "role": "goalie", "x": 26, "y": 0, "facing": 3.1 }
+          ],
+          "puck": { "owner": "h1" }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "D1 occupies the straight shooting line.",
+          "F2 is lower and wide.",
+          "The net and goalie are visible, but a shot outcome is not proven."
+        ],
+        "tags": ["experimental", "expansion"],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-013-q1",
+            "type": "choice",
+            "prompt": "Who is between YOU and the right net?",
+            "options": [
+              { "id": "a", "text": "F2" },
+              { "id": "b", "text": "D1" },
+              { "id": "c", "text": "The goalie only" }
+            ],
+            "answer": ["b"],
+            "basis": "scene",
+            "explanation": "D1 is between YOU and the goalie in the direct lane."
+          },
+          {
+            "id": "exp26b-u11-013-q2",
+            "type": "multi",
+            "prompt": "Which two cues should be read together?",
+            "options": [
+              { "id": "a", "text": "D1's position in the lane" },
+              { "id": "b", "text": "F2's availability if D1 moves" },
+              { "id": "c", "text": "A promise that the lane will clear" }
+            ],
+            "answer": ["a", "b"],
+            "basis": "coaching",
+            "explanation": "The defender and teammate create the choice. A lane only becomes useful if it remains open after the movement."
+          },
+          {
+            "id": "exp26b-u11-013-q3",
+            "type": "sequence",
+            "prompt": "Arrange this high-lane decision.",
+            "options": [
+              { "id": "a", "text": "Identify D1 and F2" },
+              { "id": "b", "text": "Check whether a lane or pass opens" },
+              { "id": "c", "text": "Choose a shot, pass or protected touch" }
+            ],
+            "answer": ["a", "b", "c"],
+            "basis": "coaching",
+            "explanation": "The carrier waits for the updated lane, then chooses among the still-reachable options."
+          },
+          {
+            "id": "exp26b-u11-013-q4",
+            "type": "position",
+            "prompt": "Move YOU to a shooting angle outside D1 while keeping F2 visible.",
+            "actorId": "h1",
+            "reference": { "x": 16, "y": 2.2 },
+            "basis": "coaching",
+            "explanation": "This point changes the line from YOU to the net and keeps F2 in the scene; it does not certify a shot."
+          },
+          {
+            "id": "exp26b-u11-013-q5",
+            "type": "choice",
+            "prompt": "D1 moves toward F2 and the direct lane opens. What deserves a new look?",
+            "options": [
+              { "id": "a", "text": "Whether the open lane supports a shot or a pass now" },
+              { "id": "b", "text": "Force a shot without checking the goalie or lane" },
+              { "id": "c", "text": "Ignore F2 because D1 moved" }
+            ],
+            "answer": ["a"],
+            "basis": "coaching",
+            "explanation": "D1's movement changes the lane, but the carrier still reads space and support before choosing."
+          },
+          {
+            "id": "exp26b-u11-013-q6",
+            "type": "explain",
+            "prompt": "Why can the slot and half wall lead to different choices here?",
+            "basis": "coaching",
+            "explanation": "The slot has a different relationship to D1, the net, and F2. Explain which lane is visible now and what movement would make another option safer."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-013-q1",
+        "exp26b-u11-013-q2",
+        "exp26b-u11-013-q3",
+        "exp26b-u11-013-q4",
+        "exp26b-u11-013-q5",
+        "exp26b-u11-013-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-013-q1",
+            "exp26b-u11-013-q2",
+            "exp26b-u11-013-q3",
+            "exp26b-u11-013-q4",
+            "exp26b-u11-013-q5",
+            "exp26b-u11-013-q6"
+          ],
+          "issue": "Scenario briefing has a subject-verb agreement error on the player-facing 'YOU' sentence: 'YOU controls the puck high in the right-side lane' instead of 'YOU control the puck...'. Confirmed via src/one-on-one/ExperimentalPractice.jsx line 83 (`<p className=\"ep-briefing\">{s.briefing}</p>`) that the briefing renders verbatim above every question in this scenario, so this is a real player-visible defect, not an internal-only field.",
+          "change": "Changed only the word 'controls' to 'control' in the briefing sentence: 'Navy attacks +x. YOU control the puck high in the right-side lane; D1 is between YOU and the net. F2 is low and wide. If D1 moves, the lane and support read change together.' No other field, coordinate, question, option, or answer was touched. Version incremented from 1 to 2.",
+          "evidence": "Before (v1) briefing: \"Navy attacks +x. YOU controls the puck high in the right-side lane; D1 is between YOU and the net. F2 is low and wide. If D1 moves, the lane and support read change together.\" After (v2): \"Navy attacks +x. YOU control the puck high in the right-side lane; D1 is between YOU and the net. F2 is low and wide. If D1 moves, the lane and support read change together.\" Recomputed scenarioSnapshotHash for the replacement (via validation/tools/claude-return-core.mjs `scenarioSnapshotHash`) = b162b79224d6bbd3ba398e8fc88682fe3118e408385adabfba2a66c117fa711c, differing from the original 0ceb23baffaa706f9b4bd7c2fc9de47be4bd49fbb80336a4378b3eb6ccf3a718 as expected since briefing is included in the hashed scene. Recomputed all six question hashes (via `questionContentHash`) and confirmed every one changed from its baseContentHash (e.g. q1: ec692968bfc4a323cd90ee7bfb936c0729c7d499d69cea54ccdda36d13f51b2c -> ea2bdb5fc487ff70ec3cdef9041134f95b8197d0e47560e6561bbf14e5a0022a) purely because the shared briefing text changed, not the question bodies themselves. Ran `validateExperimentalBank([replacement])` from validation/src/one-on-one/experimentalBankCore.js: zero structural errors. Confirmed the carried-puck point for the replacement is still on ice via `isCoachRoutePoint(makeScene(replacement).puck)` = true, position (17, 0.7)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-013-q1",
+            "contentHash": "ea2bdb5fc487ff70ec3cdef9041134f95b8197d0e47560e6561bbf14e5a0022a",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Briefing now reads 'YOU control the puck...'; question content unchanged and already verified sound (D1 exactly collinear with YOU and the net)."
+          },
+          {
+            "questionId": "exp26b-u11-013-q2",
+            "contentHash": "7175c1da9a3249dfe08e639ec06c0e0ff0ab20d976cabfd2bb8593c9cafa23f6",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Grammar defect was scenario-level (briefing), now fixed; question text itself had no agreement issue and content is otherwise unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-013-q3",
+            "contentHash": "82ed4e58d0f9ea15c7e12e2eee3329f558ab2d9e1b3e547db6115cf21ec442e6",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Grammar defect was scenario-level (briefing), now fixed; sequence remains non-objectively-graded (basis:coaching) per experimentalBankCore.js reviewResponse()."
+          },
+          {
+            "questionId": "exp26b-u11-013-q4",
+            "contentHash": "8e0cee5d65c30c10c7dc3db608abac0938eb53f5f9e2a1442dc61fe084569a23",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Grammar defect was scenario-level (briefing), now fixed; reference point re-verified on ice and meaningfully repositions the shooting angle relative to D1."
+          },
+          {
+            "questionId": "exp26b-u11-013-q5",
+            "contentHash": "c3f767a9237971b0b5c016d36ea2847b1e9fa50a05fe5c0594c077fc938d5852",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Grammar defect was scenario-level (briefing), now fixed; explicit hypothetical and answer options unchanged and sound."
+          },
+          {
+            "questionId": "exp26b-u11-013-q6",
+            "contentHash": "927b88635dcf9f4f3e32646da673739b4c6f323f8afe06b86f802e854aeaf15f",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Grammar defect was scenario-level (briefing), now fixed; reflection remains ungraded and optional, unchanged."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-05T22:30:00Z",
+      "access": "read",
+      "scope": "Fetched the PDF directly (curl with a standard browser User-Agent; HTTP 200, 1.26MB) and read PDF pages 22-25 (printed pages 16-19, the '10-and-Under' section) via the Read tool's page-range extraction. Confirms 'Shooting' (wrist shot, backhand, flip shot, screen shot, deflection, off rebound) and 'Team Play' Offensive Concepts (2-on-1, 1-on-1, triangle offense) / Defensive Concepts (gap control, protect center of the ice, stick on puck, backchecking, body position, basic defensive zone coverage) are listed as topics for this age band. This is a topic list only -- it does not describe, endorse, or verify this exact lane-read/defender-movement scenario, its coordinates, or its answer key, matching the source's own recorded 'use' field.",
+      "jurisdiction": "USA (USA Hockey publication); the product context is Canadian, so this is used as a general age-topic reference, not a jurisdiction-specific rule citation.",
+      "ageFormat": "10-and-Under (matches this scenario's U11 age band)",
+      "claim": "Shooting-lane decision-making sits within the age-appropriate 'Shooting' and 'Team Play' topic areas listed for 10-and-Under players; the source does not certify this scenario's specific geometry, wording, or correct-answer choices."
+    }
+  ],
+  "remainingQuestionIds": []
+}

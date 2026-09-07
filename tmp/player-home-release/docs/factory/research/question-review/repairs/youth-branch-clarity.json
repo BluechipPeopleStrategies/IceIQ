@@ -1,0 +1,61 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changes": [
+    {
+      "questionId": "exp26-u9-013-q7",
+      "scenarioId": "exp26-u9-013",
+      "before": {
+        "id": "exp26-u9-013-q7",
+        "type": "choice",
+        "prompt": "After YOU release the puck, Gold1 reaches it. In this change routine, what should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Continue leaving for the next unit"
+          },
+          {
+            "id": "b",
+            "text": "Chase Gold1 to win it back first"
+          },
+          {
+            "id": "c",
+            "text": "Stay until Navy2 gets the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The designated signal still means release and change in this named activity. A new puck owner does not cancel the change instruction."
+      },
+      "after": {
+        "id": "exp26-u9-013-q7",
+        "type": "choice",
+        "prompt": "For the next branch, imagine Gold1 reaches the puck after YOU release it. In this change routine, what should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Continue leaving for the next unit"
+          },
+          {
+            "id": "b",
+            "text": "Chase Gold1 to win it back first"
+          },
+          {
+            "id": "c",
+            "text": "Stay until Navy2 gets the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The designated signal still means release and change in this named activity. A new puck owner does not cancel the change instruction."
+      },
+      "beforeContentHash": "ca7310cffd7c6c635ba61bf5c54d6a7be930ce751e4e9ea3c7da4fc9e8bc0ae5",
+      "afterContentHash": "2dd75fdffaae519a73bbbb0d5a5229d016aa229b716edc9102ea5c9aa5f80e5e",
+      "reason": "Make the future branch explicitly hypothetical so it cannot be mistaken for possession in the current freeze. The named change routine remains unchanged."
+    }
+  ]
+}

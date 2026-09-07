@@ -16,6 +16,7 @@ import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOn
 import { kindsForAge } from "../src/play/interactionProfiles.js";
 import { buildScenarioFamilyReport, playKinds } from "../src/play/playFamilies.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "../src/play/telemetry.js";
+import { animatedRinkOverlays } from "../src/play/animatedRinkAdapter.js";
 
 describe("question kind registry", () => {
   it("defines the five kinds with full contracts", () => {
@@ -206,7 +207,7 @@ describe("watch-chain primitive", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
     assert.ok(/function shuffledOptions\(opts\)/.test(src),
       "a display-order shuffle helper should exist");
-    assert.ok(src.includes("const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts])"),
+    assert.ok(src.includes("const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts, replayVersion])"),
       "shuffle should be memoized per node/judge-step, not re-rolled every render");
     assert.ok(/displayOpts\s*\n\s*\.filter\(\(opt\) => !opt\.u13Only/.test(src),
       "the button-list render should map over the shuffled array, not node.ask.opts directly");
@@ -263,8 +264,11 @@ describe("spatial answers at U11/U13", () => {
       "figure-profile gate on zones should be removed");
     assert.ok(src.includes('kind === "lane-pick"') || src.includes("effectiveKind === \"lane-pick\""),
       "zone render should branch on resolved kind");
-    assert.ok(src.includes('profile.token === "figure" ? (zr ?? 6) : 4.5'),
-      "token profiles should always use the tighter trainer zone radius");
+    const node = Object.values(BACKCHECK_RECOVERY_PLAY.nodes).find(item => resolveKind(item) === 'lane-pick');
+    const older = animatedRinkOverlays(node, { kind: 'lane-pick', young: false }).targets;
+    const younger = animatedRinkOverlays(node, { kind: 'lane-pick', young: true }).targets;
+    assert.ok(older.length > 0 && older.every(target => target.radius === 4.5 * .3048));
+    assert.equal(younger.length, older.length, 'direct rink zones remain available across age profiles');
   });
 });
 
@@ -365,7 +369,7 @@ describe("predict-next kind", () => {
 
   it("every answered question updates lastKind (no stale prediction banner)", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
-    const guardIdx = src.indexOf("if (picked !== null || node.terminal) return;");
+    const guardIdx = src.indexOf("if (!sceneAvailableRef.current || answerLockRef.current || picked !== null || node.terminal || !playback.canAnswer || node.autoNext) return;");
     const setIdx = src.indexOf("setLastKind(kind);");
     assert.ok(guardIdx > -1 && setIdx > guardIdx && setIdx - guardIdx < 200,
       "setLastKind must run at the top of choose(), before any branch");
@@ -394,11 +398,11 @@ describe("spot-mistake kind", () => {
     assert.ok(catalog.some((p) => p.id === SPOT_MISTAKE_FLAT_SUPPORT.id));
   });
 
-  it("spot-mistake tap zones paint above actors and puck (hit-test order)", () => {
+  it("spot-mistake uses actual shared3D actor targets, distinct from moving players", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
-    const zoneIdx = src.indexOf("<ActorTapTargets");
-    assert.ok(zoneIdx > src.indexOf("play.actors.map"), "zones must render after actor tokens");
-    assert.ok(zoneIdx > src.indexOf('circle r="1.35"'), "zones must render after the puck");
+    assert.match(src, /selectableIds=\{canChoose \? \[\.\.\.actorChoices\.map/);
+    assert.match(src, /onActorAnswer=\{chooseActor\}/);
+    assert.doesNotMatch(src, /editableIds=|onMove=|<ActorTapTargets/);
   });
 
   it("renders generous accessible actor tap targets", () => {

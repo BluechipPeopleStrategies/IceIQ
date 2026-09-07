@@ -7,6 +7,14 @@ read `docs/factory/SCENARIO-ENGINE-DECISIONS.md` and
 The same conventions apply regardless of which agent (Claude Code or Codex) is
 doing the work.
 
+## World artwork
+
+For world environments, journey art and world thumbnails, read
+`docs/design/world-art-style.md`. Preserve the original six-world sheet as the
+visual reference and follow its camera, winter materials, lighting and palette.
+Create versioned candidates instead of overwriting the reference. Change the
+visual direction only when Thomas explicitly requests it.
+
 ## Canonical task list
 
 `docs/roadmap/TASKS.md` is the one living priority/sequencing list, scope =

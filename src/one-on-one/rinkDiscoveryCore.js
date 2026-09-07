@@ -16,10 +16,10 @@ export const RINK_DISCOVERY_GEOMETRY = Object.freeze({
 });
 
 export const RINK_DISCOVERY_PROMPTS = Object.freeze([
-  { id: 'circle', prompt: 'Where is a faceoff circle?', hint: 'Look for a big circle painted on the ice.', found: 'You found a faceoff circle!' },
-  { id: 'blue-line', prompt: 'Where is a blue line?', hint: 'Look for a straight blue stripe across the ice.', found: 'You found a blue line!' },
-  { id: 'net', prompt: 'Where is a net?', hint: 'Look for the red frame with a net at one end.', found: 'You found a net!' },
-  { id: 'puck', prompt: 'Where is the puck?', hint: 'Look for the little black puck resting on the ice.', found: 'You found the puck!' },
+  { id: 'circle', puckPresentation: 'hidden', prompt: 'Where is a faceoff circle?', hint: 'Look for a big circle painted on the ice.', found: 'You found a faceoff circle!' },
+  { id: 'blue-line', puckPresentation: 'hidden', prompt: 'Where is a blue line?', hint: 'Look for a straight blue stripe across the ice.', found: 'You found a blue line!' },
+  { id: 'net', puckPresentation: 'hidden', prompt: 'Where is a net?', hint: 'Look for the red frame with a net at one end.', found: 'You found a net!' },
+  { id: 'puck', puckPresentation: 'unlabelled', prompt: 'Where is the puck?', hint: 'Look for the little black puck resting on the ice.', found: 'You found the puck!' },
 ].map(Object.freeze));
 
 // Neutral numbered locations are available for keyboard selection as well as

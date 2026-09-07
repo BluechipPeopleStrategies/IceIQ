@@ -33,7 +33,7 @@ export function getReadSequenceStorageKey(playerId, id = U11_READ_SEQUENCE.id) {
 }
 
 function boundedReason(value, label = 'reason') {
-  if (typeof value !== 'string' || !value.trim()) throw new TypeError(`Add a short ${label} for the read.`);
+  if (typeof value !== 'string') throw new TypeError(`Use text for the optional ${label}.`);
   const text = value.trim();
   if (text.length > 600) throw new RangeError(`${label} must be 600 characters or fewer.`);
   return text;
@@ -228,7 +228,7 @@ export function submitThirdRead(session, reason) {
 export function getChangedCueComparison(session) {
   const definition = definitionForSession(session);
   if (definition.id !== U11_READ_SEQUENCE.id) throw new Error('This scenario does not include a changed-cue comparison.');
-  if (session?.phase !== 'complete' || !session.third?.reason) throw new Error('Finish all three reads before comparing the changed cue.');
+  if (session?.phase !== 'complete' || !session.third?.point) throw new Error('Finish all three reads before comparing the changed cue.');
   return {
     id: CHANGED_CUE_ID,
     originalState: clone(definition.initialState),
@@ -250,7 +250,7 @@ export function submitChangedCueRead(session, { action, reason }) {
 
 export function serializeReadSequence(session) {
   const definition = definitionForSession(session);
-  if (session?.phase !== 'complete' || !session.first || !session.second || !session.third?.point || !session.third?.reason) {
+  if (session?.phase !== 'complete' || !session.first || !session.second || !session.third?.point || typeof session.third.reason !== 'string') {
     throw new Error('Finish all three reads before saving this reflection.');
   }
   const selected = targetFor(session.first.action, session.second.targetId, session);
@@ -421,7 +421,7 @@ export function stateToStaticDirectorDraft(state, title = 'Connected-read baseli
 export function createFinalReadJudgePayload(session) {
   const definition = definitionForSession(session);
   if (definition.id !== U11_READ_SEQUENCE.id) throw new Error('Final-position AI review is not supported for this scenario.');
-  if (session?.phase !== 'complete' || !session.first || !session.second || !session.third?.point || !session.third?.reason) {
+  if (session?.phase !== 'complete' || !session.first || !session.second || !session.third?.point || typeof session.third.reason !== 'string') {
     throw new Error('Finish all three reads before asking for a final-position review.');
   }
   const selected = targetFor(session.first.action, session.second.targetId, session);

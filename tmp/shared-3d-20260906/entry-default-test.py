@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('src/visuals/FirstPersonEquipment.test.mjs');s=p.read_text().replace("import {CHARACTER_STAGES} from './characterPresentation.js';", "import {CHARACTER_STAGES} from './characterPresentation.js';\nimport {parseStartingView} from './questionCamera.js';");s=s.replace("const camera=new PerspectiveCamera(75,aspect,.04,180),pitch=-.38;", "const entry=parseStartingView({type:'first-person',actorId:'observer'});\n const camera=new PerspectiveCamera(entry.fov,aspect,.04,180),pitch=entry.lookPitch;");p.write_text(s)

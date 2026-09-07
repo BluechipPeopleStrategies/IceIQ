@@ -1,0 +1,1380 @@
+{
+  "schemaVersion": "rinkreads-character-pack-v1",
+  "id": "rr-navy-gold-youth-20260904",
+  "createdDate": "2026-09-04",
+  "status": "navy-gold-concept-references-alpha-verified",
+  "productionApproved": false,
+  "acceptedRuntimeAssets": [],
+  "notes": [
+    "Initial generated references are not rigged models, sprite sequences or approved runtime assets.",
+    "Native dimensions, real alpha and hashes must be measured from returned artifacts.",
+    "No older rejected R15-R18 evidence is promoted by this packet.",
+    "Animation/scoring authority remains in the game and scenario cores.",
+    "The actual generated skater is left-shot; it is recorded as a left-shot concept, not promoted as the requested right-shot master.",
+    "Actual files are native 1254x1254; original RGB checkerboards were removed locally under explicit user authorization.",
+    "Current owner-selected palette is BlueChip navy #0B1A33 / gold #C9A24B / bone #F5EFE6; four new skater/goalie uniform sheets are featured.",
+    "The earlier black/yellow images are historical before references. White-jersey imagery remains rejected.",
+    "Built-in GPT image edits produced RGB painted-background files; locally extracted RGBA derivatives have measured alpha and exact preserved RGB.",
+    "Reference review includes local licensed Inter and Playfair Display font files."
+  ],
+  "coordinateContract": {
+    "units": "metres",
+    "source": "src/scenario-engine/rinkFrame.js",
+    "rinkToThree": "[x,y] -> [y,height,-x]",
+    "assetLocalUp": "+Y",
+    "assetLocalForward": "-Z",
+    "assetAnatomicalRight": "+X",
+    "actorRoot": "ice-ground-root",
+    "rotationY": "-actor.facing",
+    "relativeViewAzimuth": "atan2(localCamera.x,-localCamera.z) normalized to 0..360",
+    "imagePixelOrigin": "top-left",
+    "mirrorAllowed": false,
+    "negativeScaleAllowed": false
+  },
+  "uniforms": [
+    {
+      "id": "home_black",
+      "jersey": "#111111",
+      "accent": "#FFD400",
+      "trim": "#F3F2E9",
+      "pants": "#111111",
+      "helmet": "#111111",
+      "pattern": "yellow shoulder and double cuff/waist bands",
+      "status": "superseded-by-navy-gold-direction"
+    },
+    {
+      "id": "away_yellow",
+      "jersey": "#FFD400",
+      "accent": "#111111",
+      "trim": "#F3F2E9",
+      "pants": "#111111",
+      "helmet": "#111111",
+      "pattern": "black shoulders and broad single cuff band",
+      "status": "superseded-by-navy-gold-direction"
+    },
+    {
+      "id": "home_navy",
+      "jersey": "#0B1A33",
+      "accent": "#C9A24B",
+      "trim": "#F5EFE6",
+      "status": "generated-concept-direction"
+    },
+    {
+      "id": "away_gold",
+      "jersey": "#C9A24B",
+      "accent": "#0B1A33",
+      "trim": "#F5EFE6",
+      "status": "generated-concept-direction"
+    }
+  ],
+  "characters": [
+    {
+      "id": "skater_ym_r",
+      "role": "skater",
+      "proportionClass": "youth-medium",
+      "shotHand": "right",
+      "topStickHand": "left",
+      "lowerStickHand": "right",
+      "bodyHeightTargetM": 1.55,
+      "equippedHeightM": null,
+      "uniformIds": [
+        "home_navy",
+        "away_gold"
+      ],
+      "status": "briefed",
+      "masterModelPath": null
+    },
+    {
+      "id": "goalie_ym_lc",
+      "role": "goalie",
+      "proportionClass": "youth-medium",
+      "catchHand": "left",
+      "blockerHand": "right",
+      "stickHand": "right",
+      "bodyHeightTargetM": 1.55,
+      "equippedHeightM": null,
+      "uniformIds": [
+        "home_navy",
+        "away_gold"
+      ],
+      "status": "generated-concept-reference-only",
+      "masterModelPath": null,
+      "historicalUniformIds": [
+        "home_black"
+      ]
+    },
+    {
+      "id": "skater_ym_l_concept",
+      "role": "skater",
+      "proportionClass": "youth-medium",
+      "shotHand": "left",
+      "topStickHand": "right",
+      "lowerStickHand": "left",
+      "uniformIds": [
+        "home_navy",
+        "away_gold"
+      ],
+      "facePresentation": "lighter-complexion human face visible behind complete cage",
+      "status": "generated-concept-reference-only",
+      "masterModelPath": null,
+      "historicalUniformIds": [
+        "home_black"
+      ]
+    }
+  ],
+  "imageContract": {
+    "individualRequestedNativePx": [
+      2048,
+      2048
+    ],
+    "referenceSheetRequestedNativePx": [
+      4096,
+      4096
+    ],
+    "masterFormat": "png",
+    "channels": "RGBA",
+    "colorSpace": "sRGB",
+    "alpha": "straight",
+    "background": "transparent",
+    "bakedShadow": false,
+    "bakedPuck": false,
+    "bakedLabels": false,
+    "bakedIce": false,
+    "bakedCheckerboard": false,
+    "minClearMarginFraction": 0.08,
+    "sourceCrop": "fixed-untrimmed-per-view-and-clip",
+    "atlasTrimRequiresOriginalPivot": true,
+    "fileNamePattern": "rr_{characterId}_{uniformId}_{handedness}_{viewId}_az{000}_{clipId}_f{0000}_v{001}.png"
+  },
+  "cameraSnapshotDate": "2026-09-04",
+  "cameraProfiles": [
+    {
+      "id": "broadcast-35",
+      "status": "proposed-sprite-bucket-from-live-camera",
+      "sourceFile": "src/one-on-one/PracticeScene.jsx",
+      "position": [
+        12,
+        16,
+        -1
+      ],
+      "lookAt": [
+        0,
+        0,
+        -20
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "projection": "perspective",
+      "verticalFovDeg": {
+        "landscape": 46,
+        "portrait": 69
+      },
+      "nominalSpriteElevationDeg": 35,
+      "relativeAzimuthsDeg": [
+        0,
+        45,
+        90,
+        135,
+        180,
+        225,
+        270,
+        315
+      ],
+      "spriteCaptureProjection": "weak-perspective",
+      "exactWholeRinkSpriteMatch": false,
+      "unvalidatedAzimuthToleranceDeg": 22.5,
+      "unvalidatedElevationToleranceDeg": 5
+    },
+    {
+      "id": "tactical-90",
+      "status": "live-camera-snapshot",
+      "sourceFile": "src/one-on-one/PracticeScene.jsx",
+      "position": [
+        0,
+        34,
+        -18
+      ],
+      "lookAt": [
+        0,
+        0,
+        -18
+      ],
+      "up": [
+        0,
+        0,
+        -1
+      ],
+      "projection": "perspective",
+      "verticalFovDeg": {
+        "landscape": 43,
+        "portrait": 60
+      },
+      "nominalSpriteElevationDeg": 90,
+      "spriteCaptureProjection": "orthographic",
+      "overheadOrientation": "actor-facing projected into camera screen basis",
+      "exactWholeRinkSpriteMatch": false
+    },
+    {
+      "id": "full-landscape-90",
+      "status": "live-camera-snapshot",
+      "sourceFile": "src/one-on-one/PracticeScene.jsx",
+      "position": [
+        0,
+        48,
+        0
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "up": [
+        -1,
+        0,
+        0
+      ],
+      "projection": "perspective",
+      "verticalFovDeg": 42,
+      "nominalSpriteElevationDeg": 90,
+      "spriteCaptureProjection": "orthographic",
+      "exactWholeRinkSpriteMatch": false
+    },
+    {
+      "id": "full-portrait-90",
+      "status": "live-camera-snapshot",
+      "sourceFile": "src/one-on-one/PracticeScene.jsx",
+      "position": [
+        0,
+        74,
+        0
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        -1
+      ],
+      "projection": "perspective",
+      "verticalFovDeg": 51,
+      "nominalSpriteElevationDeg": 90,
+      "spriteCaptureProjection": "orthographic",
+      "exactWholeRinkSpriteMatch": false
+    },
+    {
+      "id": "shootout-front",
+      "status": "live-camera-snapshot",
+      "sourceFile": "src/cognitive-gym/ShootoutDrill.jsx",
+      "position": [
+        0,
+        0.22,
+        7.4
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "projection": "perspective",
+      "verticalFovDeg": 46,
+      "nominalSpriteElevationDeg": 0,
+      "relativeAzimuthsDeg": [
+        0
+      ],
+      "sceneUnits": "shootout-display-units-not-metres",
+      "floorY": -1.4,
+      "goalMouthWidthSceneUnits": 4.16,
+      "spriteCaptureProjection": "weak-perspective"
+    }
+  ],
+  "referenceSheetLayout": {
+    "rows": 2,
+    "columns": 2,
+    "cells": [
+      {
+        "index": 0,
+        "viewId": "front-0",
+        "relativeAzimuthDeg": 0,
+        "elevationDeg": 0
+      },
+      {
+        "index": 1,
+        "viewId": "right-0",
+        "relativeAzimuthDeg": 90,
+        "elevationDeg": 0
+      },
+      {
+        "index": 2,
+        "viewId": "back-0",
+        "relativeAzimuthDeg": 180,
+        "elevationDeg": 0
+      },
+      {
+        "index": 3,
+        "viewId": "broadcast-35",
+        "relativeAzimuthDeg": 45,
+        "elevationDeg": 35
+      }
+    ],
+    "labelsBaked": false,
+    "autoSliceAllowed": false
+  },
+  "animationContract": {
+    "authoringFps": 24,
+    "proposedSpritePlaybackFps": 12,
+    "simulationOwnsRootMotion": true,
+    "loopEndpoint": "N unique frames sampled at i/24 for i=0..N-1; duration N/24 seconds",
+    "freezeClock": "simulation-or-replay-clock",
+    "releaseAuthority": "existing-game-core",
+    "skaterClips": [
+      {
+        "id": "ready_glide",
+        "frameCount": 32,
+        "authoringFps": 24,
+        "durationMs": 1333.333,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Neutral parallel two-foot glide; subtle breath only."
+      },
+      {
+        "id": "scan_left",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 10,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Head and upper torso scan while lower-body support remains stable."
+      },
+      {
+        "id": "scan_right",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 10,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Anatomical right scan; do not mirror equipment."
+      },
+      {
+        "id": "skate_forward",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Alternating forward stride, in place."
+      },
+      {
+        "id": "skate_backward",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Backward skating, in place."
+      },
+      {
+        "id": "crossover_left",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Left turn crossover, anatomically authored."
+      },
+      {
+        "id": "crossover_right",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Right turn crossover, anatomically authored."
+      },
+      {
+        "id": "turn_left",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Controlled left edge turn."
+      },
+      {
+        "id": "turn_right",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Controlled right edge turn."
+      },
+      {
+        "id": "stop_left",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 10,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Left stop with stable end stance."
+      },
+      {
+        "id": "stop_right",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 10,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Right stop with stable end stance."
+      },
+      {
+        "id": "pivot_forward_backward",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Forward to backward orientation transition."
+      },
+      {
+        "id": "pivot_backward_forward",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Backward to forward orientation transition."
+      },
+      {
+        "id": "carry_idle",
+        "frameCount": 32,
+        "authoringFps": 24,
+        "durationMs": 1333.333,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Stationary control of separate puck at blade socket."
+      },
+      {
+        "id": "carry_forward",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Stride plus two-hand puck carry, separate puck."
+      },
+      {
+        "id": "stickhandle",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": [
+          6,
+          18
+        ],
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Alternating blade contacts; no baked puck."
+      },
+      {
+        "id": "forehand_pass",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 7,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Release marker follows authoritative pass event."
+      },
+      {
+        "id": "receive_pass",
+        "frameCount": 16,
+        "authoringFps": 24,
+        "durationMs": 666.667,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 5,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Cushion contact at blade socket."
+      },
+      {
+        "id": "wrist_shot",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Release marker follows authoritative shot event."
+      },
+      {
+        "id": "poke_check",
+        "frameCount": 16,
+        "authoringFps": 24,
+        "durationMs": 666.667,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 5,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Short reach and recovery, no invented possession."
+      },
+      {
+        "id": "reach_lane",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 7,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Reach into a lane, no automatic interception."
+      },
+      {
+        "id": "celebrate",
+        "frameCount": 36,
+        "authoringFps": 24,
+        "durationMs": 1500,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Optional restrained celebration after a recorded result."
+      }
+    ],
+    "goalieClips": [
+      {
+        "id": "set",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Balanced set stance."
+      },
+      {
+        "id": "shuffle_left",
+        "frameCount": 16,
+        "authoringFps": 24,
+        "durationMs": 666.667,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Small lateral shuffle to anatomical left."
+      },
+      {
+        "id": "shuffle_right",
+        "frameCount": 16,
+        "authoringFps": 24,
+        "durationMs": 666.667,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Small lateral shuffle to anatomical right."
+      },
+      {
+        "id": "t_push_left",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Longer lateral move left."
+      },
+      {
+        "id": "t_push_right",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Longer lateral move right."
+      },
+      {
+        "id": "butterfly_drop",
+        "frameCount": 12,
+        "authoringFps": 24,
+        "durationMs": 500,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 7,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Drop onto pad knee blocks, feet remain articulated."
+      },
+      {
+        "id": "butterfly_hold",
+        "frameCount": 24,
+        "authoringFps": 24,
+        "durationMs": 1000,
+        "loop": true,
+        "rootMotion": "in-place",
+        "markerFrame": null,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Stable butterfly posture."
+      },
+      {
+        "id": "butterfly_slide_left",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Lateral butterfly slide to anatomical left."
+      },
+      {
+        "id": "butterfly_slide_right",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Lateral butterfly slide to anatomical right."
+      },
+      {
+        "id": "recover",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 11,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Recover to balanced set."
+      },
+      {
+        "id": "glove_high",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Left catcher high for standard goalie."
+      },
+      {
+        "id": "blocker_high",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Right blocker high for standard goalie."
+      },
+      {
+        "id": "glove_low",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Left catcher low."
+      },
+      {
+        "id": "blocker_low",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Right blocker low."
+      },
+      {
+        "id": "pad_save_left",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Anatomical left pad response."
+      },
+      {
+        "id": "pad_save_right",
+        "frameCount": 20,
+        "authoringFps": 24,
+        "durationMs": 833.333,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 8,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Anatomical right pad response."
+      },
+      {
+        "id": "poke",
+        "frameCount": 16,
+        "authoringFps": 24,
+        "durationMs": 666.667,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 5,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Right-hand goalie stick reach."
+      },
+      {
+        "id": "cover",
+        "frameCount": 18,
+        "authoringFps": 24,
+        "durationMs": 750,
+        "loop": false,
+        "rootMotion": "in-place",
+        "markerFrame": 9,
+        "markerAuthority": "proposed-art-timing-only",
+        "status": "planned",
+        "note": "Left catcher covers a separately rendered puck."
+      }
+    ]
+  },
+  "handednessMigration": {
+    "currentShootout": "full-right",
+    "newGoalie": "standard-left-catching",
+    "legacyFrontScreenColumns": {
+      "left": [
+        "gloveHi",
+        "gloveLo"
+      ],
+      "center": [
+        "midHi",
+        "fiveHole"
+      ],
+      "right": [
+        "blkrHi",
+        "blkrLo"
+      ]
+    },
+    "standardFrontScreenColumns": {
+      "left": [
+        "blkrHi",
+        "blkrLo"
+      ],
+      "center": [
+        "midHi",
+        "fiveHole"
+      ],
+      "right": [
+        "gloveHi",
+        "gloveLo"
+      ]
+    },
+    "requiredJointUpdate": [
+      "visual-anatomy",
+      "target-layout",
+      "labels",
+      "hit-areas",
+      "2d-fallback",
+      "animation-lookup"
+    ],
+    "coreIdsStayAnatomical": true,
+    "mirrorPixels": false,
+    "status": "not-implemented"
+  },
+  "generationJobs": [
+    {
+      "id": "gen-skater-reference-001",
+      "promptFile": "01-skater-reference.prompt.md",
+      "characterId": "skater_ym_r",
+      "uniformId": "home_black",
+      "kind": "reference-sheet",
+      "status": "generated-reference-with-unmet-right-shot-and-alpha-requirements",
+      "referencedArtifacts": [],
+      "returnedPath": "references/skater-black-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "342c0fb68f748ef1aeb6c3b7e84d5754cb68be5ee819de1368f44dbd6c855e11",
+      "reviewDecision": "superseded-concept",
+      "observedCharacterId": "skater_ym_l_concept"
+    },
+    {
+      "id": "gen-goalie-reference-001",
+      "promptFile": "02-goalie-reference.prompt.md",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "home_black",
+      "kind": "reference-sheet",
+      "status": "generated-reference-alpha-extracted-locally",
+      "referencedArtifacts": [],
+      "returnedPath": "references/goalie-black-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "e69f2ab40268f55c796a04b44085c71d476f1cac5f2f0713b5e82a297bf48764",
+      "reviewDecision": "selected-concept-source"
+    },
+    {
+      "id": "gen-skater-ready-001",
+      "promptFile": "03-individual-ready-poses.prompt.md#skater-elevated-right-shot-ready-glide",
+      "characterId": "skater_ym_r",
+      "uniformId": "home_black",
+      "kind": "individual-pose",
+      "status": "waiting-for-selected-reference",
+      "referencedArtifacts": [],
+      "returnedPath": null,
+      "nativeWidth": null,
+      "nativeHeight": null,
+      "alphaVerified": null,
+      "sha256": null,
+      "reviewDecision": null
+    },
+    {
+      "id": "gen-goalie-ready-001",
+      "promptFile": "03-individual-ready-poses.prompt.md#goalie-shooter-view-set-stance",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "home_black",
+      "kind": "individual-pose",
+      "status": "waiting-for-selected-reference",
+      "referencedArtifacts": [],
+      "returnedPath": null,
+      "nativeWidth": null,
+      "nativeHeight": null,
+      "alphaVerified": null,
+      "sha256": null,
+      "reviewDecision": null
+    },
+    {
+      "id": "gen-skater-light-skin-edit-002",
+      "promptFile": "04-light-skin-edit.prompt.md",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "home_black",
+      "kind": "reference-sheet-face-edit",
+      "status": "generated-reference-alpha-extracted-locally",
+      "referencedArtifacts": [
+        "skater-black-reference-v1"
+      ],
+      "returnedPath": "references/skater-black-light-skin-reference-v2.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "68e5a09ccfae76c1fbc07580d5c35316d577a3a4b9c2982345719dfdf6d44ba2",
+      "reviewDecision": "selected-concept-source"
+    },
+    {
+      "id": "gen-skater-navy-palette-001",
+      "promptFile": "05-skater-navy-edit.prompt.md",
+      "promptSha256": "60398f38e2a417e20f5614540c57c9215cfe7b734ad7352396fd54e0ad571332",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "home_navy",
+      "kind": "reference-sheet-palette-edit",
+      "status": "generated-and-alpha-extracted",
+      "referencedArtifacts": [
+        "skater-black-light-skin-transparent-v2"
+      ],
+      "returnedPath": "references/skater-navy-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "94cece57eb36bdb30b63b8fd970fdf4fa0fdf22e2ec05e1859c3b1c7809090fc",
+      "derivedAlphaAssetId": "skater-navy-transparent-v1",
+      "reviewDecision": "current-concept-reference-only"
+    },
+    {
+      "id": "gen-skater-gold-palette-001",
+      "promptFile": "06-skater-gold-edit.prompt.md",
+      "promptSha256": "8b680d206360102d68bff2c5d25806130d7832df756fec7b5839dcc823c00c50",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "away_gold",
+      "kind": "reference-sheet-palette-edit",
+      "status": "generated-and-alpha-extracted",
+      "referencedArtifacts": [
+        "skater-black-light-skin-transparent-v2"
+      ],
+      "returnedPath": "references/skater-gold-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "62a9af767b213035a5ce942dabc52d80c409021200544ee68753bc8263a6e949",
+      "derivedAlphaAssetId": "skater-gold-transparent-v1",
+      "reviewDecision": "current-concept-reference-only"
+    },
+    {
+      "id": "gen-goalie-navy-palette-001",
+      "promptFile": "07-goalie-navy-edit.prompt.md",
+      "promptSha256": "9974a6a0036c812bc77013c173d8f89d5e2122db85ac3ae84cfeb6cbeb63d5cc",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "home_navy",
+      "kind": "reference-sheet-palette-edit",
+      "status": "generated-and-alpha-extracted",
+      "referencedArtifacts": [
+        "goalie-black-transparent-v1"
+      ],
+      "returnedPath": "references/goalie-navy-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "8bb20005e3cc833d06ec0f513526a2e2cf8dd08a07be46861cb2e1c030d4de04",
+      "derivedAlphaAssetId": "goalie-navy-transparent-v1",
+      "reviewDecision": "current-concept-reference-only"
+    },
+    {
+      "id": "gen-goalie-gold-palette-001",
+      "promptFile": "08-goalie-gold-edit.prompt.md",
+      "promptSha256": "0290de8688c8fe35a77aa4c18fdb124cb1ba973bb920518a839405bbda1dc778",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "away_gold",
+      "kind": "reference-sheet-palette-edit",
+      "status": "generated-and-alpha-extracted",
+      "referencedArtifacts": [
+        "goalie-black-transparent-v1"
+      ],
+      "returnedPath": "references/goalie-gold-reference-v1.png",
+      "nativeWidth": 1254,
+      "nativeHeight": 1254,
+      "alphaVerified": false,
+      "sha256": "5a56e9db7f19a9995e5c99bf7e71b0669e7d5e3c28c46d990cecc7aa3fec34c0",
+      "derivedAlphaAssetId": "goalie-gold-transparent-v1",
+      "reviewDecision": "current-concept-reference-only"
+    }
+  ],
+  "runtimeBudgets": {
+    "status": "targets-not-measured",
+    "skaterTrianglesMax": 25000,
+    "goalieTrianglesMax": 35000,
+    "deformBonesPerCharacterMax": 70,
+    "sharedTextureDimensionMax": 2048,
+    "initialLoadedCharacterAssetsMBTarget": 20,
+    "desktopFpsTarget": 60,
+    "baselineTabletFpsTarget": 30
+  },
+  "sources": [
+    {
+      "title": "Three.js Sprite",
+      "url": "https://threejs.org/docs/pages/Sprite.html",
+      "checkedDate": "2026-09-04"
+    },
+    {
+      "title": "Three.js animation system",
+      "url": "https://threejs.org/manual/en/animation-system.html",
+      "checkedDate": "2026-09-04"
+    },
+    {
+      "title": "RinkReads current asset shortlist",
+      "path": "../../one-on-one/asset-shortlist.md"
+    }
+  ],
+  "featuredReferenceAssets": [
+    "skater-navy-transparent-v1",
+    "skater-gold-transparent-v1",
+    "goalie-navy-transparent-v1",
+    "goalie-gold-transparent-v1"
+  ],
+  "referenceInventory": [
+    {
+      "id": "skater-black-reference-v1",
+      "path": "references/skater-black-reference-v1.png",
+      "sha256": "342c0fb68f748ef1aeb6c3b7e84d5754cb68be5ee819de1368f44dbd6c855e11",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "superseded-concept",
+      "characterId": "skater_ym_l_concept",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:\\Users\\mtsli\\.codex\\generated_images\\01a06fd0-b6e6-7470-81ae-6473aa61580d\\exec-4c7c6a0d-a1f3-4131-8694-fc1dfac725bd.png",
+      "providerGenerationId": null,
+      "reason": "Face visibility was superseded by the lighter-skin edit. Source is RGB with painted checkerboard.",
+      "runtimeApproved": false
+    },
+    {
+      "id": "skater-white-reference-v1",
+      "path": "references/skater-white-reference-v1.png",
+      "sha256": "59259617109bfd6d2cee26e0658c16019dde662946d96d4b64671c9223a27474",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "rejected-misunderstanding",
+      "characterId": "skater_ym_l_concept",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:\\Users\\mtsli\\.codex\\generated_images\\01a06fd0-b6e6-7470-81ae-6473aa61580d\\exec-f25f6560-d805-4966-be51-8b44a66d0b4a.png",
+      "providerGenerationId": null,
+      "reason": "White referred to lighter skin, not a white jersey. Do not feature or treat as an approved uniform.",
+      "runtimeApproved": false
+    },
+    {
+      "id": "skater-black-light-skin-reference-v2",
+      "path": "references/skater-black-light-skin-reference-v2.png",
+      "sha256": "68e5a09ccfae76c1fbc07580d5c35316d577a3a4b9c2982345719dfdf6d44ba2",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "historical-before-reference",
+      "characterId": "skater_ym_l_concept",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:\\Users\\mtsli\\.codex\\generated_images\\01a06fd0-b6e6-7470-81ae-6473aa61580d\\exec-072bf13f-c227-4cd8-80db-bb6691421ff2.png",
+      "providerGenerationId": null,
+      "reason": "Black/yellow uniform, lighter human face visible, observed left-shot. Original RGB checkerboard retained as provenance.",
+      "runtimeApproved": false
+    },
+    {
+      "id": "goalie-black-reference-v1",
+      "path": "references/goalie-black-reference-v1.png",
+      "sha256": "e69f2ab40268f55c796a04b44085c71d476f1cac5f2f0713b5e82a297bf48764",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "historical-before-reference",
+      "characterId": "goalie_ym_lc",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:\\Users\\mtsli\\.codex\\generated_images\\01a06fd0-b6e6-7470-81ae-6473aa61580d\\exec-090e0a11-c727-4907-aa28-86d1711f5152.png",
+      "providerGenerationId": null,
+      "reason": "Standard left catcher. Original RGB checkerboard retained as provenance.",
+      "runtimeApproved": false
+    },
+    {
+      "id": "skater-black-light-skin-transparent-v2",
+      "path": "references/skater-black-light-skin-transparent-v2.png",
+      "sha256": "d846e2cd4bfeba3594bdb8fd7289dcbcdf451427da55fedbe917107d5189b081",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "skater_ym_l_concept",
+      "status": "historical-before-reference",
+      "sourceSha256": "68e5a09ccfae76c1fbc07580d5c35316d577a3a4b9c2982345719dfdf6d44ba2",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.820979,
+      "partialAlphaPixelFraction": 0.016054,
+      "extractionReport": "evidence/skater-alpha-report-v2.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "No pixel mirroring or pose change.",
+        "Not a completed animation or calibrated camera sprite."
+      ]
+    },
+    {
+      "id": "goalie-black-transparent-v1",
+      "path": "references/goalie-black-transparent-v1.png",
+      "sha256": "b4931100bed31dc9cc9e23ed7d80e0f89758155da6506dfea7f7bb3b00cd9150",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "goalie_ym_lc",
+      "status": "historical-before-reference",
+      "sourceSha256": "e69f2ab40268f55c796a04b44085c71d476f1cac5f2f0713b5e82a297bf48764",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.683254,
+      "partialAlphaPixelFraction": 0.039056,
+      "extractionReport": "evidence/goalie-alpha-report-v1.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "No pixel mirroring or pose change.",
+        "Not a completed animation or calibrated camera sprite."
+      ]
+    },
+    {
+      "id": "skater-navy-reference-v1",
+      "path": "references/skater-navy-reference-v1.png",
+      "sha256": "94cece57eb36bdb30b63b8fd970fdf4fa0fdf22e2ec05e1859c3b1c7809090fc",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "selected-current-source-concept",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "home_navy",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:/Users/mtsli/.codex/generated_images/01a06ff9-ef3c-74e2-9f01-abc04a0e524d/exec-5bf5d77c-9226-473b-8ba7-ccc93b8784b5.png",
+      "exactPromptFile": "05-skater-navy-edit.prompt.md",
+      "sourceReference": "references/skater-black-light-skin-transparent-v2.png",
+      "runtimeApproved": false
+    },
+    {
+      "id": "skater-navy-transparent-v1",
+      "path": "references/skater-navy-transparent-v1.png",
+      "sha256": "7931c2a2d207df55dbad24ef28ba671fcb7e754474dbfd4e4804ec570d55976b",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "home_navy",
+      "status": "selected-current-concept-reference",
+      "sourceSha256": "94cece57eb36bdb30b63b8fd970fdf4fa0fdf22e2ec05e1859c3b1c7809090fc",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.820955,
+      "partialAlphaPixelFraction": 0.016889,
+      "extractionReport": "evidence/skater-navy-gold-alpha-report-v1.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "Complete four-view concept sheet, not a runtime atlas or skeletal model.",
+        "No pose mirroring; observed handedness preserved.",
+        "Fine cage/web edge fringes require production matte review."
+      ]
+    },
+    {
+      "id": "skater-gold-reference-v1",
+      "path": "references/skater-gold-reference-v1.png",
+      "sha256": "62a9af767b213035a5ce942dabc52d80c409021200544ee68753bc8263a6e949",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "selected-current-source-concept",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "away_gold",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:/Users/mtsli/.codex/generated_images/01a06ff9-ef3c-74e2-9f01-abc04a0e524d/exec-b41098d3-aa4c-4b25-a147-049f654275ab.png",
+      "exactPromptFile": "06-skater-gold-edit.prompt.md",
+      "sourceReference": "references/skater-black-light-skin-transparent-v2.png",
+      "runtimeApproved": false
+    },
+    {
+      "id": "skater-gold-transparent-v1",
+      "path": "references/skater-gold-transparent-v1.png",
+      "sha256": "b02ab7e70af98a5b7a2238da1bc426c89916db61224b22c86d324b632267a2e5",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "skater_ym_l_concept",
+      "uniformId": "away_gold",
+      "status": "selected-current-concept-reference",
+      "sourceSha256": "62a9af767b213035a5ce942dabc52d80c409021200544ee68753bc8263a6e949",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.820435,
+      "partialAlphaPixelFraction": 0.016627,
+      "extractionReport": "evidence/skater-navy-gold-alpha-report-v1.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "Complete four-view concept sheet, not a runtime atlas or skeletal model.",
+        "No pose mirroring; observed handedness preserved.",
+        "Fine cage/web edge fringes require production matte review."
+      ]
+    },
+    {
+      "id": "goalie-navy-reference-v1",
+      "path": "references/goalie-navy-reference-v1.png",
+      "sha256": "8bb20005e3cc833d06ec0f513526a2e2cf8dd08a07be46861cb2e1c030d4de04",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "selected-current-source-concept",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "home_navy",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:/Users/mtsli/.codex/generated_images/01a06ff9-ef3c-74e2-9f01-abc04a0e524d/exec-de4420e8-7315-4d77-b2dd-72466c3cc797.png",
+      "exactPromptFile": "07-goalie-navy-edit.prompt.md",
+      "sourceReference": "references/goalie-black-transparent-v1.png",
+      "runtimeApproved": false
+    },
+    {
+      "id": "goalie-navy-transparent-v1",
+      "path": "references/goalie-navy-transparent-v1.png",
+      "sha256": "047200cd0e1807e87296888562f7278a1f0faa4ab1cecd6eea9a757def1327bc",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "home_navy",
+      "status": "selected-current-concept-reference",
+      "sourceSha256": "8bb20005e3cc833d06ec0f513526a2e2cf8dd08a07be46861cb2e1c030d4de04",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.682569,
+      "partialAlphaPixelFraction": 0.032765,
+      "extractionReport": "evidence/goalie-navy-alpha-report-v1.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "Complete four-view concept sheet, not a runtime atlas or skeletal model.",
+        "No pose mirroring; observed handedness preserved.",
+        "Fine cage/web edge fringes require production matte review."
+      ]
+    },
+    {
+      "id": "goalie-gold-reference-v1",
+      "path": "references/goalie-gold-reference-v1.png",
+      "sha256": "5a56e9db7f19a9995e5c99bf7e71b0669e7d5e3c28c46d990cecc7aa3fec34c0",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "status": "selected-current-source-concept",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "away_gold",
+      "provider": "built-in GPT image generation",
+      "providerFilePath": "C:/Users/mtsli/.codex/generated_images/01a06ff9-ef3c-74e2-9f01-abc04a0e524d/exec-dfcbe0ac-cc5b-45cc-899c-d99c3cfc733c.png",
+      "exactPromptFile": "08-goalie-gold-edit.prompt.md",
+      "sourceReference": "references/goalie-black-transparent-v1.png",
+      "runtimeApproved": false
+    },
+    {
+      "id": "goalie-gold-transparent-v1",
+      "path": "references/goalie-gold-transparent-v1.png",
+      "sha256": "e1df53c3bde6282d9d71750672efcce39815c127d4e258a2ad902ca9b4daaecc",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "characterId": "goalie_ym_lc",
+      "uniformId": "away_gold",
+      "status": "selected-current-concept-reference",
+      "sourceSha256": "5a56e9db7f19a9995e5c99bf7e71b0669e7d5e3c28c46d990cecc7aa3fec34c0",
+      "alphaVerified": true,
+      "transparentPixelFraction": 0.683143,
+      "partialAlphaPixelFraction": 0.034843,
+      "extractionReport": "evidence/goalie-gold-alpha-report-v1.json",
+      "runtimeApproved": false,
+      "cameraAccuracy": "illustrated-approximation",
+      "notes": [
+        "Complete four-view concept sheet, not a runtime atlas or skeletal model.",
+        "No pose mirroring; observed handedness preserved.",
+        "Fine cage/web edge fringes require production matte review."
+      ]
+    }
+  ],
+  "brandDirection": {
+    "status": "latest-user-direction-applied-to-concept-references",
+    "source": "C:/Users/mtsli/BlueChip/references/brand-guidelines.md",
+    "colors": {
+      "navy": "#0B1A33",
+      "gold": "#C9A24B",
+      "bone": "#F5EFE6"
+    },
+    "fonts": {
+      "heading": "Playfair Display",
+      "body": "Inter"
+    },
+    "uniformDirections": [
+      "navy jersey with gold trim",
+      "gold jersey with navy trim"
+    ],
+    "existingImages": "Four current navy/gold concept sheets feature lighter visible faces; earlier black/yellow images retained for before comparison."
+  },
+  "previousPackId": "rr-black-yellow-youth-20260904",
+  "fonts": [
+    {
+      "family": "Inter",
+      "file": "fonts/Inter.ttf",
+      "license": "fonts/OFL-Inter.txt",
+      "source": "public/fonts/Inter.ttf"
+    },
+    {
+      "family": "Playfair Display",
+      "file": "fonts/PlayfairDisplay.ttf",
+      "license": "fonts/OFL-PlayfairDisplay.txt",
+      "source": "public/fonts/PlayfairDisplay.ttf"
+    }
+  ]
+}

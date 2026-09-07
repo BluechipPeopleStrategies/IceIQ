@@ -1,0 +1,320 @@
+{
+  "instruction": "Independently check the final current content and complete scene. Keep the earlier receipts immutable. Every listed ID needs a current-hash pass or an actionable revision. This can serve as the second review for a newly discovered repair.",
+  "assignedQuestionIds": [
+    "exp26-u9-013-q7"
+  ],
+  "manifest": [
+    {
+      "questionId": "exp26-u9-013-q7",
+      "scenarioId": "exp26-u9-013",
+      "scenarioVersion": 1,
+      "contentHash": "2dd75fdffaae519a73bbbb0d5a5229d016aa229b716edc9102ea5c9aa5f80e5e",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "youth-u9-013-missing-navy3",
+        "youth-u9-013-state"
+      ],
+      "firstReviewer": "luna-u13-peer-youth",
+      "firstContentHash": "6eb83be8d18786b1ccc6534e7c870fc47495ef35d2894e4524d40eb08af1eaad",
+      "previousReview": {
+        "questionId": "exp26-u9-013-q7",
+        "scenarioId": "exp26-u9-013",
+        "scenarioVersion": 1,
+        "contentHash": "ca7310cffd7c6c635ba61bf5c54d6a7be930ce751e4e9ea3c7da4fc9e8bc0ae5",
+        "decision": "revise",
+        "reason": "Revise. The current q7 still introduces Gold1 reaching the puck after YOU releases it, but that turnover is not stated in the change-signal scene. The first repair correctly removed the nonexistent Navy3 elsewhere, but this q7 still tests an invented possession event.",
+        "severity": "P1",
+        "recommendedChange": "Remove the invented Gold1 reception and ask about the stated change signal. Keep the answer and explanation scoped to this named half-ice activity; rehash q7 after editing.",
+        "proposedQuestion": "After the designated change signal sounds, what should YOU do? Options: (a) Release the puck and leave for the next unit; (b) Keep carrying until the attack ends; (c) Stay until Navy2 gets the puck. Answer [a]. Explanation: In this named activity, the signal starts the change, so release the puck and leave while play continues. Use the route the coach explained because the picture does not show the waiting area."
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u9-013",
+      "version": 1,
+      "ageBand": "U9",
+      "title": "Our half-ice change signal",
+      "family": "half-ice-shift-change",
+      "topic": "Game routines",
+      "objective": "Recognize the puck-release and change routine in a named game model.",
+      "briefing": "This activity uses the Hockey Canada U9 half-ice change rule: on the designated change signal, release the puck and leave for the next unit while play continues. The signal has just sounded while YOU control the puck. The full-rink picture shows player relationships only, not the exact half-ice layout or bench. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 8,
+            "facing": -2.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 18,
+            "y": -2,
+            "facing": 2.5
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The designated change signal was stated.",
+        "YOU still own the puck at this instant.",
+        "The next unit waits off the illustrated area."
+      ],
+      "tags": [
+        "half-ice-shift-change",
+        "foundation",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-u9-half-ice-rules",
+          "title": "Hockey Canada: Set-up, game play and rules for U9 hockey",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/associations/game-play-rules",
+          "section": "Half-ice Game Play Rules: timed changes and Change of possession",
+          "use": "Supports only the explicitly named half-ice model. Local program applicability needs review; no transition-date claim is used."
+        },
+        {
+          "id": "hc-u9-faq",
+          "title": "Hockey Canada: Answering questions about U9 hockey",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/faq",
+          "section": "Core requirements; offside/icing; goalie rotation",
+          "use": "Supports age-specific program context, not measured question frequency or a full-ice tactical key."
+        }
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. Explicit half-ice-model demonstration. Not current local-policy verification; no U9 full-ice transition date is used.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Who must release the puck at this instant?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU, the current carrier"
+            },
+            {
+              "id": "b",
+              "text": "Gold1, who does not have it"
+            },
+            {
+              "id": "c",
+              "text": "The net"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "YOU are the declared puck owner when the change signal sounds.",
+          "id": "exp26-u9-013-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which instructions belong to this named routine?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Relinquish the puck"
+            },
+            {
+              "id": "b",
+              "text": "Leave for the next unit"
+            },
+            {
+              "id": "c",
+              "text": "Finish a long attack before changing"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Those actions follow the quoted model in the briefing. Local program applicability still needs review.",
+          "id": "exp26-u9-013-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange the declared change sequence.",
+          "options": [
+            {
+              "id": "a",
+              "text": "The change signal sounds"
+            },
+            {
+              "id": "b",
+              "text": "YOU release control and leave"
+            },
+            {
+              "id": "c",
+              "text": "The next unit continues the activity"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "scene",
+          "explanation": "This describes the model, not a moving trace or a universal rule for all games.",
+          "id": "exp26-u9-013-q3"
+        },
+        {
+          "type": "choice",
+          "prompt": "Does the whole game stop for this stated change?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, always a faceoff"
+            },
+            {
+              "id": "b",
+              "text": "No, play continues"
+            },
+            {
+              "id": "c",
+              "text": "Only the puck becomes larger"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The briefing states that play continues under this half-ice model.",
+          "id": "exp26-u9-013-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Imagine a different practice says whistle means stop and listen. Which instruction applies there?",
+          "options": [
+            {
+              "id": "a",
+              "text": "That practice's stop instruction"
+            },
+            {
+              "id": "b",
+              "text": "This shift-change rule everywhere"
+            },
+            {
+              "id": "c",
+              "text": "No instruction matters"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Signals need context. A practice stop and this game change routine are different.",
+          "id": "exp26-u9-013-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "How can you know which whistle routine the coach is using?",
+          "basis": "coaching",
+          "explanation": "Listen to the activity instructions and ask if unclear. The scenario does not establish a rule for every U9 program.",
+          "id": "exp26-u9-013-q6"
+        },
+        {
+          "id": "exp26-u9-013-q7",
+          "type": "choice",
+          "prompt": "For the next branch, imagine Gold1 reaches the puck after YOU release it. In this change routine, what should YOU do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Continue leaving for the next unit"
+            },
+            {
+              "id": "b",
+              "text": "Chase Gold1 to win it back first"
+            },
+            {
+              "id": "c",
+              "text": "Stay until Navy2 gets the puck"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The designated signal still means release and change in this named activity. A new puck owner does not cancel the change instruction."
+        },
+        {
+          "id": "exp26-u9-013-q8",
+          "type": "multi",
+          "prompt": "What helps the next unit take its turn in this activity?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Release the puck when the change signal sounds"
+            },
+            {
+              "id": "b",
+              "text": "Leave using the route the coach explained"
+            },
+            {
+              "id": "c",
+              "text": "Take the puck with YOU to the waiting players"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Release control and make room for the next unit. Use the real activity’s exit route; the picture does not show the bench."
+        },
+        {
+          "id": "exp26-u9-013-q9",
+          "type": "choice",
+          "prompt": "This picture does not show the waiting area. How should YOU find the exit route for your real game?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Use the route the coach explained; ask if unclear"
+            },
+            {
+              "id": "b",
+              "text": "Head for whichever boards look closest"
+            },
+            {
+              "id": "c",
+              "text": "Follow Gold1’s puck route"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The coach or official can show the actual change route. Do not invent an exit from a picture that only shows player relationships."
+        },
+        {
+          "id": "exp26-u9-013-q10",
+          "type": "explain",
+          "prompt": "Why should YOU leave after the signal even when the attacking end is nearby?",
+          "basis": "coaching",
+          "explanation": "In this named half-ice routine, the signal gives the next unit its turn while play continues. Being near the attacking end does not mean finishing another attack first. Other game formats can use different routines."
+        }
+      ]
+    }
+  ]
+}

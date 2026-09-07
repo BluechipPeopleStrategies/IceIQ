@@ -1,0 +1,99 @@
+{
+  "kind": "compiled-teaching-play",
+  "version": "compiled-teaching-play-v1",
+  "value": {
+    "schemaVersion": "compiled-teaching-play-v1",
+    "id": "sd_two_on_one_backdoor_read_v1",
+    "version": 1,
+    "compiledHash": "782ab1afcff3ceffdffb174c46c291138a526a33f725dc18d5bfeb1090963175",
+    "dependencyHashes": {
+      "definitionId": "sd_two_on_one_backdoor_read_v1",
+      "definitionVersion": 1,
+      "definitionContentHash": "db76095c3b0c26347869c7818e5770d0b477d07febcf34479787a6db38bbe14a",
+      "traceHash": "b712d7b7f5a6910b55ae7782facf2a7b009c4b6d4a7ce169027c200ac6d5d49b",
+      "physicsProfileId": "physics-u11-v1"
+    },
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          14.0208,
+          5.334
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          16.0528,
+          0.889
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 1,
+        "pos": [
+          18.0848,
+          -3.556
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 1.2,
+        "pos": [
+          18.8976,
+          -5.334
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "eventTimes": [
+      0,
+      1.2,
+      2
+    ],
+    "questionFreezeTime": 2,
+    "observableCues": [
+      "the lone defender (D1) has stepped up into F1's shooting lane",
+      "F2 is open behind the defender's step, with a clear shooting lane of their own"
+    ],
+    "declaredRead": {
+      "actorId": "F1",
+      "description": "Pass across to F2 -- the defender stepped toward you, so the support teammate is open"
+    },
+    "answerProof": {
+      "derivedRead": "pass_backdoor",
+      "proofChain": [
+        {
+          "candidateId": "pass_backdoor",
+          "physicsClean": true,
+          "hardFailures": []
+        }
+      ],
+      "comparison": {
+        "agreement": "agree",
+        "declaredCandidateId": "pass_backdoor",
+        "derivedRead": "pass_backdoor",
+        "explanation": "Declared read (pass_backdoor) matches the physically-derived read.",
+        "mismatchPreserved": false
+      }
+    },
+    "questionKindVariants": [
+      {
+        "kind": "lane-pick",
+        "ageBands": [
+          "U9",
+          "U11",
+          "U13"
+        ],
+        "copy": {
+          "q": "The lone defender steps up to you. What is the best read?"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "_comment": "Proof unit produced by the content factory. povQuestions.json-compatible 'image scenario': one validated illustration carrying a bank of mixed-format, age-laddered questions. readClarity reflects coach-gate status.",
+  "id": "IMG-2v1-RRH-001",
+  "archetype": "2-on-1 Rush",
+  "cognitiveSkill": "Decision-Making",
+  "ageGroups": ["U7", "U9", "U11", "U13", "U15"],
+  "position": ["Forward"],
+  "povType": "Puck Carrier",
+  "zone": "OZ",
+  "numericalState": "+1 Advantage",
+  "style": "illustrated-rrh-v1",
+  "readTrigger": "The defender's stick and lead skate are committed to the puck-side shooting lane, sealing the shot; the weak-side seam to the back-door teammate (#23) is unobstructed; the goalie is squared to the puck carrier and has not started sliding across.",
+  "distractors": "Goalie squared to the puck (tempts a shot); open ice to the wide side (tempts driving wide); defender still visually 'in the play' (tempts a deke).",
+  "groundTruth": {
+    "correctRead": "Cross-ice pass to the back-door teammate (#23).",
+    "actors": {
+      "you": "#7, puck carrier, strong side, entering the offensive zone.",
+      "teammate": "#23, weak side, streaking to the back door, OPEN.",
+      "defender": "#6, lone D, COMMITTED to the puck/shot side (stick + lead skate in the shooting lane), seam to #23 vacated.",
+      "goalie": "#30, squared and slightly deep to #7, has not started sliding."
+    }
+  },
+  "readClarity": "Coach-verified (tactical + pedagogy + adversarial panel)",
+  "artBrief": "See PROOF-2on1-crossice.md section 2. Fixed STYLE/RINK/JERSEYS blocks for library consistency; SITUATION block commits the defender to remove ambiguity.",
+  "imageUrls": [],
+  "questions": [
+    {
+      "id": "Q-2v1-RRH-001-U11-MC",
+      "ageGroup": "U11",
+      "ageGroups": ["U11"],
+      "format": "Multiple Choice",
+      "difficulty": "Intermediate",
+      "questionText": "You have the puck on a 2-on-1. Read the defender, then make your play.",
+      "options": [
+        { "label": "A", "text": "Shoot far side" },
+        { "label": "B", "text": "Pass cross-ice to #23" },
+        { "label": "C", "text": "Deke the defender" },
+        { "label": "D", "text": "Hold the puck and wait" }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The defender's stick and lead skate are in your shooting lane, sealing the shot. The seam to #23 is unguarded and the goalie hasn't moved. Move the puck.",
+      "concepts": ["Pass vs Shoot", "2-on-1 Read", "Back Door"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U11-TAP",
+      "ageGroup": "U11",
+      "ageGroups": ["U11"],
+      "format": "Tap Target",
+      "difficulty": "Intermediate",
+      "questionText": "Tap the player you should move the puck to.",
+      "tapTargets": ["#6", "#23", "#30", "net"],
+      "correctTarget": "#23",
+      "explanation": "#23 is open on the back door because the defender committed to your shot. Put it on his tape.",
+      "concepts": ["Back Door", "Lane Recognition"],
+      "buildNote": "All listed targets must be tappable, or this degrades to a coin-flip.",
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U11-TF",
+      "ageGroup": "U11",
+      "ageGroups": ["U11"],
+      "format": "True/False",
+      "difficulty": "Intermediate",
+      "questionText": "The defender is in your shooting lane. Shooting is still the best choice here.",
+      "correctAnswer": "False",
+      "explanation": "A committed defender plus a square goalie make the shot low-percentage. The open man is the play.",
+      "concepts": ["Pass vs Shoot", "Shot Selection"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U9-MC",
+      "ageGroup": "U9",
+      "ageGroups": ["U9"],
+      "format": "Multiple Choice",
+      "difficulty": "Beginner",
+      "questionText": "Your teammate is wide open on the far side. The defender is moving to block your shot. What should you do?",
+      "options": [
+        { "label": "A", "text": "Pass to my teammate" },
+        { "label": "B", "text": "Shoot" },
+        { "label": "C", "text": "Try to go around the defender" }
+      ],
+      "correctAnswer": "A",
+      "explanation": "The defender is taking your shot away and your teammate is all alone. Passing is the smart, easy play.",
+      "concepts": ["Pass vs Shoot", "Heads Up"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U7-EMOJI",
+      "ageGroup": "U7",
+      "ageGroups": ["U7"],
+      "format": "Multiple Choice",
+      "difficulty": "Beginner",
+      "questionText": "You have the puck. Your friend is open. What do you do?",
+      "options": [
+        { "label": "A", "text": "🥅 Shoot it" },
+        { "label": "B", "text": "🤝 Pass to my friend" },
+        { "label": "C", "text": "💨 Try to skate past everyone" }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Your friend is open! Sharing the puck is the best play.",
+      "concepts": ["Sharing the Puck"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U13-NEXT",
+      "ageGroup": "U13",
+      "ageGroups": ["U13"],
+      "format": "What Happens Next",
+      "difficulty": "Advanced",
+      "questionText": "You decide to shoot instead of pass. Given the defender's position, what is the MOST likely result?",
+      "options": [
+        { "label": "A", "text": "Goal far side" },
+        { "label": "B", "text": "The defender blocks or deflects the shot" },
+        { "label": "C", "text": "You draw a penalty" },
+        { "label": "D", "text": "The goalie freezes it for a whistle" }
+      ],
+      "correctAnswer": "B",
+      "explanation": "His stick and skate are already in the lane. Shooting into a committed defender usually ends in a block or deflection.",
+      "concepts": ["Consequence Reading", "Shot Selection"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U13-DEEP",
+      "ageGroup": "U13",
+      "ageGroups": ["U13"],
+      "format": "Multiple Choice",
+      "difficulty": "Advanced",
+      "questionText": "Before you pass, what tells you the back door is truly open?",
+      "options": [
+        { "label": "A", "text": "The defender's stick and skate are in your shooting lane, leaving the cross-ice seam unguarded" },
+        { "label": "B", "text": "The goalie is cheating to your side" },
+        { "label": "C", "text": "The defender is yelling" },
+        { "label": "D", "text": "You hear the bench" }
+      ],
+      "correctAnswer": "A",
+      "explanation": "The seam is open because the defender vacated it — that's the primary cue. The goalie being square only tells you the shot is contested.",
+      "concepts": ["Read Trigger", "2-on-1 Read", "Defender Commitment"],
+      "isAutoGraded": true
+    },
+    {
+      "id": "Q-2v1-RRH-001-U15-TF",
+      "ageGroup": "U15",
+      "ageGroups": ["U15"],
+      "format": "True/False",
+      "difficulty": "Advanced",
+      "questionText": "Given that the defender has committed to your shooting lane, a cross-ice pass to #23 is too risky and should be avoided.",
+      "correctAnswer": "False",
+      "explanation": "Because the defender committed to the puck, the seam is open — the pass is the correct read here, not a reckless one.",
+      "concepts": ["Seam Passing", "Risk Reading", "Defender Commitment"],
+      "isAutoGraded": true
+    }
+  ]
+}

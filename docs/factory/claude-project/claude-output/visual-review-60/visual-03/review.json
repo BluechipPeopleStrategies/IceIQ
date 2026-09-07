@@ -1,0 +1,79 @@
+{
+  "packetId": "visual-03",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5), this session, lead reviewer",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 missed) -- see output/calibration/reconciliation.json. All verdicts below are provisional."
+  },
+  "rows": [
+    {
+      "scenarioId": "exp26-u11-007", "questionId": "exp26-u11-007-q5", "scenarioVersion": 2,
+      "contentHash": "8688fc07987b67d17674d9c5753cb753d4596f911b26824f82fec289c559ab66", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms YOU already near the boards, D1 more central -- moving further toward boards increases separation.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-007-q5_desktop-1365x900.png","sha256":"bc9b9dc6874bdb69d1272113aa1412c5d52e6b9020438e1adc989258634f3312"},
+        {"viewport":"390x844","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-007-q5_phone-390x844_scene.png","sha256":"fdd33708a4b82e5a60d5b01cb2465840650561f47b54197f1bf16086626a100d"}
+      ],
+      "interactionTest": {"tested": false, "reason": "representative sampling used elsewhere in this packet"},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u11-008", "questionId": "exp26-u11-008-q5", "scenarioVersion": 2,
+      "contentHash": "46872470de5a9b9791e7def999319ef6750216071e6d9f2c69d60112d863099f", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry over a hypothetical carry",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene shows F2 already positioned toward the attacking end relative to YOU; a straight advance visibly closes that gap.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-008-q5_desktop-1365x900.png","sha256":"9a74626a36d7b82638296f16fc1ca68b63ca326f6be2af1739f15d096227003e"},
+        {"viewport":"390x844","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-008-q5_phone-390x844_scene.png","sha256":"558ab26744ff68f50df11e0b630f188144c4b8beb3f7cb91d020c11ecd651cba"}
+      ],
+      "interactionTest": {"tested": false, "reason": "representative sampling used elsewhere in this packet"},
+      "secondReview": "pending", "sources": []
+    },
+    {
+      "scenarioId": "exp26-u11-013", "questionId": "exp26-u11-013-q5", "scenarioVersion": 2,
+      "contentHash": "b2916cc27472cf3fe54d66b5acbf16b43e13a5e66e378d17b3a4b217f970d793", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (defender exactly on shooting lane)",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms D1 sits almost exactly on the puck-to-net line (matches manifest: D1 and net share y=0 with the puck), while F2's line clears D1 by a visible margin. Interactively tested live: selecting 'The line from the puck to F2' returned 'Yep, that matches the suggested approach.' with explanation text matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-013-q5_desktop-1365x900.png","sha256":"cce2329232e353529d3b638362bfd6e6e8cc9027784a2fe4c8a3015ee575fee1"},
+        {"viewport":"390x844","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-013-q5_phone-390x844_scene.png","sha256":"5ad0a100bfae9421e93d9157bfcfd66fd6170da2ba8d723d658621a57b058e1e"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "The line from the puck to F2", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": [],
+      "note": "On-screen option order (net-line listed first, F2-line second) is reversed from the blind.json option-letter order (a=F2, b=net) -- cosmetic UI shuffling, confirmed by text not letter position before scoring."
+    },
+    {
+      "scenarioId": "exp26-u11-018", "questionId": "exp26-u11-018-q5", "scenarioVersion": 2,
+      "contentHash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "roster/tactical-consequence reasoning",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene shows F2 isolated near a separate faceoff circle, well away from the YOU/D1/F1 cluster -- visually obvious over-commit risk. Interactively tested live: selecting 'F2 could have more room away from the two defenders' returned 'Yep, that matches the suggested approach.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-018-q5_desktop-1365x900.png","sha256":"3e10ceb1a5b30b8f29c490e9446be11df0fb2882c124ab8f7bd9a1b280b4bb37"},
+        {"viewport":"390x844","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-018-q5_phone-390x844_scene.png","sha256":"312265c2e7972458c235ac4d50dd1465f64e7b886a19a1f6394f2db42f5e1145"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "F2 could have more room away from the two defenders", "result": "Yep, that matches the suggested approach."}},
+      "secondReview": "pending", "sources": [],
+      "note": "On-screen option order reversed vs blind.json lettering (a=F2 first vs. screen shows F1-option first) -- confirmed by text before scoring, same as exp26-u11-013-q5."
+    },
+    {
+      "scenarioId": "exp26-u11-020", "questionId": "exp26-u11-020-q5", "scenarioVersion": 2,
+      "contentHash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b", "hashVerified": true,
+      "verdict": "no-defect-found-in-this-unqualified-pass", "highRisk": true, "highRiskReason": "comparative geometry (line clearance)",
+      "blindAnswer": "a", "keyedAnswer": "a", "blindMatchesKey": true,
+      "sceneEvidence": "Rendered scene confirms F2 sits much closer to the D1-D2 outlet line than YOU (measured on-screen: F2 perpendicular distance ~13px vs YOU ~54px at this camera angle, consistent with the ~0.98 vs ~3.9 unit computation from raw coordinates). Blue-line landmark for 'D2 waits just inside the blue line' also confirmed visually. Interactively tested live: selecting 'F2' returned 'Yep, you got it.' matching the key verbatim.",
+      "viewports": [
+        {"viewport":"1365x900","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-020-q5_desktop-1365x900.png","sha256":"ff527a5801b40ad19e2d695478d975fb7f8d002173e8b65cde81a39fe762693b"},
+        {"viewport":"390x844","screenshotPath":"output/visual-03/screenshots/v03_exp26-u11-020-q5_phone-390x844_scene.png","sha256":"d549b5c250e816e1ca2049798e336a928af8581b1850d4f404b240b3254c15d2"}
+      ],
+      "interactionTest": {"tested": true, "correctSelection": {"selected": "F2", "result": "Yep, you got it."}},
+      "secondReview": "pending", "sources": []
+    }
+  ],
+  "afterSolveCrossCheck": "All 5 blind answers matched packets/visual-03-after-solve.json exactly (5/5), including option-letter mapping.",
+  "hashVerification": "All 5 targets confirmed against pinned sourceCommit via output/verify-hashes.mjs (0 mismatches). Production wording matched source-commit text verbatim for all 5.",
+  "crossPacketPattern": "Both this packet and visual-02 show the live app's on-screen option ORDER is not always the same as the authoring JSON's option-letter order (cosmetic shuffling). Every scoring comparison in this and prior packets was done by TEXT match, never by assuming letter position stayed fixed -- flagging as a general methodology note for Codex, not a defect, since the app appears to intentionally randomize/vary displayed order."
+}

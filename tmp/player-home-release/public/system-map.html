@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads — System Map</title>
+<style>
+:root{
+  --navy:#0B1A33; --gold:#C9A24B; --ink:#1a2433; --muted:#6b7686; --line:#e3e7ee; --bg:#f4f6fa;
+  --ledger:#2b6fd6; --gen:#7a4ed1; --proxy:#9aa3b2; --founder:#C9A24B; --bank:#0B6B3A; --app:#0e7490; --audit:#b4731f;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
+header{background:var(--navy);color:#fff;padding:20px 26px}
+header h1{margin:0;font-size:21px}
+header p{margin:7px 0 0;font-size:13px;color:#c7d0e0;max-width:880px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:13px 26px;font-size:11.5px;color:var(--muted);border-bottom:1px solid var(--line)}
+.tag{display:inline-block;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 7px;margin-right:5px}
+.wrap{max-width:760px;margin:0 auto;padding:26px 26px 70px;position:relative}
+.node{background:#fff;border:1px solid var(--line);border-left:7px solid var(--ledger);border-radius:14px;padding:14px 16px;box-shadow:0 3px 12px rgba(11,26,51,.06);position:relative;z-index:2}
+.node .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num{font-size:13px;font-weight:800;color:#fff;background:var(--navy);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:0 0 26px}
+.nm{font-size:16px;font-weight:800;color:var(--navy)}
+.who{font-size:10px;font-weight:800;letter-spacing:.4px;border-radius:10px;padding:2px 8px;margin-left:auto;color:#fff}
+.dsc{font-size:12.5px;color:#3a4252;margin-top:7px}
+.file{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#5a6473;margin-top:7px}
+.gen{border-left-color:var(--gen)} .proxy{border-left-color:var(--proxy);border-style:dashed;background:#fbfcfe}
+.founder{border-left-color:var(--founder)} .bank{border-left-color:var(--bank)} .app{border-left-color:var(--app)} .audit{border-left-color:var(--audit)}
+.arrow{display:flex;flex-direction:column;align-items:center;color:#9fb0cc;font-size:13px;margin:3px 0;z-index:2;position:relative}
+.arrow .lab{font-size:11px;color:var(--muted);margin-bottom:1px}
+.arrow .ch{font-size:18px;line-height:1}
+.deferred{font-size:10px;font-weight:800;letter-spacing:.4px;color:#7a6a3a;background:#fff3d6;border:1px solid #e8d9a8;border-radius:10px;padding:2px 8px}
+/* feedback loops drawn as side rails */
+.loop{position:absolute;border:2px dashed;border-radius:14px;z-index:1}
+.loop .ll{position:absolute;font-size:11px;font-weight:700;background:var(--bg);padding:2px 6px;white-space:nowrap}
+.cover{right:-6px;top:120px;bottom:96px;width:46px;border-color:var(--audit)}
+.cover .ll{color:var(--audit);right:50px;top:46%}
+.learn{left:-6px;top:150px;height:150px;width:40px;border-color:var(--gen)}
+.learn .ll{color:var(--gen);left:46px;top:42%}
+@media(max-width:720px){.cover,.learn{display:none} .loopnote{display:block}}
+.loopnote{display:none;margin-top:14px;font-size:12px;color:#4a5260;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.loopnote b{color:var(--navy)}
+.foot{max-width:760px;margin:0 auto;padding:0 26px 50px;font-size:11.5px;color:var(--muted)}
+.foot code{background:#eef2f7;border-radius:4px;padding:1px 5px}
+</style></head><body>
+
+<header>
+  <h1>RinkReads — System Map</h1>
+  <p>How every layer connects, from the curriculum that defines a question to the kid who plays it. Two feedback loops make it a system, not a line: coverage (audit → generator) and learning (drops → lessons → generator).</p>
+</header>
+<div class="legend">
+  <span><span class="tag" style="background:var(--ledger)">SPINE</span>curriculum</span>
+  <span><span class="tag" style="background:var(--gen)">GENERATE</span>gauntlet</span>
+  <span><span class="tag" style="background:var(--founder)">YOU</span>founder</span>
+  <span><span class="tag" style="background:var(--bank)">LIVE</span>bank / app</span>
+  <span><span class="tag" style="background:var(--audit)">MEASURE</span>audit</span>
+</div>
+
+<div class="wrap">
+  <div class="loop cover"><span class="ll">coverage loop ↑<br>fill what's thin</span></div>
+  <div class="loop learn"><span class="ll">learning loop ↑<br>lessons</span></div>
+
+  <div class="node">
+    <div class="top"><span class="num">1</span><span class="nm">Curriculum Ledger</span><span class="who" style="background:var(--ledger)">SPINE</span></div>
+    <div class="dsc">The source of truth for WHAT to teach: 6 domains, 31 skater concepts, 152 nodes (age × concept × depth), ~860 target questions. Locked v3.1.0 after research + a coach panel + Head Coach sign-off.</div>
+    <div class="file">src/data/curriculum-ledger.json</div>
+  </div>
+  <div class="arrow"><span class="lab">"what's under target?"</span><span class="ch">▼</span></div>
+
+  <div class="node gen">
+    <div class="top"><span class="num">2</span><span class="nm">Gauntlet Generator</span><span class="who" style="background:var(--gen)">GENERATE</span></div>
+    <div class="dsc">Creates a question for a node, then runs it through: deterministic validate → curriculum confirmer → <b>debating perfectionist panel</b> → <b>Head Coach</b>. Failures are dropped and distilled into lessons that improve the next attempt. (See the Generator Workflow diagram.)</div>
+    <div class="file">tools/gauntlet-run.mjs  ·  npm run gauntlet</div>
+  </div>
+  <div class="arrow"><span class="lab">cleared the bar</span><span class="ch">▼</span></div>
+
+  <div class="node proxy">
+    <div class="top"><span class="num">3</span><span class="nm">Founder-Proxy Gate</span><span class="who" style="background:var(--proxy)">AGENT</span><span class="deferred">DESIGNED · NOT BUILT</span></div>
+    <div class="dsc">A "digital Thomas" that vets brand / strategy / learner fit and forwards only what's worthy. Designed; slots in here when built.</div>
+    <div class="file">spec: docs/superpowers/specs/2026-06-04-founder-approval-layer-design.md</div>
+  </div>
+  <div class="arrow"><span class="ch">▼</span></div>
+
+  <div class="node founder">
+    <div class="top"><span class="num">4</span><span class="nm">Founder Review Dashboard</span><span class="who" style="background:var(--founder);color:#33270a">YOU</span></div>
+    <div class="dsc">Each question renders exactly as a kid sees it, with the gate history beside it. You Approve, Edit, Send back, or Reject. Approving is the only path to live.</div>
+    <div class="file">#review  ·  src/data/review-queue.json</div>
+  </div>
+  <div class="arrow"><span class="lab">Approve</span><span class="ch">▼</span></div>
+
+  <div class="node bank">
+    <div class="top"><span class="num">5</span><span class="nm">Live Bank</span><span class="who" style="background:var(--bank)">LIVE</span></div>
+    <div class="dsc">The real, served question bank, keyed by age level. The first approval is what un-empties the app.</div>
+    <div class="file">src/data/bank.json</div>
+  </div>
+  <div class="arrow"><span class="ch">▼</span></div>
+
+  <div class="node app">
+    <div class="top"><span class="num">6</span><span class="nm">The App</span><span class="who" style="background:var(--app)">PLAY</span></div>
+    <div class="dsc">Kids play the questions. Shows a friendly "new content coming" state until content lands.</div>
+    <div class="file">src/App.jsx  ·  ice-iq.vercel.app</div>
+  </div>
+  <div class="arrow"><span class="lab">count coverage</span><span class="ch">▼</span></div>
+
+  <div class="node audit">
+    <div class="top"><span class="num">7</span><span class="nm">Coverage Audit</span><span class="who" style="background:var(--audit)">MEASURE</span></div>
+    <div class="dsc">Counts live questions per ledger node vs the ~860 target, then tells the generator what's still thin — closing the loop back to steps 1–2.</div>
+    <div class="file">npm run audit:curriculum</div>
+  </div>
+
+  <div class="loopnote">
+    <b>Coverage loop</b> (7 → 2): the audit feeds the generator which nodes are under target, so <code>--fill-gaps</code> always works on what's missing.<br><br>
+    <b>Learning loop</b> (2 → 2): every dropped question writes a rule into <code>lessons.json</code> that goes into the next creator prompt, so quality compounds.
+  </div>
+</div>
+
+<div class="foot">
+  Companion diagrams: <code>public/gauntlet.html</code> (original full design vision) · <code>public/generator-workflow.html</code> (the implemented generator, step 2 in detail). The geometry solver and the founder-proxy gate from the original design are the deferred pieces that slot into steps 2 and 3.
+</div>
+</body></html>

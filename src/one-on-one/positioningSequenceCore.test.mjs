@@ -203,7 +203,7 @@ test('restore validates every submitted freeze, holder and actor identity and pr
   assert.deepEqual(core.restorePositioningSession(JSON.stringify(session)), session);
   session = core.movePositioningPlayer(session, safePoint(1));
   assert.deepEqual(core.restorePositioningSession(JSON.stringify(session)), session);
-  assert.throws(() => core.submitPositioningRead(session, '   '), /reason/i);
+  assert.throws(() => core.submitPositioningRead(session, null), /reason/i);
   assert.throws(() => core.submitPositioningRead(session, 'a'.repeat(601)), /600/);
   const playing = core.advancePositioningPlayback(core.submitPositioningRead(session, 'Protect space'), .4);
   assert.deepEqual(core.restorePositioningSession(JSON.stringify(playing)), playing);
@@ -229,4 +229,22 @@ test('restore validates every submitted freeze, holder and actor identity and pr
   }
   assert.equal(core.restorePositioningSession('{bad'), null);
   assert.throws(() => core.createPositioningSession('unknown'), /template/i);
+});
+
+test('optional reasons can stay empty across all three reads and exact session restoration', () => {
+  for (let size = 1; size <= 5; size++) {
+    let session = core.createPositioningSession(template(size).id);
+    for (let read = 0; read < 3; read++) {
+      session = core.movePositioningPlayer(session, safePoint(size));
+      session = read === 0 ? core.submitPositioningRead(session) : core.submitPositioningRead(session, read === 1 ? '   ' : '');
+      assert.equal(session.answers[read].reason, '');
+      assert.deepEqual(core.restorePositioningSession(JSON.stringify(session)), session);
+      if (read < 2) session = core.advancePositioningPlayback(session, 1);
+    }
+    assert.equal(session.phase, 'complete');
+    assert.deepEqual(session.answers.map(answer => answer.reason), ['', '', '']);
+  }
+  const old = core.submitPositioningRead(core.movePositioningPlayer(core.createPositioningSession(template(1).id), safePoint(1)), 'Keep my existing explanation.');
+  const bytes = JSON.stringify(old);
+  assert.equal(JSON.stringify(core.restorePositioningSession(bytes)), bytes);
 });

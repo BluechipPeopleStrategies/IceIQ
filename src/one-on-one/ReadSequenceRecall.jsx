@@ -187,11 +187,10 @@ export default function ReadSequenceRecall({ session, playerId, renderBoard, dra
         <h3 ref={feedbackHeading} tabIndex="-1">{result.matchesPlay ? 'That matches the order you watched.' : 'Take another look at what changed.'}</h3>
         <p>{result.matchesPlay ? 'Now tell a coach what changed from one moment to the next.' : 'These moments appeared in a different order in your play. Use the captions and larger pictures, or Show the order for help.'}</p>
         {usedAnswer && <p>You used Show the order. Your recall records this help.</p>}
-        <p className="rs-hint">This checks the order shown. Discuss your hockey choices and support plan with a coach.</p>
+        <p className="rs-hint">Watch how the puck and players move from one moment to the next.</p>
         <button type="button" onClick={download}>Download recall</button>
       </div>}
       <p className="rs-notice" role="status">{notice || 'Your order and optional note save on this device when you check.'}</p>
-      <details className="rs-recall-boundary"><summary>For the coach</summary><p>The three pictures are the opening and the results of the first two chosen actions. The final support plan stays in the main reflection: it can finish in the same position and is not another ordering card. This exercise checks chronology, not tactical correctness, scanning skill or on-ice transfer. No score, mastery mark or AI opinion is added.</p><p>Teaching basis: scanning before and after receiving; noticing support and pressure again as the puck changes. New recall content remains a coach-review draft.</p></details>
     </div>}
   </section>;
 }

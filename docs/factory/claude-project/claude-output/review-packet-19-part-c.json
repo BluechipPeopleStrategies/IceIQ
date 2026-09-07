@@ -1,0 +1,402 @@
+{
+  "scenariosOwned": ["exp26b-u11-018"],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q1",
+      "baseContentHash": "1c6a63c1cded46877ef3c4881aa6a2470f16f83b6ef9511085416dfc04a104ff",
+      "verdict": "repair",
+      "reason": "The question's own claim (D1 pressures the puck carrier F1) is geometrically sound: D1(16,3)->F1(12,6) unit vector (-0.8,0.6) exactly equals D1's facing vector (cos 2.5, sin 2.5)=(-0.801,0.598), distance 5.0m -- D1 is verifiably closing on and facing F1. However this question's rendered scene is broken by a scene-wide setup defect: F1's facing=0 contradicts the briefing's stated 'F1 carries toward the left net' (attack is -x). Using the renderer's own carried-puck formula (x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing)), F1's carried puck currently renders at (13,6.7) -- ahead of F1 toward +x, the RIGHT net, the opposite of the stated direction of travel. Every question in this scene shares that same rendered (wrong) picture, so geometry fails scenario-wide even though this question's own answer key is correct. Repaired by setting F1.facing=3.1 (see scenario repair), which relocates the rendered puck to (10.97,5.34), ahead of F1 toward -x/the left net, matching the briefing.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (a1, away/Gold) at (12,6), facing 0 rad (toward +x), owns the puck.",
+          "D1 (h2, home/Navy) at (16,3), facing 2.5 rad; unit vector toward F1 is (-0.8,0.6), which equals (cos 2.5, sin 2.5)=(-0.801,0.598) -- D1 is facing directly at F1.",
+          "YOU (h1, home/Navy) at (12,-2); F2 (a2, away/Gold) at (17,-3).",
+          "G (goalie) at (26,0) labelled team=home, facing 3.1 rad."
+        ],
+        "stated": [
+          "Briefing: Gold attacks -x; F1 carries toward the left net; D1 is already pressuring F1.",
+          "Cue: 'D1 is already pressuring F1.'"
+        ],
+        "unproven": [
+          "Whether D1 will actually stop F1, or what F1/F2 do next; this is a static freeze, not a recorded sequence.",
+          "F1's carried-puck rendering, computed from its facing, currently contradicts the stated direction of travel (see geometry evidence above) -- a scene-wide defect, not specific to this question's own text."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q2",
+      "baseContentHash": "01ee168bf7b7d847637d0a8f8f4f6222bfdea83b423d64c2b5e4f80336f4669e",
+      "verdict": "repair",
+      "reason": "This question's own text is already correct: a historical repair (repairs/u11-repairs.json, receipt for exp26b-u11-018-q2, afterContentHash matches this row's baseContentHash exactly) already fixed an earlier 'right net' key to 'left net', consistent with the -x attack direction, and that fix is confirmed present in the current packet content. Multi-select correctly keys (a) F2's route toward the left net and (b) D1's ability to stay with F1; (c) is a believable puck-tunnel-vision distractor, not a joke option. This question's remaining defect is the scene-wide F1-facing/carried-puck contradiction described in q1's row, which this question's rendered scene shares.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (a1) at (12,6) owns the puck; D1 (h2) at (16,3) faces directly at F1 (see q1 evidence); F2 (a2) at (17,-3).",
+          "Option (a) already reads 'left net', matching the -x Gold attack direction stated in the briefing."
+        ],
+        "stated": [
+          "Briefing: Gold attacks -x; F1 carries toward the left net; F2 trails on the far side."
+        ],
+        "unproven": [
+          "F1's carried-puck rendering, computed from its facing=0, currently contradicts the stated left-net direction of travel -- a scene-wide defect (see q1's row), not specific to this question's own text."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If D1 is clearly about to be beaten cleanly by F1, a coach could defensibly argue for prioritizing tighter puck support for one more read cycle before shifting full attention to F2 -- that is a matter of timing/emphasis, not the same as option (c)'s 'the puck alone, without scanning F2', which still requires checking F2 shortly after."
+    },
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q3",
+      "baseContentHash": "b5e5261b14a3b31af7995bed03dee94e042cdf7753838f28c364583f9dc82b2f",
+      "verdict": "repair",
+      "reason": "Sibling defect to the one already found and fixed on q2 (historical finding u11-p1-new-018-net-direction, repairs/u11-repairs.json): option (a) here still reads 'Find F2 and the right net', directly contradicting the -x/left-net attack direction stated in the briefing and matching every other linked question (q2's fixed option, q4's prompt both say 'left net'). This is the exact class of miss the project's own lessons warn about -- fixing one linked question's net-direction error does not fix its sibling. The underlying sequence logic (identify the open runner and net, then position, then reassess as pressure changes) is a defensible situation-specific order once the text is corrected. Also carries the scene-wide F1-facing/carried-puck defect described in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Option (a) text: 'Find F2 and the right net' -- the scene has only one attack, toward -x/the left net (F1's stated target, and q2/q4's own wording)."
+        ],
+        "stated": [
+          "Briefing: Gold attacks -x; F1 carries toward the left net. No second, right-net-directed attack is described anywhere in this scene."
+        ],
+        "unproven": [
+          "F1's carried-puck rendering, computed from its facing=0, currently contradicts the stated left-net direction of travel -- a scene-wide defect (see q1's row), not specific to this question's own answer/sequence logic."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could defensibly place 'skate into a useful relationship' before precisely pinning F2's exact route, if YOU's gap is already large enough that closing distance is the more urgent first action; order can reasonably vary once general dual-attacker awareness already exists from the pre-scan, since scanning and moving can overlap."
+    },
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q4",
+      "baseContentHash": "5fcb72170586fb79812df8861e39d731fa322d251aa796d122ce3faf0def0b7a",
+      "verdict": "repair",
+      "reason": "Verified numerically with the real coordinate math (not eyeballed): YOU starts at (12,-2), 5.099m from F2(17,-3) -- computed as hypot(17-12,-3-(-2)). The given reference point (10,-1.5) is 7.159m from F2 -- computed as hypot(17-10,-3-(-1.5)) -- i.e. FARTHER from F2 than the starting position, directly contradicting the prompt's own instruction 'Move YOU toward F2'. The structural validator cannot catch this because it only checks that a position reference differs from the actor's start by >=0.1m and stays on ice (both true here); it does not check directional claims like 'toward'/'away', which is exactly the class of miss the project's calibration lessons flag (lesson 2: moving and staying on ice are not sufficient; the claimed relationship must be calculated). The feedback text ('This point closes the defended net-side relationship to F2') is also factually false given these numbers -- the point opens the distance, it does not close it.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) start (12,-2); F2 (a2) at (17,-3); distance(start,F2)=5.099m.",
+          "Given reference (10,-1.5); distance(reference,F2)=7.159m -- farther from F2 than the start, verified by direct calculation."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU toward F2 while staying between F2 and the left net.'",
+          "Explanation claims the reference 'closes the defended net-side relationship to F2.'"
+        ],
+        "unproven": [
+          "F1's carried-puck rendering, computed from its facing=0, currently contradicts the stated left-net direction of travel -- a scene-wide defect (see q1's row)."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A coach could defensibly value staying net-side/goal-side over closing distance quickly, so a replacement point that does not fully close the gap (or even holds distance while cutting the passing lane) is not automatically wrong -- position questions are one example, not an exclusive dot. But the specific point given in the original content moves away from F2 while the prompt says 'toward F2'; that is a coordinate error, not a defensible alternative reading. The repair proposes (14.01,-2.8): 3.0m from F2 along the real F2-to-left-net line, verifiably closer than the 5.099m starting distance and still on the net side of F2."
+    },
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q5",
+      "baseContentHash": "b1c1fbc93e6b20147e3edafa7b9c6fb57e62dfab2b0d0a428b8e38f5408695f0",
+      "verdict": "repair",
+      "reason": "This question explicitly states its own changed condition ('D1 falls behind F1 and calls for help') rather than silently assuming it, satisfying the calibration requirement to state hypothetical changes explicitly. Option (a) is a defensible reassess-and-support response; (b) and (c) are plausible over-reactions (abandon everything vs. tunnel-vision on one attacker), not joke distractors. No named player outside the established roster is introduced. This question's own content and answer are sound; it is marked repair only because it shares the scene-wide F1-facing/carried-puck defect described in q1's row (any scene/setup fix changes every linked question's content hash).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Base scene: D1 (h2) at (16,3) pressuring F1 (a1) at (12,6); F2 (a2) at (17,-3)."
+        ],
+        "stated": [
+          "Question explicitly introduces the hypothetical: 'D1 falls behind F1 and calls for help.'"
+        ],
+        "unproven": [
+          "How far behind D1 falls, or whether F1 shoots/passes as a result, is not specified beyond the stated hypothetical.",
+          "F1's carried-puck rendering, computed from its facing=0, currently contradicts the stated left-net direction of travel in the base scene -- a scene-wide defect (see q1's row)."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If F2 is clearly the more immediately dangerous, closer-to-net threat at this instant, a coach could defensibly argue for committing fully to F2 even before finishing a fresh read on F1/D1. Option (c) ('stay on F2 without checking F1') is written here as the wrong extreme, but becomes more defensible the more clearly F2 is already alone in a dangerous lane -- the question's coaching framing is the general case, not an absolute rule."
+    },
+    {
+      "scenarioId": "exp26b-u11-018",
+      "questionId": "exp26b-u11-018-q6",
+      "baseContentHash": "8277b72a1b05d19f75b27012d5e76999dc60d2daa32f152db946db79fe314909",
+      "verdict": "repair",
+      "reason": "Reflection question, no answer key, no writing requirement implied. Explanation stays within the established scene (route to attacker + net, teammate pressure) without inventing new rule/contact/safety claims. Lowercase 'you'/'your' here address the reader generically and are grammatically correct ('you can limit'), distinct from the capitalized 'YOU' actor label used elsewhere in this scene. Marked repair only because it shares the scene-wide F1-facing/carried-puck defect described in q1's row.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "No options/answer key for this explain-type question, per contract."
+        ],
+        "stated": [
+          "Explanation: backchecking connects a route to an attacker and the net while reading teammate pressure, versus simply skating toward the puck."
+        ],
+        "unproven": [
+          "No specific written response is required or graded; response length or content cannot be inferred to indicate mastery.",
+          "F1's carried-puck rendering, computed from its facing=0, currently contradicts the stated left-net direction of travel -- a scene-wide defect (see q1's row)."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A defensible answer could focus purely on gap control and stick-on-puck pressure without naming a specific attacker by role, since at U11 backchecking is often first taught as a general habit (get between your assignment and the net) before assignment-specific reads are introduced."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u11-018",
+      "baseVersion": 1,
+      "baseScenarioHash": "fc6dd974da29b3be8e237af692e5d34cfb9a8d9242e89873a98bfdb5ffe7da57",
+      "replacement": {
+        "id": "exp26b-u11-018",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Backcheck the open runner",
+        "family": "backcheck-open-runner",
+        "topic": "Backchecking",
+        "objective": "Choose a backcheck relationship for the uncovered attacker while a teammate pressures the puck.",
+        "briefing": "Gold attacks -x. F1 carries toward the left net and D1 is already pressuring F1. F2 trails on the far side, farther from the net than YOU; YOU must scan F2 rather than simply chase the puck.",
+        "setup": {
+          "actors": [
+            { "id": "h1", "label": "YOU", "team": "home", "role": "skater", "x": 12, "y": -2, "facing": 0.2 },
+            { "id": "a1", "label": "F1", "team": "away", "role": "skater", "x": 12, "y": 6, "facing": 3.1 },
+            { "id": "a2", "label": "F2", "team": "away", "role": "skater", "x": 17, "y": -3, "facing": 0 },
+            { "id": "h2", "label": "D1", "team": "home", "role": "skater", "x": 16, "y": 3, "facing": 2.5 },
+            { "id": "g", "label": "G", "team": "away", "role": "goalie", "x": 26, "y": 0, "facing": 3.1 }
+          ],
+          "puck": { "owner": "a1" }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "D1 is already pressuring F1.",
+          "F2 is the uncovered trailing attacker.",
+          "YOU starts net-side of F2, level with F1 up ice."
+        ],
+        "tags": ["experimental", "expansion"],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-018-q1",
+            "type": "choice",
+            "prompt": "Who is already pressuring the puck carrier?",
+            "options": [
+              { "id": "a", "text": "YOU" },
+              { "id": "b", "text": "D1" },
+              { "id": "c", "text": "F2" }
+            ],
+            "answer": ["b"],
+            "basis": "scene",
+            "explanation": "D1 is shown near F1 and is the stated puck pressure; YOU must read the other attacker."
+          },
+          {
+            "id": "exp26b-u11-018-q2",
+            "type": "multi",
+            "prompt": "What belongs in your backcheck read?",
+            "options": [
+              { "id": "a", "text": "F2’s route toward the left net" },
+              { "id": "b", "text": "D1's ability to stay with F1" },
+              { "id": "c", "text": "The puck alone, without scanning F2" }
+            ],
+            "answer": ["a", "b"],
+            "basis": "coaching",
+            "explanation": "The uncovered runner toward the left net and D1’s pressure on F1 define the backcheck job."
+          },
+          {
+            "id": "exp26b-u11-018-q3",
+            "type": "sequence",
+            "prompt": "Arrange this backcheck check-in.",
+            "options": [
+              { "id": "a", "text": "Find F2 and the left net" },
+              { "id": "b", "text": "Skate into a useful relationship" },
+              { "id": "c", "text": "Re-check F1, F2 and D1" }
+            ],
+            "answer": ["a", "b", "c"],
+            "basis": "coaching",
+            "explanation": "The route protects the open runner, then updates as the teammate pressure changes."
+          },
+          {
+            "id": "exp26b-u11-018-q4",
+            "type": "position",
+            "prompt": "Move YOU toward F2 while staying between F2 and the left net.",
+            "actorId": "h1",
+            "reference": { "x": 14.01, "y": -2.8 },
+            "basis": "coaching",
+            "explanation": "This point closes the distance to F2 while staying on the net side of F2's route, without pretending that one spot solves the play."
+          },
+          {
+            "id": "exp26b-u11-018-q5",
+            "type": "choice",
+            "prompt": "D1 falls behind F1 and calls for help. How should YOU respond?",
+            "options": [
+              { "id": "a", "text": "Keep F2 in view while deciding whether the carrier now needs support" },
+              { "id": "b", "text": "Leave both attackers to chase the puck" },
+              { "id": "c", "text": "Stay on F2 without checking F1" }
+            ],
+            "answer": ["a"],
+            "basis": "coaching",
+            "explanation": "D1's changed position may shift the job. Re-scan both attackers and support the more dangerous reachable lane."
+          },
+          {
+            "id": "exp26b-u11-018-q6",
+            "type": "explain",
+            "prompt": "How is a backcheck different from simply skating toward the puck?",
+            "basis": "coaching",
+            "explanation": "It connects your route to an attacker and the net, so you can limit a pass or shot while reading the teammate pressure."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-018-q1",
+        "exp26b-u11-018-q2",
+        "exp26b-u11-018-q3",
+        "exp26b-u11-018-q4",
+        "exp26b-u11-018-q5",
+        "exp26b-u11-018-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": ["exp26b-u11-018-q1", "exp26b-u11-018-q2", "exp26b-u11-018-q3", "exp26b-u11-018-q4", "exp26b-u11-018-q5", "exp26b-u11-018-q6"],
+          "issue": "F1.facing=0 (toward +x) contradicts the briefing's stated 'F1 carries toward the left net' (attack is -x). Using the renderer's carried-puck formula, this rendered the carried puck at (13,6.7) -- ahead of F1 toward the RIGHT net -- the opposite of the stated direction, visible in every question's shared scene.",
+          "change": "Set F1 (actor a1) facing from 0 to 3.1 (matches the -x/left-net convention already used elsewhere in this same batch, e.g. actor 'g' and multiple sibling scenarios' Gold-team facings).",
+          "evidence": "Computed with the real carried-puck formula (x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing)): before (facing=0) -> puck (13, 6.7); after (facing=3.1) -> puck (10.97, 5.34), now ahead of F1 toward -x/the left net, matching the briefing. Before scenarioSnapshotHash=fc6dd974da29b3be8e237af692e5d34cfb9a8d9242e89873a98bfdb5ffe7da57 (matches packet manifest); after scenarioSnapshotHash=0d3d9bd9de0684f3d5cd97ab4ff788f4189e4c30813c1dea943b1cb016f9ffa6, recomputed with validation/tools/claude-return-core.mjs's scenarioSnapshotHash on the exact replacement object."
+        },
+        {
+          "questionIds": ["exp26b-u11-018-q1", "exp26b-u11-018-q2", "exp26b-u11-018-q3", "exp26b-u11-018-q4", "exp26b-u11-018-q5", "exp26b-u11-018-q6"],
+          "issue": "Goalie actor 'g' (x=26,y=0,facing=3.1) is labelled team=home/Navy. Under this scene's own briefing ('Gold attacks -x') and the bank-wide 'Navy/home attacks +x' default, Navy's own net sits at -x and Gold's own net sits at +x, so a goalie at the +x end should be team=away/Gold, not home. Cross-checked against bank-snapshot.json: this exact (x=26,y=0,facing=3.1) template pairs with team=away in the large majority of scenarios across the bank (dozens of matches), and with team=home only in this scenario and its 4 immediate exp26b-u11-01X neighbours (015-017, 019) -- a localised authoring slip in one small batch, not an intentional variant.",
+          "change": "Change goalie actor 'g' team from 'home' to 'away' (position/facing unchanged, matching the majority template).",
+          "evidence": "node bank-snapshot.json scan: 139 skaters/goalies use the ~pi-facing '-x' template bank-wide; the (26,0,facing:3.1) goalie template appears with team=away in the overwhelming majority of scenarios (e.g. exp26-u9-014, exp26-u11-006/013/014/015/016/017/013, exp26b-u11-006/013/014/021/023) and with team=home only in exp26b-u11-015/016/017/018/019 -- this scenario's copy is one of that small, internally-inconsistent cluster. This repair addresses only exp26b-u11-018; the same likely defect in 015/016/017/019 is out of this agent's assigned scope and is flagged in the report for the controller."
+        },
+        {
+          "questionIds": ["exp26b-u11-018-q3"],
+          "issue": "q3 option (a) read 'Find F2 and the right net', contradicting the -x/left-net attack direction stated in the briefing and matching every other linked question (q2's already-fixed option and q4's prompt both say 'left net'). This is the identical defect class already found and fixed on sibling question q2 by an earlier repair (repairs/u11-repairs.json, finding id u11-p1-new-018-net-direction), left unfixed on q3.",
+          "change": "Changed q3 option (a) text from 'Find F2 and the right net' to 'Find F2 and the left net'. Sequence order (a,b,c) and all other text unchanged.",
+          "evidence": "Before text: 'Find F2 and the right net'; after text: 'Find F2 and the left net'. Before questionContentHash=b5e5261b14a3b31af7995bed03dee94e042cdf7753838f28c364583f9dc82b2f; after questionContentHash=91b9d1dfab218c958d6142755b89062c6950053f24dbc1ae0d10e8eb3be00dc2, both recomputed with validation/tools/question-batch-core.mjs's questionContentHash on the exact before/after scenario+question objects."
+        },
+        {
+          "questionIds": ["exp26b-u11-018-q4"],
+          "issue": "q4's reference point (10,-1.5) is 7.159m from F2(17,-3) -- farther than YOU's own starting distance of 5.099m from F2 -- directly contradicting the prompt 'Move YOU toward F2'. The paired explanation's claim that the point 'closes the defended net-side relationship to F2' is also false given these numbers.",
+          "change": "Changed q4 reference from (10,-1.5) to (14.01,-2.8): computed as the point 3.0m from F2(17,-3) along the real vector toward the left net's centre (-27.13,0), then rounded to 2 decimals. Reworded the explanation to state accurately that the point 'closes the distance to F2 while staying on the net side of F2's route.'",
+          "evidence": "distance(start(12,-2),F2(17,-3)) = hypot(5,-1) = 5.099m. Before reference (10,-1.5): distance to F2 = hypot(7,-1.5) = 7.159m (farther, contradicting the prompt). After reference (14.01,-2.8): distance to F2 = hypot(2.99,-0.2) = 2.997m (closer, confirmed with validation/src's isCoachRoutePoint verifying it stays on ice). Before questionContentHash=5fcb72170586fb79812df8861e39d731fa322d251aa796d122ce3faf0def0b7a; after questionContentHash=c0ffe3de31c36df7c76cd21900874fa59a3d0610e5b7fc5d73bac435890ec8d4 (recomputed on the exact final replacement question, including the reworded explanation)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-018-q1",
+            "contentHash": "334ca522b400860c167a88f78b1d0b5cee964b6dc553acd3c6fee5bdb2a59fab",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "F1 now faces -x (3.1 rad), matching 'carries toward the left net'; carried puck renders at (10.97,5.34), ahead of F1 toward the left net. D1's facing (2.5) still exactly matches its unit vector to F1 (-0.8,0.6). Goalie now team=away, resolving the roster mismatch. validateExperimentalBank(replacement) returns no errors."
+          },
+          {
+            "questionId": "exp26b-u11-018-q2",
+            "contentHash": "cacb8e9dd3e0322c1fe498961e46751ea7f1120688790db7474a0d81d7b6c9ff",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Text unchanged from the already-repaired original (left-net wording retained); now also sits in a scene whose facing/goalie are internally consistent."
+          },
+          {
+            "questionId": "exp26b-u11-018-q3",
+            "contentHash": "91b9d1dfab218c958d6142755b89062c6950053f24dbc1ae0d10e8eb3be00dc2",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Option (a) now reads 'Find F2 and the left net', consistent with q2, q4 and the briefing's stated -x attack direction. Sequence logic (find target, position, reassess) remains a defensible situation-specific order."
+          },
+          {
+            "questionId": "exp26b-u11-018-q4",
+            "contentHash": "c0ffe3de31c36df7c76cd21900874fa59a3d0610e5b7fc5d73bac435890ec8d4",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Reference (14.01,-2.8) is 2.997m from F2, verifiably closer than the 5.099m starting distance -- now consistent with 'Move YOU toward F2'. isCoachRoutePoint confirms the point stays on ice; positionSubjectIssue returns null (actorId h1 correctly matches the YOU subject named in the prompt). Explanation reworded to match the actual (closing) relationship."
+          },
+          {
+            "questionId": "exp26b-u11-018-q5",
+            "contentHash": "1104cfdeac712c37e8b53fa9e51f2bce1e7e7bef20c22492cb326b0ce2cfcbd8",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Text unchanged; this question's own hypothetical logic did not depend on F1's facing or the goalie, and now sits in an internally consistent scene."
+          },
+          {
+            "questionId": "exp26b-u11-018-q6",
+            "contentHash": "177d9f63001046acf98e66524db01eb0e9ac2bc6c857fa91a98c5fd2d3b175f4",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Reflection text unchanged, no answer key, still consistent with the scene's teaching objective; now sits in an internally consistent scene."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-05T23:40:00Z",
+      "access": "read",
+      "scope": "Read directly (PDF pages 23-25, printed pages 17-19, '10-and-Under' section) after WebFetch's text extraction failed on this scanned/embedded-image PDF (Read tool used directly on the fetched PDF per the assignment's fallback guidance). Page 19's 'TEAM PLAY / Defensive Concepts' list explicitly names 'backchecking', 'body position: man-you-net' and 'basic defensive zone coverage' as 10-and-Under team-play topics. This supports age-appropriate TOPIC PLACEMENT for this U11 backchecking scenario only -- it does not certify this scene's exact geometry, coordinates, or answer key, and is a US age-band document adapted for a Canadian coaching context per the scenario's own 'use' note.",
+      "jurisdiction": "USA Hockey (adapted for Canadian/experimental coaching context; not a Hockey Canada rule source)",
+      "ageFormat": "10-and-Under (adapted here to U11)",
+      "claim": "Backchecking and defensive-zone-coverage awareness for an uncovered attacker is an age-appropriate 10-and-Under/U11 team-play topic."
+    }
+  ],
+  "remainingQuestionIds": []
+}

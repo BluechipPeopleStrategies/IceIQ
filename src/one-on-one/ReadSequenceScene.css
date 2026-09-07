@@ -13,19 +13,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 31px;
-  padding: 4px 7px;
-  border: 2px solid #fffdf3;
-  border-radius: 6px;
-  background: #0b1a33;
+  min-width: 14px;
+  padding: 1px 3px;
+  border: 1px solid #ffffff99;
+  border-radius: 5px;
+  background: linear-gradient(145deg,#203a54e8,#0b1a33d9);
   color: #fffdf3;
-  box-shadow: 0 2px 6px #0b1a3366;
-  font: 800 12px/1.1 Inter, system-ui, sans-serif;
+  box-shadow: inset 0 1px #ffffff44, 0 2px 5px #0b1a332b;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font: 750 8px/1.2 Inter, system-ui, sans-serif;
   white-space: nowrap;
   user-select: none;
-  transform: translateY(-16px);
+  transform: translateY(-8px);
 }
-.rs-scene-player-chip.away { color: #0b1a33; background: #e0ba63; border-radius: 2px; }
+.rs-scene-player-chip.away { color: #0b1a33; background: linear-gradient(145deg,#f3d791ed,#c9a24bd9); }
 .rs-scene-player-chip.movable { outline: 2px solid #8b5b06; outline-offset: 2px; }
 .rs-scene3d .rs-scene-target {
   position: relative;
@@ -75,3 +77,5 @@
 .rs-scene-target:focus-visible .rs-scene-target-number { outline: 3px solid #fffdf3; outline-offset: 2px; }
 .rs-scene-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 760px) { .rs-scene3d { height: 420px; border-radius: 13px; } }
+.rs-root .rs-first-action-hit { width: 44px; height: 56px; min-width: 44px; padding: 0; border: 0; border-radius: 45%; background: transparent; cursor: pointer; touch-action: pan-y; }
+.rs-first-action-hit:focus-visible, .rs-first-action-hit:hover { outline: 2px solid #c9a24b; outline-offset: 3px; background: #c9a24b18; }

@@ -1,0 +1,843 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-32",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q1",
+      "baseContentHash": "8d289be4d8ff84fafafe787e5e2a1dac70ca8b19c8a52ce9aaa79003bc996124",
+      "verdict": "retain",
+      "reason": "F1 is verifiably the nearest Navy skater to the net-front/goalie area (2.24m vs 9.43-16.55m for the others); the scene basis and answer key match computed geometry.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q2",
+      "baseContentHash": "727d8573f3e352a366443dbc75d1e3b8c33355633bd40c52f4523cfe0e2e1879",
+      "verdict": "retain",
+      "reason": "Both correct checks (relative position of F1/goalie to the shot; whether the puck can beat Gold 1) are supported by the computed shot lane; the guarantee-framed distractor is thematically central (the objective explicitly rejects promising a goal), not a lazy giveaway.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "A defensible alternative check some coaches would add: whether the shooter has time before a second defender closes the lane, since a valid screen still does not help if the release itself is rushed or blocked earlier.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q3",
+      "baseContentHash": "8bcac7c7ab290f121b75f617b8a2091c1577045cb731ddf1a09a93f84df49c9c",
+      "verdict": "repair",
+      "reason": "AUTHORING-CONTRACT.md explicitly bars implying a fixed look-decide-execute order for reads that can overlap (\"Scanning and moving can overlap. Do not imply a player must stop scanning, wait to look for pressure, or follow an artificial 'look, decide, execute' order for every read.\"). The base explanation (\"The options remain conditional; timing and safe execution are outside this static example.\") hedges about timing/execution but never says the first two reads (lane defender, net-front picture) can occur in either order or together, so the sequence question reads as enforcing one mandatory scan order. This is the same class of issue the calibration adjudication resolved for U13-010 q3 by clarifying overlap rather than removing the format.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "A defenceman could just as reasonably scan the net-front picture before or while reading the lane defender; only the final release genuinely has to come last, since it depends on what those two reads show.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q4",
+      "baseContentHash": "52e378f9fd45f727557642b23f1891f0c994d1284b1299cccdad34058dda32ff",
+      "verdict": "retain",
+      "reason": "Reference point (13,3) is on ice (verified with isCoachRoutePoint on the carried-puck offset) and genuinely shifts the shot lane away from F1 (recomputed lane at x=24 gives y≈0.62 vs F1's actual y=1, a 0.38m gap versus 0.1m before the move), so the hedge \"recheck traffic instead of assuming the old screen still applies\" is accurate rather than an overclaim.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "YOU could instead shift laterally without changing x much, testing angle on Gold 1 without disturbing whether F1 remains a screen at all.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q5",
+      "baseContentHash": "457a895eeea45e00ce04aea04e23da045a5132e0cd4c1656ac8dec5a20c4d2bf",
+      "verdict": "retain",
+      "reason": "The hypothetical (F1 moves away) is explicitly flagged as a change to the static scene, not an invented fact; the two correct checks (recheck lane/passing options, check for any remaining screen) follow logically, and this question is not a verbatim restatement of q2 or q8 since it is conditioned on a stated hypothetical change rather than the initial picture.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "A defensible alternative is checking whether D2 or F2 is a better outlet than shooting at all, since losing the screen can make a lateral pass more valuable than forcing the point shot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q6",
+      "baseContentHash": "899f46deee5b80b942551ba3d25d3c792ac5797b7f3d2186fe2a7a1ac50f3685",
+      "verdict": "retain",
+      "reason": "This reflection's use of \"always best\" is the object of critique, not an unlabelled absolutist distractor; it directly reinforces the stated objective (read traffic without promising a goal) and has no answer key to leak.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "Feedback could also affirm when a screened shot IS a strong read (the lane and traffic checks actually pass), so athletes learn both directions of the same judgment, not only the caution.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q7",
+      "baseContentHash": "66b26520a6444ad8bd54e8810ba98e87dcbccd48a747a6a5ae3cdadacef762f3",
+      "verdict": "retain",
+      "reason": "Correct option (a) names the actual screen relationship (F1 near the net-front lane) and asks for a check, matching the scene; the two wrong options are plausible overclaims (guarantee framing, and treating a screen alone as sufficient), consistent with the scenario's teaching objective rather than being throwaway jokes.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "'D2 is trailing if I need a second option' is an equally valid message, since naming a backup plan is as defensible as naming the screen.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q8",
+      "baseContentHash": "29fb26e130354b6ce17885fe94196407e02fd5335ce409b276b7a9d38beaff7e",
+      "verdict": "retain",
+      "reason": "Both correct cues (F1 remaining a useful screen; F2/slot reachable) are real, distinct considerations from q2/q5's checks (Gold 1's shot-blocking ability; whether F1 moved away), so this is reinforcement of the same objective through a different specific fact pattern rather than a verbatim duplicate.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "Whether the goalie has already adjusted to see around F1 is an equally useful cue, since active goalie repositioning can matter as much as F1/F2’s own availability.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q9",
+      "baseContentHash": "61c346eca47f16cc1a2e2863f9d5790039f9703800b7beeb2e6950244afb0388",
+      "verdict": "retain",
+      "reason": "Reference point (12.5,6.3) is on ice (verified with isCoachRoutePoint) and the recomputed shot lane at x=24 lands within 0.12m of F1's actual position, so \"retaining the screen relationship\" is geometrically accurate, distinguishing this from q4's deliberately different (screen-uncertain) reference point.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "YOU could instead hold the original spot and have D2 walk the line for a different angle, keeping the screen without moving YOU at all.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "questionId": "exp26-u15-010-q10",
+      "baseContentHash": "36e8d07f0df36201eb11fc21a133fd4b229899e79c7e87b845d9d6b4d1bca92f",
+      "verdict": "retain",
+      "reason": "This reflection reuses q5's stated hypothetical (F1 moves away) but asks for an open explanation of what changes, rather than repeating q5's graded multi-select; no answer key exists to leak and the prompt does not restate q6's general reflection.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (11,7) owns the puck; D2 (12,-6); F1 (24,1); F2 (18,-5); Gold A1 (17,5); Gold A2 (22,0); Gold goalie G (26,0).",
+          "Carried-puck position for YOU with facing=0, computed via the renderer formula: x=12, y=7.7.",
+          "Line from puck (12,7.7) to goalie (26,0) passes within 0.1m of F1 (24,1) at x=24, and within 0.05m of A1 (17,5) at x=17.",
+          "Distances from each Navy skater to the goalie (26,0): YOU 16.55m, D2 15.23m, F1 2.24m, F2 9.43m -- F1 is nearest.",
+          "Goalie G sits at x=26, close to Gold's own net near x≈27.13 per the authoring contract."
+        ],
+        "stated": [
+          "Briefing/cues: Gold 1 (=A1) shades the direct shot; F1 is at net front close to Gold's crease; F2 is available across the high slot; scene shows positions only, no shot/screen timing established.",
+          "Objective: read a shooting lane and traffic without promising a goal."
+        ],
+        "unproven": [
+          "Whether F2's (18,-5) location counts as strictly 'high' vs mid slot is a coaching label, not a schema-verified zone boundary (no faceoff-circle geometry is stored); it is geometrically plausible (between the blue line at 7.62 and the goal line at 27.13, nearer the blue-line half) but not provable to an exact banded definition.",
+          "Whether F1 remains a useful screen after any hypothetical move (q5/q10) or whether the moved YOU position (q4/q9) meaningfully changes shot value is a coaching judgment, not a simulated outcome."
+        ]
+      },
+      "alternative": "An equally valid explanation path compares the new lane to a pass toward F2 in the slot, rather than only discussing the point shot's own changed angle.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u15-010",
+      "baseVersion": 2,
+      "baseScenarioHash": "4d1d87dad1997acb62d59e43a8ec17a1f4de1f7c2dc54de34f79f1c027ffa21e",
+      "replacement": {
+        "id": "exp26-u15-010",
+        "version": 3,
+        "ageBand": "U15",
+        "title": "A point shot with a changing screen",
+        "family": "point-shot-traffic",
+        "topic": "Shooting and traffic",
+        "objective": "Read a shooting lane and traffic without promising a goal.",
+        "briefing": "YOU control at the puck-side point. Gold 1 shades the direct shot and F1 is in front of the Gold net. F2 is available across the high slot. The scene shows positions only; no shot or screen timing is established. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 7,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 12,
+              "y": -6,
+              "facing": 1.6475682180646747
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": 1,
+              "facing": 2.7091848780192556
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 18,
+              "y": -5,
+              "facing": 2.0988707752212563
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 17,
+              "y": 5,
+              "facing": 2.819842099193151
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 0,
+              "facing": 2.5748634360662868
+            },
+            {
+              "id": "away-goalie-3",
+              "label": "G",
+              "team": "away",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "F1 is at net front, close to Gold’s crease.",
+          "YOU control at the puck-side point. Gold 1 shades the direct shot and F1 is in front of the Gold net. F2 is available across the high slot. The scene shows positions only; no shot or screen timing is established."
+        ],
+        "tags": [
+          "point-shot-traffic"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 18–19, Shooting",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u15-010-q1",
+            "type": "choice",
+            "prompt": "Which Navy player is nearest the net-front area?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D2"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "F1"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "F1 is at net front, close to Gold’s crease.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u15-010-q2",
+            "type": "multi",
+            "prompt": "Choose two checks before treating a screened shot as useful.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Where F1 and the goalie are relative to the shot"
+              },
+              {
+                "id": "b",
+                "text": "Whether the puck can pass Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Whether net-front traffic guarantees a goal"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "A screen is only part of the read; traffic does not establish a clear or successful shot.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-010-q3",
+            "type": "sequence",
+            "prompt": "Arrange one traffic-aware point decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read the first shooting-lane defender"
+              },
+              {
+                "id": "b",
+                "text": "Check the net-front picture"
+              },
+              {
+                "id": "c",
+                "text": "Choose a shot or another available option"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Reading the shooting-lane defender and checking the net-front picture can overlap or happen in either order; this is one workable pattern, not the only scored timeline. Choosing to shoot or use another option still comes last, since the release depends on what those reads show."
+          },
+          {
+            "id": "exp26-u15-010-q4",
+            "type": "position",
+            "prompt": "Move YOU toward a different point-to-slot shooting angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "Moving toward the middle changes the line around Gold 1. Recheck traffic instead of assuming the old screen still applies."
+          },
+          {
+            "id": "exp26-u15-010-q5",
+            "type": "multi",
+            "prompt": "F1 moves away before release. Which two checks are useful now?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Recheck the shot lane and available passing options"
+              },
+              {
+                "id": "b",
+                "text": "Check whether any useful screen remains"
+              },
+              {
+                "id": "c",
+                "text": "Shoot immediately even if the lane has changed"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "The screen was a changing cue, not a permanent property of the shot.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-010-q6",
+            "type": "explain",
+            "prompt": "Why should feedback avoid saying that a screened point shot is always best?",
+            "basis": "coaching",
+            "explanation": "A blocked lane, changed traffic or a better pass can alter the decision. The picture cannot prove scoring probability."
+          },
+          {
+            "id": "exp26-u15-010-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate before the point shot?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 is near the net-front lane; check the screen and support"
+              },
+              {
+                "id": "b",
+                "text": "The screen guarantees a goal"
+              },
+              {
+                "id": "c",
+                "text": "A screened goalie view is enough to decide the release"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The message names the screen relationship while leaving shot value conditional."
+          },
+          {
+            "id": "exp26-u15-010-q8",
+            "type": "multi",
+            "prompt": "Which two cues affect a screened shot?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 remains a useful screen"
+              },
+              {
+                "id": "b",
+                "text": "Whether F2 or the slot lane is reachable"
+              },
+              {
+                "id": "c",
+                "text": "The shot label alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Screen quality and support affect the choice; the label does not prove a useful attempt."
+          },
+          {
+            "id": "exp26-u15-010-q9",
+            "type": "position",
+            "prompt": "Move YOU to a different point-to-slot angle with F1 visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 12.5,
+              "y": 6.3
+            },
+            "basis": "coaching",
+            "explanation": "This changes the shooting line while retaining the screen relationship."
+          },
+          {
+            "id": "exp26-u15-010-q10",
+            "type": "explain",
+            "prompt": "F1 moves away before release. What changes in your explanation?",
+            "basis": "coaching",
+            "explanation": "The screen cue is gone, so compare a new shot lane with a pass or protected touch. The original plan needs a fresh read."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u15-010-q3"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u15-010-q3"
+          ],
+          "issue": "Sequence question implied a mandatory look-decide-execute order (read lane defender, then check net-front picture, then choose) for two reads that can genuinely overlap or occur in either order, contradicting AUTHORING-CONTRACT.md's explicit rule against forcing an artificial scan order.",
+          "change": "Replaced the explanation with wording that states the first two reads can overlap or happen in either order (this is one workable pattern, not the only scored timeline) while explaining that the shoot/other-option choice still comes last because it depends on those reads. Options, answer key and every other question/field are unchanged verbatim.",
+          "evidence": "AUTHORING-CONTRACT.md, Answer and teaching contracts: \"Sequence belongs only where order itself teaches something useful... Do not imply a player must stop scanning, wait to look for pressure, or follow an artificial 'look, decide, execute' order for every read.\" Precedent: calibration-adjudication.md U13-010 q3, resolved the same way (clarify overlap in the explanation rather than remove the sequence format)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u15-010-q1",
+            "contentHash": "8d289be4d8ff84fafafe787e5e2a1dac70ca8b19c8a52ce9aaa79003bc996124",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q2",
+            "contentHash": "727d8573f3e352a366443dbc75d1e3b8c33355633bd40c52f4523cfe0e2e1879",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q3",
+            "contentHash": "30bf1811c66e77759da3bf05ae8ce113228d6c4fe38c1863196a250473e3768d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Revised explanation now states the lane-defender read and net-front read can overlap or occur in either order, and explains why the shoot/other-option choice still comes last (it depends on those reads). Removes the artificial mandatory-order implication while keeping the same answer key and options."
+          },
+          {
+            "questionId": "exp26-u15-010-q4",
+            "contentHash": "52e378f9fd45f727557642b23f1891f0c994d1284b1299cccdad34058dda32ff",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q5",
+            "contentHash": "457a895eeea45e00ce04aea04e23da045a5132e0cd4c1656ac8dec5a20c4d2bf",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q6",
+            "contentHash": "899f46deee5b80b942551ba3d25d3c792ac5797b7f3d2186fe2a7a1ac50f3685",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q7",
+            "contentHash": "66b26520a6444ad8bd54e8810ba98e87dcbccd48a747a6a5ae3cdadacef762f3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q8",
+            "contentHash": "29fb26e130354b6ce17885fe94196407e02fd5335ce409b276b7a9d38beaff7e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q9",
+            "contentHash": "61c346eca47f16cc1a2e2863f9d5790039f9703800b7beeb2e6950244afb0388",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          },
+          {
+            "questionId": "exp26-u15-010-q10",
+            "contentHash": "36e8d07f0df36201eb11fc21a133fd4b229899e79c7e87b845d9d6b4d1bca92f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings above."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T13:10:42.953Z",
+      "access": "read",
+      "scope": "Fetched and read the PDF directly (pages 18-19, the \"Shooting\" slides). Confirms bullet content: \"Watch for goalie looking around a screen and shoot appropriately,\" \"Get shots through...miss their F. Be able to slide and shoot. Work on fake push, fake pull with movement to avoid F1 in shooting lane,\" and \"Learn to turn corner and shoot to avoid F1 high 'wide outs'.\" This directly supports the scenario's screen/traffic-read teaching objective and the specific F1-in-shooting-lane framing. It does not certify these exact coordinates, ages, or a guaranteed shot outcome.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General defenceman-development resource; not banded to a specific age group (used here as an adapted principle for U15, per AUTHORING-CONTRACT.md's allowance for disclosed adaptations).",
+      "claim": "Reading a screen/traffic (F1 in the shooting lane) before treating a point shot as useful, without promising a goal."
+    }
+  ],
+  "remainingQuestionIds": []
+}

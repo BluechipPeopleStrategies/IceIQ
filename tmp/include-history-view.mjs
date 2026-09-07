@@ -1,0 +1,1 @@
+import fs from 'node:fs';const f='docs/factory/research/question-review/followup/review.html';fs.copyFileSync(f,'tmp/packets-production-release/'+f);const p='tmp/packets21-34-release-files.json',list=JSON.parse(fs.readFileSync(p));if(!list.includes(f))list.push(f);fs.writeFileSync(p,JSON.stringify(list,null,2)+'\n');

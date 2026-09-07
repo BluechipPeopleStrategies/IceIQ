@@ -1,0 +1,532 @@
+import { drawHockeyPuck } from "../visuals/hockeyArtCanvas.js";
+import { useRef, useState, useCallback, useEffect } from "react";
+import {
+  createAdaptiveLevel,
+  levelT,
+  lerp,
+  rand,
+  setupCanvas,
+  drawRink,
+  pointerPos,
+  targetMaxY,
+  REPS_PER_SESSION,
+} from "./gymEngine";
+import { getDrill, saveSession, getUnit, setUnit as saveUnit } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
+import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss } from "./anticipationCore";
+import GymVisualStage from "./GymVisualStage";
+import AnticipationScene3D from "./AnticipationScene3D";
+
+// "Read the Pass" — trajectory prediction.
+// A puck launches across the ice from any side and disappears partway. The
+// player taps the gold bar where they think it will cross. Trains anticipation:
+// reading passes, picking off lanes, judging rims and bank passes off the boards.
+
+const ROUNDS = REPS_PER_SESSION;
+const DT = 1 / 120; // physics timestep used to pre-sample the trajectory
+const BAR = 22; // gold bar thickness in px (was a 4px line) — bigger target
+
+function pickDirection() {
+  return DIRECTIONS[Math.floor(rand(0, DIRECTIONS.length))];
+}
+
+// Build the full puck path for a round in a random direction. `motion` is the
+// travel axis; the gold bar sits on the exit edge; the guess varies along the
+// other axis. Difficulty raises speed, hides earlier, and shrinks tolerance.
+function buildTrajectory(W, H, level, dir = pickDirection()) {
+  const t = levelT(level);
+  const r = 8; // puck radius
+  const motion = dir === "lr" || dir === "rl" ? "x" : "y";
+  // Action Rail: the gold answer bar IS the tap target and it runs the full
+  // span of one axis, so on a top-to-bottom pass it would land squarely under
+  // the rail. The whole play — path, bounces, and bar — therefore treats
+  // targetMaxY(H) as the height of the sheet, and the rink's bottom band is
+  // left to the controls.
+  const playH = targetMaxY(H);
+  const motionSpan = motion === "x" ? W : playH;
+  const crossSpan = motion === "x" ? playH : W;
+  const speed = motionSpan * lerp(0.35, 0.9, t);
+  const maxAngle = lerp(20, 50, t) * (Math.PI / 180);
+  const angle = rand(-maxAngle, maxAngle);
+
+  // start/exit positions along the motion axis
+  const lo = 24;
+  const hi = motionSpan - 36;
+  const forward = dir === "lr" || dir === "tb";
+  let m = forward ? lo : hi; // motion coord
+  let c = rand(crossSpan * 0.2, crossSpan * 0.8); // cross coord
+  const exitM = forward ? hi : lo;
+  const vMotion = (forward ? 1 : -1) * Math.cos(angle) * speed;
+  let vCross = Math.sin(angle) * speed;
+
+  let time = 0;
+  const pts = [];
+  const push = () => {
+    // map (m, c) back to absolute (x, y)
+    const x = motion === "x" ? m : c;
+    const y = motion === "x" ? c : m;
+    pts.push({ x, y, t: time });
+  };
+  push();
+  const done = () => (forward ? m >= exitM : m <= exitM);
+  while (!done() && time < 20) {
+    m += vMotion * DT;
+    c += vCross * DT;
+    time += DT;
+    // bounce off the boards parallel to travel
+    if (c < r) {
+      c = 2 * r - c;
+      vCross = -vCross;
+    } else if (c > crossSpan - r) {
+      c = 2 * (crossSpan - r) - c;
+      vCross = -vCross;
+    }
+    push();
+  }
+
+  const hideFrac = lerp(0.55, 0.25, t); // fraction of the path still visible
+  const axis = guessAxis(dir);
+  // The guess axis measures the rink WIDTH across the playable height, not the
+  // canvas height, so a pixel miss still converts to the right number of feet.
+  const ftPerPx = feetPerPixel(axis, W, playH);
+  const toleranceFt = lerp(6, 1.5, t); // success window in REAL feet — same for every direction
+  return {
+    pts,
+    playH, // usable height: everything below this belongs to the Action Rail
+    motion, // "x" | "y"
+    axis, // "y" | "x" — where the guess varies
+    exitM, // motion-axis coordinate of the gold bar
+    crossPos: c, // guess-axis coordinate of the true crossing
+    crossT: time,
+    hideM: forward ? lo + (hi - lo) * hideFrac : hi - (hi - lo) * hideFrac,
+    forward,
+    ftPerPx, // feet per pixel along the guess axis
+    toleranceFt, // success window in feet
+    tolerancePx: toleranceFt / ftPerPx, // same window, in px, for drawing
+    r,
+  };
+}
+
+export default function AnticipationDrill({ playerId = "default", onExit }) {
+  const rootRef = useRef(null);
+  const canvasRef = useRef(null);
+  const engineRef = useRef(null);
+  const sceneRef = useRef({});
+  const rafRef = useRef(0);
+
+  const [phase, setPhase] = useState("intro"); // intro | playing | done
+  const [stage, setStage] = useState("live"); // live | reveal (drives the rail)
+  const [round, setRound] = useState(0);
+  const [hits, setHits] = useState(0);
+  const [level, setLevel] = useState(() => getDrill(playerId, "anticipation").level);
+  const [points, setPoints] = useState(0);
+  const pointsRef = useRef(0);
+  const [saved, setSaved] = useState(null);
+  const [unit, setUnit] = useState(() => getUnit());
+  const unitRef = useRef(unit);
+  useEffect(() => { unitRef.current = unit; }, [unit]);
+
+  const startRound = useCallback((roundIndex) => {
+    const canvas = canvasRef.current;
+    const host = rootRef.current;
+    if (!canvas || !host) return;
+    const { ctx, W, H } = setupCanvas(canvas, host);
+    const traj = buildTrajectory(W, H, engineRef.current.level);
+    sceneRef.current = {
+      ctx,
+      W,
+      H,
+      traj,
+      startedAt: performance.now(),
+      guessC: null,
+      result: null,
+      repPoints: 0,
+      revealStart: null,
+      settled: false,
+      roundIndex,
+    };
+    setStage("live");
+    loop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const resolveRound = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  const handleGuessAt = useCallback((pos) => {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || !sc.traj || sc.revealStart !== null || !pos) return;
+    const traj = sc.traj;
+    const idx = Math.min(
+      Math.floor((performance.now() - sc.startedAt) / 1000 / DT),
+      traj.pts.length - 1
+    );
+    const guessC = traj.axis === "y"
+      ? Math.min(Math.max(pos.y, 0), traj.playH)
+      : Math.min(Math.max(pos.x, 0), sc.W);
+    const { success, errorFt, points } = scorePass(
+      guessC,
+      traj.crossPos,
+      traj.ftPerPx,
+      traj.toleranceFt
+    );
+    sc.guessC = guessC;
+    sc.result = success ? "hit" : "miss";
+    sc.errorFt = errorFt;
+    sc.repPoints = points;
+    sc.frozenIdx = idx;
+    sc.revealStart = performance.now();
+  }, [phase]);
+
+  // The replayed path and the tolerance window hold until the player taps Next
+  // rep. This drill's whole teaching moment is the dashed line showing where
+  // the puck actually went, and a fixed 2.4 s took it away mid-look.
+  function advanceRound() {
+    const next = sceneRef.current.roundIndex + 1;
+    if (next >= ROUNDS) {
+      setPhase("done");
+    } else {
+      setRound(next);
+      startRound(next);
+    }
+  }
+
+  function drawPuck(ctx, x, y, r) {
+    drawHockeyPuck(ctx, x, y, r);
+  }
+
+  function loop() {
+    cancelAnimationFrame(rafRef.current);
+    const frame = () => {
+      const sc = sceneRef.current;
+      if (!sc.ctx) return;
+      const { ctx, W, H, traj } = sc;
+      const t = (performance.now() - sc.startedAt) / 1000;
+
+      drawRink(ctx, W, H);
+
+      const horiz = traj.motion === "x";
+
+      // gold crossing BAR on the exit edge (thick, more target area). It stops
+      // at traj.playH so no part of the answer sits under the rail.
+      ctx.fillStyle = "#f2b705";
+      if (horiz) ctx.fillRect(traj.exitM - BAR / 2, 0, BAR, traj.playH);
+      else ctx.fillRect(0, traj.exitM - BAR / 2, W, BAR);
+
+      // absolute coords of the true crossing on the bar
+      const trueX = horiz ? traj.exitM : traj.crossPos;
+      const trueY = horiz ? traj.crossPos : traj.exitM;
+
+      const idx = Math.min(Math.floor(t / DT), traj.pts.length - 1);
+      const pt = traj.pts[idx];
+
+      if (sc.revealStart !== null) {
+        // reveal phase — replay the hidden path 3x speed from where it vanished
+        const rt = (performance.now() - sc.revealStart) / 1000;
+        const revIdx = Math.min(
+          traj.pts.length - 1,
+          Math.floor(sc.frozenIdx + (rt * 3) / DT)
+        );
+
+        ctx.setLineDash([4, 6]);
+        ctx.strokeStyle = "#1b6cb0";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        traj.pts.slice(0, revIdx + 1).forEach((p, i) => {
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const head = traj.pts[revIdx];
+        drawPuck(ctx, head.x, head.y, traj.r);
+
+        // the exact crossing — landing on this gold dot is a "Perfect" read
+        ctx.fillStyle = "#f2b705";
+        ctx.beginPath();
+        ctx.arc(trueX, trueY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#0b1b2b";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        if (sc.guessC !== null) {
+          const gx = horiz ? traj.exitM : sc.guessC;
+          const gy = horiz ? sc.guessC : traj.exitM;
+          // faint guess-to-truth line — "how close was I"
+          ctx.save();
+          ctx.globalAlpha = 0.5;
+          ctx.setLineDash([3, 4]);
+          ctx.strokeStyle = "#0b1b2b";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(gx, gy);
+          ctx.lineTo(trueX, trueY);
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = sc.result === "hit" ? "#1b6cb0" : "#e8590c";
+          ctx.beginPath();
+          ctx.arc(gx, gy, 10, 0, Math.PI * 2);
+          ctx.fill();
+
+          // per-rep feedback near the guess marker: quality + distance + points
+          const rate = rateMiss(sc.errorFt || 0, traj.toleranceFt);
+          ctx.save();
+          ctx.fillStyle =
+            rate.tier === "perfect" ? "#f2b705" : rate.tier === "miss" ? "#e8590c" : "#1b6cb0";
+          ctx.font = "600 14px system-ui, sans-serif";
+          ctx.textBaseline = "middle";
+          const label = `${rate.label} · ${formatDistance(sc.errorFt || 0, unitRef.current)}  +${sc.repPoints || 0}`;
+          const labelX = Math.min(gx + 14, W - 200);
+          ctx.fillText(label, labelX, gy);
+          ctx.restore();
+        }
+
+        if (revIdx >= traj.pts.length - 1 && !sc.settled) {
+          sc.settled = true;
+          setStage("reveal"); // the rail swaps to Next rep once the replay lands
+          // show the tolerance window around the true crossing, along the bar
+          ctx.strokeStyle = "#0b1b2b";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          if (horiz) {
+            ctx.moveTo(trueX, trueY - traj.tolerancePx);
+            ctx.lineTo(trueX, trueY + traj.tolerancePx);
+          } else {
+            ctx.moveTo(trueX - traj.tolerancePx, trueY);
+            ctx.lineTo(trueX + traj.tolerancePx, trueY);
+          }
+          ctx.stroke();
+          resolveRound(sc.result === "hit");
+          return;
+        }
+      } else {
+        // live phase — puck visible until hideM along motion, then masked
+        const m = horiz ? pt.x : pt.y;
+        const past = traj.forward ? m > traj.hideM : m < traj.hideM;
+        if (!past) {
+          drawPuck(ctx, pt.x, pt.y, traj.r);
+        } else {
+          // faint mask band over the hidden stretch, oriented by motion
+          ctx.save();
+          ctx.globalAlpha = 0.06;
+          ctx.fillStyle = "#0b1b2b";
+          if (horiz) {
+            const x0 = traj.forward ? traj.hideM : traj.exitM;
+            const x1 = traj.forward ? traj.exitM : traj.hideM;
+            ctx.fillRect(Math.min(x0, x1), 0, Math.abs(x1 - x0), traj.playH);
+          } else {
+            const y0 = traj.forward ? traj.hideM : traj.exitM;
+            const y1 = traj.forward ? traj.exitM : traj.hideM;
+            ctx.fillRect(0, Math.min(y0, y1), W, Math.abs(y1 - y0));
+          }
+          ctx.restore();
+        }
+        // no tap in time -> automatic miss
+        if (t > traj.crossT + 1.2) {
+          sc.guessC = null;
+          sc.result = "miss";
+          sc.repPoints = 0;
+          sc.frozenIdx = idx;
+          sc.revealStart = performance.now();
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(frame);
+    };
+    rafRef.current = requestAnimationFrame(frame);
+  }
+
+  function handleGuess(evt) {
+    if (phase !== "playing") return;
+    evt.preventDefault();
+    const pos = pointerPos(evt, canvasRef.current);
+    handleGuessAt(pos);
+  }
+
+  // The level the player came in at, so the results card can show the move
+  // rather than just the destination (S2-27).
+  const startLevelRef = useRef(1);
+
+  function start() {
+    const d = getDrill(playerId, "anticipation");
+    startLevelRef.current = d.level;
+    engineRef.current = createAdaptiveLevel(d.level, {
+      startUps: d.streak.ups,
+      startDowns: d.streak.downs,
+      ...gymCueHooks(),
+    });
+    setHits(0);
+    setRound(0);
+    setSaved(null);
+    pointsRef.current = 0;
+    setPoints(0);
+    setPhase("playing");
+    requestAnimationFrame(() => startRound(0));
+  }
+
+  useEffect(() => {
+    if (phase === "done" && !saved) {
+      const score = Math.round((hits / ROUNDS) * 100);
+      const record = saveSession(playerId, "anticipation", {
+        score,
+        points: pointsRef.current,
+        level: engineRef.current.level,
+        streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
+      });
+      setSaved(record);
+      cue("fanfare");
+    }
+  }, [phase, saved, hits, playerId]);
+
+  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage !== "reveal") return;
+      e.preventDefault();
+      advanceRound();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
+
+  return (
+    <div className="gym-drill" ref={rootRef}>
+      {phase !== "intro" && <h2 className="gym-drill-title">Read the Pass</h2>}
+      <div className="gym-drill-bar">
+        <button className="gym-btn gym-btn-ghost" onClick={onExit}>
+          Back
+        </button>
+        {phase === "playing" && (
+          <button className="gym-btn gym-btn-ghost" onClick={start}>
+            Restart
+          </button>
+        )}
+        <span className="gym-chip">Level {level}</span>
+        {phase === "playing" && (
+          <span className="gym-chip">
+            Rep {Math.min(round + 1, ROUNDS)} / {ROUNDS}
+          </span>
+        )}
+        {phase === "playing" && (
+          <span className="gym-chip">
+            {engineRef.current ? `${engineRef.current.toPromote} to level up` : ""}
+          </span>
+        )}
+        {phase === "playing" && <span className="gym-chip">{points} pts</span>}
+        {phase === "playing" && (
+          <button
+            className="gym-chip"
+            style={{ cursor: "pointer" }}
+            onClick={() => { const u = unit === "ft" ? "m" : "ft"; setUnit(u); saveUnit(u); }}
+            title="Toggle feet / meters"
+          >
+            {unit}
+          </button>
+        )}
+      </div>
+
+      {phase === "intro" && (
+        <div className="gym-card">
+          <h2>Read the Pass</h2>
+          <svg viewBox="0 0 280 110" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
+            <rect width="280" height="110" rx="8" fill="#eaf4fb" />
+            <line x1="244" y1="8" x2="244" y2="102" stroke="#f2b705" strokeWidth="10" strokeLinecap="round" />
+            <path d="M24 72 L150 38" stroke="#1b6cb0" strokeWidth="3" strokeDasharray="5 6" fill="none" />
+            <circle cx="24" cy="72" r="7" fill="#0b1b2b" />
+            <circle cx="244" cy="28" r="6" fill="#f2b705" stroke="#0b1b2b" strokeWidth="1.5" />
+          </svg>
+          <p className="gym-goal"><strong>Your goal:</strong> predict where the hidden puck crosses the gold bar.</p>
+          <p>
+            <strong>The game:</strong> watch the puck's direction before it
+            disappears. Tap the gold bar where you think it will cross. The puck
+            can come from any side. Then compare your tap with the gold dot and
+            marked target window. Closer taps earn more points.
+          </p>
+          <div className="gym-trains">
+            <strong>Talk hockey</strong>
+            <span>
+              What clues help you predict where a pass is going? Describe what
+              you saw before the puck disappeared.
+            </span>
+          </div>
+          <button className="gym-btn" onClick={start}>
+            Start
+          </button>
+        </div>
+      )}
+
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleGuess}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink with a moving pass and a gold crossing bar."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<AnticipationScene3D sceneRef={sceneRef} onTap={handleGuessAt} />}
+        >
+
+        {/* Action Rail rule 1: one primary action, in the same place every
+            stage. This drill is tap-only while the puck is live, so the rail is
+            empty then and carries Next rep on the reveal. */}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRound}>
+              {round + 1 >= ROUNDS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        </GymVisualStage>
+      </div>
+
+      {phase === "done" && (
+        <div className="gym-card">
+          <h2>Session complete</h2>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          {/* sessionRankLabel above already says "Personal best!", so the old
+              trailing " New best." said it twice — and its `<=` printed it on a
+              TIE. The level now lives in SessionSummary. */}
+          <SessionSummary
+            from={startLevelRef.current}
+            to={level}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
+          />
+          <p>
+            {points} points. {hits} of {ROUNDS} reads inside the window.
+          </p>
+          <div className="gym-row">
+            <button className="gym-btn" onClick={start}>
+              Go again
+            </button>
+            <button className="gym-btn gym-btn-ghost" onClick={onExit}>
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

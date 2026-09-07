@@ -1,0 +1,107 @@
+{
+  "id": "u13_nz_trap_read_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "nodeId": "u13.breakout-and-regroup",
+  "themes": [
+    "neutral-zone",
+    "zone-entry",
+    "scan",
+    "decision-making"
+  ],
+  "cat": "Zone Entry",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.4,
+      "y": 0.5,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.402,
+      "y": 0.498
+    },
+    {
+      "id": "weak_wing",
+      "kind": "teammate",
+      "x": 0.62,
+      "y": 0.12,
+      "tag": "LW"
+    },
+    {
+      "id": "center",
+      "kind": "teammate",
+      "x": 0.5,
+      "y": 0.5,
+      "tag": "C"
+    },
+    {
+      "id": "strong_wing",
+      "kind": "teammate",
+      "x": 0.46,
+      "y": 0.85,
+      "tag": "RW"
+    },
+    {
+      "id": "f1",
+      "kind": "defender",
+      "x": 0.43,
+      "y": 0.535,
+      "tag": ""
+    },
+    {
+      "id": "f2",
+      "kind": "defender",
+      "x": 0.45,
+      "y": 0.505,
+      "tag": ""
+    },
+    {
+      "id": "d1",
+      "kind": "defender",
+      "x": 0.43,
+      "y": 0.68,
+      "tag": ""
+    },
+    {
+      "id": "d2",
+      "kind": "defender",
+      "x": 0.47,
+      "y": 0.62,
+      "tag": ""
+    }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "The other team is packed into a neutral zone trap. You have the puck at the red line. Tap your best option.",
+    "from": [
+      "weak_wing",
+      "center",
+      "strong_wing"
+    ],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": [
+      "weak_wing"
+    ]
+  },
+  "feedback": {
+    "right": "The trap collapses toward the puck and leaves the far side thin. Your weak-side winger is stretching into that soft ice with room to carry it in with speed.",
+    "wrong": "The centre and strong-side wing are both standing in ice the trap is built to protect — a pass there gets picked off before it arrives. The weak-side winger is the one lane the trap left open. Find the far side."
+  },
+  "tip": "A trap squeezes the puck side hard on purpose. The read is never through the middle of the wall — it's around it.",
+  "why": "A neutral zone trap sacrifices the far side to overload pressure on the puck. Scanning across the whole width finds the soft ice the trap gave up, instead of forcing a pass into the numbers it stacked."
+}

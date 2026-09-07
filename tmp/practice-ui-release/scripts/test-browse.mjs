@@ -1,0 +1,107 @@
+// Golden tests for src/review/browseCore.js (pure logic). Run: npm run test:browse
+import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline, groupIterations, questionTypeLabel, siblingsOf, groupByStem } from "../src/review/browseCore.js";
+
+let failed = 0;
+const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
+
+const mk = (id, level, nodeId = "n") => ({ id, type: "scenario", stage: {}, actors: [{}], levels: [level], nodeId });
+const scn = [mk("a", "U7"), mk("b", "U11"), mk("c", "U11"), mk("d", "U13")];
+
+// ageTierOf / ageTiers
+check("ageTierOf reads first level", ageTierOf(mk("x", "U9")) === "U9");
+check("ageTierOf empty when no level", ageTierOf({ }) === "");
+check("ageTiers sorted unique", JSON.stringify(ageTiers(scn)) === JSON.stringify(["U11", "U13", "U7"]));
+
+// flagOf: coach != keep -> coach; my revise/retire -> mine; neither -> unreviewed; my keep + coach keep -> clean
+check("flagOf coach when coach not keep", flagOf(mk("a","U7"), { verdict: "revise" }, null) === "coach");
+check("flagOf mine when my verdict retire", flagOf(mk("a","U7"), null, { verdict: "retire" }) === "mine");
+check("flagOf unreviewed when nothing", flagOf(mk("a","U7"), null, null) === "unreviewed");
+check("flagOf clean when both keep", flagOf(mk("a","U7"), { verdict: "keep" }, { verdict: "keep" }) === "clean");
+check("flagOf coach wins over my keep", flagOf(mk("a","U7"), { verdict: "revise" }, { verdict: "keep" }) === "coach");
+
+// applyFilters
+const coachById = { b: { verdict: "revise" } };
+const myById = { d: { verdict: "retire" } };
+check("applyFilters all returns everything", applyFilters(scn, { flagScope: "all", ageTier: "all" }, coachById, myById).length === 4);
+check("applyFilters coach scope", applyFilters(scn, { flagScope: "coach", ageTier: "all" }, coachById, myById).map(s=>s.id).join() === "b");
+check("applyFilters mine scope", applyFilters(scn, { flagScope: "mine", ageTier: "all" }, coachById, myById).map(s=>s.id).join() === "d");
+check("applyFilters unreviewed scope", applyFilters(scn, { flagScope: "unreviewed", ageTier: "all" }, coachById, myById).map(s=>s.id).sort().join() === "a,c");
+check("applyFilters age tier", applyFilters(scn, { flagScope: "all", ageTier: "U11" }, coachById, myById).map(s=>s.id).sort().join() === "b,c");
+check("applyFilters flag + age combined", applyFilters(scn, { flagScope: "coach", ageTier: "U11" }, coachById, myById).map(s=>s.id).join() === "b");
+
+// iterationHeadline: change wins; falls back to feedback; else "(no detail)"
+check("headline uses change when present", iterationHeadline({ change: "added a 2nd read", feedback: "only one option" }) === "added a 2nd read");
+check("headline falls back to feedback", iterationHeadline({ change: "", feedback: "only one option" }) === "only one option");
+check("headline blank both -> placeholder", iterationHeadline({ change: "", feedback: "" }) === "(no detail)");
+check("headline whitespace -> placeholder", iterationHeadline({ change: "   ", feedback: "" }) === "(no detail)");
+check("headline trims", iterationHeadline({ change: "  trimmed  " }) === "trimmed");
+check("headline null-safe", iterationHeadline(null) === "(no detail)");
+
+// groupIterations: owner + coach rows of one resolve share an iteration + change → ONE group.
+const owner1 = { scenario_id: "s", iteration: 1, source: "owner", change: "Moved YOU deep", feedback: "not in corner", node: "dz", created_at: "2026-06-13T12:00:00Z" };
+const coach1 = { scenario_id: "s", iteration: 1, source: "coach", change: "Moved YOU deep", feedback: "single-option", node: "dz", created_at: "2026-06-13T12:00:00Z" };
+const owner2 = { scenario_id: "s", iteration: 2, source: "owner", change: "Added end labels", feedback: "which way?", node: "dz", created_at: "2026-06-13T14:00:00Z" };
+const g1 = groupIterations([owner1, coach1]);
+check("group: owner+coach same iter -> 1 group", g1.length === 1);
+check("group: change preserved", g1[0].change === "Moved YOU deep");
+check("group: both feedbacks kept", g1[0].sources.length === 2);
+check("group: sources carry source+feedback", g1[0].sources[0].source === "owner" && g1[0].sources[1].source === "coach");
+check("group: date from row", g1[0].created_at === "2026-06-13T12:00:00Z");
+
+const g2 = groupIterations([owner1, coach1, owner2]);
+check("group: two iterations -> 2 groups", g2.length === 2);
+check("group: newest iteration first", g2[0].iteration === 2 && g2[1].iteration === 1);
+
+// dedupe identical source+feedback within a group (e.g. accidental duplicate insert)
+const dupd = groupIterations([owner1, { ...owner1 }]);
+check("group: dedupe identical rows", dupd.length === 1 && dupd[0].sources.length === 1);
+
+// questionTypeLabel — derived from shape
+check("type: branching", questionTypeLabel({ nodes: {}, entry: ["x"] }) === "Branching");
+check("type: multi-step", questionTypeLabel({ steps: [{}] }) === "Multi-step");
+check("type: true/false (2-opt mc)", questionTypeLabel({ mc: { opts: ["a", "b"] } }) === "True/False");
+check("type: multiple choice (4-opt)", questionTypeLabel({ mc: { opts: ["a", "b", "c", "d"] } }) === "Multiple choice");
+check("type: positioning (place)", questionTypeLabel({ interaction: { kind: "place" } }) === "Positioning");
+check("type: tap a spot (point)", questionTypeLabel({ interaction: { kind: "point" } }) === "Tap a spot");
+check("type: fallback", questionTypeLabel({}) === "Question");
+
+// stem grouping + siblings
+const stemA1 = { id: "a1", stemId: "sceneA", interaction: { kind: "point" } };
+const stemA2 = { id: "a2", stemId: "sceneA", mc: { opts: ["t", "f"] } };
+const lone = { id: "z1", interaction: { kind: "selection" } };
+check("siblingsOf finds same-stem others", siblingsOf(stemA1, [stemA1, stemA2, lone]).map(s => s.id).join() === "a2");
+check("siblingsOf empty when no stemId", siblingsOf(lone, [stemA1, stemA2, lone]).length === 0);
+const stems = groupByStem([stemA1, stemA2, lone]);
+check("groupByStem merges shared stemId", stems.find(g => g.stemId === "sceneA").questions.length === 2);
+check("groupByStem singleton for no stemId", stems.find(g => g.stemId === "z1").questions.length === 1);
+
+// bank text-MC type labels (bank uses opts, not mc.opts)
+check("type: bank multiple choice", questionTypeLabel({ sit: "x", opts: ["a", "b", "c", "d"] }) === "Multiple choice");
+check("type: bank true/false", questionTypeLabel({ opts: ["True", "False"] }) === "True/False");
+
+// player flag (highest priority) + applyFilters reportedIds
+check("flagOf player wins over coach+mine", flagOf(mk("a", "U7"), { verdict: "revise" }, { verdict: "retire" }, true) === "player");
+check("flagOf no report falls through to coach", flagOf(mk("a", "U7"), { verdict: "revise" }, null, false) === "coach");
+const rep = new Set(["b"]);
+check("applyFilters player scope", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, rep).map(s => s.id).join() === "b");
+check("applyFilters player empty when none", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, new Set()).length === 0);
+
+// overrides: deep-merge + patch building
+const { applyOverride, buildPatch } = await import("../src/review/overrides.js");
+const ovMerged = applyOverride({ mc: { stem: "a", ok: 0, opts: ["x"] } }, { mc: { stem: "b" } });
+check("applyOverride deep-merges (keeps ok, replaces stem)", ovMerged.mc.stem === "b" && ovMerged.mc.ok === 0);
+const bankPatch = buildPatch({ sit: "x", opts: ["a", "b"] }, { stem: "y", opts: ["c", "d"], ok: 1, right: "r" });
+check("buildPatch maps bank fields", bankPatch.sit === "y" && bankPatch.opts[0] === "c" && bankPatch.ok === 1 && bankPatch.why === "r");
+const mcPatch = buildPatch({ mc: { opts: [], ok: 0 }, feedback: {} }, { stem: "s", opts: ["1", "2", "3", "4"], ok: 3, right: "R", wrong: "W" });
+check("buildPatch maps mc + feedback", mcPatch.mc.stem === "s" && mcPatch.mc.ok === 3 && mcPatch.feedback.right === "R");
+
+// null iteration rows must not merge into one group
+const nullA = { scenario_id: "s", iteration: null, source: "owner", change: "A", feedback: "a", created_at: "2026-06-13T10:00:00Z" };
+const nullB = { scenario_id: "s", iteration: null, source: "owner", change: "B", feedback: "b", created_at: "2026-06-13T11:00:00Z" };
+check("group: null iterations don't merge", groupIterations([nullA, nullB]).length === 2);
+
+check("group: empty input -> []", JSON.stringify(groupIterations([])) === "[]");
+check("group: null input -> []", JSON.stringify(groupIterations(null)) === "[]");
+
+console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
+process.exit(failed ? 1 : 0);

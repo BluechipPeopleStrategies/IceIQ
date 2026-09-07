@@ -6,6 +6,7 @@ import { ANCHORS, ANCHOR_NAMES, RINK, at, mirrorX } from "../src/play/rinkAnchor
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
 import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
 import { GAP_CONTROL_PIVOT_MATCH_PLAY } from "../src/play/plays/gapControlPivotMatch.js";
+import { sampleAnimatedRink, animatedPointToRink } from "../src/play/animatedRinkAdapter.js";
 
 describe("motion paths (waypoints)", () => {
   it("keeps two-point skate and blocked motions as straight lines (legacy exact)", () => {
@@ -123,8 +124,11 @@ describe("motion validation", () => {
     bad.nodes[bad.start].enterPuck = [12];
     assert.ok(validateAnimatedPlay(bad).errs.some((error) => error.includes("enterPuck")));
 
-    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
-    assert.ok(src.includes("const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;"));
+    const play = ALL_ANIMATED_PLAYS.find(item => Object.values(item.nodes).some(node => node.enterPuck));
+    const node = Object.values(play.nodes).find(item => item.enterPuck);
+    const opening = sampleAnimatedRink(play, node, 0).puck, final = sampleAnimatedRink(play, node, 1).puck;
+    assert.deepEqual([opening.x, opening.y], Object.values(animatedPointToRink(node.enterPuck)));
+    assert.deepEqual([final.x, final.y], Object.values(animatedPointToRink(node.puck)));
   });
 
   it("requires explicit possession-change geometry", async () => {

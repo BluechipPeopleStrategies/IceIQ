@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-36",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q1",
+      "baseContentHash": "6f50089ab36da01a9d7ee1e09b4904445978236c8e159f0b25636e3f36590972",
+      "verdict": "repair",
+      "reason": "Q1's own prompt/options/answer/explanation are correct (F1 at (28,-5) is genuinely the low, behind-the-goal-line teammate versus F2 in the slot and D1 at the point), but this question's hash is cascaded by a scene-level grammar defect: cues[0] reads 'YOU controls at the half wall,' a subject-verb error (the exact 'YOU controls' pattern named in the standing lesson list) that survived the prior v1->v2 repair unchanged. Repaired at the scene level; see repairs[0].",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "h1 'YOU' (home/Navy) at (20,9), facing 0, owns the puck.",
+          "h2 'F1' (home/Navy) at (28,-5), facing 2.5.",
+          "h3 'F2' (home/Navy) at (19,3), facing 1.9.",
+          "h4 'D1' (home/Navy) at (10,7), facing 0.",
+          "a1 'A1'/Gold1 (away) at (20,4); a2 'A2'/Gold2 (away) at (24,1); a3 'A3'/Gold3 (away) at (12,6)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net; YOU control near the puck-side half wall; Gold 1 shades F2 in the slot; F1 is behind the goal line; D1 holds the high point with Gold 3 nearby.",
+          "Cue: 'F1 is a low outlet and D1 holds the point.'"
+        ],
+        "unproven": [
+          "Whether a direct pass line from YOU to F1 is fully unobstructed: the straight segment from (20,9) to (28,-5) passes within about 0.5m of A2 (24,1) and about 2.5m of A1 (20,4); the schema does not model rim/bank passing routes, stick reach or interception, so 'low outlet' as a positional description is supported but a claim that the connection is guaranteed clean would not be."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q2",
+      "baseContentHash": "dd0bc9682c61dd1023cabadf59af564c17260fe2090dc3fb65530fb5afa7133e",
+      "verdict": "repair",
+      "reason": "Q2's own content is sound: 'Gold 1's slot shading' and 'F1's reachable low route' are the two coaching-relevant details, and 'the half-wall label decides the next pass' is a credible non-callable distractor (labels don't determine tactics), not an absolutist or joke option. Repaired only because this question's hash is cascaded by the scene-level cues[0] grammar fix (see repairs[0]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck owner h1 (YOU); A1 at (20,4) sits almost on the geometric line between YOU (20,9) and F1 (28,-5); A2 at (24,1) sits within about 0.5m of that same line."
+        ],
+        "stated": [
+          "Cue/briefing: Gold 1 shades F2 in the slot; F1 is a low outlet."
+        ],
+        "unproven": [
+          "That F1's low route is unimpeded in the sense of a clean direct pass; the option only calls it 'reachable,' a coaching characterization, and the scenario's own q6 explanation elsewhere discloses 'naming an outlet does not guarantee it is open,' so this is not asserted as certainty."
+        ]
+      },
+      "alternative": "A coach could instead treat F1's connection as a boards/bank option below the net rather than a straight-line pass, since A1 and A2 both sit close to the direct line between YOU and F1; naming Gold 1's shading plus F1's low positioning as the two supporting reset details is still defensible under that reading, it just would not promise an uncontested lane.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q3",
+      "baseContentHash": "73ef5eeca58462518310f57550c46696fb6cf5e011a1ec85a4f1de8d74f70a54",
+      "verdict": "repair",
+      "reason": "The sequence (locate outlets -> protect puck -> use the outlet and scan again) does not impose an artificial 'stop scanning' order: it explicitly ends on 're-scan,' and the explanation frames the read as ongoing rather than a one-time look. Retained as sound; repaired only for the scene-level cues[0] grammar cascade (see repairs[0]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same roster/positions as q1/q2."
+        ],
+        "stated": [
+          "Explanation: 'the shaded slot and low route are re-read,' consistent with ongoing scanning rather than a single locked step order."
+        ],
+        "unproven": [
+          "That puck protection and locating teammates happen in strictly separate time windows in a real rep; in practice they can overlap. The sequence is a teaching scaffold (basis: coaching), not a claim about a mandatory real-time order."
+        ]
+      },
+      "alternative": "A player who is already scanning while shielding the puck (protection and locating happening together, not strictly first-then-second) is making an equally sound read; the ordered answer key teaches a checklist, not a claim that these steps cannot overlap in real time.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q4",
+      "baseContentHash": "6a36017bf42114af04df4e124cc07778e0d2ed09ae6e0b9b423f9a8265936a88",
+      "verdict": "repair",
+      "reason": "The reference point (18,7.5) is a valid on-ice move: it is off the boards relative to YOU's actual (20,9), stays inside the straight-board section (x=18<=21.9456, y=7.5<=12.954), and keeps F1 (28,-5), F2 (19,3) and D1 (10,7) all at plausible viewing angles. This question's coordinates were already corrected in the prior v1->v2 repair (originally (18,-1.8), which matched a since-removed near-centre YOU position); this pass finds no further geometry defect. Repaired only for the scene-level cues[0] grammar cascade (see repairs[0]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference (18,7.5) lies inside the rink boundary and inside the straight-board section, not the rounded corner.",
+          "actorId h1 matches the prompt's subject 'YOU' (labels agree)."
+        ],
+        "stated": [
+          "Explanation explicitly hedges: 'Each passing lane still depends on the defenders,' not a guaranteed-open claim."
+        ],
+        "unproven": [
+          "Exact visibility/angle to each teammate is not modelled by this schema (no facing-cone or line-of-sight simulation); treated as a coaching approximation only."
+        ]
+      },
+      "alternative": "A support point a bit closer to the boards or a touch lower along the wall would also keep F1 and F2 in view; (18,7.5) is one workable example, not the single correct dot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q5",
+      "baseContentHash": "aced1eeb50ed46bb517831e8d22dfe083b14a433027191f00c2b6aba95d9f5ce",
+      "verdict": "repair",
+      "reason": "The hypothetical (Gold 1 leaving F2 to pressure YOU) is clearly flagged as a changed condition, and the key ('weigh F2 vs F1, do not force') avoids guaranteed-outcome language; distractors b and c are believable overconfident/rushed decisions, not absurd or trivia options. Repaired only for the scene-level cues[0] grammar cascade (see repairs[0]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "A1 (Gold 1) at (20,4) is the actor nearest F2 (19,3), consistent with being the one 'shading' F2 who could 'leave' to pressure YOU."
+        ],
+        "stated": [
+          "Prompt explicitly introduces the changed condition ('Gold 1 leaves F2 to pressure YOU') rather than asserting it as an unstated fact."
+        ],
+        "unproven": [
+          "Whether F2's lane is actually clear once Gold 1 leaves is not asserted as fact; the key only says 'if the slot remains reachable,' correctly hedged."
+        ]
+      },
+      "alternative": "Depending on how quickly Gold 1 closes and how tight F2's remaining coverage is, some coaches would hold the puck one extra beat and check D1 as a release valve before choosing between F2 and F1; that is compatible with the key's framing of 'weighing,' not a contradiction of it.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-015",
+      "questionId": "exp26b-u15-015-q6",
+      "baseContentHash": "ae7c9b2ee61a294629a98a3a98d30c9f4f3be7fc10df07fdcbefc4032d4157dd",
+      "verdict": "repair",
+      "reason": "This explain question has no answer key (correctly ungraded per basis: coaching) and its own model explanation already discloses 'naming an outlet does not guarantee it is open,' which correctly avoids over-claiming a guaranteed-open lane to F1. Repaired only for the scene-level cues[0] grammar cascade (see repairs[0]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (28,-5) low/behind goal line; F2 (19,3) in the slot; D1 (10,7) at the point; Gold 3/A3 (12,6) near D1."
+        ],
+        "stated": [
+          "Model explanation names F1, F2 and D1 as the three support areas, matching the actual roster."
+        ],
+        "unproven": [
+          "No specific route/outcome is asserted as guaranteed; this row is a reflection, not a scored fact."
+        ]
+      },
+      "alternative": "A response naming F1 plus D1 (rather than F1 plus F2) is an equally valid pair of 'two support areas,' since the prompt asks for any two, not a specific pair; a reflection has no answer key and should not be graded down for choosing a different valid pairing.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u15-015",
+      "baseVersion": 2,
+      "baseScenarioHash": "7a5782d170a5431ad1d9e055dc305fc070ecbfce96b078afaa7c0fd4373b6d2d",
+      "replacement": {
+        "id": "exp26b-u15-015",
+        "version": 3,
+        "ageBand": "U15",
+        "title": "Reset around a crowded slot",
+        "family": "slot-crowding-reset",
+        "topic": "Offensive possession",
+        "objective": "Keep a possession route available when the slot is shaded and a low teammate can become the next outlet.",
+        "briefing": "Navy attacks Gold’s net. YOU control near the puck-side half wall; Gold 1 shades F2 in the slot, F1 is behind the goal line, and D1 holds the high point with Gold 3 nearby. The rep asks YOU to compare a connected reset with the crowded inside option.",
+        "setup": {
+          "actors": [
+            { "id": "h1", "label": "YOU", "team": "home", "role": "skater", "x": 20, "y": 9, "facing": 0 },
+            { "id": "h2", "label": "F1", "team": "home", "role": "skater", "x": 28, "y": -5, "facing": 2.5 },
+            { "id": "h3", "label": "F2", "team": "home", "role": "skater", "x": 19, "y": 3, "facing": 1.9 },
+            { "id": "a1", "label": "A1", "team": "away", "role": "skater", "x": 20, "y": 4, "facing": 2.6 },
+            { "id": "a2", "label": "A2", "team": "away", "role": "skater", "x": 24, "y": 1, "facing": 2.8 },
+            { "id": "a3", "label": "A3", "team": "away", "role": "skater", "x": 12, "y": 6, "facing": 2.2 },
+            { "id": "h4", "label": "D1", "team": "home", "role": "skater", "x": 10, "y": 7, "facing": 0 }
+          ],
+          "puck": { "owner": "h1" }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "YOU control at the half wall.",
+          "Gold 1 shades F2 in the slot.",
+          "F1 is a low outlet and D1 holds the point."
+        ],
+        "tags": ["experimental", "expansion"],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, puck management, cycling and support",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-015-q1",
+            "type": "choice",
+            "prompt": "Which Navy teammate is the low outlet?",
+            "options": [
+              { "id": "a", "text": "F1" },
+              { "id": "b", "text": "F2" },
+              { "id": "c", "text": "D1" }
+            ],
+            "answer": ["a"],
+            "basis": "scene",
+            "explanation": "F1 is the Navy player below the Gold net and available as the low outlet."
+          },
+          {
+            "id": "exp26b-u15-015-q2",
+            "type": "multi",
+            "prompt": "Which two details support a reset?",
+            "options": [
+              { "id": "a", "text": "Gold 1's slot shading" },
+              { "id": "b", "text": "F1's reachable low route" },
+              { "id": "c", "text": "The half-wall label decides the next pass" }
+            ],
+            "answer": ["a", "b"],
+            "basis": "coaching",
+            "explanation": "The defender and low outlet determine whether the reset can preserve possession."
+          },
+          {
+            "id": "exp26b-u15-015-q3",
+            "type": "sequence",
+            "prompt": "Arrange a connected reset.",
+            "options": [
+              { "id": "a", "text": "Locate F2, F1 and the high point" },
+              { "id": "b", "text": "Protect the puck from the slot shade" },
+              { "id": "c", "text": "Use the reachable outlet and scan again" }
+            ],
+            "answer": ["a", "b", "c"],
+            "basis": "coaching",
+            "explanation": "The reset keeps the puck connected while the shaded slot and low route are re-read."
+          },
+          {
+            "id": "exp26b-u15-015-q4",
+            "type": "position",
+            "prompt": "Move YOU off the wall to a support angle with F1 and F2 visible.",
+            "actorId": "h1",
+            "reference": { "x": 18, "y": 7.5 },
+            "basis": "coaching",
+            "explanation": "This small move off the wall changes the carrier angle while keeping F1, F2 and the high outlet available to scan. Each passing lane still depends on the defenders."
+          },
+          {
+            "id": "exp26b-u15-015-q5",
+            "type": "choice",
+            "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
+            "options": [
+              { "id": "a", "text": "A quick F2 connection if the slot remains reachable, or F1 support" },
+              { "id": "b", "text": "Force F2 because the defender moved" },
+              { "id": "c", "text": "Send the puck low without checking F1" }
+            ],
+            "answer": ["a"],
+            "basis": "coaching",
+            "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice."
+          },
+          {
+            "id": "exp26b-u15-015-q6",
+            "type": "explain",
+            "prompt": "Name two support areas in this reset and explain their different value.",
+            "basis": "coaching",
+            "explanation": "F1 offers a low outlet, while F2 offers an inside option if Gold 1 leaves it reachable. D1 is a high reset to check too, with Gold 3 nearby. Naming an outlet does not guarantee it is open."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u15-015-q1",
+        "exp26b-u15-015-q2",
+        "exp26b-u15-015-q3",
+        "exp26b-u15-015-q4",
+        "exp26b-u15-015-q5",
+        "exp26b-u15-015-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u15-015-q1",
+            "exp26b-u15-015-q2",
+            "exp26b-u15-015-q3",
+            "exp26b-u15-015-q4",
+            "exp26b-u15-015-q5",
+            "exp26b-u15-015-q6"
+          ],
+          "issue": "Scene-level grammar defect: cues[0] read 'YOU controls at the half wall,' a YOU-subject/singular-verb error matching the exact recurring defect class named in the standing lessons ('YOU is/has/was/carries/controls/...'). The briefing sentence in this same scene already used the correct form ('YOU control near the puck-side half wall'), confirming the cue line was simply never fixed when the v1->v2 repair corrected the actor roster and F1/D1 geometry. Because cues are part of the scene object (not a single question), this one-word fix changes every linked question's content hash even though no question's own prompt/options/answer/explanation text changed.",
+          "change": "Changed cues[0] from 'YOU controls at the half wall.' to 'YOU control at the half wall.' Version incremented from 2 to 3. No other field changed: actor roster, positions, facings, puck ownership, briefing, all six questions' prompts/options/answers/explanations are verbatim from v2.",
+          "evidence": "Direct text comparison of cues[0] against the correct-grammar sentence in this scene's own briefing; cross-checked against the standing defect list's exact 'controls' example. Roster/geometry for F1 (28,-5, behind the goal line at x=27.13), D1 (10,7, just inside the blue line at x=7.62, a 'high point'), and A1/A3 proximity to F2/D1 (matching the 'Gold 1 shades F2'/'Gold 3 nearby' briefing claims) were independently recomputed from setup.actors coordinates and found consistent with the prose; no further scene-level defect was found."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u15-015-q1",
+            "contentHash": "2d06bb7fcb1cd99177992abcc7fe1201e7a76793f59a5919b6f95e5a03d7c815",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; F1/F2/D1 identification, geometry and explanation unchanged and re-verified against the actual roster/coordinates."
+          },
+          {
+            "questionId": "exp26b-u15-015-q2",
+            "contentHash": "5ddb4cbad6c8fb861da58205dcd23fa9ea25f5a22e4069d1438ca99887fd84cf",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; question content unchanged and re-verified."
+          },
+          {
+            "questionId": "exp26b-u15-015-q3",
+            "contentHash": "a4d039294d62d9186569e5f7e775904f3f750834eff011f43479a9436d6a0e08",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; sequence answer key and its overlap-aware explanation unchanged and re-verified."
+          },
+          {
+            "questionId": "exp26b-u15-015-q4",
+            "contentHash": "5a49dd08e9b97c944bccd290d181d63ba07f669f639b0529be5ac168b46e3179",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; reference point (18,7.5) re-verified on-ice and off the boards relative to YOU's actual (20,9)."
+          },
+          {
+            "questionId": "exp26b-u15-015-q5",
+            "contentHash": "d3102383b8418f617df6fedabd29b2448ba4b39412ae938eee81b8b7c256e6c2",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; hypothetical framing and hedged key unchanged and re-verified."
+          },
+          {
+            "questionId": "exp26b-u15-015-q6",
+            "contentHash": "37886a2f9ec5159529d5845bcbd7198640c5dd53e1e2a95925e9d4007ae08cb0",
+            "checks": { "roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass" },
+            "reason": "Cue grammar corrected; ungraded reflection prompt and its already-hedged model explanation unchanged and re-verified."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00.000Z",
+      "access": "read",
+      "scope": "Independently fetched this same PDF (108.3KB, single page) for this packet. Text extraction through the fetch tool was limited, but the fetch succeeded and the document's identity/metadata ('Draft 2017 - Bantam - Midget Pathway', U15/U18 LTPD Train-to-Train stage chart) matches the detailed page-1 read already recorded the same day by the reviewer of packet-33 against the identical URL (a 'Team Play / Offensive Skills' column listing Puck Protection, Puck Management, Quick Transition, Smart Puck Support Principles Under Pressure, Entries, Retrievals, Hinging, Delays, Cycling, Net Drives and Anticipation). That corroborated content supports this scenario's declared use ('Page 1, puck management, cycling and support') for U15 age/topic placement only. It does not certify this scenario's specific coordinates, the slot/low-outlet decision, or any guaranteed pass outcome.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U15/U18 LTPD Train-to-Train stage chart (Bantam/Midget); used here for U15 age/topic placement only, per AUTHORING-CONTRACT.md's allowance for disclosed source use.",
+      "claim": "Supports puck management, cycling and puck-support-under-pressure as age-appropriate U15 teaching topics for this scenario's family/topic; does not certify this scenario's specific setup, alternatives or suggested answers."
+    }
+  ],
+  "remainingQuestionIds": []
+}

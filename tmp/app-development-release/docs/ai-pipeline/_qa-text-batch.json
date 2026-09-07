@@ -1,0 +1,382 @@
+[
+  {
+    "id": "gen_u13_gap_control_def01",
+    "type": "tf",
+    "nodeId": "u13.gap-control",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Defensive Play",
+    "d": 2,
+    "sit": "As a defender backing up on a 1-on-1, you should match the attacker's speed early but stay three stick lengths away all the way into the top of the circles.",
+    "ok": false,
+    "tip": "Match speed early, then tighten the gap.",
+    "why": "Matching speed is useful, but staying too far away near dangerous ice gives the attacker room to shoot, cut back, or pass. At U13, the defender should close the gap with feet and stick before the rush reaches the prime scoring area."
+  },
+  {
+    "id": "gen_u13_gap_control_def02",
+    "type": "mistake",
+    "nodeId": "u13.gap-control",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Defensive Play",
+    "d": 2,
+    "sit": "The puck turns over in the neutral zone. The gold defenseman immediately backs all the way to the top of their crease, leaving the blue line and neutral-zone ice uncontested.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They retreated too far and gave the attacker free ice to build speed",
+      "They pivoted backward even though defenders should always sprint forward",
+      "They stayed inside the dots instead of chasing the puck to the boards right away",
+      "They kept their stick in the lane instead of swinging it at the puck"
+    ],
+    "ok": 0,
+    "explain": "The mistake is not backing up by itself. The mistake is giving up too much ice. A good U13 defender surfs backward with control, holds a useful gap near the blue line, and steers the rush before it reaches the slot."
+  },
+  {
+    "id": "gen_u13_off_puck_support_off01",
+    "type": "next",
+    "nodeId": "u13.off-puck-support-offense",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Offensive Play",
+    "d": 2,
+    "sit": "Your winger is driving the puck wide down the right side. You are the center arriving late. The weak-side defender is locked onto the puck carrier and has not checked behind them.",
+    "opts": [
+      "Drive hard to the far post to occupy the defender and create a second threat",
+      "Skate directly toward the puck carrier and crowd their lane",
+      "Stop at the blue line for a drop pass while the rush moves below you",
+      "Circle behind the net before the puck carrier has beaten the defender"
+    ],
+    "ok": 0,
+    "explain": "The far-post drive gives the puck carrier a dangerous target and forces the weak-side defender to turn. That can open a pass to the net or space for the trailing player behind you.",
+    "tip": "Your route can move defenders."
+  },
+  {
+    "id": "gen_u13_off_puck_support_off02",
+    "type": "seq",
+    "nodeId": "u13.off-puck-support-offense",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Offensive Play",
+    "d": 2,
+    "sit": "Your team wins a puck battle in the defensive corner. You are the strong-side winger trying to become the breakout option.",
+    "items": [
+      "Scan up ice to locate forecheck pressure, your center, and open space.",
+      "Receive the pass on your forehand with your body ready to protect the puck.",
+      "Skate low to the hash marks to create a short, clear passing lane.",
+      "Make a quick read to bump the puck to the center, chip it, or protect it."
+    ],
+    "correct_order": [
+      2,
+      0,
+      1,
+      3
+    ],
+    "explain": "First, move into a useful support spot. As you arrive, scan so you know the pressure and your next option. Then receive the pass cleanly and make the next play without freezing."
+  },
+  {
+    "id": "gen_u13_angling_steering_def01",
+    "type": "tf",
+    "nodeId": "u13.angling-steering",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Defensive Play",
+    "d": 2,
+    "sit": "When angling a fast skater toward the boards, the best route is a straight line at their chest, even if that opens the middle behind you.",
+    "ok": false,
+    "tip": "Angle inside out, not straight at them.",
+    "why": "A straight line can miss the angle and let a fast player cut back or chip behind you. A curved inside-out route lets you match speed, protect the middle, and steer them toward the boards."
+  },
+  {
+    "id": "gen_u13_angling_steering_def02",
+    "type": "mistake",
+    "nodeId": "u13.angling-steering",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Defensive Play",
+    "d": 2,
+    "sit": "The opposing winger is skating up the boards. The gold defender has a good angle to the wall, but their stick is tucked near their own waist instead of taking away the puck-side lane.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They are not leading with their stick to take away the puck lane and inside pass",
+      "They are skating the attacker toward the boards instead of letting them cut middle",
+      "They are keeping their body inside the attacker instead of chasing from behind",
+      "They are matching speed instead of stopping to make the attacker slow down"
+    ],
+    "ok": 0,
+    "explain": "A good angle needs an active stick. Leading with the stick helps block the pass or touch to the middle while the body steers the attacker toward lower-danger ice."
+  },
+  {
+    "id": "gen_u13_transition_reads_cmp01",
+    "type": "next",
+    "nodeId": "u13.transition-reads",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Transition & Compete",
+    "d": 2,
+    "sit": "You intercept a pass in the neutral zone. Two opponents are closing from the middle, but your winger is already moving up the wide lane with open ice.",
+    "opts": [
+      "Make a quick, firm pass to the winger who has speed and space",
+      "Try to split the two middle defenders before they close their sticks",
+      "Dump the puck in before checking whether the wide lane is open",
+      "Turn back toward your own zone and let the counterattack slow down"
+    ],
+    "ok": 0,
+    "explain": "The middle is closing, but the wide lane is open. Moving the puck quickly to the player with speed creates a counterattack before the defenders can reset.",
+    "tip": "Use the open lane before it closes."
+  },
+  {
+    "id": "gen_u13_transition_reads_cmp02",
+    "type": "seq",
+    "nodeId": "u13.transition-reads",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Transition & Compete",
+    "d": 2,
+    "sit": "The other team misses the net, and the puck rims hard around the boards to you. You are starting a quick transition out of your zone.",
+    "items": [
+      "Move your feet and snap a firm pass to the center's tape.",
+      "Shoulder check before the puck arrives to read wall pressure.",
+      "Cushion the puck off the boards so you have control.",
+      "Locate your center curling low as the first support option."
+    ],
+    "correct_order": [
+      1,
+      3,
+      2,
+      0
+    ],
+    "explain": "The read starts before the puck arrives. Check pressure, find your support, control the rimmed puck, then move it quickly while your feet are alive."
+  },
+  {
+    "id": "gen_u13_puck_protection_skl01",
+    "type": "tf",
+    "nodeId": "u13.puck-protection",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Puck Skills",
+    "d": 2,
+    "sit": "When protecting the puck in the corner, standing still and reaching with your arms is usually safer than using your feet and edges to change the defender's angle.",
+    "ok": false,
+    "tip": "Move your feet to protect.",
+    "why": "A still puck carrier is easy to pin. Cutbacks, tight turns, and active feet help keep your body between the defender and the puck."
+  },
+  {
+    "id": "gen_u13_puck_protection_skl02",
+    "type": "mistake",
+    "nodeId": "u13.puck-protection",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "cat": "Puck Skills",
+    "d": 2,
+    "sit": "A forward carries the puck out of the corner. A defender closes from the forward's right side, but the forward keeps the puck exposed in front of their skates.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They failed to move the puck to the away hip and put their body between pressure and puck",
+      "They kept moving their feet instead of stopping to shield with only their arms",
+      "They stayed near the wall instead of cutting straight into the defender's stick",
+      "They looked up ice before the defender was fully beaten"
+    ],
+    "ok": 0,
+    "explain": "When pressure comes from one side, move the puck to the away hip and use your legs and hips as the shield. That makes the defender reach through your body to get the puck."
+  },
+  {
+    "id": "gen_u15_coverage_reads_def01",
+    "type": "tf",
+    "nodeId": "u15.coverage-reads",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Defensive Play",
+    "d": 3,
+    "sit": "In defensive-zone coverage, if the opposing center cycles high and switches spots with their defenseman, the covering forward should chase that center all the way to the blue line without communicating.",
+    "ok": false,
+    "tip": "Switches beat blind chasing.",
+    "why": "Blindly chasing a high cycle can pull coverage apart and open the slot. At U15 speed, players usually need to communicate a switch so the defensive shape stays layered and compact."
+  },
+  {
+    "id": "gen_u15_coverage_reads_def02",
+    "type": "mistake",
+    "nodeId": "u15.coverage-reads",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Defensive Play",
+    "d": 3,
+    "sit": "The opponent's puck carrier is tied up with a gold defenseman in the corner. The opposing center slides into the slot, but the gold center is puck-watching from the faceoff dot.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "The gold center lost defensive-side positioning on the most dangerous slot threat",
+      "The gold center should join the corner battle and leave the slot to the weak-side winger",
+      "The gold center should drift to the blue line early to prepare for a breakout",
+      "The gold center is too low even though the slot player is below the hash marks"
+    ],
+    "ok": 0,
+    "explain": "The most dangerous player is often away from the puck in the high-danger area. The center has to shoulder check, locate the slot threat, and stay between that player and the net."
+  },
+  {
+    "id": "gen_u15_attacking_1v1_off01",
+    "type": "next",
+    "nodeId": "u15.attacking-1v1",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Offensive Play",
+    "d": 3,
+    "sit": "You are attacking 1-on-1 off the rush. The defender has a tight gap and is matching your speed in the middle, but the outside lane is open.",
+    "opts": [
+      "Change pace with a hesitation, then accelerate into the wide lane",
+      "Force a toe drag through the defender's stick and skates in the middle",
+      "Stop completely and wait for the defender to back away on their own",
+      "Shoot from the blue line even though the defender is set in the lane"
+    ],
+    "ok": 0,
+    "explain": "When the defender owns a tight middle gap, you have to disrupt their timing. A pace change can freeze their feet, then your acceleration attacks the open outside lane.",
+    "tip": "Change speed to change the gap."
+  },
+  {
+    "id": "gen_u15_attacking_1v1_off02",
+    "type": "seq",
+    "nodeId": "u15.attacking-1v1",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Offensive Play",
+    "d": 3,
+    "sit": "You are a forward receiving an outlet pass and preparing to attack a lone defender on a 1-on-1 rush.",
+    "items": [
+      "Push the puck slightly wide to make the defender turn their hips.",
+      "Build speed as you receive and move through the neutral zone.",
+      "Cut back hard to the middle once the defender leans outside.",
+      "Scan the defender's gap, stick, and feet before choosing your lane."
+    ],
+    "correct_order": [
+      1,
+      3,
+      0,
+      2
+    ],
+    "explain": "Speed makes the defender respect the rush. Then read their gap and feet, push wide to make them commit, and cut back only after they lean outside."
+  },
+  {
+    "id": "gen_u15_backcheck_recovery_cmp01",
+    "type": "tf",
+    "nodeId": "u15.backcheck-recovery",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Transition & Compete",
+    "d": 3,
+    "sit": "When backchecking against a fast rush, you should go straight to the puck carrier even if two teammates are already pressuring that player.",
+    "ok": false,
+    "tip": "Sort the threats behind the puck.",
+    "why": "If teammates already have the puck carrier, another player chasing the puck can leave the trailer or weak-side attacker open. At U15, the backchecker must scan and pick up the next most dangerous option."
+  },
+  {
+    "id": "gen_u15_backcheck_recovery_cmp02",
+    "type": "mistake",
+    "nodeId": "u15.backcheck-recovery",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Transition & Compete",
+    "d": 3,
+    "sit": "The gold team turns the puck over deep. The first forward back starts hard, then glides through the neutral zone while watching the puck behind them.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They stopped skating hard before recovering to the defensive house",
+      "They checked over their shoulder instead of staring only at their own net",
+      "They stayed in the middle lane instead of chasing the puck to the boards",
+      "They avoided reaching from behind and taking a penalty"
+    ],
+    "ok": 0,
+    "explain": "A backcheck is not done when you can see the play. The first forward back has to keep skating through the middle until the dangerous ice is protected, then sort out the next threat."
+  },
+  {
+    "id": "gen_u15_breakout_and_regroup_cmp01",
+    "type": "next",
+    "nodeId": "u15.breakout-and-regroup",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Transition & Compete",
+    "d": 3,
+    "sit": "You are a defenseman retrieving a dump-in. The forechecker takes an inside angle and cuts off your partner. Your strong-side winger is open on the wall.",
+    "opts": [
+      "Shoulder check early, wheel the puck to the strong side, and make a firm wall pass",
+      "Force the reverse to your partner even though the inside lane is covered",
+      "Spin blind and fire the puck through the middle before pressure arrives",
+      "Hide behind the net until the forechecker leaves the inside lane"
+    ],
+    "ok": 0,
+    "explain": "The forechecker has taken away the partner reverse, but that opens the strong side. Reading that early lets you protect the puck and hit the winger before the forecheck resets.",
+    "tip": "Take the outlet the forechecker gives you."
+  },
+  {
+    "id": "gen_u15_breakout_and_regroup_cmp02",
+    "type": "seq",
+    "nodeId": "u15.breakout-and-regroup",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Transition & Compete",
+    "d": 3,
+    "sit": "A defenseman has the puck behind your net to start a breakout. You are the center executing a low-support route.",
+    "items": [
+      "Read the forecheck pressure on your defenseman.",
+      "Swing low into the strong-side circle to offer a short passing lane.",
+      "Receive the puck in motion with your feet already moving up ice.",
+      "Scan up ice to locate your wingers before the puck arrives."
+    ],
+    "correct_order": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "explain": "First read where support is needed. Then swing low, scan before the puck arrives, and receive in motion so the breakout can continue with speed."
+  },
+  {
+    "id": "gen_u15_time_and_space_sen01",
+    "type": "tf",
+    "nodeId": "u15.time-and-space",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Hockey Sense",
+    "d": 3,
+    "sit": "When you receive a pass in the offensive zone with no immediate pressure, one-touching it away right away is usually better than holding it long enough to draw a defender.",
+    "ok": false,
+    "tip": "Use space to make defenders move.",
+    "why": "A quick touch can be right under pressure, but with time and space you can hold the puck, force a defender to commit, and open a better passing or shooting lane."
+  },
+  {
+    "id": "gen_u15_time_and_space_sen02",
+    "type": "mistake",
+    "nodeId": "u15.time-and-space",
+    "levels": [
+      "U15 / Bantam"
+    ],
+    "cat": "Hockey Sense",
+    "d": 3,
+    "sit": "A forward enters the zone with speed on a 1-on-3. Instead of using the open perimeter ice to delay, they attack straight through all three defenders and lose the puck.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They failed to recognize they were outnumbered and did not delay for support",
+      "They stayed wide too long instead of cutting into the three defenders sooner",
+      "They looked for a late teammate instead of shooting from outside the blue line",
+      "They kept possession instead of dumping the puck the instant they crossed the line"
+    ],
+    "ok": 0,
+    "explain": "On a 1-on-3, attacking the middle is low percentage. The better U15 read is to use the perimeter, delay, and let support arrive so the rush can become a connected attack."
+  }
+]

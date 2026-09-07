@@ -1,0 +1,238 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changedAt": "2026-09-05T19:26:21.588Z",
+  "changes": [
+    {
+      "questionId": "exp26-u9-006-q3",
+      "scenarioId": "exp26-u9-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "sequence",
+        "prompt": "Arrange one pickup preparation.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find the loose puck"
+          },
+          {
+            "id": "b",
+            "text": "Look for pressure and support"
+          },
+          {
+            "id": "c",
+            "text": "Approach and choose a controlled next action"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This is a suggested practice sequence. No exact route is established by the source.",
+        "id": "exp26-u9-006-q3"
+      },
+      "after": {
+        "id": "exp26-u9-006-q3",
+        "type": "choice",
+        "prompt": "You spotted Gold1 and Navy2 before moving. When should you look for them again?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Only once the puck is on your stick"
+          },
+          {
+            "id": "b",
+            "text": "Keep checking as you approach and before choosing your first touch"
+          },
+          {
+            "id": "c",
+            "text": "After you send the pass to Navy2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 and Navy2 can move while you approach. Keep checking pressure and support along with the puck, so your first touch fits the newest picture. Looking once does not finish the job."
+      },
+      "beforeContentHash": "96a25e49ea3826f3fe67a3ae92c3dc889378f960e9a8dac6f7aff137ec7468d8",
+      "afterContentHash": "e6df473641798f7ec177a97d5f801a7df08120956006ebebbd7f457514ddcbdd",
+      "reason": "Teach repeated checking without duplicating q2’s list of cues."
+    },
+    {
+      "questionId": "exp26-u9-006-q7",
+      "scenarioId": "exp26-u9-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u9-006-q7",
+        "type": "choice",
+        "prompt": "If Gold1 closes YOU before the pass, what can Navy2 do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find Navy3 or another clear lane"
+          },
+          {
+            "id": "b",
+            "text": "Pass through Gold1 automatically"
+          },
+          {
+            "id": "c",
+            "text": "Treat the planned pass as safe"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 changed the planned reception lane. Navy3 or another clear choice can fit if the carrier can see it."
+      },
+      "after": {
+        "id": "exp26-u9-006-q7",
+        "type": "explain",
+        "prompt": "Navy2 sees Gold1 closing from the inside. What could Navy2 call to help YOU before the pickup?",
+        "basis": "coaching",
+        "explanation": "A short call such as “Pressure inside; I am along the boards” gives the pressure side and an outlet. YOU still checks the play: the call helps the scan and does not replace it."
+      },
+      "beforeContentHash": "41998d76d54db7d527816495dec3d4136d2ddfafb8ff57d86c8819eb08010670",
+      "afterContentHash": "d04bc3ad6ae7fd3164ab957dfce5d334b3d1db7896224e253aaa3a6c51b15459",
+      "reason": "Replace a question set attached to the wrong possession/actor situation with a distinct target grounded in the actual corner pickup."
+    },
+    {
+      "questionId": "exp26-u9-006-q8",
+      "scenarioId": "exp26-u9-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u9-006-q8",
+        "type": "multi",
+        "prompt": "What two facts say the pass is still only planned?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy2 still owns the puck"
+          },
+          {
+            "id": "b",
+            "text": "YOU have not received it"
+          },
+          {
+            "id": "c",
+            "text": "Gold1 already passed to YOU"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "Navy2 remains the owner and the reception has not happened. The planned pass can change with pressure."
+      },
+      "after": {
+        "id": "exp26-u9-006-q8",
+        "type": "multi",
+        "prompt": "If Gold1 wins the puck before YOU, what could Navy2 do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check Gold1’s route and look for a useful passing lane to close"
+          },
+          {
+            "id": "b",
+            "text": "Look toward the Navy net and recover to help defend"
+          },
+          {
+            "id": "c",
+            "text": "Keep waiting in the old spot for a pass from YOU"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 now has possession, so Navy2’s job changes from offering an outlet to helping defend. Recovering or closing an available lane can help; if Navy2 can reach the puck under control, challenging it may also fit."
+      },
+      "beforeContentHash": "b83ace614748f17cad7eeb409df98d83b4262c73ab3bdb7589b7c0ed0744ad27",
+      "afterContentHash": "06da7d2de4a041e82ed401478f1c47e70b442e3fce4fcc70a9d1829a05fb20f0",
+      "reason": "Replace a question set attached to the wrong possession/actor situation with a distinct target grounded in the actual corner pickup."
+    },
+    {
+      "questionId": "exp26-u9-006-q9",
+      "scenarioId": "exp26-u9-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u9-006-q9",
+        "type": "position",
+        "prompt": "Place YOU lower and away from Gold1, still visible to Navy2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 7,
+          "y": 7
+        },
+        "basis": "coaching",
+        "explanation": "This example creates a new reception angle and separation from Gold1. Another clear target may work."
+      },
+      "after": {
+        "id": "exp26-u9-006-q9",
+        "type": "position",
+        "actorId": "home-skater-2",
+        "prompt": "Move Navy2 to offer a shorter pass along the boards once YOU gain control.",
+        "reference": {
+          "x": 22,
+          "y": 9
+        },
+        "basis": "coaching",
+        "explanation": "The example brings Navy2 closer along the board side while staying away from Gold1’s inside approach. A shorter outlet can help after the pickup, but Navy2 must keep checking whether Gold1 can close the lane."
+      },
+      "beforeContentHash": "52eb102b0e73ff9f07b977afff71f7817af36eb519ccbec4e6220463e97b5f2f",
+      "afterContentHash": "9e5fe341cf226f637031b70bb4420d132962d705d785d1be53ae11e85dfb9cde",
+      "reason": "Replace a question set attached to the wrong possession/actor situation with a distinct target grounded in the actual corner pickup."
+    },
+    {
+      "questionId": "exp26-u9-006-q10",
+      "scenarioId": "exp26-u9-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u9-006-q10",
+        "type": "explain",
+        "prompt": "Why should YOU keep moving before the pass arrives?",
+        "basis": "coaching",
+        "explanation": "Gold1 is close and can take away the first lane. Moving to a clear angle gives Navy2 a current target instead of a fixed one."
+      },
+      "after": {
+        "id": "exp26-u9-006-q10",
+        "type": "choice",
+        "prompt": "The puck is near where the side boards curve around the end of the rink. What do we call this area?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The slot"
+          },
+          {
+            "id": "b",
+            "text": "The corner"
+          },
+          {
+            "id": "c",
+            "text": "The point"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "This is the corner. The slot is the middle space in front of the net; the point is near the attacking blue line. Naming the corner helps a teammate understand where the pickup is happening."
+      },
+      "beforeContentHash": "9242ee3a6f972e4676e94244cd0b9dc819eafcc197ae964b52251c3d947a8217",
+      "afterContentHash": "6125f775d86ae21b283760c107bc4bc781ffb5f5564d634b8b8f515bdc1d16fd",
+      "reason": "Replace a question set attached to the wrong possession/actor situation with a distinct target grounded in the actual corner pickup."
+    }
+  ]
+}

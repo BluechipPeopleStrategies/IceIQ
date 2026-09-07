@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { LEVELS } from '../shared.jsx';
 import { loadQB } from '../qbLoader.js';
 import { ALL_ANIMATED_PLAYS } from '../play/playCatalog.js';
 import AnimatedPlay from '../play/AnimatedPlay.jsx';
 import { ScenarioRenderer } from '../scenario/index.js';
+import { scenarioTitle } from '../scenario/scenario3DAdapter.js';
 import RinkReadsRinkQuestion from '../RinkReadsRinkQuestion.jsx';
 import ScenarioImage from '../visuals/ScenarioImage.jsx';
-import { COACH_PERSONAS, getCoachForQuestion, coachReaction } from '../coachPersonas.js';
+import { getCoachForQuestion, coachReaction } from '../coachPersonas.js';
 import { CoachFeedback } from '../play/CoachFeedback.jsx';
 import { TYPE_LABELS, questionOptions, scoreLesson, creditLesson, buildLibrary, libraryMasteryDescriptor } from './lessonCore.js';
-
 import { createMasteryLedger, readMasteryLedger, recordMasteryAttempt, masteryProgress, masterySummary, masteryStorageKey } from './spacedMasteryCore.js';
 import { savePracticeEvidence, readPracticeEvidence } from './practiceMasteryStorage.js';
 import SpacedMasteryProgress from './SpacedMasteryProgress.jsx';
@@ -18,22 +18,30 @@ const documents=import.meta.glob('../../docs/library/*.md',{query:'?raw',import:
 const NOTES=Object.entries(documents).filter(([path])=>!path.split('/').at(-1).startsWith('_')&&!path.endsWith('/INDEX.md')).map(([path,text])=>({id:path.split('/').at(-1).replace('.md',''),title:text.replace(/^\uFEFF/,'').split('\n').map(l=>l.trim()).find(l=>l.startsWith('# '))?.replace(/^# /,'').replace(/\s*\(`.*`\)/,'')||path.split('/').at(-1),text,path:path.replace('../../','')}));
 const readProgress=key=>{try{const value=JSON.parse(localStorage.getItem(key));return value&&typeof value==='object'&&!Array.isArray(value)?value:{};}catch{return {};}};
 
-function SourceQuestion({item,coachId,onCredit,playerId}) {
+function SourceQuestion({item,onCredit,playerId}) {
   const q=item.source;
   const [answer,setAnswer]=useState(null), [result,setResult]=useState(null), [order,setOrder]=useState(()=>q.items?.map((_,i)=>i)||[]),[picks,setPicks]=useState([]);
   const locked=useRef(false);
-  const coach=COACH_PERSONAS.find(c=>c.id===coachId)||getCoachForQuestion(q,item.age,'Forward');
-  function submit(correct,value){if(locked.current)return;locked.current=true;setAnswer(value);setResult(correct);onCredit(correct);}
   const spatial=q.type==='scenario'||q.rink;
+  const needsImage=!!q.media?.url&&(!q.media.type||q.media.type==='image')&&!spatial;
+  const [imageReady,setImageReady]=useState(!needsImage);
+  const imageReadyRef=useRef(!needsImage);
+  const imageAvailability=useCallback(value=>{imageReadyRef.current=!!value;setImageReady(!!value);},[]);
+  const coach=getCoachForQuestion(q,item.age,'Forward');
+  function submit(correct,value){if(locked.current||!imageReadyRef.current)return;locked.current=true;setAnswer(value);setResult(correct);onCredit(correct);}
+  function moveStep(index,direction){if(locked.current||!imageReadyRef.current)return;setOrder(old=>{const next=[...old];[next[index],next[index+direction]]=[next[index+direction],next[index]];return next;});}
+  function togglePick(value){if(locked.current||!imageReadyRef.current)return;setPicks(old=>old.includes(value)?old.filter(v=>v!==value):[...old,value]);}
+  const cannotAnswer=result!==null||!imageReady;
   const options=questionOptions(q);
   return <div className="pf-question">
     {!spatial&&<><p className="oo-eyebrow">{TYPE_LABELS[item.type]||item.type} · {item.age.split(' / ')[0]}</p>{q.question&&q.sit&&<p>{q.sit}</p>}<h2>{q.question||q.sit||q.q||q.prompt||q.title}</h2>
-      <ScenarioImage media={q.media} overlays={q.overlays} frameRatio={null}/>
-      {q.type==='seq'?<><ol className="pf-sequence">{order.map((idx,i)=><li key={idx}><span>{q.items[idx]}</span><button disabled={result!==null||i===0} aria-label={`Move step ${i+1} up`} onClick={()=>setOrder(a=>{const n=[...a];[n[i-1],n[i]]=[n[i],n[i-1]];return n;})}>↑</button><button disabled={result!==null||i===order.length-1} aria-label={`Move step ${i+1} down`} onClick={()=>setOrder(a=>{const n=[...a];[n[i],n[i+1]]=[n[i+1],n[i]];return n;})}>↓</button></li>)}</ol><button className="oo-primary" disabled={result!==null} onClick={()=>submit(scoreLesson(q,order),order)}>Check the sequence</button></>:<div className="pf-options">{options.map(({value,text})=>{
+      <ScenarioImage questionId={q.id} media={q.media} overlays={q.overlays} frameRatio={null} onAvailabilityChange={imageAvailability}/>
+      {needsImage&&!imageReady&&<p role="status">Open the rink before choosing your answer. Your choices stay here if it needs to reload.</p>}
+      {q.type==='seq'?<><ol className="pf-sequence">{order.map((idx,i)=><li key={idx}><span>{q.items[idx]}</span><button disabled={cannotAnswer||i===0} aria-label={`Move step ${i+1} up`} onClick={()=>moveStep(i,-1)}>↑</button><button disabled={cannotAnswer||i===order.length-1} aria-label={`Move step ${i+1} down`} onClick={()=>moveStep(i,1)}>↓</button></li>)}</ol><button className="oo-primary" disabled={cannotAnswer} onClick={()=>submit(scoreLesson(q,order),order)}>Check the sequence</button></>:<div className="pf-options">{options.map(({value,text})=>{
         const chosen=q.type==='multi'?picks.includes(value):answer===value;
         const correct=result!==null&&q.type!=='multi'&&scoreLesson(q,value);
-        return <button key={String(value)} disabled={result!==null} aria-pressed={chosen} className={`${correct?'correct':''} ${chosen?'chosen':''}`} onClick={()=>q.type==='multi'?setPicks(a=>a.includes(value)?a.filter(v=>v!==value):[...a,value]):submit(scoreLesson(q,value),value)}><b>{correct?'✓':q.type==='tf'?'?':String.fromCharCode(65+value)}</b><span>{text}</span></button>;
-      })}{q.type==='multi'&&<button disabled={result!==null||!picks.length} onClick={()=>submit(scoreLesson(q,picks),picks)}>Check my choices</button>}</div>}
+        return <button key={String(value)} disabled={cannotAnswer} aria-pressed={chosen} className={`${correct?'correct':''} ${chosen?'chosen':''}`} onClick={()=>q.type==='multi'?togglePick(value):submit(scoreLesson(q,value),value)}><b>{correct?'✓':q.type==='tf'?'?':String.fromCharCode(65+value)}</b><span>{text}</span></button>;
+      })}{q.type==='multi'&&<button disabled={cannotAnswer||!picks.length} onClick={()=>submit(scoreLesson(q,picks),picks)}>Check my choices</button>}</div>}
     </>}
     {q.type==='scenario'?<ScenarioRenderer scenario={q} playerId={playerId} onAnswer={p=>{if(p.complete!==false)submit(p.ok,p.picked)}}/>:q.rink?<RinkReadsRinkQuestion question={q} onAnswer={p=>submit(typeof p==='boolean'?p:!!p?.ok,p)}/>:null}
     {result!==null&&<><CoachFeedback coach={coach} correct={result} headline={coachReaction(coach,result,item.age)} explanation={q.why||q.explain||q.explanation||q.feedback?.[result?'correct':'incorrect']||''}/>{q.tip&&<p className="pf-tip">Remember: {q.tip}</p>}{q.type==='seq'&&!result&&<p>Source order: {q.correct_order.map(i=>q.items[i]).join(' → ')}</p>}<div className="pf-earned">{result?'Read completed. Mastery builds across different questions and practice days.':'Read the feedback. A later practice day can show improvement.'}</div></>}
@@ -49,7 +57,7 @@ export default function PracticeLibrary({playerId='practice-preview',ageBand='U1
   const [mastery,setMastery]=useState(()=>{try{return readPracticeEvidence(localStorage.getItem(masteryKey));}catch{return createMasteryLedger();}});
   const [notice,setNotice]=useState('');
   useEffect(()=>{let active=true;loadQB().then(b=>{if(active)setBank(b)}).catch(e=>{if(active)setError(e.message)});return()=>{active=false};},[]);
-  const library=useMemo(()=>buildLibrary(bank||{},ALL_ANIMATED_PLAYS),[bank]);
+  const library=useMemo(()=>buildLibrary(bank||{},ALL_ANIMATED_PLAYS).map(item=>item.type==='scenario'?{...item,title:scenarioTitle(item.source)}:item),[bank]);
   const masteryCatalog=useMemo(()=>library.map(libraryMasteryDescriptor),[library]);
   const masteryTotals=masterySummary(mastery,masteryCatalog.filter(q=>q.ageBand===age.split(' ')[0]));
   const selectedMastery=selected?libraryMasteryDescriptor(selected):null;

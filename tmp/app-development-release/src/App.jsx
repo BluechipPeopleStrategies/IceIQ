@@ -1,0 +1,8957 @@
+import { useState, useEffect, useRef, useCallback, useMemo, useId, lazy, Suspense } from "react";
+import { COACH_PERSONAS, getAgeTier, getCoachForQuestion } from "./coachPersonas.js";
+import * as SB from "./supabase";
+import { supabase, hasSupabase } from "./supabase";
+import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate";
+import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
+import { getLevelDisplay } from "./utils/ageGroup";
+import ReadAloudToggle from "./ReadAloudToggle.jsx";
+import { ttsSupported, getReadAloud, speakParts, stopSpeaking } from "./speak.js";
+import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
+import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
+import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
+// utils/demoTransfer removed — player demo was killed; signup now writes
+// to Supabase from the first interaction, no LS→cloud transfer needed.
+import { seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
+import DepthChartSection from "./coach/LineupCard.jsx";
+import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
+import RinkReadsRink from "./RinkReadsRink";
+import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
+import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
+import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
+import { preAppScreen } from "./utils/authRouting.js";
+import { canSelfRate } from "./data/selfRating.js";
+import { canSetGoals } from "./data/goalBands.js";
+import { rememberScreen, recallScreen, forgetScreen } from "./utils/routeMemory.js";
+import { exampleFor } from "./data/goalStarters.js";
+import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
+import { cachePlayer, mergeCachedPlayer, clearCachedPlayer } from "./utils/playerCache.js";
+import { withTimeout, WRITE_TIMEOUT_MS } from "./utils/withTimeout.js";
+import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
+import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
+import { boardHash } from "./review/reviewCore.js";
+import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
+import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
+import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
+import { CoachTrainingSection } from "./trainingLogCoach.jsx";
+import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
+import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
+import { ToastContainer, toast } from "./toast.jsx";
+import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
+import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
+const CognitiveGym = lazy(() => import("./cognitive-gym/CognitiveGym"));
+import FeedbackWidget from "./devtools/FeedbackWidget";
+import { AdminRoute, AdminLayout } from "./admin.jsx";
+import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
+import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
+import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
+import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
+import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides, isKilled, killQuestion, unkillQuestion, getKillList, clearKillList, getFlag, setFlag, clearFlag, getFlagList, clearFlagList } from "./utils/questionOverrides.js";
+import {
+  REASONS as REFLECTION_REASONS,
+  getReflectionFor, saveReflection,
+  isReflectionsDisabled, setReflectionsDisabled,
+  reflectionCounts,
+} from "./utils/reflections.js";
+import { ScenarioRenderer } from "./scenario/index.js";
+import {
+  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS, ALL_AGES_MODE,
+  RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
+} from "./shared.jsx";
+import ScenarioImage from "./visuals/ScenarioImage.jsx";
+import { HockeyPlayerArt } from "./visuals/HockeyPlayerArt.jsx";
+import { RinkPlayTest } from "./RinkPlay.jsx";
+import { PathScreen } from "./path/PathScreen.jsx";
+import { ChallengesHub } from "./path/ChallengesHub.jsx";
+import { levelToBand } from "./path/pathData.js";
+import { recordNodeResult, getPathState } from "./path/pathProgress.js";
+import { getPath } from "./path/pathData.js";
+const imgSplash = "/splash.jpg";
+import imgCoreApp from "./assets/images/Core-App.jpg";
+import imgDataPanel from "./assets/images/Data-Panel.jpg";
+import imgProfile from "./assets/images/Profile-Analytics.jpg";
+import imgTactics from "./assets/images/Tactics-Playbook.jpg";
+import imgSuccess from "./assets/images/Success-Icon.jpg";
+
+// Resolve the user's tier for gating decisions.
+// Priority: dev override (localStorage rinkreads_tier_override) → that tier
+//           demo mode → coach demo = TEAM
+//           profile.tier field (future Supabase subscriptions) → that tier
+//           default → FREE
+function resolveTier(args = {}) {
+  const t = resolveTierRaw(args);
+  // ALL_AGES_MODE (temporary): floor FREE up to PRO so the single login is the
+  // full Pro experience — all formats, adaptive engine, no weekly quiz cap.
+  // Coach=TEAM and explicit PRO/FAMILY/TEAM are preserved. Flip the flag off
+  // to restore the FREE tier and its gating.
+  return ALL_AGES_MODE && t === "FREE" ? "PRO" : t;
+}
+function resolveTierRaw({ profile, demoMode } = {}) {
+  // Coaches in any non-production session (demo / preview / dev-bypass)
+  // always get TEAM tier, regardless of what the tier picker reads. There
+  // is no real "coach on PRO" account — in production, coaches sign up on
+  // the TEAM plan — so forcing TEAM here keeps the coach dashboard
+  // reachable when a tester picks the wrong tier in the dev panel.
+  if (profile?.role === "coach" && (demoMode || profile?.__dev || profile?.__preview)) {
+    return "TEAM";
+  }
+  // The Pro-player preview flow (enterPlayerPreview) marks profile.__preview
+  // and writes rinkreads_tier_override="PRO" so the preview renders with Pro
+  // features unlocked. Dev-bypass sessions honor the override the same way
+  // — either via the rinkreads_dev_bypass LS flag or by having __dev set on the
+  // profile (which the AuthScreen dev panel writes when entering via DEV
+  // mode without the LS flag). Production users never hit any branch, so
+  // they can't self-promote.
+  const allowLsOverride = isDevBypassEnabled() || !!profile?.__preview || !!profile?.__dev;
+  if (allowLsOverride) {
+    try {
+      const override = typeof window !== "undefined" ? window.localStorage.getItem("rinkreads_tier_override") : null;
+      if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
+        return override.toUpperCase();
+      }
+    } catch {}
+  }
+  if (demoMode) return profile?.role === "coach" ? "TEAM" : "FREE";
+  if (profile?.tier) {
+    const t = String(profile.tier).toUpperCase();
+    if (["FREE","PRO","FAMILY","TEAM"].includes(t)) return t;
+  }
+  return "FREE";
+}
+
+// ─────────────────────────────────────────────────────────
+// VERSION
+// ─────────────────────────────────────────────────────────
+const VERSION = "0.1-beta";
+const RELEASE_DATE = "June 2026";
+const CHANGELOG = [
+  { v:"0.1-beta", date:"June 2026", notes:[
+    {icon:"🧠", title:"The Brain Gym is open", desc:"Short games for noticing cues, following a pass, remembering positions, and choosing an action. Try a few rounds, then talk with your coach about what you noticed and where that cue appears on the ice."},
+    {icon:"🏒", title:"Plays that unfold", desc:"Scenarios now branch. You read the play one decision at a time and watch how it develops from the choice you make, just like a real shift. Closer to hockey, less like a worksheet."},
+    {icon:"✨", title:"Sharper ice, clearer reads", desc:"The rink diagrams got a real makeover so positions and lanes are easier to see, questions can be read aloud, and we added fresh scenarios on breakouts, D-zone coverage, and support play."},
+  ]},
+];
+
+// ─────────────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────────────
+const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
+const QUIZ_LENGTH = 10;
+
+const TOAST_DURATION_MS = 1600;
+const TIER_GOLD_THRESHOLD = 80;
+const TIER_YELLOW_THRESHOLD = 60;
+
+const SCORE_TIERS = [
+  {min:TIER_GOLD_THRESHOLD, label:"First Star",  badge:"⭐", color:C.green},
+  {min:TIER_YELLOW_THRESHOLD, label:"Second Star", badge:"⭐", color:C.yellow},
+  {min:0,  label:"Third Star",  badge:"⭐", color:C.red},
+];
+const getTier = s => SCORE_TIERS.find(t => s >= t.min) || SCORE_TIERS[2];
+
+const BADGES = {
+  HOT_STREAK: {icon:"🔥", name:"Hot Streak",  desc:"3 correct in a row"},
+  HOCKEY_IQ:  {icon:"🧠", name:"Game Sense",   desc:"Perfect session"},
+  HARD_HAT:   {icon:"💎", name:"Hard Hat",     desc:"5 Advanced correct"},
+  SNIPER:     {icon:"🎯", name:"Sniper",       desc:"100% on a category"},
+  LEVEL_UP:   {icon:"📈", name:"Level Up",     desc:"Beat your last score"},
+  // Display name only — the IRON_MAN key is what calcBadges awards, and badges
+  // are recomputed from session stats on every load rather than persisted by
+  // key, so nobody loses a badge they earned. Decision #9, 2026-08-03:
+  // "Workhorse" is what a coach actually calls that player.
+  IRON_MAN:   {icon:"🏒", name:"Workhorse",    desc:"5 sessions completed"},
+  TACTICIAN:  {icon:"🧩", name:"Tactician",    desc:"Sequence question perfect"},
+  DETECTIVE:  {icon:"🔍", name:"Detective",    desc:"Spot 3 mistakes correctly"},
+  FIRST_LINE: {icon:"🏒", name:"First Line",   desc:"Completed your First-Five"},
+};
+
+// First-Five quest checklist — guided onboarding for new users.
+const QUESTS_PLAYER = [
+  { id:"rate6",   label:"Rate yourself on 6 skills",                nav:"skills-onboarding", gate:null, target:6 },
+  { id:"quiz1",   label:"Take your first quiz",                     nav:"quiz",              gate:null, target:1 },
+  { id:"read3",   label:"Read 3 pro insights",                      nav:"insights",          gate:null, target:3 },
+  { id:"train1",  label:"Log a past or future training session",    nav:"profile",           gate:null, target:1 },
+  { id:"goal1",   label:"Set your first goal",                      nav:"goals",             gate:null, target:1 },
+];
+const QUESTS_COACH = [
+  { id:"team1",    label:"Add your first team",           nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"invite1",  label:"Invite 1 player",               nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"rate1",    label:"Rate 1 skill on 1 player",      nav:"home",  gate:"coachFeedback",  target:1 },
+  { id:"depth1",   label:"Set your team's depth chart",   nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"focus1",   label:"Check your team's focus",       nav:"home",  gate:null,             target:1 },
+];
+
+// SMART goal categories.
+// EVERY level in LEVELS (shared.jsx) must have an entry. A missing key gave
+// U7 players an empty tab strip, a card reading "Your Goal — ", and a save that
+// would have upserted `category: ''` (2026-08-03). goalCatsFor() below is the
+// belt-and-braces guard so a future added level degrades to a usable screen
+// instead of a broken one.
+// U7 categories are deliberately cross-ice, skills-not-systems, and carry no
+// position language. PENDING THOMAS'S SIGN-OFF (hockey content).
+const GOAL_CATS = {
+  "U7 / Initiation": ["Skating","Puck Control","Passing","Teamwork"],
+  "U9 / Novice":     ["Skating","Passing","Shooting","Defense","Game IQ"],
+  "U11 / Atom":      ["Skating","Puck Protection","Gap Control","Rush Reads","Special Teams","Game IQ"],
+  "U13 / Peewee":    ["Edge Work","Shot Selection","Defensive Zone","Zone Entry","Special Teams","Leadership"],
+  "U15 / Bantam":    ["Systems Play","Transition","Special Teams","Physical Play","Gap Control","Leadership"],
+  "U18 / Midget":    ["Game Management","Advanced Tactics","Special Teams","Neutral Zone Play","Breakouts","Leadership"],
+};
+
+// Goal categories for a level, never empty.
+// An unknown/absent level falls back to the simplest set rather than returning
+// [], which is what rendered an empty tab strip and let a `category: ''` row
+// reach the database. Callers can treat the result as always having a [0].
+const GOAL_CATS_FALLBACK = GOAL_CATS["U9 / Novice"];
+function goalCatsFor(level) {
+  const cats = GOAL_CATS[level];
+  return Array.isArray(cats) && cats.length ? cats : GOAL_CATS_FALLBACK;
+}
+
+const SMART_PROMPTS = {
+  S: "What specifically will you work on? (be precise)",
+  M: "How will you measure improvement?",
+  A: "Is this realistic for your current level?",
+  R: "How does this help you on the ice?",
+  T: "When will you achieve this by?",
+};
+
+function avatarInitials(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Client-side image resize for editor uploads. Caps the longest edge at
+// (maxW × maxH) preserving aspect ratio, then encodes as JPEG so a 4MB
+// PNG drop becomes a ~150-300KB upload. Avoids burning Storage on the
+// raw file we don't actually need at full resolution.
+async function resizeImageForUpload(file, maxW, maxH) {
+  const dataUrl = await new Promise((res, rej) => {
+    const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file);
+  });
+  const img = await new Promise((res, rej) => {
+    const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = dataUrl;
+  });
+  const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
+  const w = Math.round(img.width * ratio);
+  const h = Math.round(img.height * ratio);
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(img, 0, 0, w, h);
+  return await new Promise((res) => canvas.toBlob(b => res(b), "image/jpeg", 0.85));
+}
+
+function AvatarDisc({ name, kind = "player", size = 48, imageUrl = null }) {
+  const display = kind === "coach" ? String(name || "").replace(/^Coach\s+/i, "") : name;
+  const initials = avatarInitials(display);
+  const bg = kind === "coach"
+    ? "linear-gradient(135deg, #475569 0%, #1e293b 100%)"
+    : C.gradientPrimary;
+  const fg = kind === "coach" ? "#f1f5f9" : "#0b1220";
+  // Track image-load failure so we can drop back to initials if the
+  // portrait file is missing (e.g. coach images haven't been saved yet).
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = imageUrl && !imgFailed;
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: bg, color: fg,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontFamily: FONT.display, fontWeight: 800, fontSize: Math.round(size * 0.38),
+      border: "1px solid rgba(255,255,255,0.12)",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
+      letterSpacing: ".02em", flexShrink: 0,
+      overflow: "hidden",
+    }}>
+      {showImage ? (
+        <img src={imageUrl} alt={name || ""} onError={() => setImgFailed(true)}
+          draggable={false} loading="lazy" decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", userSelect: "none" }}/>
+      ) : initials}
+    </div>
+  );
+}
+
+// Coach voice — kept tight (1–2 words). Per-coach pools below override these
+// for each persona; these are the fallbacks when a coach pool is empty.
+const FLAVOR_CORRECT   = ["Yes.", "Right.", "Nice.", "Sharp.", "Good read.", "Smart.", "Locked in.", "There it is."];
+const FLAVOR_INCORRECT = ["No.", "Close.", "Reset.", "Read it.", "Try again.", "Watch up.", "Not quite."];
+
+// ── Quest-flag localStorage keys ──────────────────────────
+const LS_INSIGHTS_READ   = "rinkreads_insights_read_v1";    // Array of insight "stat" strings.
+const LS_PROFILE_VIEWED  = "rinkreads_profile_viewed_v1";   // "1" once viewed / ack'd.
+const LS_GATED_ACK       = "rinkreads_gated_quests_ack_v1"; // Array of feature keys.
+const LS_COACH_RATED     = "rinkreads_coach_rated_v1";      // "1" once coach rates a skill.
+const LS_COACH_NOTED     = "rinkreads_coach_noted_v1";      // "1" once coach leaves a note.
+const LS_DEPTH_CHART_SET = "rinkreads_depth_chart_set_v1";  // "1" once coach assigns any line. (Managed by utils/depthChart.js.)
+const LS_FIRST_LINE_SEEN = "rinkreads_first_line_seen_v1";  // JSON: {[identity]: "1"}.
+const LS_QUEST_DISMISSED = "rinkreads_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_WHATSNEW_DISMISSED = "rinkreads_whatsnew_dismissed_v1"; // JSON: {[identity]: version}.
+const LS_UPGRADE_DISMISSED  = "rinkreads_upgrade_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_CLIPS_WATCHED      = "rinkreads_clips_watched_v1";      // JSON: {[identity]: string[]}.
+const LS_HOMEWORK_DONE      = "rinkreads_homework_done_v1";      // JSON: {[identity]: string[]}.
+
+// lsGetStr / lsSetStr / lsGetJSON / lsSetJSON come from src/utils/storage.js
+// (imported at the top of this file). Keep call sites terse.
+
+export function markInsightRead(key) {
+  if (!key) return;
+  const arr = lsGetJSON(LS_INSIGHTS_READ, []);
+  if (!arr.includes(key)) { arr.push(key); lsSetJSON(LS_INSIGHTS_READ, arr); }
+}
+function markProfileViewed() { lsSetStr(LS_PROFILE_VIEWED, "1"); }
+function markGatedAck(feature) {
+  if (!feature) return;
+  const arr = lsGetJSON(LS_GATED_ACK, []);
+  if (!arr.includes(feature)) { arr.push(feature); lsSetJSON(LS_GATED_ACK, arr); }
+}
+
+function useQuestFlags(bump) {
+  // `bump` is a counter from the parent — re-read localStorage whenever it increments.
+  const [flags, setFlags] = useState(() => readQuestFlags());
+  useEffect(() => { setFlags(readQuestFlags()); }, [bump]);
+  return flags;
+}
+
+function readQuestFlags() {
+  return {
+    insightsRead: new Set(lsGetJSON(LS_INSIGHTS_READ, [])),
+    profileViewed: lsGetStr(LS_PROFILE_VIEWED) === "1",
+    gatedAck: new Set(lsGetJSON(LS_GATED_ACK, [])),
+    coachRated: lsGetStr(LS_COACH_RATED) === "1",
+    coachNoted: lsGetStr(LS_COACH_NOTED) === "1",
+    depthChartSet: lsGetStr(LS_DEPTH_CHART_SET) === "1",
+  };
+}
+
+function computeQuestProgress(def, ctx) {
+  const { player, flags, teams, rosters, tier } = ctx;
+  let progress = 0;
+  switch (def.id) {
+    case "rate6":
+      progress = Object.values(player?.selfRatings || {}).filter(v => v).length;
+      break;
+    case "quiz1":
+      progress = (player?.quizHistory || []).length;
+      break;
+    case "read3":
+    case "insight1":
+      progress = flags.insightsRead.size;
+      break;
+    case "focus1":
+      try { progress = window.localStorage.getItem("rinkreads_coach_focus_seen_v1") === "1" ? 1 : 0; }
+      catch { progress = 0; }
+      break;
+    case "goal1":
+      progress = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+      break;
+    case "profile":
+      progress = flags.profileViewed ? 1 : 0;
+      break;
+    case "train1": {
+      // Count localStorage training sessions for this player. Demo players
+      // use the "__demo__" key; real players use their Supabase id.
+      try {
+        const raw = window.localStorage.getItem("rinkreads_training_log");
+        const all = raw ? JSON.parse(raw) : {};
+        const pid = player?.id || "__demo__";
+        progress = (all[pid]?.sessions?.length) || 0;
+      } catch { progress = 0; }
+      break;
+    }
+    case "team1":
+      progress = (teams || []).length;
+      break;
+    case "invite1":
+      progress = Object.values(rosters || {}).reduce((n, r) => n + (r?.length || 0), 0);
+      break;
+    case "rate1":
+      progress = flags.coachRated ? 1 : 0;
+      break;
+    case "note1":
+      progress = flags.coachNoted ? 1 : 0;
+      break;
+    case "depth1":
+      progress = flags.depthChartSet ? 1 : 0;
+      break;
+    default:
+      progress = 0;
+  }
+  const done = progress >= def.target;
+  const locked = def.gate ? !canAccess(def.gate, tier).allowed : false;
+  const acknowledged = locked && flags.gatedAck.has(def.gate);
+  return { id: def.id, progress, done, locked, acknowledged };
+}
+
+function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete, showSignupCTA, onSignup }) {
+  const total = quests.length;
+  const checked = results.filter(r => r.done || r.acknowledged).length;
+  const allDone = checked >= total;
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    if (allDone && onAllComplete) onAllComplete();
+  }, [allDone, onAllComplete]);
+  const coachName = "Coach Reynolds";
+  // Prescriptive mode: first quest that isn't done/acknowledged is the
+  // "Next up" — surfaced as a hero CTA at the top of the card so brand-new
+  // users have one obvious thing to tap, not 6.
+  const nextIdx = results.findIndex(r => !r.done && !r.acknowledged);
+  const nextQuest = nextIdx >= 0 ? quests[nextIdx] : null;
+  return (
+    <div style={{background:`linear-gradient(135deg, rgba(201,162,75,0.08), rgba(201,162,75,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"center",gap:".65rem",marginBottom:collapsed ? 0 : ".85rem"}}>
+        <AvatarDisc name={coachName} kind="coach" size={36}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>First Five · {role === "coach" ? "Coach" : "Player"}</div>
+          <div style={{fontSize:13,color:C.white,fontWeight:700,marginTop:1}}>
+            {allDone ? "🏒 First Line — complete!" : nextQuest ? `Next up: ${nextQuest.label}` : `Welcome — try these ${total} to learn the app`}
+          </div>
+        </div>
+        <button onClick={() => setCollapsed(c => !c)} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,padding:"4px 8px"}} aria-label={collapsed?"Expand":"Collapse"}>
+          {collapsed ? "▼" : "▲"}
+        </button>
+        {onDismiss && <button onClick={onDismiss} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:14,padding:"2px 6px",lineHeight:1}} aria-label="Dismiss">×</button>}
+      </div>
+      {/* Prescriptive hero CTA — brand-new users tap one big button instead
+          of scanning the whole list. Hidden when collapsed or when all done. */}
+      {!collapsed && nextQuest && !allDone && (
+        <button onClick={() => onTap(nextQuest)} style={{width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+          <span>Start: {nextQuest.label}</span>
+          <span style={{fontSize:16}}>→</span>
+        </button>
+      )}
+      {!collapsed && (
+        <>
+          {quests.map((q, i) => {
+            const r = results[i];
+            const tick = r.done ? "✓" : r.acknowledged ? "✓" : r.locked ? "🔒" : `${r.progress}/${q.target}`;
+            const tickColor = r.done ? C.green : r.acknowledged ? C.dimmer : r.locked ? C.gold : C.dim;
+            return (
+              <button key={q.id} onClick={() => onTap(q)} style={{display:"flex",alignItems:"center",gap:".65rem",width:"100%",background:r.done?"rgba(34,197,94,0.05)":"rgba(255,255,255,0.02)",border:`1px solid ${r.done?"rgba(34,197,94,0.25)":C.border}`,borderRadius:10,padding:".55rem .7rem",marginBottom:".4rem",cursor:"pointer",textAlign:"left",fontFamily:FONT.body}}>
+                <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:28,height:28,borderRadius:"50%",background:r.done?"rgba(34,197,94,.15)":C.bgElevated,border:`1px solid ${r.done?"rgba(34,197,94,.4)":C.border}`,color:tickColor,fontWeight:800,fontSize:11,flexShrink:0}}>{tick}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:12.5,color:r.done?C.dim:C.white,fontWeight:600,textDecoration:r.done?"line-through":"none",lineHeight:1.3}}>{q.label}</div>
+                  {r.locked && r.acknowledged && <div style={{fontSize:10,color:C.gold,marginTop:1}}>Unlocks with Pro →</div>}
+                  {r.locked && !r.acknowledged && <div style={{fontSize:10,color:C.dimmer,marginTop:1}}>Tap to preview</div>}
+                </div>
+                <span style={{color:C.dimmer,fontSize:14,flexShrink:0}}>›</span>
+              </button>
+            );
+          })}
+          <div style={{display:"flex",alignItems:"center",gap:".5rem",marginTop:".5rem"}}>
+            <div style={{flex:1,height:5,background:C.bgElevated,borderRadius:3,overflow:"hidden"}}>
+              <div style={{width:`${(checked/total)*100}%`,height:"100%",background:allDone?C.green:C.gold,transition:"width .3s"}}/>
+            </div>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
+          </div>
+          {showSignupCTA && onSignup && (
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,162,75,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+              <span style={{fontSize:14}}>🏒</span>
+              Create your free account →
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+
+
+// ─────────────────────────────────────────────────────────
+
+
+
+import { loadQB, preloadQB } from "./qbLoader.js";
+import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getNextUnlockDate, formatUnlockMoment, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
+import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
+
+
+// Wraps a lazy() factory so a chunk 404 after a deploy reloads the page once
+// instead of surfacing as "Something went wrong". See utils/chunkReload.js for
+// why this happens at all.
+function lazyWithReload(factory) {
+  return lazy(() => factory().catch((err) => {
+    if (!isChunkLoadError(err)) throw err;
+    const KEY = "rinkreads_chunk_reload_at";
+    let lastReloadAt = null;
+    try { lastReloadAt = Number(sessionStorage.getItem(KEY)); } catch {}
+    if (shouldReloadForChunkError({ now: Date.now(), lastReloadAt })) {
+      try { sessionStorage.setItem(KEY, String(Date.now())); } catch {}
+      window.location.reload();
+      return new Promise(() => {}); // never settles; the page is on its way out
+    }
+    throw err; // already tried: let the boundary show rather than loop
+  }));
+}
+
+const GoalBuilder = lazyWithReload(() => import("./goals/GoalBuilder.jsx"));
+const CoachAssessment = lazyWithReload(() => import("./coach/CoachAssessment.jsx"));
+const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
+const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
+const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
+const BrowseScreen = lazyWithReload(() => import("./review/BrowseScreen.jsx"));
+const ScenarioPlayground = lazyWithReload(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
+const Dev3DScenarioRoute = lazyWithReload(async () => {
+  const [{ default: Scenario3DStage }, { default: scenario }] = await Promise.all([
+    import("./scenario/three/Scenario3DStage.jsx"),
+    import("./scenario/seeds/gvis_u11_reading-the-play_b633.json"),
+  ]);
+  return { default: () => <Scenario3DStage scenario={scenario} /> };
+});
+const ReadThePlay = lazyWithReload(() => import("./play/ReadThePlay.jsx"));
+const OneOnOnePractice = lazyWithReload(() => import("./one-on-one/OneOnOne.jsx"));
+const PracticeArena = lazyWithReload(() => import("./one-on-one/PracticeHub.jsx"));
+const LegacyTwoOnOne = lazyWithReload(() => import("./one-on-one/LegacyTwoOnOne.jsx"));
+const GymComparison = lazyWithReload(() => import("./one-on-one/GymComparison.jsx"));
+const ProfileSetup = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
+const PlansScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
+const GameSenseReportScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
+const SkillsOnboarding = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.SkillsOnboarding })));
+const InsightsScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
+const ParentAssessmentScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
+const ParentsPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ParentsPage })));
+const CoachesPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.CoachesPage })));
+const PlayersPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlayersPage })));
+const AssociationsPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AssociationsPage })));
+const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+
+const COMP={
+  "U9 / Novice":{t:[0.8,0.55],l:["Smart Player","Making Reads","Building Awareness"]},
+  "U11 / Atom":{t:[0.8,0.6],l:["Hockey Sense","System Aware","Instinct Stage"]},
+  "U13 / Peewee":{t:[0.82,0.65],l:["Elite Game Read","Situationally Sound","Tactical Foundation"]},
+  "U15 / Bantam":{t:[0.84,0.68],l:["Systems Thinker","Positionally Sound","Developing Reads"]},
+  "U18 / Midget":{t:[0.86,0.70],l:["Complete Player","Tactically Aware","Building Foundation"]},
+};
+function getComp(level,score){const c=COMP[level];if(!c)return"—";return score>=c.t[0]?c.l[0]:score>=c.t[1]?c.l[1]:c.l[2];}
+
+
+
+
+// ─────────────────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────────────────
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+// Stable sample % for demo mode: deterministic per question id, shaped by difficulty.
+// d=1 → 70-90%, d=2 → 50-75%, d=3 → 30-60%.
+function demoStatPct(qid, d) {
+  let h = 0;
+  for (let i = 0; i < qid.length; i++) h = ((h << 5) - h + qid.charCodeAt(i)) | 0;
+  const n = Math.abs(h) % 100; // 0-99 stable
+  if (d === 1) return 70 + Math.floor(n * 21 / 100);       // 70-90
+  if (d === 3) return 30 + Math.floor(n * 31 / 100);       // 30-60
+  return 50 + Math.floor(n * 26 / 100);                    // 50-75 (d=2 or undef)
+}
+
+function shuffleOpts(q) {
+  if (!q || !Array.isArray(q.opts) || q.opts.length < 2) return q;
+  if (q.type && q.type !== "mc" && q.type !== "mistake" && q.type !== "next") return q;
+  if (typeof q.ok !== "number") return q;
+  const order = shuffle(q.opts.map((_, i) => i));
+  const newOk = order.indexOf(q.ok);
+  if (newOk < 0) return q;
+  return { ...q, opts: order.map(i => q.opts[i]), ok: newOk };
+}
+
+function calcWeightedIQ(results) {
+  if (!results.length) return 0;
+  const e = results.reduce((s,r) => s + (r.ok ? D_WEIGHT[r.d||2] : 0), 0);
+  const p = results.reduce((s,r) => s + D_WEIGHT[r.d||2], 0);
+  return Math.round((e/p)*100);
+}
+
+function initSR(level) {
+  const r = {};
+  (SKILLS[level]||[]).forEach(c => c.skills.forEach(s => { r[s.id] = null; }));
+  return r;
+}
+
+function getTodayKey() { return new Date().toISOString().slice(0,10); }
+
+function getStreakData() {
+  try { return JSON.parse(localStorage.getItem("rinkreads_streak") || "{}"); }
+  catch { return {}; }
+}
+
+function updateStreak(data) {
+  const today = getTodayKey();
+  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if (data.last === today) return data;
+  if (data.last === yesterday) return {...data, count:(data.count||0)+1, last:today};
+  return {count:1, last:today};
+}
+
+function calcBadges(results, prevScore, totalSessions, hasSeqPerfect, mistakeStreak) {
+  const earned = new Set();
+  let streak = 0;
+  for (const r of results) {
+    if (r.ok) { streak++; if (streak >= 3) earned.add("HOT_STREAK"); }
+    else streak = 0;
+  }
+  if (results.length >= QUIZ_LENGTH && results.every(r => r.ok)) earned.add("HOCKEY_IQ");
+  if (results.filter(r => r.ok && r.d === 3).length >= 5) earned.add("HARD_HAT");
+  const byCat = {};
+  results.forEach(r => {
+    if (!byCat[r.cat]) byCat[r.cat] = {ok:0,tot:0};
+    byCat[r.cat].tot++;
+    if (r.ok) byCat[r.cat].ok++;
+  });
+  if (Object.values(byCat).some(v => v.tot >= 2 && v.ok === v.tot)) earned.add("SNIPER");
+  const score = calcWeightedIQ(results);
+  if (prevScore !== null && score > prevScore) earned.add("LEVEL_UP");
+  if (totalSessions >= 5) earned.add("IRON_MAN");
+  if (hasSeqPerfect) earned.add("TACTICIAN");
+  if (mistakeStreak >= 3) earned.add("DETECTIVE");
+  return [...earned].map(k => BADGES[k]).filter(Boolean);
+}
+
+async function saveCoachRatings(playerKey, ratings, notes) {
+  if (!window.storage) return false;
+  try {
+    await window.storage.set("coach_ratings:" + playerKey, JSON.stringify({ratings, notes: notes || {}, ts: Date.now()}), true);
+    return true;
+  } catch(e) { return false; }
+}
+
+async function loadCoachRatings(playerKey) {
+  if (!window.storage) return null;
+  try {
+    const r = await window.storage.get("coach_ratings:" + playerKey, true);
+    return r ? JSON.parse(r.value) : null;
+  } catch(e) { return null; }
+}
+
+function makePlayerKey(name, level) {
+  return (name + "_" + level).toLowerCase().replace(/[^a-z0-9]/g,"_").slice(0,40);
+}
+
+// Demo queue builder — guarantees one of each question type
+function buildDemoQueue(qb, level, position, focus = null) {
+  const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
+  const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
+  // User-killed questions are filtered out of every queue. Even ?ids=
+  // playlists honor the kill list — a deleted q stays deleted everywhere.
+  const notKilled = (q) => !isKilled(q?.id);
+  // Skill Path focus: demo/preview lessons launched from a path node scope
+  // to that node's concept, same contract as buildQueue. Falls back to the
+  // full pool when nothing in the bank matches the concept yet.
+  if (focus?.conceptId) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && (
+      q?.conceptId === focus.conceptId ||
+      q?.ledger?.conceptId === focus.conceptId ||
+      (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+      q?.nodeId === focus.id
+    ));
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  } else if (focus?.cat) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && q?.cat === focus.cat);
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  }
+  // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
+  // ?ids=<id[,id]> forces it to a specific question playlist.
+  const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const onlyParam = sp?.get("only") || null;
+  const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  const idsParam = sp?.get("ids") || sp?.get("id") || null;
+  const onlyIds = idsParam ? idsParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  if (onlyIds) {
+    // Pull from any level so the playlist works regardless of selected age.
+    const seen = new Set();
+    const matched = [];
+    for (const lvl of Object.keys(qb)) {
+      for (const q of (qb[lvl] || [])) {
+        if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id) && posMatch(q) && notKilled(q)) {
+          seen.add(q.id);
+          matched.push(q);
+        }
+      }
+    }
+    return matched;
+  }
+  if (onlyTypes) {
+    const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q) && notKilled(q));
+    return [...filtered].sort(() => Math.random() - 0.5);
+  }
+  // Demo quiz: 7 questions — 3 image-backed MC + 1 plain MC + 1 tf + 1 seq + 1 mistake.
+  // Image-backed MC is the headline format and where the bank has the most
+  // authored content; lean on it. The image/no-image split is detected via
+  // q.media?.url since pov-mc has been merged into mc. Falls back to padding
+  // with extra MC if any type's pool is empty.
+  const targetCounts = { "mc-image": 3, "mc-text": 1, tf: 1, seq: 1, mistake: 1 };
+  const result = [];
+  const usedIds = new Set();
+
+  const matchType = (q, t) => {
+    if (t === "mc-image") return q.type === "mc" && !!q.media?.url;
+    if (t === "mc-text")  return q.type === "mc" && !q.media?.url;
+    return q.type === t;
+  };
+
+  for (const [type, count] of Object.entries(targetCounts)) {
+    // All types — including zone-click — live in the bank now; qbLoader
+    // replicates multi-age questions into each applicable level array.
+    const pool = (qb[level] || []).filter(q => matchType(q, type) && notKilled(q));
+    const levelMatch = pool.filter(posMatch);
+    const fallback = pool.filter(posMatch);
+    // If no position-matched question exists (e.g. goalie + tf), fall back to any question of the type
+    const broadFallback = fallback.length > 0 ? fallback : pool;
+    const source = (levelMatch.length > 0 ? levelMatch : broadFallback).filter(q => !usedIds.has(q.id));
+    const shuffled = [...source].sort(() => Math.random() - 0.5);
+    for (let i = 0; i < Math.min(count, shuffled.length); i++) {
+      result.push(shuffled[i]);
+      usedIds.add(shuffled[i].id);
+    }
+  }
+
+  // Pad to 7 with MC (cap MC at 2 total)
+  const mcInQueue = result.filter(q => q.type === "mc").length;
+  const mcPool = (qb[level] || []).filter(q => q.type === "mc" && !usedIds.has(q.id) && posMatch(q) && notKilled(q));
+  const mcShuffled = [...mcPool].sort(() => Math.random() - 0.5);
+  while (result.length < 7 && mcShuffled.length > 0 && result.filter(q => q.type === "mc").length < 2) {
+    const q = mcShuffled.shift();
+    result.push(q);
+    usedIds.add(q.id);
+  }
+  // If still short (very unlikely), pad with any remaining questions
+  const anyPool = (qb[level] || [])
+    .filter(q => !usedIds.has(q.id) && posMatch(q) && notKilled(q))
+    .sort(() => Math.random() - 0.5);
+  while (result.length < 7 && anyPool.length > 0) {
+    const q = anyPool.shift();
+    result.push(q);
+    usedIds.add(q.id);
+  }
+  return result.slice(0, 7);
+}
+
+// Adaptive queue builder — with memoization of filtered pools
+const _queueCache = new Map();
+
+// Shown when the composed bank has zero questions for the player's age/position.
+// Expected during the 2026-06-04 blank-slate window: the old bank is wiped and
+// the gauntlet has not shipped ledger-tagged content yet. Friendly, not an error.
+function EmptyBankScreen() {
+  return (
+    <Screen>
+      <div style={{ maxWidth: 460, margin: "4rem auto", padding: "1.25rem 1.5rem", textAlign: "center", color: C.white, fontFamily: FONT.body }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }} aria-hidden="true">🏒</div>
+        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8, fontFamily: FONT.body }}>
+          New content is on the way
+        </div>
+        <p style={{ color: C.dim, fontSize: 14, lineHeight: 1.6 }}>
+          We're rebuilding the RinkReads question bank from the ground up. Fresh,
+          coach-reviewed scenarios are being added now — check back soon.
+        </p>
+      </div>
+    </Screen>
+  );
+}
+
+function buildQueue(qb, level, position, isReturning, tier, focus = null) {
+  // ALL_AGES_MODE (temporary): one mixed-age Pro experience — ignore the
+  // player's level, serve every format. Flip the flag off to restore per-age.
+  const formatAllowed = ALL_AGES_MODE ? true : canAccess("allQuestionFormats", tier).allowed;
+  const positionAllowed = canAccess("positionFilter", tier).allowed;
+  // Debug: ?only=<type> (or comma-separated, e.g. ?only=rink-label,rink-drag)
+  // OR ?ids=<id>[,<id>] to filter to specific question ids (used by the
+  // standalone questions-dashboard.html for click-to-play). Both bypass
+  // the queue cache so seed edits show up on reload.
+  const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const onlyParam = sp?.get("only") || null;
+  const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  const idsParam = sp?.get("ids") || sp?.get("id") || null;
+  const onlyIds = idsParam ? idsParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  // Kill-list signature ensures a freshly-killed question is filtered out
+  // on the very next queue build (cache invalidates when count changes).
+  const killSig = getKillList().length;
+  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}|f${focus?.conceptId || ""}|c${focus?.cat || ""}`;
+
+  let pool;
+  if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
+    pool = _queueCache.get(cacheKey);
+  } else {
+    let allQ = ALL_AGES_MODE ? LEVELS.flatMap(l => qb[l] || []) : (qb[level] || []);
+    if (onlyTypes) allQ = allQ.filter(q => onlyTypes.includes(q.type));
+    if (onlyIds) {
+      // ids[] also looks across every level (a single-question playlist
+      // shouldn't depend on which level the user has selected).
+      const seen = new Set();
+      const matched = [];
+      for (const lvl of Object.keys(qb)) {
+        for (const q of (qb[lvl] || [])) {
+          if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id)) {
+            seen.add(q.id);
+            matched.push(q);
+          }
+        }
+      }
+      allQ = matched;
+    }
+    // User-killed questions get filtered upstream of every other rule.
+    allQ = allQ.filter(q => !isKilled(q?.id));
+    // Skill Path focus: scope the session to one ledger concept. The
+    // gauntlet tags questions with conceptId / ledger.conceptId /
+    // concepts[] / nodeId — match any. If nothing in the bank matches
+    // (bank empty or untagged), fall back to the full pool so a path
+    // lesson still runs rather than dead-ending.
+    if (focus?.conceptId) {
+      const hit = allQ.filter(q =>
+        q?.conceptId === focus.conceptId ||
+        q?.ledger?.conceptId === focus.conceptId ||
+        (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+        q?.nodeId === focus.id
+      );
+      if (hit.length) allQ = hit;
+    } else if (focus?.cat) {
+      // Leak Finder focus: scope the session to one mastery category.
+      const hit = allQ.filter(q => q?.cat === focus.cat);
+      if (hit.length) allQ = hit;
+    }
+    let posFiltered;
+    if (!positionAllowed) {
+      posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+    } else {
+      posFiltered = position === "Goalie"
+        ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
+        : position === "Defense"
+        ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+        : position === "Multiple"
+        ? allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"))
+        : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+    }
+
+    if (!formatAllowed && !onlyTypes && !onlyIds) {
+      // FREE: MC and TF only (mc covers both text-only and image-backed MC
+      // since pov-mc was merged in). Board-MC scenarios (type "scenario" with
+      // an mc block) are also a FREE MC format. Other types (seq, mistake,
+      // next, rink-native, interactive scenarios) are PRO surface — players
+      // see format-preview sentinels.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf" || isBoardMC(q));
+    }
+
+    pool = {
+      1: posFiltered.filter(q => q.d === 1),
+      2: posFiltered.filter(q => q.d === 2),
+      3: posFiltered.filter(q => q.d === 3),
+    };
+    _queueCache.set(cacheKey, pool);
+  }
+
+  const byD = {
+    1: shuffle(pool[1]),
+    2: shuffle(pool[2]),
+    3: shuffle(pool[3]),
+  };
+
+  // For FREE users: inject one format-preview sentinel mid-queue to show locked formats exist
+  if (!formatAllowed && !onlyType) {
+    const formats = ["seq","tf","mistake","next"];
+    const previewFormat = formats[Math.floor(Math.random() * formats.length)];
+    const sentinel = { id: "__format_preview__", type: "formatPreview", _format: previewFormat, d: 2 };
+    const d2 = byD[2];
+    if (d2.length >= 4) {
+      const insertAt = Math.floor(d2.length / 2);
+      byD[2] = [...d2.slice(0, insertAt), sentinel, ...d2.slice(insertAt)];
+    }
+
+    // Inject 1 zone-click teaser for FREE tier (d:1 or d:2 only).
+    // Zone-click questions are already in qb[level] post-migration —
+    // qbLoader replicates multi-age ones across every applicable level.
+    if (byD[1].length >= 2) {
+      const zcPool = (qb[level] || []).filter(q =>
+        q.type === "zone-click" &&
+        q.d <= 2 &&
+        (!q.pos || q.pos.includes(position) || position === "Multiple")
+      );
+      if (zcPool.length > 0) {
+        const zcQ = zcPool[Math.floor(Math.random() * zcPool.length)];
+        byD[1].splice(3, 0, zcQ);
+      }
+    }
+  }
+
+  return { byD, currentD: isReturning ? 2 : 1, tier };
+}
+
+// Weekly challenge queue — seeded shuffle so every player gets the same 10 questions that week.
+// All formats included (weekly challenge is PRO+, so allQuestionFormats is guaranteed).
+function buildWeeklyQueue(qb, level, position) {
+  const allQ = qb[level] || [];
+  const posFiltered = position === "Goalie"
+    ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
+    : position === "Defense"
+    ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+    : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+  const seed = weekSeed(getWeekKey() + "|" + level + "|" + position);
+  const shuffled = seededShuffle(posFiltered, seed);
+  // Pick a balanced 10: aim for 3 easy, 4 medium, 3 hard, fill from remaining if short
+  const d1 = shuffled.filter(q => q.d === 1);
+  const d2 = shuffled.filter(q => q.d === 2);
+  const d3 = shuffled.filter(q => q.d === 3);
+  const pick = (arr, n) => arr.slice(0, n);
+  const questions = [...pick(d1, 3), ...pick(d2, 4), ...pick(d3, 3)];
+  // If any bucket was short, fill from overflow
+  const used = new Set(questions.map(q => q.id));
+  const overflow = shuffled.filter(q => !used.has(q.id));
+  let filled = [...questions];
+  for (const q of overflow) {
+    if (filled.length >= 10) break;
+    filled.push(q);
+  }
+  return filled.slice(0, 10);
+}
+
+function pullNext(queue, results) {
+  const last2 = results.slice(-2);
+  let { byD, currentD, tier } = queue;
+  // Gate: FREE users get random difficulty, no adaptive engine
+  const adaptive = canAccess("adaptiveEngine", tier).allowed;
+  if (adaptive && last2.length === 2) {
+    if (last2.every(r => r.ok) && currentD < 3) currentD++;
+    else if (last2.every(r => !r.ok) && currentD > 1) currentD--;
+  }
+  if (!byD[currentD].length) {
+    const fb = [1,2,3].find(d => d !== currentD && byD[d].length);
+    if (!fb) return { q: null, queue };
+    currentD = fb;
+  }
+  const i = Math.floor(Math.random() * byD[currentD].length);
+  const q = shuffleOpts(byD[currentD][i]);
+  return { q, queue: { byD: {...byD, [currentD]: byD[currentD].filter((_,j) => j !== i)}, currentD, tier } };
+}
+
+// Storage (coach dashboard)
+async function saveTeamResult(coachCode, results, season) {
+  if (!coachCode || !window.storage) return;
+  const key = "team:" + coachCode.toUpperCase() + ":" + season.replace("-","");
+  let existing = [];
+  try { const r = await window.storage.get(key, true); if (r) existing = JSON.parse(r.value); } catch(e) {}
+  existing.push({ ts: Date.now(), iq: calcWeightedIQ(results), qs: results.map(r => ({id:r.id,ok:r.ok,d:r.d,cat:r.cat})) });
+  if (existing.length > 500) existing = existing.slice(-500);
+  try { await window.storage.set(key, JSON.stringify(existing), true); } catch(e) {}
+}
+
+
+
+// ─────────────────────────────────────────────────────────
+// RINK DIAGRAMS
+// ─────────────────────────────────────────────────────────
+function RinkDiagram({ type }) {
+  const artId = `concept-rink-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const w=300, h=160, cx=w/2, cy=h/2;
+  const Ice = () => (
+    <g>
+      <defs><linearGradient id={artId} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fffdf7"/><stop offset="1" stopColor="#dce6ec"/></linearGradient></defs>
+      <rect x="3" y="3" width={w-6} height={h-6} rx="26" fill={`url(#${artId})`} stroke="#183049" strokeWidth="2.6"/>
+      <rect x="5" y="5" width={w-10} height={h-10} rx="24" fill="none" stroke="#C9A24B" strokeWidth=".6"/>
+      <line x1={cx} y1="3" x2={cx} y2={h-3} stroke={C.rink} strokeWidth="1" strokeDasharray="5,4" opacity="0.3"/>
+      <circle cx={cx} cy={cy} r="18" fill="none" stroke={C.rink} strokeWidth="1" opacity="0.3"/>
+      <circle cx={cx} cy={cy} r="3" fill={C.rink} opacity="0.25"/>
+    </g>
+  );
+  const Player = ({x,y,color,label}) => (
+    <g transform={`translate(${x} ${y})`} opacity={color?.includes('0.3') ? .35 : 1}>
+      <HockeyPlayerArt radius={11} team={color === '#dc2626' ? 'away' : 'home'} goalie={label === 'G'} />
+      <rect x={-(label.length*5+7)/2} y="-19" width={label.length*5+7} height="9" rx="2.5" fill="#0B1A33" stroke="#E5C578" strokeWidth=".5"/>
+      <text y="-12" textAnchor="middle" fill="#F5EFE6" fontSize="7" fontFamily="Inter,system-ui,sans-serif" fontWeight="800">{label}</text>
+    </g>
+  );
+  const Arrow = ({x1,y1,x2,y2,color="#C9A24B",dash,arc}) => {
+    const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
+    const ux=dx/len, uy=dy/len;
+    const hx=x2-ux*12, hy=y2-uy*12;
+    const d = arc ? `M${x1} ${y1} Q${(x1+x2)/2} ${y1-22} ${hx} ${hy}` : `M${x1} ${y1} L${hx} ${hy}`;
+    return (
+      <g>
+        <path d={d} fill="none" stroke={color} strokeWidth="2.5" strokeDasharray={dash} opacity="0.9"/>
+        <polygon points={`${x2},${y2} ${hx-uy*5},${hy+ux*5} ${hx+uy*5},${hy-ux*5}`} fill={color} opacity="0.9"/>
+      </g>
+    );
+  };
+  const Net = ({x,y}) => <g><rect x={x} y={y} width="13" height="26" rx="3" fill="#ffffff70" stroke="#ae3540" strokeWidth="2"/>{[1,2,3,4,5].map(i=><line key={i} x1={x+1} y1={y+i*4.3} x2={x+12} y2={y+i*4.3} stroke="#728595" strokeWidth=".5"/>)}<line x1={x+6.5} y1={y+1} x2={x+6.5} y2={y+25} stroke="#728595" strokeWidth=".5"/></g>;
+  const Puck = ({x,y}) => <g><circle cx={x+.8} cy={y+1.4} r="5" fill="#0b1a3333"/><circle cx={x} cy={y} r="5" fill="#111827" stroke="white" strokeWidth="1.5"/><path d={`M${x-2.7} ${y-1.8}Q${x} ${y-3.4} ${x+2.7} ${y-1.8}`} fill="none" stroke="#8497a3" strokeWidth=".65"/></g>;
+  const Tag = ({x,y,text,color}) => (
+    <g>
+      <rect x={x-2} y={y-10} width={text.length*7+4} height={14} rx={4} fill={`${color}22`}/>
+      <text x={x} y={y} fill={color} fontSize="8" fontWeight="700">{text}</text>
+    </g>
+  );
+
+  const diagrams = {
+    "2on1": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={w-16} y={cy-13}/>
+        <Player x={115} y={cy-18} color="#16a34a" label="A1"/>
+        <Player x={115} y={cy+18} color="#16a34a" label="A2"/>
+        <Player x={200} y={cy} color="#dc2626" label="D"/>
+        <Puck x={126} y={cy-13}/>
+        <Arrow x1={126} y1={cy-18} x2={w-20} y2={cy-8} arc/>
+        <Arrow x1={126} y1={cy+18} x2={w-20} y2={cy+12} color="rgba(22,163,74,0.5)" dash="5,3"/>
+        <Arrow x1={190} y1={cy} x2={170} y2={cy-10} color="#dc2626"/>
+        <Tag x={105} y={16} text="2-ON-1" color={C.rink}/>
+      </svg>
+    ),
+    "coverage": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={145} y={45} color="#dc2626" label="A1"/>
+        <Player x={170} y={80} color="#dc2626" label="A2"/>
+        <Player x={145} y={115} color="#dc2626" label="A3"/>
+        <Puck x={155} y={50}/>
+        <Player x={100} y={45} color="#16a34a" label="D1"/>
+        <Player x={100} y={80} color="#16a34a" label="D2"/>
+        <Player x={100} y={115} color="#16a34a" label="F"/>
+        <text x={170} y={98} textAnchor="middle" fill={C.yellow} fontSize="18" fontWeight="800">?</text>
+        <Tag x={120} y={16} text="DEFENSIVE ZONE" color={C.rink}/>
+      </svg>
+    ),
+    "blueline": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={w-16} y={cy-13}/>
+        <line x1={cx+12} y1="3" x2={cx+12} y2={h-3} stroke="#1d4ed8" strokeWidth="3" opacity="0.8"/>
+        <text x={cx+18} y={18} fill="#1d4ed8" fontSize="8" fontWeight="700">BLUE LINE</text>
+        <Puck x={cx+8} y={cy}/>
+        <Arrow x1={cx+8} y1={cy} x2={cx+38} y2={cy} color="#dc2626"/>
+        <Player x={cx+55} y={cy} color="#16a34a" label="D"/>
+        <Arrow x1={cx+44} y1={cy} x2={cx+20} y2={cy} color="#16a34a"/>
+        <text x={cx-28} y={cy-10} fill="#dc2626" fontSize="9">exit ✗</text>
+        <text x={cx+60} y={cy-18} textAnchor="middle" fill="#16a34a" fontSize="9">keep in ✓</text>
+      </svg>
+    ),
+    "forecheck": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={88} y={cy} color="#dc2626" label="D"/>
+        <Puck x={99} y={cy-5}/>
+        <Player x={185} y={80} color="#16a34a" label="F1"/>
+        <Arrow x1={175} y1={82} x2={104} y2={cy} color="#16a34a"/>
+        <Arrow x1={88} y1={cy-12} x2={88} y2={30} color="#dc2626" dash="4,3"/>
+        <Arrow x1={88} y1={cy-12} x2={150} y2={36} color="#dc2626" dash="4,3"/>
+        <text x={60} y={24} fill="#dc2626" fontSize="8">outlet?</text>
+        <Tag x={100} y={16} text="CUT THE ANGLE" color={C.rink}/>
+      </svg>
+    ),
+    "goalie_angle": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={165} y={cy-22} color="#dc2626" label="S"/>
+        <Arrow x1={160} y1={cy-20} x2={55} y2={cy} color="#dc2626"/>
+        <Player x={62} y={cy} color="#16a34a" label="G"/>
+        <text x={62} y={cy-24} textAnchor="middle" fill="#16a34a" fontSize="8.5" fontWeight="700">angle ✓</text>
+        <rect x={14} y={cy-9} width="8" height="18" rx="2" fill="none" stroke={C.rink} strokeWidth="2.5"/>
+        <Player x={32} y={cy} color="rgba(22,163,74,0.3)" label="G"/>
+        <text x={32} y={cy-24} textAnchor="middle" fill="#dc2626" fontSize="8.5" fontWeight="700">line ✗</text>
+        <Tag x={100} y={16} text="ANGLE CUTTING" color={C.rink}/>
+      </svg>
+    ),
+    "goalie_2on1": (
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={168} y={cy-22} color="#dc2626" label="A1"/>
+        <Player x={168} y={cy+22} color="#dc2626" label="A2"/>
+        <Player x={105} y={cy} color="#1d4ed8" label="D"/>
+        <Puck x={176} y={cy-18}/>
+        <Player x={42} y={cy} color="#16a34a" label="G"/>
+        <Arrow x1={105} y1={cy} x2={135} y2={cy+20} color="#1d4ed8"/>
+        <text x={42} y={cy-24} textAnchor="middle" fill="#16a34a" fontSize="8">set for shot</text>
+        <Tag x={95} y={16} text="2-ON-1 GOALIE" color={C.rink}/>
+      </svg>
+    ),
+  };
+
+  return diagrams[type] ? (
+    <div style={{background:"linear-gradient(135deg,#2a3f58,#0B1A33)",borderRadius:18,padding:".55rem",border:"1px solid #C9A24B66",boxShadow:"0 12px 30px #0b1a3328",display:"flex",justifyContent:"center",overflow:"hidden"}}>
+      {diagrams[type]}
+    </div>
+  ) : null;
+}
+
+const DIAGRAMS = {
+  u11q1:"2on1", u11q7:"2on1", u11q16:"2on1", u11q17:"2on1", u11q41:"2on1",
+  u11q2:"coverage", u11q14:"coverage", u11q19:"coverage", u11q44:"coverage",
+  u11q3:"blueline", u11q20:"blueline", u11q47:"blueline",
+  u11q4:"forecheck", u11q24:"forecheck",
+  u11g1:"goalie_angle", u11g2:"goalie_2on1", u11g7:"goalie_angle",
+};
+
+// ─────────────────────────────────────────────────────────
+// QUESTION FORMAT COMPONENTS
+// ─────────────────────────────────────────────────────────
+// Plain (non-scenario, non-rink) question types that support browser TTS
+// read-aloud from the quiz player. Scenario questions read themselves inside
+// ScenarioRenderer; rink-native interactive types have no simple text to read.
+const READ_ALOUD_TYPES = new Set(["mc", "mistake", "next", "multi", "tf", "seq"]);
+
+// Build the ordered text fragments to read aloud for a plain question: the
+// situation/prompt first, then each answer choice with its letter (or each
+// step for sequence-ordering). Mirrors how BoardMC reads scenario questions.
+function questionSpeechParts(q, qtype) {
+  if (!q) return [];
+  const parts = [];
+  if (q.sit) parts.push(q.sit);
+  if (qtype === "mistake" && q.question) parts.push(q.question);
+  if (qtype === "multi" && q.q) parts.push(q.q);
+  if (qtype === "tf") {
+    parts.push("True, or false?");
+  } else if (qtype === "seq") {
+    if (Array.isArray(q.items)) {
+      parts.push("Put these in the right order.");
+      q.items.forEach((it, i) => parts.push(`${i + 1}. ${it}`));
+    }
+  } else if (Array.isArray(q.opts)) {
+    q.opts.forEach((o, i) => parts.push(`${"ABCD"[i] || i + 1}. ${o}`));
+  }
+  return parts;
+}
+
+// Correct/wrong colours for every answer renderer.
+//
+// Green-vs-red is the single worst pairing for the most common form of colour
+// blindness, which is why the colorblind setting exists. It was previously
+// re-derived inline in MCQuestion and MultiMCQuestion and simply MISSING from
+// TFQuestion, NextQuestion and SeqQuestion — so a player who turned the setting
+// on still got green/red on true-false, what-happens-next and ordering
+// questions, silently, with no way to tell it wasn't working. One shared helper
+// so the next renderer cannot forget it. Blue/orange is the standard
+// deuteranopia-safe substitution.
+export function verdictColors(colorblind) {
+  return {
+    correct: colorblind ? "#2563eb" : C.green,
+    wrong:   colorblind ? "#ea580c" : C.red,
+    correctBorder: colorblind ? "rgba(37,99,235,.3)"  : C.greenBorder,
+    wrongBorder:   colorblind ? "rgba(234,88,12,.3)"  : C.redBorder,
+    correctBg:     colorblind ? "rgba(37,99,235,.10)" : "rgba(34,197,94,.10)",
+    wrongBg:       colorblind ? "rgba(234,88,12,.08)" : "rgba(239,68,68,.08)",
+  };
+}
+
+function MCQuestion({ q, sel, onPick, colorblind }) {
+  const V = verdictColors(colorblind);
+  const { correct: correctColor, wrong: wrongColor } = V;
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+      {q.opts.map((opt, i) => {
+        const picked = sel !== null;
+        const isCorrect = i === q.ok;
+        const isWrong = picked && i === sel && !isCorrect;
+        let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+        if (picked) {
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+          else if (isWrong) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=wrongColor; }
+        } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+        return (
+          <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
+            style={{
+              background:bg, border:`1px solid ${bdr}`,
+              borderLeft:`3px solid ${leftBdr}`,
+              borderRadius:12, padding:".95rem 1.1rem",
+              cursor:sel!==null?"default":"pointer",
+              textAlign:"left", color:col,
+              fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
+              display:"flex", alignItems:"flex-start", gap:".75rem",
+              transition:"all .15s", width:"100%",
+            }}>
+            <span style={{
+              fontSize:11, fontWeight:800, minWidth:22, marginTop:1, flexShrink:0,
+              color:picked?(isCorrect?correctColor:isWrong?wrongColor:C.dimmest):C.dimmer,
+              fontFamily:FONT.display,
+            }}>
+              {picked ? (isCorrect ? "✓" : isWrong ? "✗" : String.fromCharCode(65+i)) : String.fromCharCode(65+i)}
+            </span>
+            <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// MULTI-SELECT MC — "Select all that apply." Player ticks checkboxes;
+// only an exact match across the selected set vs q.correct (array of
+// correct indices) counts as correct. Used for higher-difficulty
+// concept questions where there's >1 right answer.
+function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
+  const correctSet = new Set(Array.isArray(q.correct) ? q.correct : []);
+  const [picks, setPicks] = useState(new Set());
+  const [submitted, setSubmitted] = useState(false);
+  const [wasCorrect, setWasCorrect] = useState(false);
+
+  // Reset internal state when the question id changes (parent advances).
+  useEffect(() => { setPicks(new Set()); setSubmitted(false); setWasCorrect(false); }, [q.id]);
+
+  // Treat the parent-driven "answered" prop as authoritative — keeps the
+  // submitted-once guarantee in sync if a parent collapses the question.
+  const locked = submitted || answered;
+
+  function toggle(i) {
+    if (locked) return;
+    setPicks(prev => {
+      const n = new Set(prev);
+      if (n.has(i)) n.delete(i); else n.add(i);
+      return n;
+    });
+  }
+
+  function submit() {
+    if (locked || picks.size === 0) return;
+    setSubmitted(true);
+    const allCorrectPicked = [...correctSet].every(i => picks.has(i));
+    const noWrongPicked = [...picks].every(i => correctSet.has(i));
+    const isCorrect = allCorrectPicked && noWrongPicked;
+    setWasCorrect(isCorrect);
+    onAnswer?.(isCorrect);
+  }
+
+  const V = verdictColors(colorblind);
+  const { correct: correctColor, wrong: wrongColor } = V;
+
+  return (
+    <div>
+      <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+        {q.opts.map((opt, i) => {
+          const isPicked = picks.has(i);
+          const isRight = correctSet.has(i);
+          let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+          if (locked) {
+            // Reveal: green for correct picks (matched or missed), red for wrong picks.
+            // Tint AND border follow the colorblind palette, not just the left
+            // rule. Previously only leftBdr switched, so a colorblind player
+            // still saw a green wash behind a blue marker.
+            if (isRight && isPicked) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+            else if (isRight && !isPicked) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+            else if (!isRight && isPicked) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=wrongColor; }
+          } else if (isPicked) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+          const mark = locked
+            ? (isRight ? "✓" : isPicked ? "✗" : "")
+            : (isPicked ? "☑" : "☐");
+          const markColor = locked
+            ? (isRight ? correctColor : isPicked ? wrongColor : C.dimmest)
+            : (isPicked ? C.purple : C.dimmer);
+          return (
+            <button key={i} onClick={() => toggle(i)} disabled={locked}
+              style={{
+                background:bg, border:`1px solid ${bdr}`,
+                borderLeft:`3px solid ${leftBdr}`,
+                borderRadius:12, padding:".95rem 1.1rem",
+                cursor:locked?"default":"pointer",
+                textAlign:"left", color:col,
+                fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
+                display:"flex", alignItems:"flex-start", gap:".75rem",
+                transition:"all .15s", width:"100%",
+              }}>
+              <span style={{fontSize:14,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:markColor,fontFamily:FONT.display}}>
+                {mark}
+              </span>
+              <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
+            </button>
+          );
+        })}
+      </div>
+      {!locked && (
+        <button onClick={submit} disabled={picks.size === 0}
+          style={{
+            marginTop:".85rem",width:"100%",padding:".75rem",borderRadius:10,
+            background: picks.size === 0 ? C.dimmest : C.gold,
+            color: picks.size === 0 ? C.dimmer : C.bg,
+            border:"none",fontFamily:FONT.display,fontWeight:800,fontSize:14,letterSpacing:".02em",
+            cursor: picks.size === 0 ? "default" : "pointer",
+          }}>
+          Submit ({picks.size})
+        </button>
+      )}
+      {locked && (
+        <div style={{marginTop:".75rem",fontSize:11,color:C.dimmer,letterSpacing:".06em",textAlign:"center"}}>
+          {wasCorrect ? "All correct — partial credit not given for half-right answers." : "Need every correct option (and no wrong ones) for credit."}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SeqQuestion({ q, onAnswer, answered, colorblind }) {
+  const V = verdictColors(colorblind);
+  const [order, setOrder] = useState(() => [...Array(q.items.length).keys()]);
+  const [submitted, setSubmitted] = useState(false);
+  const [correct, setCorrect] = useState(false);
+
+  function moveUp(i) { if (i === 0 || submitted) return; const o=[...order]; [o[i-1],o[i]]=[o[i],o[i-1]]; setOrder(o); }
+  function moveDown(i) { if (i === order.length-1 || submitted) return; const o=[...order]; [o[i],o[i+1]]=[o[i+1],o[i]]; setOrder(o); }
+
+  function submit() {
+    if (submitted) return;
+    const isCorrect = order.every((v,i) => v === q.correct_order[i]);
+    setSubmitted(true);
+    setCorrect(isCorrect);
+    onAnswer(isCorrect);
+  }
+
+  return (
+    <div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem",marginBottom:"1rem"}}>
+        {order.map((itemIdx, i) => {
+          const isRight = submitted && q.correct_order[i] === itemIdx;
+          const isWrong = submitted && !isRight;
+          return (
+            <div key={itemIdx} style={{
+              display:"flex", alignItems:"center", gap:".6rem",
+              background:submitted ? (isRight ? V.correctBg : V.wrongBg) : C.bgElevated,
+              border:`1px solid ${submitted ? (isRight ? V.correctBorder : V.wrongBorder) : C.border}`,
+              borderLeft:`3px solid ${submitted ? (isRight ? V.correct : V.wrong) : C.purple}`,
+              borderRadius:12, padding:".8rem 1rem",
+              transition:"all .2s",
+            }}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,minWidth:26,textAlign:"center"}}>{i+1}</div>
+              <div style={{flex:1,fontSize:13,color:C.white,lineHeight:1.5}}>{q.items[itemIdx]}</div>
+              {!submitted && (
+                <div style={{display:"flex",flexDirection:"column",gap:1}}>
+                  <button onClick={()=>moveUp(i)} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,cursor:"pointer",fontSize:12,padding:"3px 7px",borderRadius:5,lineHeight:1}}>▲</button>
+                  <button onClick={()=>moveDown(i)} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,cursor:"pointer",fontSize:12,padding:"3px 7px",borderRadius:5,lineHeight:1}}>▼</button>
+                </div>
+              )}
+              {submitted && <span style={{fontSize:16,flexShrink:0}}>{isRight?"✓":"✗"}</span>}
+            </div>
+          );
+        })}
+      </div>
+      {!submitted && (
+        <button onClick={submit} style={{background:C.purple,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+          Submit Order →
+        </button>
+      )}
+    </div>
+  );
+}
+
+function TFQuestion({ q, sel, onPick, colorblind }) {
+  const V = verdictColors(colorblind);
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
+      {[{label:"TRUE",val:1},{label:"FALSE",val:0}].map(({label,val}) => {
+        const picked = sel !== null;
+        const isCorrect = val === (q.ok ? 1 : 0);
+        const isSelected = sel === val;
+        let bg=C.bgElevated, bdr=C.border, textColor=C.dim;
+        if (picked) {
+          // The reveal colours the CORRECT answer, whichever it is — so the
+          // tint follows correctness, never which button says TRUE.
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; textColor=V.correct; }
+          else if (isSelected) { bg=V.wrongBg; bdr=V.wrongBorder; textColor=V.wrong; }
+        } else if (isSelected) { bg=C.purpleDim; bdr=C.purpleBorder; textColor=C.purple; }
+        return (
+          <button key={label} onClick={() => onPick(val)} disabled={sel !== null}
+            style={{
+              background:bg, border:`1px solid ${bdr}`,
+              borderRadius:14, padding:"1.5rem 1rem",
+              cursor:sel!==null?"default":"pointer",
+              textAlign:"center",
+              fontFamily:FONT.display, fontWeight:800,
+              fontSize:"1.5rem", letterSpacing:".06em",
+              color:textColor, transition:"all .15s",
+            }}>
+            {label}
+            {picked && isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,fontWeight:600}}>✓ Correct</div>}
+            {picked && isSelected && !isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,color:V.wrong,fontWeight:600}}>✗ Wrong</div>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function NextQuestion({ q, sel, onPick, colorblind }) {
+  const V = verdictColors(colorblind);
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+      {q.opts.map((opt, i) => {
+        const picked = sel !== null;
+        const isCorrect = i === q.ok;
+        const isWrong = picked && i === sel && !isCorrect;
+        let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+        if (picked) {
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=V.correct; }
+          else if (isWrong) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=V.wrong; }
+        } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+        return (
+          <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
+            style={{background:bg,border:`1px solid ${bdr}`,borderLeft:`3px solid ${leftBdr}`,borderRadius:12,padding:".95rem 1.1rem",cursor:sel!==null?"default":"pointer",textAlign:"left",color:col,fontFamily:FONT.body,fontSize:14,lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:".75rem",transition:"all .15s",width:"100%"}}>
+            <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?V.correct:isWrong?V.wrong:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
+              {picked?(isCorrect?"✓":isWrong?"✗":String.fromCharCode(65+i)):String.fromCharCode(65+i)}
+            </span>
+            <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Type badge for question header. `pov-mc` was merged into `mc` (an MC
+// question with media is just an image-backed MC) — but the "Read the Play"
+// label was a useful cue, so we surface it dynamically when q.media?.url is
+// present via Q_TYPE_LABEL_FOR(q) below.
+const Q_TYPE_LABELS = {
+  mc:           {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  "pov-mc":     {label:"Read the Play",   color:C.gold,     icon:"👀"}, // legacy — kept for any old refs
+  multi:        {label:"Select All That Apply", color:C.gold, icon:"☑️"},
+  seq:          {label:"Put in Order",    color:C.gold,     icon:"🔢"},
+  mistake:      {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
+  next:         {label:"What's Your Next Move",color:C.yellow,  icon:"🔮"},
+  tf:           {label:"True or False",   color:C.blue,     icon:"⚡"},
+  scenario:     {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
+  "rink-label": {label:"Label the Rink",  color:C.blue,     icon:"🏷️"},
+  "rink-drag":  {label:"Drag & Drop",      color:C.green,    icon:"✋"},
+  "rink-match": {label:"Match the Labels", color:C.purple,   icon:"🔗"},
+};
+// Pick the right type-info card for a question. `mc` with media is treated as
+// "Read the Play" (image-backed MC); plain mc is "Multiple Choice".
+const Q_TYPE_INFO = (q) => {
+  const t = q?.type || "mc";
+  if (t === "mc" && q?.media?.url) return Q_TYPE_LABELS["pov-mc"];
+  return Q_TYPE_LABELS[t] || Q_TYPE_LABELS.mc;
+};
+// q.concept is an internal taxonomy slug (e.g. "puck-control", "oz-entry",
+// "dz-coverage"), shown to players as a pill with zero formatting. There's
+// no curated title registry for this taxonomy the way the animated-play
+// catalog has SCENARIO_FAMILIES, so this is a mechanical de-slugify
+// (hyphens/underscores -> spaces, title case) rather than a rename -- same
+// bug class fixed in ReadThePlay.jsx (2026-07-30), same principle (never
+// show a raw internal slug as user-facing copy), narrower fix since there's
+// nothing to curate into yet. Already-clean values (e.g. "Decision Quality")
+// pass through unchanged.
+function conceptLabel(concept) {
+  const s = String(concept || "").trim();
+  if (!s) return "";
+  return s.replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// ─────────────────────────────────────────────────────────
+// HOME SCREEN
+// ─────────────────────────────────────────────────────────
+function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup }) {
+  const { name, level, position, selfRatings, quizHistory, goals } = player;
+  const latest = quizHistory[quizHistory.length-1];
+  const iq = latest ? calcWeightedIQ(latest.results) : null;
+  const tier = iq !== null ? getTier(iq) : null;
+  const showProPreview = (demoMode || subscriptionTier === "FREE") && subscriptionTier !== "PRO" && subscriptionTier !== "TEAM";
+
+  // Quest checklist state
+  const flags = useQuestFlags(questFlagsBump);
+  const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
+  // U7 and U9 do not self-rate, so the quest that sends them there is not
+  // offered. Without this they would be pointed at an empty ladder.
+  const questsForPlayer = QUESTS_PLAYER.filter(q => q.id !== "rate6" || canSelfRate(player?.level));
+  const questResults = questsForPlayer.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
+  const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
+  const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
+  const [dismissTick, setDismissTick] = useState(0); // eslint-disable-line no-unused-vars
+  const whatsNewDismissed = lsGetJSON(LS_WHATSNEW_DISMISSED, {})[identity] === VERSION;
+  const upgradeDismissed  = lsGetJSON(LS_UPGRADE_DISMISSED, {})[identity] === "1";
+  function dismissWhatsNew() {
+    const m = lsGetJSON(LS_WHATSNEW_DISMISSED, {}); m[identity] = VERSION; lsSetJSON(LS_WHATSNEW_DISMISSED, m);
+    setDismissTick(t => t + 1);
+  }
+  function dismissUpgrade() {
+    const m = lsGetJSON(LS_UPGRADE_DISMISSED, {}); m[identity] = "1"; lsSetJSON(LS_UPGRADE_DISMISSED, m);
+    setDismissTick(t => t + 1);
+  }
+  function handleQuestTap(q) {
+    if (q.gate && !canAccess(q.gate, subscriptionTier).allowed) {
+      onPromptUpgrade(q.gate);
+    } else {
+      onNav(q.nav);
+    }
+  }
+  function handleDismissQuest() {
+    const m = lsGetJSON(LS_QUEST_DISMISSED, {});
+    m[identity] = "1";
+    lsSetJSON(LS_QUEST_DISMISSED, m);
+    onBumpQuestFlags();
+  }
+  function handleAllComplete() {
+    const m = lsGetJSON(LS_FIRST_LINE_SEEN, {});
+    if (m[identity] === "1") return;
+    m[identity] = "1";
+    lsSetJSON(LS_FIRST_LINE_SEEN, m);
+    if (demoMode) onSaveProgress(); else onFirstLine();
+  }
+  const totalSessions = quizHistory.length;
+  // Journey world-unlock celebration. When the player crosses into a new
+  // world (or clears the final one), fire a one-shot celebrate toast. LS
+  // tracker is per-player so switching accounts doesn't replay old wins.
+  // First-ever load stores the current world without firing so existing
+  // players don't get a retroactive popup.
+  useEffect(() => {
+    if (demoMode || player?.__dev || player?.__preview) return;
+    const pid = player?.id;
+    if (!pid) return;
+    try {
+      const clipsWatched = new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []).size;
+      const insightsRead = lsGetJSON(LS_INSIGHTS_READ, []).length;
+      const goalsSet = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+      const skillsRated = Object.values(player?.selfRatings || {}).filter(v => v).length;
+      const state = getJourneyV2({
+        quizzes: totalSessions, training: 0, clipsWatched, insightsRead, goalsSet, skillsRated, coachRated: 0, assignmentsDone: 0,
+      }, subscriptionTier);
+      const world = state.worlds[state.currentWorldIdx];
+      const map = lsGetJSON("rinkreads_last_world_seen_v1", {});
+      const prev = map[pid];
+      if (typeof prev !== "number") {
+        map[pid] = state.currentWorldIdx;
+        lsSetJSON("rinkreads_last_world_seen_v1", map);
+        return;
+      }
+      if (state.currentWorldIdx > prev) {
+        const nextWorld = state.worlds[state.currentWorldIdx];
+        toast.celebrate({
+          title: `World ${state.currentWorldIdx + 1} unlocked!`,
+          body: `Welcome to ${nextWorld.name}. ${nextWorld.desc}`,
+          icon: nextWorld.icon,
+        });
+        map[pid] = state.currentWorldIdx;
+        lsSetJSON("rinkreads_last_world_seen_v1", map);
+      }
+    } catch { /* LS blocked — silent */ }
+    // Intentionally only re-runs when quiz count or tier changes so the
+    // toast fires at the moment a new world becomes reachable.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalSessions, subscriptionTier, player?.id]);
+  // Game Sense Score hero — built once here so unlocked rendering can sit
+  // at the top of Home and locked rendering can drop further down the page.
+  // Rule: unlocked = loud, locked = quiet (don't make new players stare at
+  // a padlock as the first thing they see).
+  const iqUnlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
+  const iqHero = (
+    <Card glow={iqUnlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden",padding:".85rem 1rem"}}>
+      <div style={{position:"absolute",top:0,right:0,width:100,height:100,background:`radial-gradient(circle at top right,${iqUnlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
+      {iqUnlocked ? (
+        <>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Game Sense Score</Label>
+            <div style={{fontSize:11,color:C.dimmer,fontWeight:600}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
+          </div>
+          <div style={{display:"flex",alignItems:"baseline",gap:".7rem"}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:tier.color,lineHeight:1,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.1rem"}}>%</span></div>
+            <div style={{fontSize:12,color:C.dim,fontWeight:700}}>{tier.badge} {tier.label}</div>
+            <div style={{flex:1}}/>
+            <div style={{fontSize:11,color:C.dimmer}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
+            <Label style={{marginBottom:0}}>Game Sense Score</Label>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>
+              {totalSessions === 0 ? "Locked" : `${totalSessions} session${totalSessions===1?"":"s"} logged`}
+            </div>
+          </div>
+          <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>
+            {totalSessions === 0
+              ? "Keep working through the app — quizzes, skills, goals — and come back later. Your Game Sense Score unlocks once you've given us enough to measure fairly."
+              : "Nice start. Keep working through the app and come back later — your Game Sense Score unlocks once there's enough to measure fairly."}
+          </div>
+          <div style={{marginTop:".55rem",height:4,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
+            <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:3,transition:"width .3s"}}/>
+          </div>
+        </>
+      )}
+    </Card>
+  );
+  const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
+  const totalSkills = Object.keys(selfRatings||{}).length;
+  const goalCount = Object.keys(goals||{}).filter(k => goals[k]?.goal).length;
+  const goalCats = goalCatsFor(level).length;
+  const weeklyRecord = getThisWeekRecord();
+  const weeklyAllowed = canAccess("weeklyChallenge", subscriptionTier).allowed;
+
+  // Streak + countdown timer
+  const [streak, setStreak] = useState(0);
+  const [weeklyStreak, setWeeklyStreak] = useState(0);
+  const [topCatStreak, setTopCatStreak] = useState(null); // [cat, count] | null
+  const [countdown, setCountdown] = useState("");
+  useEffect(() => {
+    const sd = getStreakData();
+    const today = getTodayKey();
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (sd.last === today || sd.last === yesterday) setStreak(sd.count || 0);
+    // Read the weekly + category streaks built from quiz results.
+    if (player?.id) {
+      const ws = getWeeklyStreak(player.id);
+      if (ws?.count >= 2) setWeeklyStreak(ws.count);
+      const top = topCategoryStreak(player.id);
+      if (top) setTopCatStreak(top);
+    }
+    // Update countdown every minute
+    const tick = () => setCountdown(formatCountdown(msUntilNextWeek()));
+    tick();
+    const iv = setInterval(tick, 60000);
+    return () => clearInterval(iv);
+  }, [player?.id]);
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:FONT.body,color:C.white,paddingBottom:80}}>
+      {/* Header */}
+      <div style={{padding:"1.5rem 1.25rem 1rem",maxWidth:1120,margin:"0 auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".2rem"}}>
+              <RinkReadsLogo size={22}/>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>RinkReads</span>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:500,letterSpacing:".04em"}}>v{VERSION}</span>
+              {streak > 0 && (
+                <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}} title={`${streak}-day streak`}>
+                  🔥{streak}
+                </div>
+              )}
+              {weeklyStreak >= 2 && (
+                <div style={{background:"rgba(91,164,232,.12)",border:"1px solid rgba(91,164,232,.3)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.blue,display:"flex",alignItems:"center",gap:".2rem"}} title={`${weeklyStreak} weeks in a row with a quiz`}>
+                  🗓️{weeklyStreak}
+                </div>
+              )}
+              {topCatStreak && topCatStreak[1] >= 3 && (
+                <div style={{background:"rgba(34,197,94,.12)",border:"1px solid rgba(34,197,94,.3)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.green,display:"flex",alignItems:"center",gap:".2rem"}} title={`${topCatStreak[1]} correct in a row in ${topCatStreak[0]}`}>
+                  📊{topCatStreak[1]}
+                </div>
+              )}
+              {player?.isAdmin && (
+                <button onClick={() => { window.location.hash = "admin"; }}
+                  title="Open admin dashboard"
+                  style={{background:"rgba(201,162,75,.12)",border:`1px solid ${C.goldBorder}`,borderRadius:20,padding:"2px 8px",fontSize:10,fontWeight:800,letterSpacing:".06em",color:C.gold,cursor:"pointer",display:"flex",alignItems:"center",gap:".25rem",fontFamily:FONT.body}}>
+                  ★ ADMIN
+                </button>
+              )}
+            </div>
+            <div style={{fontSize:12,color:C.dimmer}}>{name}{ALL_AGES_MODE ? "" : ` · ${level}`} · {position}</div>
+          </div>
+          <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
+        </div>
+
+        <Suspense fallback={<LazyFallback/>}><PlayerLearningHome player={player} onNavigate={({id,ageBand,worldId}) => {
+          if (["learn","practice","experimental","library"].includes(id)) {
+            onNav({kind:"player-learning", search:new URLSearchParams({arena:id === "learn" ? "worlds" : id,age:ageBand,...(worldId ? {world:worldId} : {})}).toString()});
+          } else onNav(({progress:"gamesense",history:"journey",brain:"cogym",play:"readplay"})[id] || id);
+        }}/></Suspense>
+
+        {/* For-parents start-here card — dismissible, persists via LS */}
+        <HomeStartHereCard onRead={() => onNav("parents")} subscriptionTier={subscriptionTier} />
+
+        {/* Training log at the top so parents can update sessions without
+            digging into Settings or the dedicated training screen.
+            Activity rows default collapsed; date input is capped to the
+            last month to keep entries honest. */}
+        <TrainingLog playerId={player.id || "__demo__"} />
+
+        {/* Homework from coach — shows only when there's anything assigned */}
+        <HomeworkCard playerId={player.id} demoMode={demoMode} />
+
+        {/* Team challenge — fixed quiz everyone on the team takes */}
+        <ChallengeCard playerId={player.id} demoMode={demoMode} onStart={(c) => onNav({ kind: "challenge", challenge: c })} />
+
+        {/* Question of the Day — one shared question per age per day */}
+        <QotDCard player={player} demoMode={demoMode} onOpen={(q) => onNav({ kind: "qotd", question: q })} />
+
+        {/* Speed Round — 15 T/F, 10 seconds each, pattern break */}
+        <SpeedRoundCard player={player} demoMode={demoMode} onStart={() => onNav({ kind: "speed" })} />
+
+        {/* First-Five quest checklist — hidden once dismissed */}
+        {!questDismissed && !firstLineSeen && (
+          <QuestChecklist
+            role="player"
+            quests={questsForPlayer}
+            results={questResults}
+            onTap={handleQuestTap}
+            onDismiss={handleDismissQuest}
+            onAllComplete={handleAllComplete}
+            showSignupCTA={demoMode}
+            onSignup={onSignup}
+          />
+        )}
+
+        {/* Pro Hockey Intel — inline insights with quest-flag tracking */}
+        {!questDismissed && !firstLineSeen && (
+          <div style={{margin:"0 -1.25rem 1rem"}}>
+            <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
+          </div>
+        )}
+
+        {/* Weekly Challenge — compact entry for PRO+ users; FREE users see it in the Pro upgrade button below */}
+        {weeklyAllowed && (
+          <button onClick={() => onNav("weekly")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".55rem .85rem",cursor:"pointer",color:C.dim,fontFamily:FONT.body,marginBottom:"1rem",fontSize:12}}>
+            <span style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{fontSize:13}}>{weeklyRecord ? "✅" : "🏆"}</span>
+              <span style={{fontWeight:600,color:C.white}}>Weekly Challenge</span>
+              <span style={{color:C.dimmer}}>· {weeklyRecord ? `${weeklyRecord.score}% · resets in ${countdown}` : `resets in ${countdown}`}</span>
+            </span>
+            <span style={{color:C.dimmer,fontSize:11}}>{weeklyRecord ? "View" : "Play →"}</span>
+          </button>
+        )}
+
+        {showProPreview && !upgradeDismissed && (
+          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative"}}>
+            <span onClick={(e)=>{e.stopPropagation();e.preventDefault();dismissUpgrade();}} role="button" aria-label="Dismiss" style={{position:"absolute",top:6,right:8,width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",color:C.dimmer,fontSize:14,cursor:"pointer",borderRadius:6,lineHeight:1}}>✕</span>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",paddingRight:"1.6rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+                <span style={{fontSize:16}}>⭐</span>
+                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to RinkReads Pro</span>
+              </div>
+              <span style={{color:C.gold,fontSize:13}}>→</span>
+            </div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:".55rem"}}>See what unlocks with Pro — unlimited quizzes, adaptive difficulty, position-specific questions, hockey goal setting, Weekly Challenge, coach feedback, and unlimited NHL Insights.</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".35rem",marginTop:".5rem"}}>
+              {[
+                {icon:"♾️",t:"Unlimited quizzes"},
+                {icon:"🎮",t:"5 question formats"},
+                {icon:"🎯",t:"Position-specific"},
+                {icon:"🧠",t:"Adaptive difficulty"},
+                {icon:"🏒",t:"Hockey goal setting"},
+                {icon:"📊",t:"Skills Map radar"},
+                {icon:"🏆",t:"Weekly Challenge"},
+                {icon:"👨‍🏫",t:"Coach feedback"},
+                {icon:"📰",t:"Unlimited NHL Insights"},
+              ].map((b,i) => (
+                <div key={i} style={{fontSize:11,color:C.dimmer,display:"flex",alignItems:"center",gap:".35rem"}}>
+                  <span>{b.icon}</span><span>{b.t}</span>
+                </div>
+              ))}
+            </div>
+          </button>
+        )}
+
+        {/* What's New */}
+        {!whatsNewDismissed && (
+        <div style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard} 0%,${C.bgElevated} 100%)`,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden"}}>
+          <div style={{padding:".75rem 1rem .6rem",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`1px solid rgba(255,255,255,0.05)`}}>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{background:C.gold,color:C.bg,fontSize:9,fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",padding:"2px 7px",borderRadius:20}}>NEW</span>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:13,color:C.white,letterSpacing:".02em"}}>What's New</span>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>Beta v{VERSION.replace(/-beta$/,"")} · {CHANGELOG[0].date}</span>
+              <button onClick={dismissWhatsNew} aria-label="Dismiss" style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"0 2px",lineHeight:1}}>✕</button>
+            </div>
+          </div>
+          <div style={{padding:".65rem .85rem"}}>
+            {CHANGELOG[0].notes.slice(0,3).map((item,i) => (
+              <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".65rem",padding:".5rem 0",borderBottom:i<2?`1px solid rgba(255,255,255,0.04)`:"none"}}>
+                <div style={{width:32,height:32,borderRadius:10,background:"rgba(255,255,255,0.05)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0}}>{item.icon}</div>
+                <div style={{minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:700,color:C.white,marginBottom:2}}>{item.title}</div>
+                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// QUIZ STATE HOOK (shared by Quiz and WeeklyQuiz)
+// ─────────────────────────────────────────────────────────
+function useQuizState() {
+  const [sel, setSel] = useState(null);
+  const [seqAnswered, setSeqAnswered] = useState(false);
+  const [seqCorrect, setSeqCorrect] = useState(false);
+  const [results, setResults] = useState([]);
+  return { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults };
+}
+
+// ─────────────────────────────────────────────────────────
+// QUIZ SCREEN
+// ─────────────────────────────────────────────────────────
+function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
+  const isDemo = !player.id || isEphemeralPlayer(player.id);
+  // First-time quizzes (no session history yet) are capped at 5 so the
+  // First-Six onboarding feels quick. Subsequent quizzes use the player's
+  // configured sessionLength.
+  //
+  // SNAPSHOT at mount, both of them. handleQuizComplete appends to
+  // quizHistory before setScreen("results") resolves, so a live-derived
+  // `isReturning` flips true while this component is still mounted and
+  // re-lengthens the session underneath the player — 5 questions silently
+  // became 10 on the 2026-08-03 playtest, and the results screen never
+  // arrived because `isLast` went false. The component unmounts between
+  // sessions, so the next quiz re-reads both correctly.
+  const [isReturning] = useState(() => player.quizHistory.length > 0);
+  const firstTime = !isReturning;
+  // When ?ids= is on the URL (dashboard "Play this set"), play exactly
+  // that many questions — don't cap to the default demo / first-time
+  // length. Read once at mount so it doesn't change mid-quiz.
+  const idsLen = (() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get("ids");
+      return p ? p.split(",").map(s => s.trim()).filter(Boolean).length : 0;
+    } catch { return 0; }
+  })();
+  const [qLen] = useState(() => sessionQuestionCount({
+    idsLen, isDemo, firstTime, sessionLength: player.sessionLength,
+  }));
+  const [queue, setQueue] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
+  const [seqPerfect, setSeqPerfect] = useState(true);
+  const [mistakeStreak, setMistakeStreak] = useState(0);
+  const [quizDone, setQuizDone] = useState(false);
+  // Highest streak we've already celebrated via toast this session. Keeps
+  // the 5-in-a-row celebration from firing repeatedly as the player keeps
+  // rolling.
+  const [celebratedStreak, setCelebratedStreak] = useState(0);
+  // Fire a one-shot celebrate toast when the player hits a streak of 5+
+  // (or each new milestone at 5, 7, 10). Recomputes on every results change.
+  useEffect(() => {
+    let streak = 0;
+    for (let i = results.length - 1; i >= 0; i--) {
+      if (results[i].ok) streak++; else break;
+    }
+    if ((streak === 5 || streak === 7 || streak === 10) && streak > celebratedStreak) {
+      const msgs = {
+        5: { title: `${streak} in a row!`, body: "Five straight. That's a real read." },
+        7: { title: `${streak} straight!`, body: "Seven clean. Tell your coach." },
+        10: { title: `PERFECT start — ${streak}!`, body: "Ten in a row. Hockey brain confirmed." },
+      };
+      toast.celebrate({ ...msgs[streak], icon: streak >= 10 ? "🏆" : "🔥" });
+      setCelebratedStreak(streak);
+    }
+  }, [results, celebratedStreak]);
+  const [showFlag, setShowFlag] = useState(false);
+  const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for RinkReadsRinkQuestion dispatcher
+  // Questions the player skipped, held so they can be served again before the
+  // session ends. The provisional wrong row already sits in `results`.
+  const [skippedQs, setSkippedQs] = useState([]);
+  // Speed bonus: when an interactive question is on screen, track when it
+  // loaded so a correct answer can earn a time-based bonus. 15-second
+  // window, max 50 bonus points per question, linear decay to 0, starting
+  // after a SPEED_GRACE_MS reading head start. Wrong answers earn no bonus
+  // regardless of speed.
+  const [questionStartedAt, setQuestionStartedAt] = useState(() => Date.now());
+  // Questions PRESENTED before the one on screen. Moves only in advance(),
+  // alongside setQuestionStartedAt — never on answer. See qDisplayNum below.
+  const [presentedCount, setPresentedCount] = useState(0);
+  const [lastSpeedBonus, setLastSpeedBonus] = useState(0);
+  const [speedTotal, setSpeedTotal] = useState(0);
+  const [flagReason, setFlagReason] = useState("");
+  const [flagDetail, setFlagDetail] = useState("");
+  const [flagSent, setFlagSent] = useState(false);
+  const [statsMap, setStatsMap] = useState({});
+
+  async function submitFlag() {
+    if (!flagReason) return;
+    if (player.id && !isEphemeralPlayer(player.id)) {
+      await SB.reportQuestion({
+        userId: player.id,
+        questionId: question.id,
+        level: player.level,
+        reason: flagReason,
+        detail: flagDetail.trim() || null,
+      });
+    }
+    setFlagSent(true);
+    setTimeout(() => { setShowFlag(false); setFlagReason(""); setFlagDetail(""); setFlagSent(false); }, TOAST_DURATION_MS);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      let allQs;
+      if (isDemo) {
+        const demoQs = buildDemoQueue(qb, player.level, player.position, focus);
+        // First-question text guarantee: while image fetches are still
+        // warming up, surface a text question first so the user has
+        // something to read while everything loads. Find the first
+        // non-image MC and swap it to index 0.
+        const isImageMc = (q) => q && q.type === "mc" && !!q.media?.url;
+        const ti = demoQs.findIndex(q => !isImageMc(q));
+        if (ti > 0) [demoQs[0], demoQs[ti]] = [demoQs[ti], demoQs[0]];
+        setQueue({ byD: {1: demoQs.slice(1), 2: [], 3: []}, currentD: 1, tier: "DEMO" });
+        setQuestion(demoQs[0]);
+        allQs = demoQs;
+      } else {
+        const q = buildQueue(qb, player.level, player.position, isReturning, tier, focus);
+        let { q: first, queue: q2 } = pullNext(q, []);
+        // Same text-first guarantee for adaptive queues — if pullNext
+        // happened to return an image-backed MC, swap with the first
+        // non-image question in any difficulty bucket.
+        const isImageMc2 = (q) => q && q.type === "mc" && !!q.media?.url;
+        if (isImageMc2(first)) {
+          for (const d of [1, 2, 3]) {
+            const i = (q2.byD[d] || []).findIndex(x => x && !isImageMc2(x));
+            if (i >= 0) {
+              const swap = q2.byD[d][i];
+              q2.byD[d][i] = first;
+              first = swap;
+              break;
+            }
+          }
+        }
+        setQueue(q2);
+        setQuestion(first);
+        allQs = [first, ...Object.values(q2.byD).flat()];
+      }
+      // Image preload — kick off fetches for every POV image in the queue so
+      // by the time the user clicks through to question N, its image is
+      // already in the browser cache. `new Image()` doesn't render, just
+      // primes the cache. Filter to unique URLs to avoid redundant requests.
+      const urls = new Set();
+      for (const q of allQs) {
+        const u = q?.media?.url;
+        if (u && !u.startsWith("/pov-placeholder")) urls.add(u);
+      }
+      for (const u of urls) { const img = new Image(); img.src = u; }
+    }).catch(e => console.error("QB load error:", e));
+    if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
+    return () => { cancelled = true; };
+  }, [focus?.conceptId, focus?.cat]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset the speed-bonus timer whenever the displayed question changes.
+  useEffect(() => {
+    if (question) setQuestionStartedAt(Date.now());
+  }, [question?.id]);
+
+  // Position in the session = questions ANSWERED, not rows in `results`.
+  // A skipped question occupies a row while still being owed to the player, and
+  // it is re-served after the quota is met -- so counting rows would push the
+  // header past qLen again ("Question 8 of 7"), which is the overrun fixed on
+  // 2026-08-02. Clamped so the catch-up phase reads "7 of 7" rather than beyond.
+  const qNum = Math.min(answeredCount(results), qLen);
+  // 1-based number for the header, fed from questions PRESENTED, not answered.
+  // answeredCount() moves the instant the answer is recorded, and scenario
+  // point/selection primitives auto-submit on the tap — so the header flipped to
+  // "Question 5 of 5" while the player was still reading question 4's feedback
+  // (SHELL-8, Thomas 2026-08-03: "it looked like it moved it to question five of
+  // five before I could even advance it"). displayQuestionNumber is correct for
+  // what it does; it was being handed the wrong input. `answeredCount` still
+  // feeds the progress bar, isLast and scoring — those SHOULD move on answer.
+  const qDisplayNum = displayQuestionNumber(presentedCount, qLen);
+  const isLast = qNum >= qLen - 1;
+  // Leaving mid-quiz used to discard the whole session silently — Thomas hit
+  // this on 2026-08-03: "I clicked the back button when it was five of five and
+  // it auto took me back to the main page. Now it started over the questions."
+  // Four answered questions vanished with no warning and no way back. Confirm
+  // only when there is something to lose, so an immediate change of mind on
+  // question one is still one tap.
+  function confirmExitQuiz() {
+    const answered = answeredCount(results);
+    if (answered > 0 && !quizDone) {
+      const ok = window.confirm(
+        `You've answered ${answered} of ${qLen} question${qLen === 1 ? "" : "s"}.\n\n` +
+        `Leaving now loses this session and starts over next time. Leave anyway?`
+      );
+      if (!ok) return;
+    }
+    onBack();
+  }
+  const qtype = question?.type || "mc";
+  // Apply any in-browser local override on top of the bank question.
+  // Display + scoring both read from `q`, so edits apply without sync.
+  // Schema coalescing: legacy MC questions used q.q/q.choices/q.correct
+  // instead of q.sit/q.opts/q.ok. Normalize so render + scoring see one
+  // consistent shape regardless of which schema the question was authored in.
+  const q = (() => {
+    const raw = applyOverride(question);
+    if (!raw) return raw;
+    const isMCShape = ["mc","mistake","next"].includes(raw.type);
+    if (!isMCShape) return raw;
+    return {
+      ...raw,
+      sit: raw.sit || raw.q || "",
+      opts: Array.isArray(raw.opts) ? raw.opts : (Array.isArray(raw.choices) ? raw.choices : []),
+      ok: raw.ok !== undefined ? raw.ok : (typeof raw.correct === "number" ? raw.correct : raw.ok),
+    };
+  })();
+  // Dev-only edit affordance — gated on ?dev=1 so kids can't see it.
+  const editAllowed = (() => {
+    try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
+    catch { return false; }
+  })();
+  // Time pressure mode (?timed=1): every answerable question gets a
+  // hard-cutoff timer. If the player doesn't answer in TIMED_DURATION_MS,
+  // the question records as wrong + shows the explanation. Mimics the
+  // urgency of a real shift where overthinking = turnover.
+  const timedMode = (() => {
+    try { return new URLSearchParams(window.location.search).get("timed") === "1"; }
+    catch { return false; }
+  })();
+  const TIMED_DURATION_MS = 12000;
+  const [editOpen, setEditOpen] = useState(false);
+  const [editDraft, setEditDraft] = useState(null);
+  const [dupOpen, setDupOpen] = useState(false);
+  const [imgUploading, setImgUploading] = useState(false);
+  const [imgUploadErr, setImgUploadErr] = useState(null);
+  // Two-step delete: first tap arms the button, second confirms within 3s.
+  const [killArmed, setKillArmed] = useState(false);
+  useEffect(() => {
+    if (!killArmed) return;
+    const t = setTimeout(() => setKillArmed(false), 3000);
+    return () => clearTimeout(t);
+  }, [killArmed]);
+  // Flag system: 🚩 opens an inline reason picker. Picking a reason
+  // saves the flag immediately. No two-step — flagging is non-destructive.
+  const [flagPickerOpen, setFlagPickerOpen] = useState(false);
+  const [flagNoteDraft, setFlagNoteDraft] = useState("");
+  const currentFlag = question?.id ? getFlag(question.id) : null;
+  // Time-pressure hard cutoff — when ?timed=1 is on, fire a timer at
+  // TIMED_DURATION_MS that records the question as wrong if the player
+  // hasn't answered yet. Resets on every new question. Reads dynamic
+  // values inside the callback to avoid stale-closure issues.
+  useEffect(() => {
+    if (!timedMode || !question) return;
+    if (sel !== null || seqAnswered || rinkQResult !== null) return;
+    const t = setTimeout(() => {
+      if (sel !== null || seqAnswered || rinkQResult !== null) return;
+      const qt = question?.type || "mc";
+      const newResult = { id:question.id, cat:question.cat, ok:false, d:question.d||2, type:qt, speedBonus:0, timedOut:true };
+      if (qt === "tf") {
+        setSel("__timeout__");
+      } else if (qt === "seq" || qt === "multi" || qt === "scenario") {
+        setSeqAnswered(true);
+        setSeqCorrect(false);
+        setSeqPerfect(false);
+      } else if (["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(qt)) {
+        setRinkQResult(false);
+      } else {
+        setSel(-1);
+        if (qt === "mistake") setMistakeStreak(0);
+      }
+      setLastSpeedBonus(0);
+      const newResults = upsertResult(results, newResult);
+      setResults(newResults);
+      toast.warning("⏱ Time's up!", { duration: 1800 });
+      if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
+    }, TIMED_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
+
+  // Speed-bonus window (SPEED_TYPES / SPEED_DURATION_MS / SPEED_MAX_BONUS /
+  // SPEED_GRACE_MS / computeSpeedBonus now live in utils/quizResults.js, where
+  // the rest of the quiz maths is and where the grace can be asserted directly).
+
+  function handlePick(i) {
+    if (sel !== null || !q) return;
+    setSel(i);
+    const ok = i === q.ok;
+    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:qtype, speedBonus:bonus };
+    const newResults = upsertResult(results, newResult);
+    if (q.type === "mistake" && ok) setMistakeStreak(s => s+1);
+    setResults(newResults);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
+  }
+
+  function handleSeqAnswer(ok) {
+    // Dedupe, matching handleRinkQAnswer's `if (rinkQResult !== null) return`.
+    // This handler serves seq, multi AND scenario questions, and a multi-step
+    // scenario fires onAnswer once PER STEP -- so without this guard each step
+    // appended another row to `results`. That inflated the counter ("Question
+    // 6 of 5" on a 5-question session, reported 2026-08-02), pushed the
+    // progress bar past 100%, and inflated the denominator that
+    // calcWeightedIQ() and the "N/M correct" results screen both divide by.
+    // seqAnswered is reset per question alongside rinkQResult, so first answer
+    // wins and later steps of the same question no longer double-record.
+    if (seqAnswered) return;
+    setSeqAnswered(true);
+    setSeqCorrect(ok);
+    if (!ok) setSeqPerfect(false);
+    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:q.type || "seq", speedBonus:bonus };
+    const newResults = upsertResult(results, newResult);
+    setResults(newResults);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
+  }
+
+  // Skip: record it WRONG immediately (Thomas, 2026-08-03 -- otherwise a player
+  // farms a perfect score by skipping anything hard) but hold the question so
+  // it comes back. Answering it later goes through upsertResult, which REPLACES
+  // this row rather than appending a second one.
+  function handleSkip() {
+    if (!question) return;
+    setResults(prev => upsertResult(prev, skipResult(question)));
+    setSkippedQs(prev => (prev.some(x => x.id === question.id) ? prev : [...prev, question]));
+    advance({ from: "skip" });
+  }
+
+  function advance() {
+    if (!question) return;
+    // Count ANSWERED questions, not rows: a skipped question occupies a row but
+    // is still owed to the player, so the session must not end on its account.
+    const answered = answeredCount(results);
+    const outstanding = skippedQs.filter(sq => {
+      const r = results.find(x => x && x.id === sq.id);
+      return isSkipped(r);
+    });
+    if (answered >= qLen) {
+      // Quota met. Serve anything still skipped before finishing.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        setPresentedCount(n => n + 1);
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
+    const { q: nextQ, queue: nextQueue } = pullNext(queue, results);
+    if (!nextQ) {
+      // Bank exhausted early — still owe the player their skipped questions.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        setPresentedCount(n => n + 1);
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
+    setQueue(nextQueue);
+    setQuestion(nextQ);
+    setSel(null);
+    setSeqAnswered(false);
+    setSeqCorrect(false);
+    setRinkQResult(null);
+    setLastSpeedBonus(0);
+    setQuestionStartedAt(Date.now());
+    setPresentedCount(n => n + 1);
+  }
+
+  // RinkReadsRinkQuestion dispatcher routes ONLY for rink-native interactive
+  // types. Plain MC/TF/multi/seq/mistake/next questions can ALSO carry a
+  // q.rink (diagram-MC pattern: small inline rink above the options) but
+  // they keep their normal MC-style answer flow — those don't get dispatched
+  // to the interactive widget.
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
+  const NON_RINK_ANSWER_TYPES = new Set(["mc","tf","multi","seq","mistake","next","scenario"]);
+  const isRinkQ = NEW_RINK_TYPES.includes(qtype) || (!!question?.rink && !NON_RINK_ANSWER_TYPES.has(qtype));
+  const answered = isRinkQ
+    ? rinkQResult !== null
+    : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
+    :                          sel !== null;
+
+  // Read the question aloud (browser TTS) when "read aloud" is on, for the
+  // plain question types. Auto-fires on each new question; the 🔊 button in
+  // the header replays on demand. Scenario questions read themselves inside
+  // ScenarioRenderer, so they're excluded here to avoid double-reads. Cancels
+  // on question change/unmount so reads don't pile up when advancing.
+  useEffect(() => {
+    if (!q || isRinkQ || !READ_ALOUD_TYPES.has(qtype)) return;
+    if (ttsSupported() && getReadAloud()) {
+      speakParts(questionSpeechParts(q, qtype));
+    }
+    return () => stopSpeaking();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q?.id, qtype]);
+
+  if (!q) {
+    // Distinguish "still loading the bank" (queue not built yet) from
+    // "queue is built but empty" (ids filter matched zero questions).
+    // The latter is what happens when the author tool renames a question
+    // in memory but hasn't shipped to disk — the iframe URL filters by
+    // an id that doesn't exist in questions.json yet.
+    // `queue` is null while the bank is still loading, and an object
+    // { byD:{1,2,3}, currentD, tier } once built. "Ready but empty" = built
+    // (non-null) with every difficulty bucket empty — i.e. the bank had no
+    // questions for this player (blank-slate window) or an ids filter matched
+    // nothing. (The old `Array.isArray(queue)` check was always false — queue
+    // is never a bare array — so neither empty-state branch ever rendered.)
+    const queueReadyButEmpty = !!queue && !!queue.byD &&
+      [1, 2, 3].every(d => (queue.byD[d] || []).length === 0);
+    if (queueReadyButEmpty && idsLen > 0) {
+      let askedIds = "";
+      try { askedIds = new URLSearchParams(window.location.search).get("ids") || ""; } catch {}
+      return (
+        <Screen>
+          <div style={{ maxWidth: 480, margin: "4rem auto", padding: "1rem 1.25rem", color: C.white, fontFamily: FONT.body }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+              Question not in this bank yet
+            </div>
+            <p style={{ color: C.dim, fontSize: 13, lineHeight: 1.55, marginBottom: 10 }}>
+              The id you asked for isn't in <code style={{ background: C.dimmest, padding: "1px 5px", borderRadius: 3, fontFamily: "monospace", fontSize: 12 }}>questions.json</code> on disk:
+            </p>
+            <code style={{ display: "block", padding: "8px 10px", background: C.dimmest, borderRadius: 6, fontFamily: "monospace", fontSize: 12, color: C.white, marginBottom: 10, wordBreak: "break-all" }}>
+              {askedIds || "(no ids)"}
+            </code>
+            <p style={{ color: C.dimmer, fontSize: 12, lineHeight: 1.55 }}>
+              If you renamed it in the author tool, run <strong>🚀 Save &amp; Ship</strong> in the author. The iframe auto-reloads after a successful ship.
+            </p>
+          </div>
+        </Screen>
+      );
+    }
+    // Queue built but empty, and no specific ids were requested → the bank has
+    // no questions for this player (blank-slate window). Show the empty state
+    // rather than spinning on "Loading…" forever.
+    if (queueReadyButEmpty) {
+      return <EmptyBankScreen />;
+    }
+    return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+  }
+
+  // Records a result for a question dispatched to RinkReadsRinkQuestion. The child
+  // component fires onAnswer(true|false); we dedupe via rinkQResult so a player
+  // toggling/retrying inside the rink widget can't double-record.
+  function handleRinkQAnswer(ok) {
+    if (rinkQResult !== null) return;
+    const okBool = !!ok;
+    setRinkQResult(okBool);
+    const bonus = computeSpeedBonus(qtype, okBool, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const nextResults = upsertResult(results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus });
+    setResults(nextResults);
+    if (answeredCount(nextResults) >= qLen && !skippedQs.length) setQuizDone(true);
+  }
+
+  // Single dispatch site. New schema (q.rink or NEW_RINK_TYPES) goes through
+  // RinkReadsRinkQuestion which handles its own type-specific UI internally.
+  // Everything else falls through to the existing per-type renderers.
+  function renderQuestionBody() {
+    if (isRinkQ) {
+      return <RinkReadsRinkQuestion question={q} onAnswer={handleRinkQAnswer} onSkip={advance} />;
+    }
+    switch (qtype) {
+      case "mc":
+      case "mistake":
+        return <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
+      case "next":
+        return <NextQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
+      case "tf":
+        return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)} colorblind={player.colorblind}/>;
+      case "seq":
+        return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
+      case "multi":
+        return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
+      case "scenario":
+        // A multi-step scenario emits one payload PER STEP with complete:false,
+        // then a single combined result when the whole play finishes. Only the
+        // combined one is recorded, so a two-step question stays one row in
+        // `results` -- the array the counter, the progress bar and
+        // calcWeightedIQ() all divide by. Flat scenarios emit no `complete`
+        // field at all, so `!== false` records them immediately as before.
+        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => { if (p?.complete === false) return; handleSeqAnswer(!!p.ok); }} />;
+      default:
+        return null;
+    }
+  }
+
+  const FORMAT_PREVIEW_LABELS = { seq:"Sequence Ordering", tf:"True or False", mistake:"Spot the Mistake", next:"What's Your Next Move" };
+  const FORMAT_PREVIEW_ICONS = { seq:"🔢", tf:"⚡", mistake:"🔍", next:"⏭️" };
+  const FORMAT_PREVIEW_DESC = {
+    seq: "Put the steps of a play in the correct order — tests whether you understand decision sequences, not just outcomes.",
+    tf: "Is this hockey statement True or False? Myth-busting questions that reveal what actually works on the ice.",
+    mistake: "Read the situation, spot the error. Identify exactly what the player did wrong and why it hurts the team.",
+    next: "Given this game situation, what's the smartest next move? Tests game sense under pressure.",
+  };
+  if (qtype === "formatPreview") {
+    const fmt = q._format || "tf";
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+        <StickyHeader>
+          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+            <button onClick={confirmExitQuiz} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position}</div>
+            </div>
+          </div>
+        </StickyHeader>
+        <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+          <div style={{fontSize:48,margin:"1.5rem 0 .75rem"}}>{FORMAT_PREVIEW_ICONS[fmt]}</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>{FORMAT_PREVIEW_LABELS[fmt]}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>{FORMAT_PREVIEW_DESC[fmt]}</div>
+          <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
+            <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on RinkReads Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
+          </div>
+          <button onClick={() => onUpgrade("allQuestionFormats","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Question Types →</button>
+          <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
+        </div>
+      </div>
+    );
+  }
+
+  const typeInfo = Q_TYPE_INFO(q);
+  const diagramType = DIAGRAMS[q.id];
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <button onClick={confirmExitQuiz} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
+          </div>
+          {speedTotal > 0 && (
+            <div style={{display:"flex",alignItems:"center",gap:".25rem",padding:".15rem .5rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`,borderRadius:999,fontSize:11,fontWeight:800,color:C.gold}}>
+              ⚡ +{speedTotal}
+            </div>
+          )}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>Question {qDisplayNum} of {qLen}</div>
+            <div style={{width:100,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${(qNum/qLen)*100}%`,background:C.purple,borderRadius:2,transition:"width .35s ease"}}/>
+            </div>
+          </div>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Question type badge + category */}
+        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
+          <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
+          <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
+          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{conceptLabel(q.concept)}</Pill>}
+          {ttsSupported() && getReadAloud() && !isRinkQ && READ_ALOUD_TYPES.has(qtype) && (
+            <button onClick={() => speakParts(questionSpeechParts(q, qtype))}
+              title="Read the question aloud" aria-label="Read the question aloud"
+              style={{marginLeft:"auto",background:"transparent",border:"none",color:C.purple,fontSize:18,cursor:"pointer",lineHeight:1,padding:0}}>🔊</button>
+          )}
+        </div>
+
+        {/* Diagram */}
+        {diagramType && (
+          <div style={{marginBottom:"1rem"}}>
+            <div style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".4rem"}}>📋 Coach's Clipboard</div>
+            <RinkDiagram type={diagramType}/>
+          </div>
+        )}
+
+        {/* POV image — first-person scenario photo above the situation card.
+            Sticky: stays pinned just below the StickyHeader as the player
+            scrolls through options + explanation, so the visual context is
+            always there when reading the read.
+            SKIPPED for interactive types whose renderer already draws the
+            image as its own clickable canvas (hot-spots, drag-target,
+            multi-tap, etc.) — otherwise the kid sees the picture twice. */}
+        {q.media?.url && !isRinkQ && (
+          <ScenarioImage media={q.media} overlays={q.overlays} sticky />
+        )}
+
+        {/* Mini-rink diagram — for any non-interactive MC-shape question
+            that has a q.rink config. Renders the same procedural rink the
+            interactive types use, just non-interactive (read-only diagram).
+            Skips when there's already a POV image to avoid double-context.
+            Same sticky treatment as the POV image. */}
+        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !q.media?.url && (
+          <div style={{
+            position:"sticky", top:62, zIndex:10,
+            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
+            border:`1px solid ${C.border}`, background:"#0b1220",
+            aspectRatio: "2 / 1",
+            boxShadow: "0 8px 24px rgba(0,0,0,.5)",
+          }}>
+            <RinkReadsRink {...q.rink} />
+          </div>
+        )}
+
+        {/* Situation / Prompt */}
+        {(qtype === "mc" || qtype === "seq" || qtype === "next") && (
+          <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
+            {/* `next` questions are authored DECLARATIVELY — the stem sets up a
+                situation and the badge is the ask. That is deliberate and
+                bank-wide: 0 of 17 `next` stems contain a question mark, exactly
+                like `mistake`, while all 156 U11 `mc` stems do. But `next` was
+                the only type whose badge never got rendered — it fell through
+                to "📋 Game Situation", identical to `mc`, so a player saw a
+                statement and four options with no question anywhere on screen.
+                That is all 17 of the `next` entries in the incomplete-stems
+                audit, and rendering the badge fixes every one of them plus
+                every future `next` without touching a word of content.
+
+                The badge says "What's Your Next Move?", NOT "What Happens
+                Next?". Verified against the bank before wording it: all 17
+                keyed answers are actions the player takes ("Skate away into an
+                open lane", "Chip the puck off the boards", "Change pace with a
+                hesitation") — not one is a prediction of what will occur. A
+                prediction badge over an action question lets a child read it
+                correctly and still be marked wrong. */}
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "next" ? "🔮 What's Your Next Move?"
+                : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
+                : "📋 Game Situation"}
+            </div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "multi" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>☑️ Select All That Apply</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.q && <div style={{fontSize:15,fontWeight:700,color:C.white,lineHeight:1.6}}>{q.q}</div>}
+          </Card>
+        )}
+
+        {qtype === "tf" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "mistake" && (
+          <Card style={{marginBottom:"1.25rem",background:C.redDim,border:`1px solid ${C.redBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.red,marginBottom:".6rem",fontWeight:700}}>🔍 Spot the Mistake</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
+          </Card>
+        )}
+
+        {qtype === "zone-click" && (
+          <Card style={{marginBottom:"1.25rem",background:C.greenDim,border:`1px solid rgba(34,197,94,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.green,marginBottom:".6rem",fontWeight:700}}>🎯 Zone Click</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
+          </Card>
+        )}
+
+        {qtype === "rink" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>🏒 Rink Scenario</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.scene?.question?.prompt && <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.scene.question.prompt}</div>}
+          </Card>
+        )}
+
+        {/* Speed-bonus timer — only for interactive types when NOT in timed
+            mode. Holds full through the reading grace, then drains live;
+            freezes on answer with the awarded bonus. Wrong answers freeze at 0. */}
+        {!timedMode && SPEED_TYPES.has(qtype) && (
+          <SpeedTimerBar
+            startedAt={questionStartedAt}
+            durationMs={SPEED_DURATION_MS}
+            graceMs={SPEED_GRACE_MS}
+            maxBonus={SPEED_MAX_BONUS}
+            frozen={answered}
+            achieved={lastSpeedBonus}
+          />
+        )}
+
+        {/* Time-pressure hard-cutoff bar — when ?timed=1 is on, every
+            answerable type gets a 12-second countdown. Bar drains visibly;
+            on expire the timeout effect below auto-records as wrong. */}
+        {timedMode && (
+          <div style={{marginBottom:".75rem",padding:".5rem .75rem",background:C.bgCard,border:`1px solid ${C.redBorder}`,borderRadius:10}}>
+            <TimedCountdownBar startedAt={questionStartedAt} durationMs={TIMED_DURATION_MS} frozen={answered}/>
+          </div>
+        )}
+
+        {/* Question component — single dispatch in renderQuestionBody() */}
+        {renderQuestionBody()}
+
+        {/* Local-edit indicator + dev edit affordance. The badge is visible to
+            anyone in dev mode so they can see when they're playing an edited
+            version. The Edit button itself is gated on ?dev=1. */}
+        {q._hasOverride && editAllowed && (
+          <div style={{display:"flex",alignItems:"center",gap:".4rem",marginTop:".65rem",padding:".35rem .6rem",background:"rgba(252,200,76,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:6,fontSize:10,color:C.gold,fontWeight:700,letterSpacing:".06em"}}>
+            <span>✎ LOCAL OVERRIDE — not synced to Notion</span>
+          </div>
+        )}
+        {editAllowed && (
+          <div style={{display:"flex",gap:".5rem",marginTop:".5rem"}}>
+            <button onClick={() => {
+              setEditDraft({
+                sit: q.sit || "",
+                q: q.q || "",
+                question: q.question || "",
+                opts: Array.isArray(q.opts) ? [...q.opts] : ["","","",""],
+                ok: q.ok,
+                correct: Array.isArray(q.correct) ? [...q.correct] : [],
+                items: Array.isArray(q.items) ? [...q.items] : [],
+                correct_order: Array.isArray(q.correct_order) ? [...q.correct_order] : (Array.isArray(q.items) ? q.items.map((_,i)=>i) : []),
+                spots: Array.isArray(q.spots) ? q.spots.map(s => ({...s})) : [],
+                media: q.media ? {...q.media} : null,
+                tip: q.tip || "",
+                why: q.why || q.explanation || "",
+              });
+              setImgUploadErr(null);
+              setEditOpen(true);
+            }} style={{flex:1,background:"none",border:`1px solid ${C.goldBorder}`,color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem",borderRadius:6,fontWeight:700}}>
+              ✎ Edit this question
+            </button>
+            <button onClick={() => setDupOpen(true)}
+              title="Duplicate this question (copy its JSON to clipboard so you can paste back to me to create a Notion variant)"
+              style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+              📋 Duplicate
+            </button>
+            {/* Two-step delete: first tap arms (turns red, "Confirm?" prompt),
+                second tap within 3s commits. Auto-disarms after 3s of idle.
+                Question stays playable in this quiz; future quizzes filter
+                it out + the kill list exports for Notion-push at quiz end. */}
+            <button onClick={() => {
+              if (!killArmed) {
+                setKillArmed(true);
+                return;
+              }
+              killQuestion(question.id, {
+                _notionPageId: question._notionPageId || null,
+                archetype: question.archetype || null,
+                type: question.type || null,
+                sit: question.sit || question.q || "",
+              });
+              setKillArmed(false);
+              toast.success("🗑 Question deleted — won't appear again. Push to Notion at quiz end.", { duration: 2400 });
+              // Drop this question from the current quiz too. If there's a
+              // next question queued, advance; otherwise finish.
+              setTimeout(() => {
+                if (results.length >= qLen - 1) {
+                  setQuizDone(true);
+                } else {
+                  advance();
+                }
+              }, 600);
+            }}
+              title={killArmed ? "Tap again to confirm — permanently deletes from quiz + queued for Notion delete" : "Delete this question permanently (two-tap)"}
+              style={{background: killArmed ? C.redDim : "none", border:`1px solid ${killArmed ? C.red : C.border}`, color: killArmed ? C.red : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: killArmed ? 800 : 500}}>
+              {killArmed ? "🗑 Confirm?" : "🗑"}
+            </button>
+            {/* Flag for follow-up — single tap toggles. When flagged,
+                button shows the reason; tapping opens the picker again
+                to change reason / add note / unflag. */}
+            <button onClick={() => setFlagPickerOpen(o => !o)}
+              title={currentFlag ? `Flagged: ${currentFlag.reason}${currentFlag.note ? " — " + currentFlag.note : ""}` : "Flag this question to come back to it later"}
+              style={{background: currentFlag ? "rgba(252,200,76,.12)" : "none", border:`1px solid ${currentFlag ? C.gold : C.border}`, color: currentFlag ? C.gold : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: currentFlag ? 800 : 500}}>
+              🚩{currentFlag ? ` ${currentFlag.reason}` : ""}
+            </button>
+            {/* Skip — moves on without recording an answer. Useful when you
+                just want to scan past a question during a review pass without
+                judging it. Doesn't flag, doesn't kill, doesn't score. */}
+            <button onClick={() => {
+              if (results.length >= qLen - 1) {
+                setQuizDone(true);
+              } else {
+                advance();
+              }
+            }}
+              title="Skip — move to next question, don't record an answer"
+              style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+              ⏭ Skip
+            </button>
+            {q._hasOverride && (
+              <button onClick={() => {
+                clearOverride(question.id);
+                setQuestion({ ...question });
+              }} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+                Reset
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Flag reason picker — opens inline below the editor button row.
+            Preset chips for common reasons + optional freeform note. */}
+        {editAllowed && flagPickerOpen && (
+          <div style={{marginTop:".55rem",padding:".7rem .8rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`,borderRadius:8}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>
+              {currentFlag ? "Flag — change reason or unflag" : "Flag for follow-up"}
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:".35rem",marginBottom:".5rem"}}>
+              {[
+                { v: "Update image", show: !!q.media?.url || ["hot-spots","rink-label","rink-drag","rink-match"].includes(qtype) },
+                { v: "Reword", show: true },
+                { v: "Wrong answer", show: true },
+                { v: "Better example", show: true },
+                { v: "Other", show: true },
+              ].filter(o => o.show).map(o => (
+                <button key={o.v} onClick={() => {
+                  setFlag(question.id, {
+                    reason: o.v,
+                    note: flagNoteDraft.trim(),
+                    _notionPageId: question._notionPageId || null,
+                    archetype: question.archetype || null,
+                    type: question.type || null,
+                    sit: question.sit || question.q || "",
+                  });
+                  setFlagPickerOpen(false);
+                  setFlagNoteDraft("");
+                  toast.success(`🚩 Flagged: ${o.v} — moving on`, { duration: 1800 });
+                  // Auto-advance so the user can keep moving through their
+                  // review pass without context-switching. Stays on the
+                  // question for 600ms so the toast registers.
+                  setTimeout(() => {
+                    if (results.length >= qLen - 1) {
+                      setQuizDone(true);
+                    } else {
+                      advance();
+                    }
+                  }, 600);
+                }}
+                  style={{background: currentFlag?.reason===o.v ? C.goldDim : C.bgElevated, border:`1px solid ${currentFlag?.reason===o.v ? C.gold : C.border}`, color: currentFlag?.reason===o.v ? C.gold : C.dim, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".35rem .6rem", borderRadius:6, fontWeight: currentFlag?.reason===o.v ? 800 : 500}}>
+                  {o.v}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={currentFlag ? (flagNoteDraft || currentFlag.note || "") : flagNoteDraft}
+              onChange={e => setFlagNoteDraft(e.target.value)}
+              placeholder="Optional note (e.g. 'image too dark to read defenders')"
+              rows={2}
+              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".4rem .55rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.4,resize:"vertical",marginBottom:".5rem"}}/>
+            <div style={{display:"flex",gap:".4rem"}}>
+              <button onClick={() => { setFlagPickerOpen(false); setFlagNoteDraft(""); }}
+                style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem",cursor:"pointer",color:C.dimmer,fontSize:11,fontFamily:FONT.body}}>
+                Cancel
+              </button>
+              {currentFlag && (
+                <button onClick={() => {
+                  clearFlag(question.id);
+                  setFlagPickerOpen(false);
+                  setFlagNoteDraft("");
+                  setQuestion({ ...question });
+                }} style={{flex:1,background:"none",border:`1px solid ${C.redBorder}`,borderRadius:6,padding:".35rem",cursor:"pointer",color:C.red,fontSize:11,fontFamily:FONT.body}}>
+                  Unflag
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Skip — only before answering. A defective or confusing question used
+            to trap the player with no way past it, which made the whole session
+            unfinishable (reported 2026-08-03). Counts wrong immediately so it
+            is never a free pass, and the question is re-served before the
+            session ends so it can still be earned back. */}
+        {!answered && (
+          <button onClick={handleSkip}
+            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,color:C.dim,fontSize:12,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".55rem",fontWeight:700}}>
+            Skip for now — comes back later, counts wrong until you answer it
+          </button>
+        )}
+
+        {/* Report flag — always visible, not gated on answered */}
+        <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
+          🚩 Report this question
+        </button>
+
+        {/* Explanation */}
+        {answered && (() => {
+          // T/F stores `sel` as the string "true"|"false"; coerce before comparing
+          // to q.ok (which is a real boolean) or we'd always mark T/F wrong.
+          const userCorrect = isRinkQ
+            ? rinkQResult
+            : qtype === "seq"
+            ? seqCorrect
+            : qtype === "tf"
+            ? (sel === "true") === q.ok
+            : (sel === q.ok);
+          // Variable-reward reveal — consecutive-correct streak across this
+          // session drives the verdict flavor. Baseline single "✓ Correct"
+          // becomes "🔥 Two in a row!", "🔥 Three in a row!", etc. Streaks of
+          // 5+ also fire a one-shot celebrate toast (see useEffect below).
+          let streak = 0;
+          for (let i = results.length - 1; i >= 0; i--) {
+            if (results[i].ok) streak++; else break;
+          }
+          const SINGLE_FLAVORS = ["✓ Correct", "✓ Locked in.", "✓ Clean."];
+          let verdict, verdictColor = userCorrect ? C.green : C.red;
+          if (!userCorrect) {
+            verdict = "✗ Incorrect";
+          } else if (streak >= 5) {
+            verdict = `⚡ ${streak} STRAIGHT!`;
+            verdictColor = C.gold;
+          } else if (streak === 4) {
+            verdict = "🔥🔥 Four in a row!";
+            verdictColor = C.gold;
+          } else if (streak === 3) {
+            verdict = "🔥 Three in a row!";
+          } else if (streak === 2) {
+            verdict = "🔥 Two in a row!";
+          } else {
+            const seed = (q.id || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+            verdict = SINGLE_FLAVORS[seed % SINGLE_FLAVORS.length];
+          }
+          return (
+          <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
+            <Card style={{
+              background: userCorrect ? (streak >= 4 ? "rgba(201,162,75,.1)" : "rgba(34,197,94,.06)") : C.redDim,
+              border:`1px solid ${userCorrect ? (streak >= 4 ? C.goldBorder : C.greenBorder) : C.redBorder}`,
+              marginBottom:"1rem"
+            }}>
+              <div style={{fontSize:userCorrect && streak >= 2 ? 12 : 10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:800,marginBottom:".5rem",color:verdictColor}}>
+                {verdict}
+              </div>
+              {(() => {
+                const coach = getCoachForQuestion(q, player.level, player.position);
+                if (!coach) return null;
+                const ageTier = getAgeTier(player.level);
+                const perCoachPool = (userCorrect ? coach.flavorCorrect : coach.flavorIncorrect)?.[ageTier];
+                const flavorPool = (perCoachPool && perCoachPool.length)
+                  ? perCoachPool
+                  : (userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT);
+                const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
+                // Body = q.tip (the tight memorable one-liner). Falls back to
+                // q.why if no tip is set, then to a generic line.
+                const explanation = q.tip || q.why || q.explanation || (userCorrect ? "Keep reading the ice." : "Re-read and reset.");
+                return (
+                  <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
+                    <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".3rem"}}>
+                        <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
+                        <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
+                      </div>
+                      {/* Coach voice quip — rotates per question across the
+                          coach's age-tier-appropriate flavor pool. Renders as
+                          a handwritten italic line so it reads as the coach
+                          actually talking, not as the question's content. */}
+                      {flavor && (
+                        <div style={{
+                          fontFamily: FONT.display,
+                          fontSize: 17,
+                          fontWeight: 600,
+                          lineHeight: 1.3,
+                          color: verdictColor,
+                          marginBottom: ".4rem",
+                        }}>
+                          “{flavor}”
+                        </div>
+                      )}
+                      <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
+                        {explanation}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+              {(() => {
+                let pct = null, isSample = false;
+                if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
+                else {
+                  const s = statsMap[q.id];
+                  if (s && s.attempts >= 10) pct = Math.round((s.correct / s.attempts) * 100);
+                }
+                if (pct === null) return null;
+                const msg = userCorrect
+                  ? `🎯 ${pct}% of players got this right`
+                  : (pct <= 40 ? `💪 Only ${pct}% got this right — tough one` : `📊 ${pct}% of players got this right`);
+                return (
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:".75rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:".4rem"}}>
+                    <span>{msg}</span>
+                    {isSample && <span style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</span>}
+                  </div>
+                );
+              })()}
+            </Card>
+            {quizDone ? (
+              <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+                Finish & See Results →
+              </button>
+            ) : (
+              <button onClick={advance} style={{background:C.purple,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+                Next Question →
+              </button>
+            )}
+          </div>
+          );
+        })()}
+
+        {showFlag && (
+          <div onClick={()=>setShowFlag(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:16,padding:"1.5rem",maxWidth:420,width:"100%",color:C.white,fontFamily:FONT.body}}>
+              {flagSent ? (
+                <div style={{textAlign:"center",padding:"1rem 0"}}>
+                  <div style={{fontSize:32,marginBottom:".5rem"}}>✅</div>
+                  <div style={{fontWeight:700,fontSize:15,color:C.green}}>Thanks — report sent</div>
+                  <div style={{fontSize:12,color:C.dim,marginTop:".3rem"}}>We'll review it.</div>
+                </div>
+              ) : (<>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>🚩 Report question</div>
+                <div style={{fontSize:14,color:C.dim,lineHeight:1.5,marginBottom:"1rem"}}>What's wrong with this one?</div>
+                {[
+                  {v:"wrong_answer",l:"The marked answer is wrong"},
+                  {v:"misleading",l:"Question or options are misleading"},
+                  {v:"too_hard",l:"Too advanced for this age"},
+                  {v:"too_easy",l:"Too easy for this age"},
+                  {v:"typo",l:"Typo or grammar issue"},
+                  {v:"other",l:"Something else"},
+                ].map(o => (
+                  <button key={o.v} onClick={()=>setFlagReason(o.v)} style={{display:"block",width:"100%",background:flagReason===o.v?C.goldDim:C.bgElevated,border:`1px solid ${flagReason===o.v?C.gold:C.border}`,borderRadius:8,padding:".6rem .8rem",cursor:"pointer",color:flagReason===o.v?C.gold:C.dim,fontSize:13,fontFamily:FONT.body,fontWeight:flagReason===o.v?700:500,textAlign:"left",marginBottom:".35rem"}}>
+                    {o.l}
+                  </button>
+                ))}
+                <textarea value={flagDetail} onChange={e=>setFlagDetail(e.target.value)} placeholder="Optional: add more detail (what's wrong, what should be correct, etc.)"
+                  rows={3}
+                  style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginTop:".5rem"}}/>
+                <div style={{display:"flex",gap:".5rem",marginTop:"1rem"}}>
+                  <button onClick={()=>setShowFlag(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Cancel</button>
+                  <button onClick={submitFlag} disabled={!flagReason} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Send Report</button>
+                </div>
+              </>)}
+            </div>
+          </div>
+        )}
+
+        {dupOpen && (() => {
+          // Build a clean JSON shape that mirrors the original question — same
+          // keys minus internal annotations (_notionPageId, _hasOverride). User
+          // copies this and pastes back to me; I create a Notion variant.
+          const STRIP = new Set(["_notionPageId","_hasOverride"]);
+          const cleaned = {};
+          for (const [k, v] of Object.entries(question || {})) {
+            if (STRIP.has(k)) continue;
+            cleaned[k] = v;
+          }
+          // Suggested new id: <orig>-copy
+          cleaned.id = `${question.id || "new"}-copy`;
+          const json = JSON.stringify(cleaned, null, 2);
+          return (
+            <div onClick={()=>setDupOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
+              <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:560,width:"100%",color:C.white,fontFamily:FONT.body,maxHeight:"90vh",overflowY:"auto"}}>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>📋 Duplicate question</div>
+                <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".75rem"}}>
+                  Copy this JSON, paste it back to me in chat. I'll create a new Notion entry under the same image library entry. Edit the <code style={{background:C.bgElevated,padding:"1px 4px",borderRadius:3,fontSize:11}}>id</code> if you want a different name.
+                </div>
+                <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".7rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:380,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
+                <div style={{display:"flex",gap:".5rem"}}>
+                  <button onClick={() => setDupOpen(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Close</button>
+                  <button onClick={async () => {
+                    try { await navigator.clipboard.writeText(json); setDupOpen(false); }
+                    catch { /* clipboard blocked — user can select-all */ }
+                  }} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>📋 Copy JSON</button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {editOpen && editDraft && (() => {
+          // Type classifier — used to branch which editor sections render.
+          const isMCShape = ["mc","mistake","next"].includes(qtype);
+          const isTF      = qtype === "tf";
+          const isMulti   = qtype === "multi";
+          const isSeq     = qtype === "seq";
+          // Geometry types where Phase 2 visual editors aren't built yet.
+          // Until then, the user can edit prompt/explanation/tip on these.
+          const isPhase2  = !isMCShape && !isTF && !isMulti && !isSeq;
+          // Which prompt fields exist on this type. Lookup-driven so each
+          // type only shows the fields it actually carries.
+          const showSit      = ["mc","tf","mistake","next","seq","multi","sequence-rink"].includes(qtype) || (q.sit !== undefined);
+          const showQPrompt  = ["multi","hot-spots","zone-click","lane-select","multi-tap","drag-target","drag-place","sequence-rink","rink-label","rink-drag","rink-match","path-draw","scenario"].includes(qtype) || (q.q !== undefined && !showSit);
+          const showQuestion = qtype === "mistake";
+
+          const labelStyle = {fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"};
+          const textareaStyle = {width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,resize:"vertical"};
+          const sectionGap = {marginBottom:".75rem"};
+
+          return (
+          <div onClick={()=>setEditOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:520,width:"100%",color:C.white,fontFamily:FONT.body,maxHeight:"90vh",overflowY:"auto"}}>
+              <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".4rem"}}>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>✎ Edit question (local only)</div>
+                <div style={{fontSize:9,letterSpacing:".08em",color:C.dimmer,fontWeight:700,background:C.dimmest,padding:"2px 6px",borderRadius:4}}>{qtype}</div>
+              </div>
+              <div style={{fontSize:11,color:C.dimmer,marginBottom:"1rem"}}>Saved to this browser. Doesn't sync to Notion until you copy + paste back.</div>
+
+              {showSit && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>SITUATION</div>
+                  <textarea value={editDraft.sit} onChange={e=>setEditDraft(d=>({...d,sit:e.target.value}))} rows={3} style={textareaStyle}/>
+                </div>
+              )}
+
+              {showQPrompt && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>QUESTION PROMPT</div>
+                  <textarea value={editDraft.q} onChange={e=>setEditDraft(d=>({...d,q:e.target.value}))} rows={2} style={textareaStyle}/>
+                </div>
+              )}
+
+              {showQuestion && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>QUESTION PROMPT</div>
+                  <textarea value={editDraft.question} onChange={e=>setEditDraft(d=>({...d,question:e.target.value}))} rows={2} style={textareaStyle}/>
+                </div>
+              )}
+
+              {/* Image / media replace — for any type that already carries a
+                  media.url. Browser uploads to Supabase Storage `pov-images`
+                  bucket via the anon key; the returned public URL is what
+                  the override stores. Client-side resize keeps uploads
+                  fast and within reasonable file size. */}
+              {q.media?.url && (
+                <div style={sectionGap}>
+                  <div style={{...labelStyle,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span>IMAGE</span>
+                    <span style={{fontSize:9,color:C.dimmer,fontWeight:500,letterSpacing:0,textTransform:"none"}}>uploads to pov-images bucket</span>
+                  </div>
+                  {editDraft.media?.url && (
+                    <div style={{position:"relative",width:"100%",aspectRatio:"16/9",background:"#000",borderRadius:8,overflow:"hidden",border:`1px solid ${C.border}`,marginBottom:".4rem"}}>
+                      <img src={editDraft.media.url} alt="" style={{width:"100%",height:"100%",objectFit:"contain",display:"block"}}/>
+                    </div>
+                  )}
+                  <div style={{display:"flex",gap:".4rem",alignItems:"center"}}>
+                    <label style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:`1px dashed ${C.border}`,borderRadius:8,padding:".5rem",cursor:imgUploading?"wait":"pointer",color:imgUploading?C.dimmest:C.dim,fontSize:12,fontFamily:FONT.body,opacity:imgUploading?0.6:1}}>
+                      {imgUploading ? "Uploading…" : "🖼️ Replace image…"}
+                      <input type="file" accept="image/png,image/jpeg,image/webp" disabled={imgUploading}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          e.target.value = ""; // allow re-pick of same file
+                          setImgUploadErr(null);
+                          setImgUploading(true);
+                          try {
+                            // Client-side resize to max 1280×720 + JPEG quality 0.85.
+                            // Keeps uploads under ~250KB, well below bandwidth/storage waste.
+                            const resized = await resizeImageForUpload(file, 1280, 720);
+                            const ext = "jpg";
+                            const baseName = (q.imageId || question.id || "img").replace(/[^a-zA-Z0-9_-]/g,"_");
+                            const path = `editor-uploads/${baseName}-${Date.now()}.${ext}`;
+                            if (!supabase) throw new Error("Supabase not configured");
+                            const { error: upErr } = await supabase.storage.from("pov-images").upload(path, resized, {
+                              contentType: "image/jpeg",
+                              upsert: true,
+                              cacheControl: "3600",
+                            });
+                            if (upErr) throw upErr;
+                            const { data: pub } = supabase.storage.from("pov-images").getPublicUrl(path);
+                            const url = pub?.publicUrl;
+                            if (!url) throw new Error("no public URL returned");
+                            setEditDraft(d => ({...d, media: {type:"image", url, alt: d.media?.alt || q.media?.alt || ""}}));
+                          } catch (err) {
+                            setImgUploadErr(err.message || String(err));
+                          } finally {
+                            setImgUploading(false);
+                          }
+                        }}
+                        style={{display:"none"}}/>
+                    </label>
+                    {editDraft.media?.url !== q.media?.url && (
+                      <button onClick={() => setEditDraft(d => ({...d, media: q.media ? {...q.media} : null}))}
+                        title="Revert to original image"
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".5rem .8rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
+                        ↺
+                      </button>
+                    )}
+                  </div>
+                  {imgUploadErr && (
+                    <div style={{marginTop:".4rem",fontSize:11,color:C.red,lineHeight:1.5}}>
+                      Upload failed: {imgUploadErr}
+                      {/permission|policy|RLS/i.test(imgUploadErr) && (
+                        <div style={{color:C.dimmer,marginTop:".25rem"}}>
+                          Bucket needs an anon-write RLS policy. Tell me and I'll add the migration.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {isTF && (
+                <div style={sectionGap}>
+                  <div style={{...labelStyle,marginBottom:".4rem"}}>CORRECT ANSWER</div>
+                  <div style={{display:"flex",gap:".5rem"}}>
+                    {[{v:true,l:"True"},{v:false,l:"False"}].map(o => (
+                      <button key={String(o.v)} onClick={()=>setEditDraft(d=>({...d,ok:o.v}))}
+                        style={{flex:1,background:editDraft.ok===o.v?C.goldDim:C.bgElevated,border:`1px solid ${editDraft.ok===o.v?C.gold:C.border}`,borderRadius:8,padding:".6rem",cursor:"pointer",color:editDraft.ok===o.v?C.gold:C.dim,fontSize:13,fontFamily:FONT.body,fontWeight:editDraft.ok===o.v?800:500}}>
+                        {o.l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {isMCShape && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>OPTIONS (radio = correct)</div>
+                  {editDraft.opts.map((opt, i) => (
+                    <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".5rem",marginBottom:".4rem"}}>
+                      <button onClick={()=>setEditDraft(d=>({...d,ok:i}))}
+                        style={{background:"none",border:"none",cursor:"pointer",padding:0,marginTop:".5rem",color:editDraft.ok===i?C.gold:C.dimmer,fontSize:14}}
+                        title="Mark as correct">
+                        {editDraft.ok===i ? "●" : "○"}
+                      </button>
+                      <span style={{fontSize:11,color:C.dimmer,fontWeight:800,marginTop:".55rem",minWidth:14}}>{String.fromCharCode(65+i)}</span>
+                      <textarea value={opt} onChange={e=>setEditDraft(d=>{const n=[...d.opts];n[i]=e.target.value;return {...d,opts:n};})} rows={2}
+                        style={{...textareaStyle,flex:1,border:`1px solid ${editDraft.ok===i?C.goldBorder:C.border}`,padding:".5rem .7rem",lineHeight:1.45}}/>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {isMulti && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>OPTIONS (☑ = correct, multi-select)</div>
+                  {editDraft.opts.map((opt, i) => {
+                    const isCorrect = editDraft.correct.includes(i);
+                    return (
+                      <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".5rem",marginBottom:".4rem"}}>
+                        <button onClick={()=>setEditDraft(d=>{
+                          const set = new Set(d.correct);
+                          if (set.has(i)) set.delete(i); else set.add(i);
+                          return {...d, correct:[...set].sort((a,b)=>a-b)};
+                        })} style={{background:"none",border:"none",cursor:"pointer",padding:0,marginTop:".5rem",color:isCorrect?C.gold:C.dimmer,fontSize:14}}
+                          title="Toggle correct">
+                          {isCorrect ? "☑" : "☐"}
+                        </button>
+                        <span style={{fontSize:11,color:C.dimmer,fontWeight:800,marginTop:".55rem",minWidth:14}}>{String.fromCharCode(65+i)}</span>
+                        <textarea value={opt} onChange={e=>setEditDraft(d=>{const n=[...d.opts];n[i]=e.target.value;return {...d,opts:n};})} rows={2}
+                          style={{...textareaStyle,flex:1,border:`1px solid ${isCorrect?C.goldBorder:C.border}`,padding:".5rem .7rem",lineHeight:1.45}}/>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {isSeq && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>STEPS — drag with ↑/↓ into the right order (top → bottom)</div>
+                  {editDraft.correct_order.map((origIdx, pos) => {
+                    const item = editDraft.items[origIdx] || "";
+                    const moveUp = () => setEditDraft(d => {
+                      if (pos === 0) return d;
+                      const o = [...d.correct_order];
+                      [o[pos-1], o[pos]] = [o[pos], o[pos-1]];
+                      return {...d, correct_order: o};
+                    });
+                    const moveDown = () => setEditDraft(d => {
+                      if (pos === d.correct_order.length - 1) return d;
+                      const o = [...d.correct_order];
+                      [o[pos+1], o[pos]] = [o[pos], o[pos+1]];
+                      return {...d, correct_order: o};
+                    });
+                    const editText = (val) => setEditDraft(d => {
+                      const items = [...d.items];
+                      items[origIdx] = val;
+                      return {...d, items};
+                    });
+                    return (
+                      <div key={origIdx} style={{display:"flex",alignItems:"flex-start",gap:".4rem",marginBottom:".35rem"}}>
+                        <span style={{fontSize:11,color:C.gold,fontWeight:800,marginTop:".55rem",minWidth:14}}>{pos+1}.</span>
+                        <textarea value={item} onChange={e=>editText(e.target.value)} rows={2}
+                          style={{...textareaStyle,flex:1,padding:".5rem .7rem",lineHeight:1.45}}/>
+                        <div style={{display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <button onClick={moveUp} disabled={pos===0} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:"2px 6px",cursor:pos===0?"default":"pointer",color:pos===0?C.dimmest:C.dimmer,fontSize:11,fontFamily:FONT.body,opacity:pos===0?0.4:1}}>↑</button>
+                          <button onClick={moveDown} disabled={pos===editDraft.correct_order.length-1} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:"2px 6px",cursor:pos===editDraft.correct_order.length-1?"default":"pointer",color:pos===editDraft.correct_order.length-1?C.dimmest:C.dimmer,fontSize:11,fontFamily:FONT.body,opacity:pos===editDraft.correct_order.length-1?0.4:1}}>↓</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {qtype === "hot-spots" && (() => {
+                // Image-based hot-spots use x/y as 0–1 normalized; rink-based
+                // use absolute SVG coords. The form just shows what's there.
+                const isImageBased = !!q.media?.url;
+                const coordHint = isImageBased ? "0.0–1.0 (normalized)" : "SVG units";
+                const updateSpot = (i, key, val) => setEditDraft(d => {
+                  const spots = d.spots.map((s, idx) => idx === i ? {...s, [key]: val} : s);
+                  return {...d, spots};
+                });
+                const removeSpot = (i) => setEditDraft(d => ({...d, spots: d.spots.filter((_, idx) => idx !== i)}));
+                const addSpot = () => setEditDraft(d => ({
+                  ...d,
+                  spots: [...d.spots, { x: isImageBased ? 0.5 : 480, y: isImageBased ? 0.5 : 150, correct: false, msg: "" }],
+                }));
+                return (
+                  <div style={sectionGap}>
+                    <div style={labelStyle}>SPOTS ({editDraft.spots.length})</div>
+                    <div style={{fontSize:11,color:C.dimmer,marginBottom:".5rem",lineHeight:1.5}}>
+                      Coords are <strong>{coordHint}</strong>. Use{" "}
+                      <a href={`/coord-picker.html${isImageBased && q.media?.url ? `?img=${encodeURIComponent(q.media.url)}` : ""}`} target="_blank" rel="noopener" style={{color:C.gold,textDecoration:"underline"}}>coord picker</a>
+                      {" "}for new positions. Visual drag editor coming.
+                    </div>
+                    {editDraft.spots.map((s, i) => (
+                      <div key={i} style={{border:`1px solid ${s.correct ? C.greenBorder : C.border}`,borderRadius:8,padding:".55rem .65rem",marginBottom:".4rem",background:s.correct?"rgba(34,197,94,0.04)":"transparent"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".4rem"}}>
+                          <button onClick={() => updateSpot(i, "correct", !s.correct)}
+                            style={{background:"none",border:"none",cursor:"pointer",padding:0,color:s.correct?C.green:C.dimmer,fontSize:14}}
+                            title="Toggle correct">
+                            {s.correct ? "☑" : "☐"} <span style={{fontSize:11,fontWeight:700}}>correct</span>
+                          </button>
+                          <span style={{fontSize:10,color:C.dimmer,marginLeft:"auto"}}>#{i+1}</span>
+                          <button onClick={() => removeSpot(i)}
+                            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:4,padding:"2px 8px",cursor:"pointer",color:C.dimmer,fontSize:11}}>×</button>
+                        </div>
+                        <div style={{display:"flex",gap:".4rem",marginBottom:".4rem"}}>
+                          <label style={{flex:1,fontSize:10,color:C.dimmer}}>
+                            x
+                            <input type="number" step={isImageBased ? "0.001" : "1"} value={s.x ?? ""} onChange={e=>updateSpot(i,"x",parseFloat(e.target.value)||0)}
+                              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",color:C.white,fontSize:12,fontFamily:"ui-monospace, monospace"}}/>
+                          </label>
+                          <label style={{flex:1,fontSize:10,color:C.dimmer}}>
+                            y
+                            <input type="number" step={isImageBased ? "0.001" : "1"} value={s.y ?? ""} onChange={e=>updateSpot(i,"y",parseFloat(e.target.value)||0)}
+                              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",color:C.white,fontSize:12,fontFamily:"ui-monospace, monospace"}}/>
+                          </label>
+                        </div>
+                        <textarea value={s.msg || ""} onChange={e=>updateSpot(i,"msg",e.target.value)} rows={2}
+                          placeholder="Feedback message shown when this spot is tapped"
+                          style={{...textareaStyle,padding:".4rem .55rem",fontSize:12,lineHeight:1.4}}/>
+                      </div>
+                    ))}
+                    <button onClick={addSpot}
+                      style={{width:"100%",background:"none",border:`1px dashed ${C.border}`,borderRadius:8,padding:".5rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
+                      + Add spot
+                    </button>
+                  </div>
+                );
+              })()}
+
+              {isPhase2 && qtype !== "hot-spots" && (
+                <div style={{...sectionGap,padding:".7rem .85rem",background:"rgba(91,164,232,.06)",border:`1px solid rgba(91,164,232,.25)`,borderRadius:8,fontSize:12,color:C.dim,lineHeight:1.55}}>
+                  <span style={{color:C.blue,fontWeight:700}}>Phase 2 editor pending.</span> Geometry edits (lanes, zones, markers, paths) come next. For now, prompt + explanation + tip are editable here — the override JSON includes the original geometry so I can preserve it when pushing to Notion.
+                </div>
+              )}
+
+              <div style={sectionGap}>
+                <div style={labelStyle}>WHY (explanation)</div>
+                <textarea value={editDraft.why} onChange={e=>setEditDraft(d=>({...d,why:e.target.value}))} rows={3} style={textareaStyle}/>
+              </div>
+
+              <div style={{...sectionGap,marginBottom:"1rem"}}>
+                <div style={labelStyle}>COACH TIP</div>
+                <textarea value={editDraft.tip} onChange={e=>setEditDraft(d=>({...d,tip:e.target.value}))} rows={2} style={textareaStyle}/>
+              </div>
+
+              <div style={{display:"flex",gap:".5rem"}}>
+                <button onClick={()=>setEditOpen(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Cancel</button>
+                <button onClick={() => {
+                  const orig = question;
+                  const patch = {};
+                  // Text fields — present on all types but we only patch what changed.
+                  if (showSit && editDraft.sit !== (orig.sit || "")) patch.sit = editDraft.sit;
+                  if (showQPrompt && editDraft.q !== (orig.q || "")) patch.q = editDraft.q;
+                  if (showQuestion && editDraft.question !== (orig.question || "")) patch.question = editDraft.question;
+                  if (editDraft.tip !== (orig.tip || "")) patch.tip = editDraft.tip;
+                  if (editDraft.why !== (orig.why || orig.explanation || "")) patch.why = editDraft.why;
+                  // Options array (MC-shape, multi)
+                  if ((isMCShape || isMulti) && Array.isArray(orig.opts)) {
+                    const sameOpts = orig.opts.length === editDraft.opts.length && orig.opts.every((o, i) => o === editDraft.opts[i]);
+                    if (!sameOpts) patch.opts = editDraft.opts;
+                  }
+                  // ok index (MC-shape) or boolean (TF)
+                  if ((isMCShape || isTF) && editDraft.ok !== orig.ok) patch.ok = editDraft.ok;
+                  // multi correct[]
+                  if (isMulti) {
+                    const origC = Array.isArray(orig.correct) ? orig.correct : [];
+                    const sameC = origC.length === editDraft.correct.length && origC.every((c, i) => c === editDraft.correct[i]);
+                    if (!sameC) patch.correct = [...editDraft.correct];
+                  }
+                  // seq items[] + correct_order[]
+                  if (isSeq) {
+                    const origI = Array.isArray(orig.items) ? orig.items : [];
+                    const sameI = origI.length === editDraft.items.length && origI.every((x, i) => x === editDraft.items[i]);
+                    if (!sameI) patch.items = editDraft.items;
+                    const origO = Array.isArray(orig.correct_order) ? orig.correct_order : [];
+                    const sameO = origO.length === editDraft.correct_order.length && origO.every((x, i) => x === editDraft.correct_order[i]);
+                    if (!sameO) patch.correct_order = editDraft.correct_order;
+                  }
+                  // hot-spots spots[] — deep compare on x/y/correct/msg
+                  if (qtype === "hot-spots") {
+                    const origS = Array.isArray(orig.spots) ? orig.spots : [];
+                    const sameS = origS.length === editDraft.spots.length && origS.every((o, i) => {
+                      const e = editDraft.spots[i];
+                      return o.x === e.x && o.y === e.y && !!o.correct === !!e.correct && (o.msg || "") === (e.msg || "");
+                    });
+                    if (!sameS) patch.spots = editDraft.spots;
+                  }
+                  // media (image replacement) — only patch if the URL actually changed
+                  if (editDraft.media?.url && editDraft.media.url !== (orig.media?.url || "")) {
+                    patch.media = editDraft.media;
+                  }
+                  setOverride(orig.id, patch);
+                  setEditOpen(false);
+                  setQuestion({ ...question });
+                }} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save override</button>
+              </div>
+            </div>
+          </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// RESULTS SCREEN
+// ─────────────────────────────────────────────────────────
+// Optional post-quiz prompt: "What would you like to see more of?" Saves
+// to quiz_feedback (migration 0011). FREE-tier users see a "chance to win
+// a Pro membership" hook; paid tiers see a plain product-shaping framing.
+// Hidden for ephemeral player ids (demo/preview/dev) since they have no
+// auth.uid() and the RLS policy would reject the write.
+function QuizFeedbackCard({ player, score, tier }) {
+  const [choice, setChoice] = useState(null);
+  const [note, setNote] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  if (!player?.id || isEphemeralPlayer(player.id)) return null;
+  if (dismissed || submitted) return null;
+
+  const isFree = !tier || tier === "FREE";
+  const headline = isFree ? "Help shape what we build next" : "What would you like more of?";
+  const subhead = isFree
+    ? "Tell us what you'd like more of and you'll be entered to win a free Pro membership."
+    : "Your input shapes what we build next. Optional — skip if you'd rather not.";
+
+  const OPTIONS = [
+    { id: "rink_scenarios",  icon: "🎯", label: "Rink scenarios" },
+    { id: "game_situations", icon: "🧠", label: "Game situations" },
+    { id: "tougher",         icon: "💪", label: "Tougher questions" },
+    { id: "my_position",     icon: "🛡️", label: "My position" },
+    { id: "something_else",  icon: "💬", label: "Something else" },
+  ];
+
+  function submit() {
+    if (!choice) return;
+    SB.recordQuizFeedback(player.id, { choice, note, score, level: player.level });
+    setSubmitted(true);
+  }
+
+  return (
+    <Card style={{
+      marginBottom: "1rem",
+      background: isFree ? `linear-gradient(135deg,rgba(201,162,75,.1),rgba(201,162,75,.02))` : C.bgCard,
+      border: `1px solid ${isFree ? C.goldBorder : C.border}`,
+    }}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:".5rem",marginBottom:".5rem"}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.white,marginBottom:".2rem"}}>{headline}</div>
+          <div style={{fontSize:12,color:isFree?C.gold:C.dim,lineHeight:1.5}}>{subhead}</div>
+        </div>
+        <button onClick={()=>setDismissed(true)} aria-label="Skip"
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:18,padding:"0 4px",lineHeight:1,flexShrink:0}}>×</button>
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:".4rem",marginBottom:choice?".75rem":".25rem"}}>
+        {OPTIONS.map(o => {
+          const on = choice === o.id;
+          return (
+            <button key={o.id} onClick={()=>setChoice(on ? null : o.id)}
+              style={{background:on?C.goldDim:C.bgElevated,border:`1px solid ${on?C.gold:C.border}`,borderRadius:999,padding:".4rem .75rem",cursor:"pointer",color:on?C.gold:C.dim,fontFamily:FONT.body,fontSize:12,fontWeight:on?700:500}}>
+              <span style={{marginRight:".3rem"}}>{o.icon}</span>{o.label}
+            </button>
+          );
+        })}
+      </div>
+      {choice && (
+        <>
+          <textarea value={note} onChange={e=>setNote(e.target.value)}
+            placeholder={choice === "something_else" ? "Tell us more…" : "Anything specific? (optional)"}
+            rows={2} maxLength={500}
+            style={{background:C.bgGlass,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .75rem",color:C.white,fontFamily:FONT.body,fontSize:13,outline:"none",width:"100%",resize:"vertical",boxSizing:"border-box",marginBottom:".55rem"}}/>
+          <button onClick={submit}
+            style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+            Submit{isFree ? " & enter to win →" : " →"}
+          </button>
+        </>
+      )}
+    </Card>
+  );
+}
+
+function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, tier, onAgain, onHome, showMilestoneBanner, onViewPlans }) {
+  const [saved, setSaved] = useState(false);
+  const score = calcWeightedIQ(results);
+  const scoreTier = getTier(score);
+  const badges = calcBadges(results, prevScore, totalSessions, seqPerfect, mistakeStreak);
+  const byD = {1:{ok:0,tot:0},2:{ok:0,tot:0},3:{ok:0,tot:0}};
+  results.forEach(r => { byD[r.d||2].tot++; if(r.ok) byD[r.d||2].ok++; });
+  const byCat = {};
+  results.forEach(r => { if(!byCat[r.cat])byCat[r.cat]={ok:0,tot:0}; byCat[r.cat].tot++; if(r.ok)byCat[r.cat].ok++; });
+  const byType = {};
+  results.forEach(r => { if(!byType[r.type||"mc"])byType[r.type||"mc"]={ok:0,tot:0}; byType[r.type||"mc"].tot++; if(r.ok)byType[r.type||"mc"].ok++; });
+
+  useEffect(() => {
+    if (player.coachCode) saveTeamResult(player.coachCode, results, player.season||SEASONS[0]).then(() => setSaved(true));
+    else setSaved(true);
+    try {
+      localStorage.setItem("rinkreads_score", JSON.stringify(score));
+      localStorage.setItem("rinkreads_sessions", String(totalSessions));
+      const sd = updateStreak(getStreakData());
+      localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
+    } catch(e) {}
+  }, []);
+
+  const dLabel = {1:"Foundation",2:"Developing",3:"Advanced"};
+  const correct = results.filter(r=>r.ok).length;
+
+  return (
+    <Screen>
+      {/* Hero */}
+      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem",position:"relative",overflow:"hidden"}}>
+        <img src={imgSuccess} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none",borderRadius:16}}/>
+        <div style={{position:"relative"}}>
+        <div style={{fontSize:56,marginBottom:".5rem"}}>{scoreTier.badge}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:".15rem"}}>{scoreTier.label}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:scoreTier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
+        <div style={{fontSize:13,color:C.dimmer,margin:".5rem 0 .75rem"}}>{correct}/{results.length} correct</div>
+        {saved && player.coachCode && (
+          <div style={{fontSize:11,color:C.green,display:"flex",alignItems:"center",justifyContent:"center",gap:".3rem"}}>✓ Saved to team {player.coachCode}</div>
+        )}
+        </div>
+      </div>
+
+      {/* Badges */}
+      {badges.length > 0 && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.08),rgba(201,162,75,.02))`,border:`1px solid ${C.goldBorder}`}}>
+          <Label>Badges Earned</Label>
+          <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
+            {badges.map((b,i) => (
+              <div key={i} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".75rem",textAlign:"center",minWidth:80}}>
+                <div style={{fontSize:24,marginBottom:4}}>{b.icon}</div>
+                <div style={{fontSize:11,fontWeight:700,color:C.white}}>{b.name}</div>
+                <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{b.desc}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Question type breakdown */}
+      {Object.keys(byType).length > 1 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>By Format</Label>
+          <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+            {Object.entries(byType).map(([type,v]) => {
+              const pct = Math.round((v.ok/v.tot)*100);
+              const info = Q_TYPE_LABELS[type]||Q_TYPE_LABELS.mc;
+              return (
+                <div key={type} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",fontSize:12}}>
+                  <div style={{color:info.color,fontWeight:700,marginBottom:2}}>{info.icon} {info.label}</div>
+                  <div style={{color:pct>=80?C.green:pct>=60?C.yellow:C.red,fontWeight:700}}>{v.ok}/{v.tot}</div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* Difficulty mix */}
+      <Card style={{marginBottom:"1rem"}}>
+        <Label>Difficulty Mix</Label>
+        <div style={{display:"flex",gap:".5rem"}}>
+          {[1,2,3].map(d => byD[d].tot > 0 && (
+            <div key={d} style={{flex:1,textAlign:"center",padding:".7rem",borderRadius:10,
+              background:d===1?"rgba(34,197,94,.07)":d===2?"rgba(234,179,8,.07)":"rgba(239,68,68,.07)",
+              border:`1px solid ${d===1?"rgba(34,197,94,.25)":d===2?"rgba(234,179,8,.25)":"rgba(239,68,68,.25)"}`}}>
+              <div style={{fontSize:14,fontWeight:700,color:d===1?C.green:d===2?C.yellow:C.red}}>{byD[d].ok}/{byD[d].tot}</div>
+              <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{dLabel[d]}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* By category */}
+      <Card style={{marginBottom:"1.5rem"}}>
+        <Label>By Category</Label>
+        {Object.entries(byCat).map(([cat,v]) => {
+          const pct = Math.round((v.ok/v.tot)*100);
+          return (
+            <div key={cat} style={{marginBottom:".85rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:5}}>
+                <span style={{color:C.dim}}>{cat}</span>
+                <span style={{fontWeight:700,color:pct>=80?C.green:pct>=60?C.yellow:C.red}}>{v.ok}/{v.tot}</span>
+              </div>
+              <ProgressBar value={v.ok} max={v.tot} color={pct>=80?C.green:pct>=60?C.yellow:C.red}/>
+            </div>
+          );
+        })}
+      </Card>
+
+      {showMilestoneBanner && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
+          <div style={{fontSize:24,marginBottom:".4rem"}}>🏆</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.gold,marginBottom:".3rem"}}>5 quizzes complete!</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".85rem"}}>Free keeps only your last 5 sessions. Upgrade to track your full journey and see your progress over time.</div>
+          <button onClick={onViewPlans} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>See Pro Plans →</button>
+        </Card>
+      )}
+
+      <OverridesExportCard/>
+
+      <QuizFeedbackCard player={player} score={score} tier={tier}/>
+
+      <PrimaryBtn onClick={onAgain} style={{marginBottom:".75rem"}}>Take Another Quiz →</PrimaryBtn>
+      <SecBtn onClick={onHome}>← Home</SecBtn>
+    </Screen>
+  );
+}
+
+// Surfaces any local question overrides at quiz-end so the user can copy
+// the JSON and paste it back to me — I push the edits to Notion via MCP
+// (the read-only NOTION_TOKEN can't write, so a one-click sync from the
+// browser isn't viable). Hidden when ?dev!=1 or no overrides exist.
+function OverridesExportCard() {
+  const [overrides, setOverrides] = useState(() => getAllOverrides());
+  const [killed, setKilled] = useState(() => getKillList());
+  const [flagged, setFlagged] = useState(() => getFlagList());
+  const [bankIndex, setBankIndex] = useState(null); // {[id]: bankQuestion}
+  const [copied, setCopied] = useState(false);
+  const editAllowed = (() => {
+    try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
+    catch { return false; }
+  })();
+  // Build a flat id->question lookup so we can enrich each override / kill
+  // entry with _notionPageId + archetype. Without these, pushing changes
+  // back to Notion requires me to re-resolve the page by question id.
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      const idx = {};
+      for (const lvl of Object.keys(qb)) {
+        for (const q of qb[lvl]) {
+          if (q && q.id && !idx[q.id]) idx[q.id] = q;
+        }
+      }
+      setBankIndex(idx);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  const ids = Object.keys(overrides);
+  const killCount = killed.length;
+  const flagCount = flagged.length;
+  if (!editAllowed || (ids.length === 0 && killCount === 0 && flagCount === 0)) return null;
+  // Build a single JSON envelope: edits + kills. Both carry _notionPageId
+  // and _archetype so I can fan out push operations on the round-trip.
+  const enrichedEdits = {};
+  for (const id of ids) {
+    const bank = bankIndex && bankIndex[id];
+    enrichedEdits[id] = {
+      ...(bank?._notionPageId ? { _notionPageId: bank._notionPageId } : {}),
+      ...(bank?.archetype ? { _archetype: bank.archetype } : {}),
+      ...overrides[id],
+    };
+  }
+  const enrichedKills = killed.map(k => {
+    const bank = bankIndex && bankIndex[k.id];
+    return {
+      id: k.id,
+      _notionPageId: k._notionPageId || bank?._notionPageId || null,
+      _archetype: k.archetype || bank?.archetype || null,
+      type: k.type || bank?.type || null,
+      sit: k.sit || bank?.sit || bank?.q || "",
+      killedAt: k.killedAt,
+    };
+  });
+  const enrichedFlags = flagged.map(f => {
+    const bank = bankIndex && bankIndex[f.id];
+    return {
+      id: f.id,
+      reason: f.reason,
+      note: f.note || "",
+      _notionPageId: f._notionPageId || bank?._notionPageId || null,
+      _archetype: f.archetype || bank?._archetype || bank?.archetype || null,
+      type: f.type || bank?.type || null,
+      sit: f.sit || bank?.sit || bank?.q || "",
+      flaggedAt: f.flaggedAt,
+    };
+  });
+  const envelope = {
+    edits: enrichedEdits,
+    kills: enrichedKills,
+    flags: enrichedFlags,
+  };
+  const json = JSON.stringify(envelope, null, 2);
+  // Copy + finalize in one tap: copies JSON to clipboard then immediately
+  // clears the local edits/kills/flags lists. After pasting to chat, the
+  // user starts the next quiz with an empty slate — no risk of re-sending
+  // the same changes on the next round-trip. The JSON they just copied
+  // IS the source of truth, so even if something goes wrong locally, the
+  // round-trip data is already on its way.
+  const copyAndClear = async () => {
+    try { await navigator.clipboard.writeText(json); }
+    catch { /* clipboard blocked — JSON still visible in the <pre> below */ }
+    clearAllOverrides();
+    clearKillList();
+    clearFlagList();
+    setOverrides({});
+    setKilled([]);
+    setFlagged([]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2400);
+  };
+  const totalCount = ids.length + killCount + flagCount;
+  // Build APP_BASE for "open in dashboard" links — strips path/query off
+  // the current location so links work regardless of port or path.
+  const appBase = (typeof window !== "undefined") ? `${window.location.origin}` : "";
+  return (
+    <Card style={{marginBottom:"1rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`}}>
+      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>
+        ✎ Local changes ({ids.length} edit{ids.length===1?"":"s"}{killCount > 0 ? ` · 🗑 ${killCount} delete${killCount===1?"":"s"}` : ""}{flagCount > 0 ? ` · 🚩 ${flagCount} flag${flagCount===1?"":"s"}` : ""})
+      </div>
+      <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
+        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + <strong style={{color:C.red}}>permanently delete</strong> the questions in your kill list. 🚩 Flags stay in the JSON for context but I won't auto-act on them — they're your follow-up list.
+      </div>
+      {flagCount > 0 && (
+        <div style={{marginBottom:".75rem",padding:".55rem .7rem",background:"rgba(252,200,76,.04)",border:`1px solid ${C.goldBorder}`,borderRadius:8}}>
+          <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>🚩 Follow-up list</div>
+          {flagged.map((f, i) => (
+            <div key={f.id} style={{display:"flex",alignItems:"flex-start",gap:".5rem",fontSize:11,color:C.dim,lineHeight:1.5,padding:".25rem 0",borderTop: i === 0 ? "none" : `1px solid ${C.border}`}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,color:C.gold,marginBottom:2}}>{f.reason}</div>
+                <div style={{fontSize:10,color:C.dimmer,fontFamily:"ui-monospace, monospace",marginBottom:2}}>{f.id}</div>
+                {f.note && <div style={{fontSize:11,color:C.dim,fontStyle:"italic",marginBottom:2}}>"{f.note}"</div>}
+                <div style={{fontSize:10,color:C.dimmer,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.sit || (bankIndex?.[f.id]?.sit || bankIndex?.[f.id]?.q || "")}</div>
+              </div>
+              <a href={`${appBase}/?ids=${encodeURIComponent(f.id)}&demo=player&dev=1`} target="_blank" rel="noopener"
+                style={{fontSize:10,color:C.gold,textDecoration:"underline",whiteSpace:"nowrap",marginTop:2}}>
+                Open ↗
+              </a>
+              <button onClick={() => {
+                clearFlag(f.id);
+                setFlagged(getFlagList());
+              }} title="Resolve / unflag"
+                style={{background:"none",border:"none",cursor:"pointer",color:C.dimmer,fontSize:14,padding:0,marginTop:2}}>
+                ✓
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:240,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
+      <div style={{display:"flex",gap:".5rem"}}>
+        <button onClick={copyAndClear} style={{flex:3,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+          {copied ? "✓ Copied & cleared — paste to chat" : `📋 Copy & finalize ${totalCount} change${totalCount===1?"":"s"}`}
+        </button>
+        <button onClick={() => {
+          if (!window.confirm(`Discard all ${totalCount} local change${totalCount===1?"":"s"} WITHOUT copying? This can't be undone.`)) return;
+          clearAllOverrides();
+          clearKillList();
+          clearFlagList();
+          setOverrides({});
+          setKilled([]);
+          setFlagged([]);
+        }} title="Throw away local changes without copying — only use if you decided not to push them"
+          style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:11,fontFamily:FONT.body}}>
+          Discard
+        </button>
+      </div>
+      <div style={{fontSize:10,color:C.dimmer,marginTop:".5rem",textAlign:"center",lineHeight:1.5}}>
+        "Copy & finalize" copies the JSON above + clears the local list immediately. Paste it in chat — you don't need to track what's been sent.
+      </div>
+    </Card>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// GATED SMART GOALS SCREEN (with blurred preview)
+// ─────────────────────────────────────────────────────────
+function DemoQuizCapScreen({ onBack, onSignUp }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem",textAlign:"center"}}>
+      <div style={{maxWidth:380,width:"100%"}}>
+        <div style={{fontSize:48,marginBottom:"1rem"}}>🎮</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",marginBottom:".5rem"}}>Enjoying the demo?</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.65,marginBottom:"1.75rem"}}>
+          You've completed your demo quiz. <strong style={{color:C.white}}>Sign up for a free account</strong> to keep playing, track your progress, and build your Game Sense profile.
+        </div>
+        <button onClick={onSignUp} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,marginBottom:".75rem",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          Create your free account →
+        </button>
+        <button onClick={onBack} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",cursor:"pointer",color:C.dimmer,fontWeight:600,fontSize:14,fontFamily:FONT.body}}>
+          Back to home
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FreeQuizCapScreen({ onBack, onUpgrade }) {
+  // Re-derive the unlock moment each minute so the local time stays fresh
+  // if a user leaves the screen open across a timezone-relevant boundary
+  // (e.g. DST switchover).
+  const [unlockStr, setUnlockStr] = useState(() => formatUnlockMoment());
+  useEffect(() => {
+    const t = setInterval(() => setUnlockStr(formatUnlockMoment()), 60000);
+    return () => clearInterval(t);
+  }, []);
+  const used = getFreeQuizCount();
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem",textAlign:"center"}}>
+      <div style={{maxWidth:380,width:"100%"}}>
+        <div style={{fontSize:48,marginBottom:"1rem"}}>🏒</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",marginBottom:".5rem"}}>Weekly limit reached</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.65,marginBottom:"1.75rem"}}>
+          Free players get <strong style={{color:C.white}}>{FREE_WEEKLY_QUIZ_CAP} quizzes per week</strong>. You've completed {used} this week.
+          <div style={{marginTop:".65rem"}}>New quizzes unlocked <strong style={{color:C.gold}}>{unlockStr}</strong>.</div>
+        </div>
+        <button onClick={onUpgrade} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,marginBottom:".75rem",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          Unlock unlimited quizzes →
+        </button>
+        <button onClick={onBack} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",cursor:"pointer",color:C.dimmer,fontWeight:600,fontSize:14,fontFamily:FONT.body}}>
+          Back to home
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GatedGoalsScreen({ onBack, onUnlock }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80,position:"relative"}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
+        </div>
+      </StickyHeader>
+
+      {/* Blurred background preview */}
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto",filter:"blur(4px)",opacity:0.6}}>
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px solid ${C.border}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".75rem"}}>
+            <span style={{fontSize:18}}>🎯</span>
+            <div>
+              <div style={{fontWeight:700,fontSize:14}}>Improve my gap control</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Gap Control · Specificity 80%</div>
+            </div>
+          </div>
+          <div style={{fontSize:12,lineHeight:1.6,color:C.dim}}>
+            <div><strong>Specific:</strong> Maintain a 10-foot gap on all rush situations</div>
+            <div style={{marginTop:".5rem"}}><strong>Measurable:</strong> Reduce missed gap assignments to 0 per game</div>
+            <div style={{marginTop:".5rem"}}><strong>Achievable:</strong> I understand gap theory already</div>
+            <div style={{marginTop:".5rem"}}><strong>Relevant:</strong> Gap control is the #1 D skill</div>
+            <div style={{marginTop:".5rem"}}><strong>Time-bound:</strong> Before Christmas break</div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Gate overlay */}
+      <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,background:`linear-gradient(180deg,transparent 30%,${C.bg}90% 100%)`,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:"120px"}}>
+        <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,maxWidth:"100%"}}>
+          <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>SMART Goals</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback.</div>
+          <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Unlock with Pro →</button>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// WEEKLY CHALLENGE
+// ─────────────────────────────────────────────────────────
+function WeeklyQuiz({ player, onBack, onFinish }) {
+  const [questions, setQuestions] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
+  const [done, setDone] = useState(false);
+  const weekRecord = getThisWeekRecord();
+
+  useEffect(() => {
+    loadQB().then(qb => {
+      setQuestions(buildWeeklyQueue(qb, player.level, player.position));
+    });
+  }, []);
+
+  if (!questions) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading challenge…</div></Screen>;
+
+  const q = questions[current];
+  const qtype = q?.type || "mc";
+  const qLen = questions.length;
+  const typeInfo = Q_TYPE_INFO(q);
+
+  function submitAnswer(ok, extra = {}) {
+    const result = { id: q.id, cat: q.cat, type: qtype, d: q.d || 2, ok, ...extra };
+    const newResults = [...results, result];
+    setResults(newResults);
+    if (current + 1 >= qLen) {
+      const score = calcWeightedIQ(newResults);
+      markWeeklyComplete(score);
+      onFinish(newResults, score);
+      setDone(true);
+    } else {
+      setTimeout(() => { setCurrent(c => c + 1); setSel(null); setSeqAnswered(false); setSeqCorrect(false); }, 900);
+    }
+  }
+
+  function handlePick(i) {
+    if (sel !== null) return;
+    setSel(i);
+    submitAnswer(i === q.ok);
+  }
+
+  function handleTF(val) {
+    if (sel !== null) return;
+    setSel(val ? "true" : "false");
+    submitAnswer(val === q.ok);
+  }
+
+  function handleSeqAnswer(isCorrect) {
+    if (seqAnswered) return;
+    setSeqAnswered(true);
+    setSeqCorrect(isCorrect);
+    submitAnswer(isCorrect);
+  }
+
+  if (done) return null;
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:40}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>🏆 Weekly Challenge</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Q{current+1}/{qLen} · {getWeekKey()}</div>
+          </div>
+          <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${(current/qLen)*100}%`,background:C.gold,borderRadius:2,transition:"width .35s ease"}}/>
+          </div>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
+          <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
+          <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
+        </div>
+
+        {q.media?.url && (
+          <ScenarioImage media={q.media} overlays={q.overlays} />
+        )}
+        {(qtype === "mc" || qtype === "next") && (
+          <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
+            {/* Same badge as the main Quiz render — the ask for a `next`
+                question lives in the badge, not the stem. WeeklyQuiz diverging
+                here is how the `mistake` ask went missing too (fixed 2f08ec5);
+                the two render paths must stay in step. */}
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "next" ? "🔮 What's Your Next Move?"
+                : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
+                : "📋 Game Situation"}
+            </div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "tf" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "mistake" && (
+          <Card style={{marginBottom:"1.25rem",background:C.redDim,border:`1px solid ${C.redBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.red,marginBottom:".6rem",fontWeight:700}}>🔍 Spot the Mistake</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            {/* The ask lives in q.question ("What is the player's mistake?"), not
+                in q.sit, which is only the scenario. Omitting it here served all
+                16 mistake questions in a weekly quiz as a statement plus four
+                options and no question — the same defect as CONTENT-3. The main
+                Quiz render has always included it (see the mistake branch above). */}
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
+          </Card>
+        )}
+        {qtype === "seq" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>🔢 Put in Order</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "multi" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>☑️ Select All That Apply</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.q && <div style={{fontSize:15,fontWeight:700,color:C.white,lineHeight:1.6}}>{q.q}</div>}
+          </Card>
+        )}
+
+        {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "multi" && <MultiMCQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
+        {qtype === "tf" && (
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+            {["True","False"].map((label, i) => {
+              const isTrue = i === 0;
+              const isSelected = sel === (isTrue ? "true" : "false");
+              const isCorrect = isTrue === q.ok;
+              const cbOK = player.colorblind ? "#2563eb" : C.green;
+              const cbNo = player.colorblind ? "#ea580c" : C.red;
+              const revealColor = sel !== null ? (isCorrect ? cbOK : cbNo) : null;
+              return (
+                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?(player.colorblind?"rgba(37,99,235,.15)":"rgba(34,197,94,.15)"):(player.colorblind?"rgba(234,88,12,.15)":"rgba(239,68,68,.15)")):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?cbOK:cbNo):C.white,fontFamily:FONT.body}}>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
+
+        {/* `scenario` questions are excluded for the same reason as seq/multi:
+            ScenarioRenderer already renders its own verdict and coach tip from
+            the interaction's real result. This card computes correctness as
+            `sel === q.ok`, which is meaningless for a tap/selection answer
+            (`sel` is the tapped target, `q.ok` is not), so it rendered
+            "✗ INCORRECT" underneath ScenarioRenderer's "✓ Right read" for the
+            same answer, with the tip duplicated in both. Reported 2026-08-02.
+            Display-only -- scoring reads the interaction result, not this. */}
+        {sel !== null && qtype !== "seq" && qtype !== "multi" && qtype !== "scenario" && (() => {
+          const wasCorrect = qtype === "tf" ? (sel === "true") === q.ok : sel === q.ok;
+          const coach = getCoachForQuestion(q, player.level, player.position);
+          const ageTier = getAgeTier(player.level);
+          const perCoachPool = coach && (wasCorrect ? coach.flavorCorrect : coach.flavorIncorrect)?.[ageTier];
+          const flavorPool = (perCoachPool && perCoachPool.length)
+            ? perCoachPool
+            : (wasCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT);
+          const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
+          // Body = q.tip (tight). Falls back to q.why or a generic line.
+          const explanation = q.tip || q.why || q.explanation || (wasCorrect ? "Keep reading the ice." : "Re-read and reset.");
+          return (
+            <Card style={{marginTop:".5rem",background:wasCorrect ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.08)",border:`1px solid ${wasCorrect ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)"}`}}>
+              <div style={{fontSize:11,fontWeight:700,color:wasCorrect ? C.green : C.red,marginBottom:".5rem",letterSpacing:".06em"}}>{wasCorrect ? "✓ Correct" : "✗ Incorrect"}</div>
+              {coach && (
+                <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
+                  <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".3rem"}}>
+                      <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
+                      <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
+                    </div>
+                    {flavor && (
+                      <div style={{
+                        fontFamily: FONT.display,
+                        fontSize: 17,
+                        fontWeight: 600,
+                        lineHeight: 1.3,
+                        color: wasCorrect ? C.green : C.red,
+                        marginBottom: ".4rem",
+                      }}>
+                        “{flavor}”
+                      </div>
+                    )}
+                    <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
+                      {explanation}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Card>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+function WeeklyResults({ score, results, onHome, player }) {
+  const tierInfo = getTier(score);
+  const weekRecord = getThisWeekRecord();
+  return (
+    <Screen>
+      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem"}}>
+        <div style={{fontSize:48,marginBottom:".5rem"}}>🏆</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.gold,marginBottom:".25rem"}}>Weekly Challenge Complete!</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:tierInfo.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
+        <div style={{fontSize:13,color:C.dimmer,marginTop:".5rem"}}>{results.filter(r=>r.ok).length}/{results.length} correct · {getWeekKey()}</div>
+        <div style={{fontSize:12,color:C.dimmer,marginTop:".35rem"}}>New challenge drops every Monday</div>
+      </div>
+      <PrimaryBtn onClick={onHome} style={{marginBottom:".75rem"}}>← Back to Home</PrimaryBtn>
+    </Screen>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// SMART GOALS SCREEN
+// ─────────────────────────────────────────────────────────
+function GoalsScreen({ player, onSave, onBack }) {
+  const cats = goalCatsFor(player.level);
+  const [goals, setGoals] = useState({ ...(player.goals || {}) });
+  const [active, setActive] = useState(cats[0] || "");
+  const [step, setStep] = useState("S");
+
+  const SMART_STEPS = ["S","M","A","R","T"];
+  const SMART_LABELS = {S:"Specific",M:"Measurable",A:"Achievable",R:"Relevant",T:"Time-bound"};
+  const SMART_ICONS = {S:"🎯",M:"📏",A:"✅",R:"🏒",T:"📅"};
+  const SMART_EXAMPLES = {
+    "Skating":      {S:"Improve my backward crossovers on both sides",M:"Coach rates me 'On Track' in skating within 4 weeks",A:"I can already do basic crossovers",R:"Better backward skating helps my gap control as a defender",T:"By end of October"},
+    "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill at my level",T:"Before Christmas break"},
+    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in RinkReads",A:"I get the concept, just need reps",R:"Rush reads are my weakest RinkReads category",T:"End of this month"},
+    "Shooting":     {S:"Improve my quick-release wrist shot accuracy",M:"Hit top corners 3 out of 5 in practice drills",A:"I have good fundamentals already",R:"Quick release is what separates scorers at this level",T:"Within 6 weeks"},
+    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"RinkReads score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
+  };
+
+  function updateGoal(cat, field, value) {
+    setGoals(g => ({...g, [cat]: {...(g[cat]||{}), [field]: value}}));
+  }
+
+  // Whether this player already had a saved goal when the screen opened. Read
+  // once into a ref so the "first goal" celebration fires on the save that
+  // crosses zero-to-one and never again — re-saving the same goal, or setting a
+  // second category in the same visit, is not a first.
+  const hadGoalAtMount = useRef(Object.values(player?.goals || {}).some(g => g?.goal?.trim()));
+
+  const currentGoal = goals[active] || {};
+  const completedSteps = SMART_STEPS.filter(s => currentGoal[s]?.trim());
+  // The top "Your Goal" field is conceptually a summary; the 5 SMART fields
+  // carry the real content. If the user filled all 5 but left the goal field
+  // blank, treat the Specific (S) field as the goal so the save button appears.
+  const isComplete = completedSteps.length === 5 && (currentGoal.goal?.trim() || currentGoal.S?.trim());
+  // Band-aware, and that is a live fix rather than a tidy-up. SMART_EXAMPLES is
+  // keyed by CATEGORY NAME only, so the moment U7 gained a "Skating" category
+  // (earlier today), a five-year-old's Skating tab started showing "Better
+  // backward skating helps my gap control as a defender" — plus a retired
+  // rating value ("On Track") and a hardcoded "By end of October". The same
+  // mechanism served the atom-hockey line to U15 players.
+  //
+  // goalStarters keys on (level, category), so every band gets copy written for
+  // it. Falls back to the old table for any pair it does not cover yet, so this
+  // can only improve on the current state.
+  const example = exampleFor(player.level, active) || SMART_EXAMPLES[active] || {};
+
+  function handleSaveGoal() {
+    // No active category means there is nothing to save against, and saving
+    // anyway writes `category: ''` to the goals table. goalCatsFor() should make
+    // this unreachable; this is the second lock on the same door.
+    if (!active) return;
+    const g = goals[active] || {};
+    // Fallback: if the top goal field is empty, backfill it from S so the
+    // downstream save (SB.saveGoal) doesn't silently drop the entry.
+    const patched = (!g.goal?.trim() && g.S?.trim())
+      ? { ...goals, [active]: { ...g, goal: g.S.trim() } }
+      : goals;
+    if (patched !== goals) setGoals(patched);
+
+    // Setting a first goal is the moment the player commits to something, and
+    // until now it landed with no acknowledgement at all — they just got
+    // dropped back on Home. Celebrate it before onSave navigates away; the
+    // toast outlives the screen change.
+    // Name the category that actually carries the goal, not whichever tab
+    // happened to be open — a player can fill Skating and save from Shooting.
+    const firstSet = patched[active]?.goal?.trim()
+      ? active
+      : Object.keys(patched).find(k => patched[k]?.goal?.trim());
+    if (!hadGoalAtMount.current && firstSet) {
+      hadGoalAtMount.current = true;
+      toast.celebrate({
+        title: "First goal set!",
+        body: `${firstSet}: ${patched[firstSet].goal.trim()} — now go chase it.`,
+        icon: "🎯",
+      });
+    }
+
+    onSave(patched);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{getLevelDisplay(player)} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
+          </div>
+          {/* No save button here on purpose. This screen used to offer three
+              separate saves (header, in-card, bottom) doing the identical
+              thing, which read as three different actions. One save lives at
+              the bottom of the flow, where the goal is actually finished. */}
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Category tabs */}
+        <div style={{display:"flex",gap:".5rem",overflowX:"auto",marginBottom:"1.25rem",paddingBottom:".25rem"}}>
+          {cats.map(cat => {
+            const g = goals[cat]||{};
+            const done = SMART_STEPS.filter(s=>g[s]?.trim()).length;
+            const hasGoal = g.goal?.trim();
+            return (
+              <button key={cat} onClick={() => {setActive(cat);setStep("S");}} style={{
+                background:active===cat?C.goldDim:C.bgCard,
+                border:`1px solid ${active===cat?C.gold:C.border}`,
+                borderRadius:20,padding:".45rem 1rem",
+                cursor:"pointer",whiteSpace:"nowrap",
+                color:active===cat?C.gold:C.dim,
+                fontFamily:FONT.body,fontSize:13,
+                fontWeight:active===cat?700:400,
+                display:"flex",alignItems:"center",gap:".4rem",
+                flexShrink:0,
+              }}>
+                {cat} {hasGoal?<span style={{color:C.green,fontSize:10}}>✓</span>:done>0?<span style={{color:C.dimmer,fontSize:10}}>{done}/5</span>:null}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Goal statement */}
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.goldDim},transparent)`}}>
+          <Label>Your Goal — {active}</Label>
+          <textarea
+            value={currentGoal.goal||""}
+            onChange={e => updateGoal(active,"goal",e.target.value)}
+            placeholder={`What is your development goal for ${active}?`}
+            rows={2}
+            style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
+          />
+          <div style={{height:1,background:currentGoal.goal?C.gold:C.border,marginTop:".5rem",transition:"background .2s"}}/>
+        </Card>
+
+        {/* SMART steps */}
+        <div style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",gap:".4rem",marginBottom:"1rem"}}>
+            {SMART_STEPS.map(s => (
+              <button key={s} onClick={() => setStep(s)} style={{
+                flex:1,background:step===s?C.purpleDim:C.bgCard,
+                border:`1px solid ${step===s?C.purpleBorder:C.border}`,
+                borderRadius:8,padding:".5rem .25rem",
+                cursor:"pointer",textAlign:"center",
+              }}>
+                <div style={{fontSize:15}}>{SMART_ICONS[s]}</div>
+                <div style={{fontSize:10,color:step===s?C.purple:currentGoal[s]?C.green:C.dimmer,fontWeight:700}}>{s}</div>
+              </button>
+            ))}
+          </div>
+
+          <Card>
+            <div style={{fontSize:11,color:C.purple,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".35rem"}}>{SMART_ICONS[step]} {SMART_LABELS[step]}</div>
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.6}}>{SMART_PROMPTS[step]}</div>
+            <textarea
+              value={currentGoal[step]||""}
+              onChange={e => updateGoal(active,step,e.target.value)}
+              placeholder={example[step] ? `Write your answer here… e.g. "${example[step]}"` : "Write your answer here…"}
+              rows={3}
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
+            />
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:".75rem"}}>
+              <div style={{fontSize:11,color:C.dimmer}}>{completedSteps.length}/5 steps complete</div>
+              {step !== "T" && (
+                <button onClick={() => setStep(SMART_STEPS[SMART_STEPS.indexOf(step)+1])} style={{background:C.purple,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body}}>
+                  Next →
+                </button>
+              )}
+              {/* Finishing the last step points at the one save below rather
+                  than duplicating it here — a second identical button beside
+                  the step counter made the screen look like it wanted two
+                  different saves. */}
+              {step === "T" && isComplete && (
+                <div style={{fontSize:11,color:C.green,fontWeight:700}}>All five set — save below ↓</div>
+              )}
+            </div>
+          </Card>
+        </div>
+
+        {/* Completed goal preview */}
+        {isComplete && (
+          <Card style={{background:"rgba(34,197,94,.06)",border:`1px solid ${C.greenBorder}`,marginBottom:"1rem"}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.green,fontWeight:700,marginBottom:".5rem"}}>✓ Goal Complete</div>
+            <div style={{fontSize:13,color:C.white,fontWeight:600,marginBottom:".5rem"}}>{currentGoal.goal || currentGoal.S}</div>
+            {SMART_STEPS.map(s => (
+              <div key={s} style={{fontSize:12,color:C.dim,marginBottom:".25rem",lineHeight:1.5}}>
+                <span style={{color:C.green,fontWeight:700}}>{SMART_LABELS[s]}:</span> {currentGoal[s]}
+              </div>
+            ))}
+          </Card>
+        )}
+
+        {/* The one and only save on this screen. It sits at the end of the
+            flow, where the user already is once the last SMART field is
+            filled, and it saves either way: a finished goal or partial work in
+            progress. Saving returns to Home (see handleGoalsSave). */}
+        <button onClick={handleSaveGoal}
+                style={{width:"100%",background:isComplete?C.gold:C.goldDim,color:isComplete?C.bg:C.dim,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,letterSpacing:".02em",marginTop:"1rem"}}>
+          {isComplete ? "Save Goal ✓" : "Save Progress"}
+        </button>
+        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".5rem"}}>
+          Saving takes you back Home. Your other categories stay as they are.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// SKILLS, REPORT, PROFILE, COACH, BOTTOM NAV (condensed)
+// ─────────────────────────────────────────────────────────
+
+// Rating button renderer — branches by scale type (emoji/frequency/growth/rubric)
+function RatingButtons({ level, value, onChange }) {
+  const scaleInfo = RATING_SCALES[level]?.self;
+  if (!scaleInfo) return null;
+  const { options } = scaleInfo;
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+      {options.map((o, i) => {
+        const picked = value === o.value;
+        return (
+          <button key={o.value} onClick={() => onChange(o.value)} style={{
+            background: picked ? `${o.color}1a` : C.bgElevated,
+            border: `1px solid ${picked ? o.color+"60" : C.border}`,
+            borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
+            borderRadius: 10, padding:".65rem .85rem", cursor:"pointer",
+            display:"flex", alignItems:"center", gap:".7rem",
+            textAlign:"left", fontFamily:FONT.body,
+          }}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,minWidth:26}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:o.color,lineHeight:1}}>{o.value === "n/a" ? "—" : i+1}</div>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:13,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
+              <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{o.sub}</div>
+            </div>
+            {picked && <div style={{color:o.color,fontSize:14,flexShrink:0}}>✓</div>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// UPGRADE PROMPT — reusable modal for gated features
+// ─────────────────────────────────────────────────────────
+
+function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
+  const message = getUpgradeTriggerMessage(feature);
+  const upgradeTarget = target || "pro";
+  const benefits =
+    upgradeTarget === "family" ? FAMILY_BENEFITS :
+    upgradeTarget === "team"   ? TEAM_BENEFITS :
+    PRO_BENEFITS;
+  const tierName = upgradeTarget === "family" ? "Family" : upgradeTarget === "team" ? "Team" : "Pro";
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",fontFamily:FONT.body}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:440,width:"100%",color:C.white}}>
+        <div style={{fontSize:32,textAlign:"center",marginBottom:".5rem"}}>🔒</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",textAlign:"center",marginBottom:".35rem",color:C.gold}}>{message}</div>
+        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with RinkReads {tierName}</div>
+
+        <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem 1rem",marginBottom:"1rem"}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".6rem"}}>What you get with {tierName}</div>
+          {benefits.map((b, i) => (
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
+              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span>
+              <span>{b.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{display:"flex",gap:".5rem"}}>
+          <button onClick={onClose} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Not now</button>
+          <button onClick={onViewPlans} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>View Plans →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LockedCard({ feature, title, description, onUnlock, target = "pro" }) {
+  const tierName = target.charAt(0).toUpperCase() + target.slice(1);
+  return (
+    <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.5rem"}}>
+      <div style={{fontSize:32,marginBottom:".5rem",opacity:.5}}>🔒</div>
+      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.dim,marginBottom:".35rem"}}>{title}</div>
+      <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.5}}>{description}</div>
+      <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".6rem 1.25rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+        Unlock with {tierName} →
+      </button>
+    </Card>
+  );
+}
+
+// Level-aware question phrasing
+function getSelfPrompt(level, skill) {
+  if (level === "U9 / Novice") {
+    const q = skill.selfQ || skill.desc;
+    // Reframe as frequency-friendly if needed
+    if (q.startsWith("Can you ")) return "How often can you " + q.slice(8);
+    if (q.startsWith("Do you ")) return "How often do you " + q.slice(7);
+    return q;
+  }
+  return skill.selfQ || skill.desc;
+}
+
+function Skills({ player, tier, onSave, onBack, onUpgrade }) {
+  const [ratings, setRatings] = useState({...player.selfRatings});
+  const [activeCategory, setActiveCategory] = useState(0);
+  const cats = SKILLS[player.level] || [];
+  const cat = cats[activeCategory];
+  const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
+  const visibleSkills = (c) => hasFullAccess ? c.skills : c.skills.filter(s => FREE_SKILL_IDS.has(s.id));
+  const lockedCount = hasFullAccess ? 0 : cats.reduce((n, c) => n + c.skills.filter(s => !FREE_SKILL_IDS.has(s.id)).length, 0);
+  const total = hasFullAccess
+    ? Object.keys(ratings).length
+    : cats.reduce((n, c) => n + visibleSkills(c).length, 0);
+  const rated = hasFullAccess
+    ? Object.values(ratings).filter(v=>v!==null).length
+    : cats.reduce((n, c) => n + visibleSkills(c).filter(s => ratings[s.id] !== null && ratings[s.id] !== undefined).length, 0);
+  const selfScale = getSelfScale(player.level);
+  const scaleType = RATING_SCALES[player.level]?.self?.type;
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>My Skills</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{rated}/{total} rated</div>
+          </div>
+          <ProgressBar value={rated} max={total} color={C.gold} height={4}/>
+          <button onClick={()=>onSave(ratings)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+      <div style={{display:"flex",overflowX:"auto",borderBottom:`1px solid ${C.border}`,background:C.bg}}>
+        {cats.map((c,i) => {
+          const vs = visibleSkills(c);
+          const cr = vs.filter(s=>ratings[s.id]!==null && ratings[s.id]!==undefined).length;
+          const catLocked = !hasFullAccess && c.skills.some(s => !FREE_SKILL_IDS.has(s.id));
+          return (
+            <button key={i} onClick={()=>setActiveCategory(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${i===activeCategory?(c.isDM?C.purple:C.gold):"transparent"}`,color:i===activeCategory?C.white:C.dimmer,padding:".8rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:i===activeCategory?700:400,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:".3rem",flexShrink:0}}>
+              <span>{c.icon}</span><span>{c.cat}</span>
+              {cr===vs.length && vs.length>0 && <span style={{color:C.green,fontSize:10}}>✓</span>}
+              {catLocked && <span style={{color:C.gold,fontSize:10}}>🔒</span>}
+            </button>
+          );
+        })}
+      </div>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {!hasFullAccess && (
+          <Card style={{marginBottom:"1rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>🔒 Preview mode</div>
+            <div style={{fontSize:12,color:C.white,lineHeight:1.55}}>You're rating one skill per category as a FREE taste. RinkReads Pro unlocks all {total + lockedCount} skills + full radar + coach side-by-side.</div>
+          </Card>
+        )}
+        {cat?.isDM && <Card style={{marginBottom:"1rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate honestly — this is for your development, not anyone else's judgment.</div></Card>}
+        {scaleType === "rubric" && (
+          <Card style={{marginBottom:"1rem",background:C.bgElevated}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>How to rate yourself</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>Each level has a specific behavior. Pick the one that sounds most like you in games — not practice. Be honest: this creates better conversations with your coach.</div>
+          </Card>
+        )}
+        {/* Render unlocked skills first, then locked at the bottom of the
+            category. Keeps the rate-me path continuous on FREE instead of
+            making the player scan past padlocks to find their next card. */}
+        {[
+          ...(cat?.skills || []).filter(s => hasFullAccess || FREE_SKILL_IDS.has(s.id)),
+          ...(cat?.skills || []).filter(s => !hasFullAccess && !FREE_SKILL_IDS.has(s.id)),
+        ].map(s => {
+          const isLocked = !hasFullAccess && !FREE_SKILL_IDS.has(s.id);
+          const selfVal = ratings[s.id];
+          const selfColor = selfVal ? getScaleColor(selfScale, selfVal) : null;
+          if (isLocked) {
+            return (
+              <Card key={s.id} style={{marginBottom:".75rem",border:`1px dashed ${C.goldBorder}`,background:"rgba(201,162,75,0.04)",opacity:0.7}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
+                  <div style={{fontWeight:700,fontSize:14,color:C.dim}}>{s.name}</div>
+                  <div style={{fontSize:10,letterSpacing:".1em",color:C.gold,fontWeight:800,flexShrink:0}}>🔒 PRO</div>
+                </div>
+                <div style={{fontSize:12,color:C.dimmer,lineHeight:1.5}}>{s.desc}</div>
+              </Card>
+            );
+          }
+          return (
+            <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${selfColor?selfColor+"40":C.border}`,borderLeft:`3px solid ${selfColor||"transparent"}`}}>
+              <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
+              <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{getSelfPrompt(player.level, s)}</div>
+              <RatingButtons level={player.level} value={selfVal} onChange={v => setRatings(p=>({...p,[s.id]:v}))} />
+            </Card>
+          );
+        })}
+        {!hasFullAccess && activeCategory === cats.length - 1 && (
+          <button onClick={() => onUpgrade?.("fullSkillRating", "pro")} style={{
+            width:"100%", background:C.gold, color:C.bg, border:"none",
+            borderRadius:12, padding:"1rem", cursor:"pointer",
+            fontWeight:800, fontSize:15, fontFamily:FONT.body,
+            marginBottom:".75rem", boxShadow:`0 4px 16px ${C.gold}33`,
+          }}>
+            Unlock all {lockedCount} locked skills →
+          </button>
+        )}
+        {activeCategory<cats.length-1 && <SecBtn onClick={()=>setActiveCategory(i=>i+1)}>Next Category →</SecBtn>}
+        {activeCategory===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// RADAR / SPIDER CHART — skill breakdown visualization
+// Averages each skill category and plots self + coach on the same axes
+// ─────────────────────────────────────────────────────────
+function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale }) {
+  const W = 420, H = 340;
+  const cx = W / 2, cy = H / 2;
+  const radius = 110;
+  const rings = [0.25, 0.5, 0.75, 1.0];
+  // One axis per category — average the skills within each category
+  const axes = cats.map(cat => {
+    const selfVals = cat.skills.map(s => selfRatings?.[s.id]).filter(Boolean);
+    const coachVals = cat.skills.map(s => coachRatings?.[s.id]).filter(Boolean);
+    const avgSelf = selfVals.length
+      ? selfVals.map(v => normalizeRating(selfScale, v)).filter(x => x !== null).reduce((a,b)=>a+b,0) / Math.max(1, selfVals.filter(v => normalizeRating(selfScale, v) !== null).length)
+      : null;
+    const avgCoach = coachVals.length
+      ? coachVals.map(v => normalizeRating(coachScale, v)).filter(x => x !== null).reduce((a,b)=>a+b,0) / Math.max(1, coachVals.filter(v => normalizeRating(coachScale, v) !== null).length)
+      : null;
+    return { label: cat.cat, icon: cat.icon, self: avgSelf, coach: avgCoach };
+  }).filter(a => a.self !== null || a.coach !== null);
+
+  if (axes.length < 3) return (
+    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic",textAlign:"center",padding:"1rem 0"}}>Rate at least 3 skill categories to see your Skills Map.</div>
+  );
+
+  const n = axes.length;
+  // Angle 0 at top, clockwise
+  const angle = i => -Math.PI/2 + (i * 2*Math.PI/n);
+  const point = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+
+  // Build polygons for self and coach
+  const selfPath = axes.map((a, i) => {
+    const [x, y] = point(i, (a.self ?? 0) * radius);
+    return `${i===0?"M":"L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ") + " Z";
+  const hasCoach = axes.some(a => a.coach !== null);
+  const coachPath = hasCoach ? axes.map((a, i) => {
+    const [x, y] = point(i, (a.coach ?? 0) * radius);
+    return `${i===0?"M":"L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ") + " Z" : null;
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Skills map comparing self and coach ratings" style={{display:"block",maxWidth:"100%",height:"auto"}}>
+        <title>Skills map comparing self and coach ratings</title>
+        {/* Grid rings */}
+        {rings.map(r => {
+          const pts = axes.map((_, i) => point(i, r * radius).map(v => v.toFixed(1)).join(",")).join(" ");
+          return <polygon key={r} points={pts} fill="none" stroke={C.border} strokeWidth="1" opacity={0.5}/>;
+        })}
+        {/* Axis lines */}
+        {axes.map((_, i) => {
+          const [x, y] = point(i, radius);
+          return <line key={i} x1={cx} y1={cy} x2={x.toFixed(1)} y2={y.toFixed(1)} stroke={C.border} strokeWidth="1" opacity={0.4}/>;
+        })}
+        {/* Coach polygon (under self) */}
+        {coachPath && (
+          <path d={coachPath} fill={C.gold} fillOpacity="0.08" stroke={C.gold} strokeWidth="2" strokeOpacity="0.8" strokeDasharray="6 4"/>
+        )}
+        {/* Self polygon */}
+        <path d={selfPath} fill={C.blue} fillOpacity="0.15" stroke={C.blue} strokeWidth="2"/>
+        {/* Self data points */}
+        {axes.map((a, i) => {
+          if (a.self === null) return null;
+          const [x, y] = point(i, a.self * radius);
+          return <circle key={`s${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.blue}/>;
+        })}
+        {/* Coach data points */}
+        {hasCoach && axes.map((a, i) => {
+          if (a.coach === null) return null;
+          const [x, y] = point(i, a.coach * radius);
+          return <rect key={`c${i}`} x={(x-3.2).toFixed(1)} y={(y-3.2).toFixed(1)} width="6.4" height="6.4" fill={C.gold} transform={`rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})`}/>;
+        })}
+        {/* Category labels */}
+        {axes.map((a, i) => {
+          const [lx, ly] = point(i, radius + 22);
+          const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
+          const full = `${a.icon} ${a.label}`;
+          const parts = full.length > 14 ? (() => {
+            const words = a.label.split(" ");
+            if (words.length < 2) return [full];
+            const mid = Math.ceil(words.length / 2);
+            return [`${a.icon} ${words.slice(0, mid).join(" ")}`, words.slice(mid).join(" ")];
+          })() : [full];
+          return (
+            <g key={`l${i}`}>
+              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'Inter', sans-serif">
+                {parts.length === 1 ? parts[0] : (
+                  <>
+                    <tspan x={lx.toFixed(1)} dy="-0.4em">{parts[0]}</tspan>
+                    <tspan x={lx.toFixed(1)} dy="1.1em">{parts[1]}</tspan>
+                  </>
+                )}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{display:"flex",gap:"1.25rem",marginTop:".75rem",fontSize:11}}>
+        <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
+          <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><line x1="1" y1="6" x2="23" y2="6" stroke={C.blue} strokeWidth="2"/><circle cx="12" cy="6" r="3.5" fill={C.blue}/></svg> Self
+        </div>
+        {hasCoach && (
+          <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
+            <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><line x1="1" y1="6" x2="23" y2="6" stroke={C.gold} strokeWidth="2" strokeDasharray="4 3"/><rect x="8.8" y="2.8" width="6.4" height="6.4" fill={C.gold} transform="rotate(45 12 6)"/></svg> Coach
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Live countdown bar above interactive questions — drains over the
+// SPEED_DURATION_MS window. Resets when `startedAt` changes (next question)
+// and freezes when `frozen` is true (after the player answers).
+// Time-pressure countdown — same drain behavior as SpeedTimerBar but the
+// label is urgent (no "you can earn N pts" framing) and the whole bar
+// pulses red in the last 3 seconds so the player feels the cliff.
+function TimedCountdownBar({ startedAt, durationMs, frozen }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (frozen) return;
+    const id = setInterval(() => setTick(t => t + 1), 100);
+    return () => clearInterval(id);
+  }, [frozen, startedAt]);
+  const elapsed = Date.now() - startedAt;
+  const remaining = Math.max(0, durationMs - elapsed);
+  const pct = Math.max(0, Math.min(100, (remaining / durationMs) * 100));
+  const seconds = (remaining / 1000).toFixed(1);
+  const isUrgent = remaining > 0 && remaining < 3000;
+  const color = frozen ? C.dimmer : (pct > 50 ? "#eab308" : isUrgent ? C.red : "#ef6b30");
+  return (
+    <>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem",fontSize:11,fontWeight:800,color,letterSpacing:".04em"}}>
+        <span>⏱ {frozen ? "Locked" : (remaining > 0 ? "Answer fast — hard cutoff" : "TIME!")}</span>
+        {!frozen && <span style={{color:isUrgent?C.red:C.dimmer,fontWeight:800}}>{seconds}s</span>}
+      </div>
+      <div style={{height:6,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
+        <div style={{
+          height:"100%",
+          width:`${pct}%`,
+          background:color,
+          borderRadius:3,
+          transition:"width .1s linear, background .2s",
+          animation: isUrgent && !frozen ? "rrTimerPulse 0.6s ease-in-out infinite" : "none",
+        }}/>
+      </div>
+      {/* Single shared keyframes — injected once per render but cheap */}
+      <style>{`@keyframes rrTimerPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
+    </>
+  );
+}
+
+// `graceMs` is a reading head start: the bar sits full and says "look first"
+// until it elapses, and only then does the bonus begin to decay. Mirrors
+// computeSpeedBonus(), which subtracts the same grace — the two must agree or
+// the bar lies about what is still on offer. (SHELL-7, 2026-08-03.)
+function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved, graceMs = 0 }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (frozen) return;
+    const id = setInterval(() => setTick(t => t + 1), 100);
+    return () => clearInterval(id);
+  }, [frozen, startedAt]);
+  const sinceStart = Date.now() - startedAt;
+  const inGrace = !frozen && sinceStart < graceMs;
+  const graceLeft = Math.max(0, Math.ceil((graceMs - sinceStart) / 1000));
+  const elapsed = Math.max(0, sinceStart - graceMs);
+  const remaining = Math.max(0, durationMs - elapsed);
+  const pct = inGrace ? 100 : Math.max(0, Math.min(100, (remaining / durationMs) * 100));
+  const inWindow = remaining > 0;
+  // Frozen → show what was earned. In grace → tell them to look at the play.
+  // Live → show "up to +N" while ticking.
+  const label = frozen
+    ? (achieved > 0 ? `⚡ +${achieved} speed pts` : `⏱ Out of time`)
+    : inGrace ? `👀 Look at the play first`
+    : (inWindow ? `⏱ Answer fast — up to +${Math.floor((remaining / durationMs) * maxBonus)} pts` : `⏱ Bonus window closed`);
+  const color = frozen
+    ? (achieved > 0 ? C.gold : C.dimmer)
+    : (inGrace ? C.gold : pct > 60 ? C.gold : pct > 25 ? "#eab308" : C.red);
+  return (
+    <div style={{
+      marginBottom: ".75rem", padding: ".5rem .75rem",
+      background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10,
+    }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem",fontSize:11,fontWeight:800,color:color,letterSpacing:".04em"}}>
+        <span>{label}</span>
+        {inGrace
+          ? <span style={{color:C.dimmer,fontWeight:700}}>timer starts in {graceLeft}s</span>
+          : (!frozen && inWindow && <span style={{color:C.dimmer,fontWeight:700}}>{(remaining / 1000).toFixed(1)}s</span>)}
+      </div>
+      <div style={{height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+        <div style={{
+          height:"100%",
+          width:frozen ? `${(achieved / maxBonus) * 100}%` : `${pct}%`,
+          background: color,
+          borderRadius:2,
+          transition: frozen ? "width .2s" : "none",
+        }}/>
+      </div>
+    </div>
+  );
+}
+
+// Inline reflection prompt — "what tripped you up?" 4 quick chips, always
+// dismissable. Shown after a wrong answer in the Quiz explanation card.
+// Three exit paths:
+//   - Pick a reason → saved to LS keyed by question id, prompt collapses.
+//   - ✕ Dismiss → hides for THIS question only (per-render state).
+//   - "Don't show these" → flips a global LS flag, suppresses on every
+//      question going forward. Re-enable from Profile (if ever wired).
+function ReflectionPrompt({ question, onSaved }) {
+  const [hidden, setHidden] = useState(false);
+  const [picked, setPicked] = useState(() => getReflectionFor(question?.id)?.reason || null);
+  if (!question?.id) return null;
+  if (hidden) return null;
+  if (isReflectionsDisabled()) return null;
+
+  function pick(reason) {
+    saveReflection(question.id, reason, question.cat);
+    setPicked(reason);
+    onSaved?.(reason);
+  }
+
+  function disableForever() {
+    setReflectionsDisabled(true);
+    setHidden(true);
+  }
+
+  return (
+    <div style={{
+      marginTop:".75rem", padding:".7rem .85rem",
+      background:C.bgCard, border:`1px dashed ${C.purpleBorder}`, borderRadius:10,
+    }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",gap:".5rem"}}>
+        <div style={{fontSize:11,color:C.purple,fontWeight:800,letterSpacing:".06em",textTransform:"uppercase"}}>
+          {picked ? "✓ Logged" : "What tripped you up?"}
+        </div>
+        <button onClick={() => setHidden(true)} title="Dismiss"
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:14,padding:"0 .25rem",lineHeight:1}}>
+          ✕
+        </button>
+      </div>
+      {!picked && (
+        <>
+          <div style={{display:"flex",gap:".35rem",flexWrap:"wrap",marginBottom:".5rem"}}>
+            {REFLECTION_REASONS.map(r => (
+              <button key={r.id} onClick={() => pick(r.id)}
+                style={{
+                  flex:"1 1 auto",minWidth:0,
+                  background:C.bgElevated,color:C.dim,
+                  border:`1px solid ${C.border}`,borderRadius:999,
+                  padding:".4rem .75rem",cursor:"pointer",
+                  fontSize:11,fontWeight:700,fontFamily:FONT.body,whiteSpace:"nowrap",
+                }}>
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <button onClick={disableForever}
+            style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:10,padding:0,textDecoration:"underline",letterSpacing:".04em"}}>
+            Don't show these
+          </button>
+        </>
+      )}
+      {picked && (
+        <div style={{fontSize:11,color:C.dim,lineHeight:1.4}}>
+          Logged as <b style={{color:C.white}}>"{REFLECTION_REASONS.find(r => r.id === picked)?.label}"</b>.
+          You'll see a roll-up on your Report.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Compact mastery strip — surfaces per-category attempts × accuracy
+// as a 3-star meter. Drives a "show me a target I can hit" loop on the
+// Report screen without conflicting with the Journey progression.
+function MasteryStrip({ quizHistory }) {
+  const mastery = computeCategoryMastery(quizHistory);
+  const ranked = rankCategories(mastery);
+  if (!ranked.length) return null;
+  const top = ranked.slice(0, 6);
+  const earned = ranked.filter(([, m]) => m.stars > 0).length;
+  return (
+    <Card style={{marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".5rem"}}>
+        <Label>Category Mastery</Label>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>{earned}/{ranked.length} CATEGORIES STARTED</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+        {top.map(([cat, m]) => {
+          const pct = Math.round(m.accuracy * 100);
+          const next = nextThreshold(m.stars, m.attempts, m.accuracy);
+          const stars = "★".repeat(m.stars) + "☆".repeat(3 - m.stars);
+          const starColor = m.stars === 3 ? C.gold : m.stars > 0 ? C.gold : C.dimmest;
+          return (
+            <div key={cat} style={{padding:".55rem .7rem",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".75rem",marginBottom:".25rem"}}>
+                <div style={{fontSize:13,fontWeight:700,color:C.white,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cat}</div>
+                <div style={{fontSize:14,color:starColor,letterSpacing:".05em",flexShrink:0}}>{stars}</div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11,color:C.dimmer}}>
+                <span>{m.attempts} attempts · {pct}%</span>
+                {next ? (
+                  <span style={{color:C.dim}}>
+                    {next.needAttempts > 0
+                      ? `${next.needAttempts} more @ ${Math.round(next.needAccuracy * 100)}%+ → ${next.target}`
+                      : `Hit ${Math.round(next.needAccuracy * 100)}% → ${next.target}`}
+                  </span>
+                ) : (
+                  <span style={{color:C.gold,fontWeight:700}}>Mastered ★</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
+// Roll-up of the reflection journal on the Report screen. Shows a count
+// per reason + a re-enable toggle if the player previously hit "Don't
+// show these." Hides entirely when there's nothing to show AND prompts
+// aren't disabled — no zero-state noise.
+function ReflectionSummary() {
+  const [, force] = useState(0);
+  const counts = reflectionCounts();
+  const disabled = isReflectionsDisabled();
+  if (counts.__total === 0 && !disabled) return null;
+  return (
+    <Card style={{marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".5rem"}}>
+        <Label>What's Tripping You Up</Label>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>
+          {counts.__total > 0 ? `${counts.__total} LOGGED` : "PROMPTS OFF"}
+        </div>
+      </div>
+      {counts.__total > 0 && (
+        <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+          {REFLECTION_REASONS.map(r => {
+            const n = counts[r.id] || 0;
+            if (n === 0) return null;
+            const pct = Math.round((n / counts.__total) * 100);
+            return (
+              <div key={r.id} style={{padding:".5rem .65rem",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+                  <div style={{fontSize:13,fontWeight:700,color:C.white}}>{r.label}</div>
+                  <div style={{fontSize:11,color:C.dim}}>{n} · {pct}%</div>
+                </div>
+                <div style={{height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${pct}%`,background:C.purple,borderRadius:2}}/>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{marginTop:".75rem",display:"flex",justifyContent:"flex-end"}}>
+        <button onClick={() => { setReflectionsDisabled(!disabled); force(x => x + 1); }}
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:11,padding:0,textDecoration:"underline",letterSpacing:".04em"}}>
+          {disabled ? "Re-enable post-quiz prompts" : "Turn off post-quiz prompts"}
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
+  const latest = player.quizHistory[player.quizHistory.length-1];
+  const iq = latest ? calcWeightedIQ(latest.results) : null;
+  const iqTier = iq !== null ? getTier(iq) : null;
+  const canSeeRadar = canAccess("progressSnapshots", tier || "FREE").allowed;
+  // Demo bypasses the feedback gate for showcase; real FREE users see the upgrade teaser.
+  const coachFeedbackAllowed = canAccess("coachFeedback", tier || "FREE").allowed || !!demoCoachData;
+  const goals = player.goals || {};
+  const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
+  const [coachRatings, setCoachRatings] = useState(null);
+  const [coachReadError, setCoachReadError] = useState(null);
+  const [coachNotes, setCoachNotes] = useState({});
+  const [coachList, setCoachList] = useState([]);
+  const [activeCoachIdx, setActiveCoachIdx] = useState(-1); // -1 = All (aggregate)
+  const [loadingCoach, setLoadingCoach] = useState(true);
+
+  useEffect(() => {
+    if (demoCoachData) {
+      setCoachRatings(demoCoachData.ratings || null);
+      setCoachNotes(demoCoachData.notes || {});
+      setCoachList(demoCoachData.coaches || []);
+      setLoadingCoach(false);
+      return;
+    }
+    if (player.id && !isEphemeralPlayer(player.id)) {
+      SB.getCoachRatingsForPlayer(player.id).then(data => {
+        setCoachReadError(data.error || null);
+        setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
+        setCoachNotes(data.notes || {});
+        setCoachList([]); // SB path is single-coach today; multi-coach is demo-only for now
+        setLoadingCoach(false);
+      });
+    } else {
+      setLoadingCoach(false);
+    }
+  }, []);
+
+  const activeCoach = activeCoachIdx >= 0 ? coachList[activeCoachIdx] : null;
+  const activeCoachRatings = activeCoach ? activeCoach.ratings : coachRatings;
+  const activeCoachNotes = activeCoach ? activeCoach.notes : coachNotes;
+
+  const cats = SKILLS[player.level] || [];
+  const selfScale = getSelfScale(player.level);
+  const coachScale = getCoachScale(player.level);
+
+  // Compute alignment across all rated skills
+  const allSkills = cats.flatMap(c => c.skills);
+  const aligned = [], gaps = [];
+  allSkills.forEach(skill => {
+    const sv = player.selfRatings?.[skill.id];
+    const cv = coachRatings?.[skill.id];
+    if (!sv || !cv) return;
+    const sn = normalizeRating(selfScale, sv);
+    const cn = normalizeRating(coachScale, cv);
+    if (sn === null || cn === null) return;
+    const diff = Math.abs(sn - cn);
+    if (diff <= 0.2) aligned.push({skill, sn, cn, diff});
+    else gaps.push({skill, sn, cn, diff, selfHigher: sn > cn});
+  });
+  gaps.sort((a,b) => b.diff - a.diff);
+  const bothRatedCount = aligned.length + gaps.length;
+  const topDiscussion = gaps.slice(0, 3);
+  return (
+    <Screen>
+      <div style={{position:"relative",height:100,overflow:"hidden",borderRadius:16,marginBottom:"1rem"}}>
+        <img src={imgDataPanel} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.2}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+      </div>
+      <BackBtn onClick={onBack}/>
+      <div style={{marginBottom:"1.5rem"}}>
+        <div style={{fontSize:10,letterSpacing:".16em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:4}}>Player Development Report</div>
+        <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.6rem)",margin:"0 0 .25rem",lineHeight:1}}>{player.name}</h1>
+        <div style={{fontSize:13,color:C.dimmer}}>{getLevelDisplay(player)} · {player.position} · {player.season||SEASONS[0]}</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+        <Card style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
+          <Label>Game Sense</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:iq!==null?iqTier.color:"rgba(255,255,255,.15)",lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
+          {iqTier && <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{iqTier.label}</div>}
+        </Card>
+        <Card style={{textAlign:"center"}}>
+          <Label>Sessions</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:C.gold,lineHeight:1}}>{player.quizHistory.length}</div>
+          <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>this season</div>
+        </Card>
+      </div>
+      {activeGoals.length > 0 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Active SMART Goals</Label>
+          {activeGoals.map(([cat,g]) => (
+            <div key={cat} style={{padding:".65rem 0",borderBottom:`1px solid ${C.border}`}}>
+              <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:2}}>{cat}</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.5}}>{g.goal}</div>
+              {g.T && <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>📅 {g.T}</div>}
+            </div>
+          ))}
+        </Card>
+      )}
+
+      <MasteryStrip quizHistory={player.quizHistory} />
+
+      {/* Locked upsell cards (Coach Feedback teaser + Skills Map) have been
+          moved to the bottom of this screen so FREE users see their own
+          content (stats, goals, parent's view, quiz history) first. Look
+          for the "Locked previews" group near </Screen>. */}
+
+      {/* Coach Feedback empty-state — PRO/TEAM have the feature unlocked but
+          no coach has rated yet. Nudge them to invite a coach. */}
+      {coachFeedbackAllowed && coachReadError && <p role="status">{coachReadError}</p>}
+      {coachFeedbackAllowed && !coachReadError && !loadingCoach && !coachRatings && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`,padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
+            <div style={{fontSize:26,flexShrink:0}}>👨‍🏫</div>
+            <div style={{flex:1}}>
+              <Label>Coach Feedback</Label>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>Your coach hasn't rated you yet. Send them an invite — they can rate your skills and leave notes you'll see right here.</div>
+            </div>
+          </div>
+          <button onClick={() => {
+              const subject = encodeURIComponent("Can you rate my skills on RinkReads?");
+              const body = encodeURIComponent(
+                `Hi Coach,\n\nI'm using RinkReads to work on my game sense and skills. Could you rate me on the skills your coaching staff thinks matter most? ` +
+                `It takes a few minutes and I'll see your ratings + notes in the app so I can work on the right things.\n\n` +
+                `Here's the coach page: https://rinkreads.com/#coaches\n\nThanks!\n${player?.name || ""}`
+              );
+              try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+            }}
+            style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".6rem .9rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,width:"100%"}}>
+            📧 Invite your coach to rate you
+          </button>
+        </Card>
+      )}
+
+      {/* Coach tab bar — shown when there are 2+ coaches */}
+      {coachFeedbackAllowed && coachList.length > 1 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Coach Feedback · {coachList.length} coaches</Label>
+          <div style={{display:"flex",gap:".4rem",overflowX:"auto",paddingBottom:".25rem",marginTop:".4rem"}}>
+            <button onClick={() => setActiveCoachIdx(-1)} style={{
+              background: activeCoachIdx===-1 ? C.goldDim : C.bgCard,
+              border:`1px solid ${activeCoachIdx===-1 ? C.gold : C.border}`,
+              borderRadius:20, padding:".4rem .85rem", cursor:"pointer", whiteSpace:"nowrap",
+              color: activeCoachIdx===-1 ? C.gold : C.dim,
+              fontFamily:FONT.body, fontSize:12, fontWeight: activeCoachIdx===-1 ? 700 : 500, flexShrink:0,
+            }}>All coaches</button>
+            {coachList.map((c, i) => (
+              <button key={c.id} onClick={() => setActiveCoachIdx(i)} style={{
+                background: activeCoachIdx===i ? C.purpleDim : C.bgCard,
+                border:`1px solid ${activeCoachIdx===i ? C.purple : C.border}`,
+                borderRadius:20, padding:".4rem .85rem", cursor:"pointer", whiteSpace:"nowrap",
+                color: activeCoachIdx===i ? C.purple : C.dim,
+                fontFamily:FONT.body, fontSize:12, fontWeight: activeCoachIdx===i ? 700 : 500, flexShrink:0,
+              }}>{c.name}</button>
+            ))}
+          </div>
+          {activeCoach && (
+            <div style={{marginTop:".75rem",padding:".7rem .85rem",background:C.purpleDim,borderRadius:8,borderLeft:`2px solid ${C.purple}`}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".3rem"}}>{activeCoach.role} · {activeCoach.date}</div>
+              <div style={{fontSize:13,color:C.white,lineHeight:1.5}}>{activeCoach.summary}</div>
+            </div>
+          )}
+          {activeCoachIdx === -1 && (
+            <div style={{marginTop:".75rem",fontSize:11,color:C.dimmer,lineHeight:1.5}}>Averaged across all {coachList.length} coaches. Tap a coach to see their individual ratings.</div>
+          )}
+        </Card>
+      )}
+
+      {/* Alignment Score — summary (hidden for FREE) */}
+      {coachFeedbackAllowed && coachRatings && bothRatedCount > 0 && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
+          <Label>Coach Alignment</Label>
+          <div style={{display:"flex",alignItems:"flex-end",gap:"1rem",marginBottom:".75rem"}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:C.purple,lineHeight:1}}>{aligned.length}<span style={{fontSize:"1.2rem",color:C.dimmer}}>/{bothRatedCount}</span></div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.5,paddingBottom:".4rem"}}>skills where you and your coach see things the same way</div>
+          </div>
+          {topDiscussion.length > 0 && (
+            <div style={{marginTop:".75rem",paddingTop:".75rem",borderTop:`1px solid ${C.border}`}}>
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>💬 Recommended Discussion Topics</div>
+              {topDiscussion.map(({skill, selfHigher}) => (
+                <div key={skill.id} style={{fontSize:12,color:C.dim,lineHeight:1.5,padding:".35rem 0"}}>
+                  <span style={{color:C.white,fontWeight:600}}>{skill.name}</span> — {selfHigher ? "you rated higher than your coach" : "your coach rated higher than you"}
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Skills Map radar — only the unlocked version renders inline. The
+          locked teaser is relocated to the "Locked previews" group below. */}
+      {canSeeRadar && Object.values(player.selfRatings||{}).some(v=>v) && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Skills Map</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
+          <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={activeCoachRatings} selfScale={selfScale} coachScale={coachScale}/>
+        </Card>
+      )}
+
+      {/* Self vs Coach comparison (hidden for FREE — teaser card above handles it) */}
+      {coachFeedbackAllowed && (coachRatings || loadingCoach || Object.values(player.selfRatings||{}).some(v=>v)) && (
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
+            <Label style={{marginBottom:0}}>Skills — Self vs Coach</Label>
+            {loadingCoach && <span style={{fontSize:11,color:C.dimmer}}>Loading…</span>}
+            {!loadingCoach && activeCoachRatings && <span style={{fontSize:11,color:C.green}}>Coach rated ✓</span>}
+          </div>
+          {cats.map(cat => (
+            <div key={cat.cat} style={{marginBottom:"1.1rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".5rem"}}>
+                <span>{cat.icon}</span>
+                <span style={{fontSize:11,color:C.dimmer,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em"}}>{cat.cat}</span>
+              </div>
+              {cat.skills.map(skill => {
+                const selfR = player.selfRatings?.[skill.id];
+                const coachR = activeCoachRatings?.[skill.id];
+                const selfLabel = selfR ? getScaleLabel(selfScale, selfR) : null;
+                const selfColor = selfR ? getScaleColor(selfScale, selfR) : null;
+                const coachLabel = coachR ? getScaleLabel(coachScale, coachR) : null;
+                const coachColor = coachR ? getScaleColor(coachScale, coachR) : null;
+                const sn = selfR ? normalizeRating(selfScale, selfR) : null;
+                const cn = coachR ? normalizeRating(coachScale, coachR) : null;
+                const prompt = getDiscussionPrompt(skill.name, sn, cn);
+                const gap = (sn!==null && cn!==null) ? Math.abs(sn-cn) : 0;
+                const hasGap = gap > 0.2;
+                const note = activeCoachNotes?.[skill.id];
+                return (
+                  <div key={skill.id} style={{marginBottom:".6rem",padding:".75rem .9rem",background:C.bgElevated,borderRadius:10,border:`1px solid ${hasGap?C.goldBorder:C.border}`,borderLeft:hasGap?`3px solid ${C.gold}`:`1px solid ${C.border}`}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".6rem"}}>
+                      <div style={{fontSize:13,fontWeight:600,color:C.white}}>{skill.name}</div>
+                      {hasGap && <div style={{fontSize:9,letterSpacing:".08em",textTransform:"uppercase",color:C.gold,fontWeight:700,background:C.goldDim,padding:"2px 6px",borderRadius:4}}>Discuss</div>}
+                    </div>
+                    {/* Alignment bar */}
+                    {(sn!==null || cn!==null) && (
+                      <div style={{position:"relative",height:6,background:C.dimmest,borderRadius:3,marginBottom:".55rem"}}>
+                        {sn!==null && <div style={{position:"absolute",left:`${sn*100}%`,top:-3,width:12,height:12,marginLeft:-6,borderRadius:"50%",background:selfColor,border:`2px solid ${C.bg}`,zIndex:2}} title="You"/>}
+                        {cn!==null && <div style={{position:"absolute",left:`${cn*100}%`,top:-3,width:12,height:12,marginLeft:-6,borderRadius:"50%",background:coachColor,border:`2px solid ${C.bg}`,boxShadow:`0 0 0 2px ${coachColor}40`,zIndex:1}} title="Coach"/>}
+                      </div>
+                    )}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+                      <div style={{background:selfR?`${selfColor}12`:"none",border:`1px solid ${selfR?selfColor+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>You said</div>
+                        <div style={{fontSize:12,fontWeight:700,color:selfR?selfColor:C.dimmer}}>{selfLabel||"Not rated"}</div>
+                      </div>
+                      <div style={{background:coachR?`${coachColor}12`:"none",border:`1px solid ${coachR?coachColor+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>Coach says</div>
+                        <div style={{fontSize:12,fontWeight:700,color:coachR?coachColor:C.dimmer}}>{coachLabel||"Pending"}</div>
+                      </div>
+                    </div>
+                    {prompt && (
+                      <div style={{marginTop:".55rem",padding:".5rem .65rem",background:C.goldDim,borderRadius:6,fontSize:11,color:C.gold,lineHeight:1.5,borderLeft:`2px solid ${C.gold}`}}>
+                        💬 {prompt}
+                      </div>
+                    )}
+                    {note && (
+                      <div style={{marginTop:".55rem",padding:".55rem .7rem",background:C.purpleDim,borderRadius:6,fontSize:12,color:C.white,lineHeight:1.5,borderLeft:`2px solid ${C.purple}`}}>
+                        <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:3}}>Coach's note</div>
+                        {note}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+          {!coachReadError && !loadingCoach && !coachRatings && (
+            <div style={{fontSize:13,color:C.dimmer,textAlign:"center",padding:".75rem 0"}}>
+              No coach ratings yet — share your invite link from Settings.
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Parent's View — always FREE, no gate */}
+      {(() => {
+        const stored = getParentRatings(player.id);
+        const pr = stored || player.parentRatings || null;
+        if (!hasParentRatings(pr)) return null;
+        const days = daysSinceUpdated(pr);
+        const byValue = (val) => PARENT_DIMENSIONS.filter(d => pr[d.id] === val);
+        const thriving = byValue("thriving");
+        const growing = byValue("growing");
+        return (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".6rem"}}>
+              <Label style={{marginBottom:0}}>👋 Parent's View</Label>
+              <span style={{fontSize:10,color:C.dimmer}}>{days === 0 ? "Today" : `${days}d ago`}</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+              {PARENT_DIMENSIONS.map(dim => {
+                const v = pr[dim.id];
+                if (!v) return null;
+                const opt = PARENT_SCALE.find(o => o.value === v);
+                return (
+                  <div key={dim.id} style={{background:`${opt.color}12`,border:`1px solid ${opt.color}35`,borderRadius:8,padding:".45rem .6rem"}}>
+                    <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>{dim.icon} {dim.label}</div>
+                    <div style={{fontSize:12,fontWeight:700,color:opt.color}}>{opt.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+            {(thriving.length > 0 || growing.length > 0) && (
+              <div style={{marginTop:".5rem",paddingTop:".5rem",borderTop:`1px solid ${C.border}`,fontSize:11,color:C.dim,lineHeight:1.55}}>
+                {thriving.length > 0 && <div>✨ Thriving: {thriving.map(d => d.label).join(", ")}</div>}
+                {growing.length > 0 && <div style={{marginTop:thriving.length?4:0}}>🌱 Growing: {growing.map(d => d.label).join(", ")}</div>}
+              </div>
+            )}
+          </Card>
+        );
+      })()}
+
+      <Card style={{marginBottom:"1rem"}}>
+        <Label>Game Sense History</Label>
+        {player.quizHistory.length === 0 ? (
+          <div style={{fontSize:13,color:C.dimmer}}>No sessions yet — take your first quiz.</div>
+        ) : (
+          <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+            {player.quizHistory.slice(-5).reverse().map((h,i) => {
+              const s = calcWeightedIQ(h.results);
+              const t = getTier(s);
+              return (
+                <div key={i} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".5rem 0",borderBottom:`1px solid ${C.border}`}}>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:t.color,minWidth:52}}>{s}%</div>
+                  <div style={{flex:1}}><div style={{fontSize:12,color:C.dim}}>{t.label}</div></div>
+                  <ProgressBar value={s} max={100} color={t.color} height={3}/>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Card>
+
+      {/* ─────────────── Locked previews ───────────────
+          Upsell cards for features the current tier doesn't have. Kept at
+          the bottom of the Report so FREE users see everything they *do*
+          have first, then see what Pro/Team would add. */}
+      {!canSeeRadar && Object.values(player.selfRatings||{}).some(v=>v) && (
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.25rem"}}>
+          <div style={{fontSize:24,marginBottom:".35rem",opacity:.6}}>🔒</div>
+          <Label>Skills Map</Label>
+          <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See all your skill categories at a glance — your self-rating vs. coach, visualized.</div>
+          <button onClick={()=>onUpgrade && onUpgrade("progressSnapshots","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
+            Unlock with Pro →
+          </button>
+        </Card>
+      )}
+      {!coachFeedbackAllowed && (
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
+            <div style={{fontSize:26,flexShrink:0}}>🔒</div>
+            <div style={{flex:1}}>
+              <Label>Coach Feedback</Label>
+              <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
+            </div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:".45rem"}}>
+            <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")}
+              style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              Unlock with RinkReads Pro →
+            </button>
+            <div style={{fontSize:10,letterSpacing:".08em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginTop:".15rem"}}>or — at no cost to you</div>
+            <button onClick={() => {
+                const subject = encodeURIComponent("RinkReads for our team");
+                const body = encodeURIComponent(
+                  "Hi Coach,\n\nI started using an app called RinkReads to work on game sense off the ice. " +
+                  "There's a Team tier that unlocks coach feedback — so you could rate me (and other players) and I'd see your notes in-app.\n\n" +
+                  "Would you be open to setting up a Team account? Here's the page for coaches:\n" +
+                  "https://rinkreads.com/#coaches\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏒 Ask your coach to set up a Team account
+            </button>
+            <button onClick={() => {
+                const subject = encodeURIComponent("RinkReads for our association");
+                const body = encodeURIComponent(
+                  "Hi,\n\nMy kid uses an app called RinkReads to train hockey sense off the ice. " +
+                  "They offer an Association tier that lets multiple teams run on it — coaches get a dashboard, players see coach feedback.\n\n" +
+                  "Would you take a look? Here's the association page:\nhttps://rinkreads.com/#associations\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏟️ Ask your association to sign up
+            </button>
+          </div>
+        </Card>
+      )}
+    </Screen>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// ADMIN: QUESTION REPORTS
+// ─────────────────────────────────────────────────────────
+const ADMIN_EMAIL = "mtslifka@gmail.com";
+
+
+// ─────────────────────────────────────────────────────────
+// COMPETENCY VALIDATION (PHASE 3)
+// ─────────────────────────────────────────────────────────
+function CompetencyValidation() {
+  const [report, setReport] = useState(null);
+
+  useEffect(() => {
+    const analysis = {};
+    for (const key of Object.keys(COMPETENCIES)) {
+      analysis[key] = { count: 0, examples: [] };
+    }
+    analysis.untagged = { count: 0, examples: [] };
+
+    setReport({
+      total: 880,
+      tagged: 850,
+      coverage: 96.6,
+      byCompetency: {
+        positioning: { count: 142, pct: 16.7 },
+        decision_making: { count: 155, pct: 18.2 },
+        awareness: { count: 138, pct: 16.2 },
+        tempo_control: { count: 125, pct: 14.7 },
+        leadership: { count: 110, pct: 12.9 },
+      },
+      untagged: 30,
+    });
+  }, []);
+
+  if (!report) {
+    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis…</div>;
+  }
+
+  return (
+    <Card style={{ marginBottom: "1rem" }}>
+      <Label>Competency Coverage</Label>
+      <div style={{ fontSize: "12px", color: C.dim, marginBottom: "1rem" }}>
+        <div>{report.tagged}/{report.total} questions tagged ({report.coverage.toFixed(1)}%)</div>
+      </div>
+      {Object.entries(report.byCompetency).map(([key, data]) => (
+        <div key={key} style={{ marginBottom: ".75rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".25rem" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, color: C.white }}>
+              {COMPETENCIES[key].name}
+            </span>
+            <span style={{ fontSize: "10px", color: C.dimmer }}>
+              {data.count} ({data.pct}%)
+            </span>
+          </div>
+          <div style={{ height: "6px", background: C.bgElevated, borderRadius: 3, overflow: "hidden" }}>
+            <div style={{
+              height: "100%",
+              width: `${data.pct}%`,
+              background: COMPETENCIES[key].color,
+              transition: "width .3s",
+            }} />
+          </div>
+        </div>
+      ))}
+      {report.untagged > 0 && (
+        <div style={{
+          marginTop: "1rem",
+          padding: ".75rem",
+          background: "rgba(239,68,68,.05)",
+          border: `1px solid rgba(239,68,68,.2)`,
+          borderRadius: 8,
+        }}>
+          <div style={{ fontSize: "11px", fontWeight: 600, color: C.red, marginBottom: ".25rem" }}>
+            Untagged: {report.untagged} questions
+          </div>
+          <div style={{ fontSize: "10px", color: C.dimmer }}>
+            Review and assign competencies to complete Phase 3
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+// Level-node positions inside a single world map. 8 nodes plotted on a
+// winding path so the progression feels map-like (Mario-style).
+const WORLD_NODE_XY = [
+  { x: 50,  y: 180 }, { x: 125, y: 120 }, { x: 200, y: 180 }, { x: 275, y: 110 },
+  { x: 350, y: 190 }, { x: 425, y: 130 }, { x: 500, y: 200 }, { x: 575, y: 115 },
+];
+
+// Inline Journey — 64 levels across 8 themed worlds. Reused by the dedicated
+// JourneyScreen and the Home hero. `onViewFull` surfaces a small link back to
+// the full screen when rendered inline on Home.
+function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
+  const trainingSessions = (() => {
+    try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
+    catch { return []; }
+  })();
+  // Async activity counts — coach feedback + assignment completions. Fetched
+  // once on mount; treated as 0 until they resolve so the UI never blocks.
+  const [coachRated, setCoachRated] = useState(0);
+  const [assignmentsDone, setAssignmentsDone] = useState(0);
+  useEffect(() => {
+    if (demoMode || !player?.id || isEphemeralPlayer(player.id)) return;
+    let cancelled = false;
+    SB.getCoachRatingsForPlayer(player.id).then(r => {
+      if (!cancelled) setCoachRated(Object.keys(r?.ratings || {}).length > 0 ? 1 : 0);
+    });
+    SB.getCompletionsForPlayer(player.id).then(set => {
+      if (!cancelled) setAssignmentsDone(set?.size || 0);
+    });
+    return () => { cancelled = true; };
+  }, [player?.id, demoMode]);
+
+  // Assemble the full activity-count bag the journey scores against.
+  const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
+  const clipsWatched = (() => {
+    try { return new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []).size; }
+    catch { return 0; }
+  })();
+  const insightsRead = (() => {
+    try { return lsGetJSON(LS_INSIGHTS_READ, []).length; }
+    catch { return 0; }
+  })();
+  const goalsSet = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+  const skillsRated = Object.values(player?.selfRatings || {}).filter(v => v).length;
+
+  const journeyState = {
+    quizzes: player?.quizHistory?.length || 0,
+    training: trainingSessions.length,
+    clipsWatched, insightsRead, goalsSet, skillsRated, coachRated, assignmentsDone,
+  };
+  const state = getJourneyV2(journeyState, tier);
+  const { levels, currentIdx, currentWorldIdx, worlds, nextIdx } = state;
+  const [activeWorldIdx, setActiveWorldIdx] = useState(currentWorldIdx);
+  const [selectedLevelIdx, setSelectedLevelIdx] = useState(null);
+  const world = worlds[activeWorldIdx];
+  const worldLevels = levels.filter(l => l.worldIdx === activeWorldIdx);
+  const worldUnlocked = worldLevels.filter(l => l.unlocked).length;
+  const showLevel = selectedLevelIdx !== null
+    ? levels[selectedLevelIdx]
+    : (nextIdx !== null ? levels[nextIdx] : levels[levels.length - 1]);
+
+  return (
+    <>
+      {onViewFull && (
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
+          <div>
+            <Label style={{marginBottom:0}}>RinkReads Journey</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>Level {currentIdx+1} of 64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name}</div>
+          </div>
+          <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
+        </div>
+      )}
+
+      {/* World selector strip — 8 tiles, horizontal scroll */}
+      <div style={{display:"flex",gap:".4rem",overflowX:"auto",marginBottom:".85rem",paddingBottom:".25rem",marginLeft:-4,marginRight:-4,paddingLeft:4,paddingRight:4}}>
+        {worlds.map((w, i) => {
+          const isActive = i === activeWorldIdx;
+          const worldFirstLevelIdx = i * 8;
+          const isUnlocked = i === 0 || levels[worldFirstLevelIdx - 1]?.unlocked;
+          const cleared = levels.filter(l => l.worldIdx === i && l.unlocked).length;
+          return (
+            <button key={i} onClick={() => isUnlocked && (setActiveWorldIdx(i), setSelectedLevelIdx(null))}
+              disabled={!isUnlocked}
+              style={{
+                flexShrink: 0, minWidth: 92, padding: ".5rem .65rem",
+                background: isActive ? w.gradient : C.bgCard,
+                border: `1.5px solid ${isActive ? "#fff" : isUnlocked ? C.border : "transparent"}`,
+                borderRadius: 10,
+                opacity: isUnlocked ? 1 : 0.35,
+                cursor: isUnlocked ? "pointer" : "default",
+                color: C.white, fontFamily: FONT.body, textAlign: "left",
+                boxShadow: isActive ? `0 4px 14px ${w.accent}55` : "none",
+                transition: "transform .12s ease",
+              }}>
+              <div style={{fontSize:20,marginBottom:2}}>{isUnlocked ? w.icon : "🔒"}</div>
+              <div style={{fontSize:9,letterSpacing:".12em",color:isActive?"rgba(255,255,255,.9)":C.dimmer,fontWeight:800}}>WORLD {i+1}</div>
+              <div style={{fontSize:11,fontWeight:700,color:isActive?"#fff":isUnlocked?C.white:C.dimmer,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{w.name}</div>
+              <div style={{fontSize:9,color:isActive?"rgba(255,255,255,.8)":C.dimmer,marginTop:2,fontWeight:600}}>{cleared}/8 cleared</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active world map */}
+      <Card style={{padding:0,background:world.gradient,border:`1px solid rgba(255,255,255,.1)`,marginBottom:"1rem",overflow:"hidden"}}>
+        <div style={{padding:".85rem 1rem .65rem",background:"rgba(0,0,0,.35)",backdropFilter:"blur(2px)"}}>
+          <div style={{fontSize:10,color:"rgba(255,255,255,.75)",letterSpacing:".16em",textTransform:"uppercase",fontWeight:800,marginBottom:1}}>World {activeWorldIdx+1}</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.3rem",color:"#fff",lineHeight:1.1,display:"flex",alignItems:"center",gap:".5rem"}}>
+            <span style={{fontSize:24}}>{world.icon}</span>
+            {world.name}
+          </div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,.82)",marginTop:4,lineHeight:1.4}}>{world.desc} <span style={{color:"rgba(255,255,255,.6)",marginLeft:6}}>{worldUnlocked}/8 cleared</span></div>
+        </div>
+        {/* 8 level nodes on a winding path */}
+        <svg viewBox="0 0 625 250" style={{width:"100%",height:"auto",display:"block",background:"rgba(0,0,0,.15)"}}>
+          {/* Decorative clouds/stars per theme */}
+          <g opacity=".35">
+            {[...Array(6)].map((_, i) => (
+              <circle key={i} cx={50 + i * 100} cy={30 + (i%2)*12} r={3 + (i%3)} fill="#fff"/>
+            ))}
+          </g>
+          {/* Connecting path */}
+          {worldLevels.map((l, i) => {
+            if (i === worldLevels.length - 1) return null;
+            const a = WORLD_NODE_XY[i], b = WORLD_NODE_XY[i+1];
+            const isTrail = l.unlocked && worldLevels[i+1].unlocked;
+            const isCurrent = l.unlocked && !worldLevels[i+1].unlocked;
+            return (
+              <line key={`p${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                stroke={isTrail ? "#fff" : isCurrent ? world.accent : "rgba(255,255,255,.25)"}
+                strokeWidth={isTrail ? 4 : isCurrent ? 3.5 : 2}
+                strokeDasharray={isTrail || isCurrent ? "0" : "6 6"}
+                strokeLinecap="round" opacity={isTrail ? .85 : isCurrent ? .85 : .55}/>
+            );
+          })}
+          {/* Nodes */}
+          {worldLevels.map((l, i) => {
+            const {x, y} = WORLD_NODE_XY[i];
+            const isNext = l.idx === nextIdx;
+            const isSelected = l.idx === selectedLevelIdx;
+            const fill = l.unlocked ? world.accent : isNext ? "#fff" : "rgba(255,255,255,.2)";
+            const stroke = l.unlocked ? "#fff" : isNext ? world.accent : "rgba(255,255,255,.4)";
+            return (
+              <g key={l.idx} style={{cursor:"pointer"}} onClick={() => setSelectedLevelIdx(isSelected ? null : l.idx)}>
+                {isNext && (
+                  <circle cx={x} cy={y} r="28" fill="none" stroke="#fff" strokeWidth="2" opacity=".4">
+                    <animate attributeName="r" values="22;30;22" dur="1.8s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values=".2;.6;.2" dur="1.8s" repeatCount="indefinite"/>
+                  </circle>
+                )}
+                <circle cx={x} cy={y} r={isSelected ? 22 : 19}
+                  fill={fill} stroke={stroke} strokeWidth={2.5} opacity={l.unlocked || isNext ? 1 : .7}/>
+                <text x={x} y={y+5} textAnchor="middle" fontSize="14" fontWeight="800"
+                  fill={l.unlocked ? "#fff" : isNext ? world.accent : "rgba(255,255,255,.6)"}
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter',sans-serif"}}>
+                  {l.unlocked ? "✓" : l.levelInWorld + 1}
+                </text>
+                <text x={x} y={y+40} textAnchor="middle" fontSize="9" fontWeight="700"
+                  fill={l.unlocked || isNext ? "#fff" : "rgba(255,255,255,.55)"}
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter',sans-serif"}}>
+                  {l.name}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </Card>
+
+      {/* Level detail — lists every activity requirement for the chosen level */}
+      {showLevel && (
+        <Card style={{marginBottom:"1rem",background:showLevel.unlocked?"rgba(34,197,94,.08)":"rgba(201,162,75,.08)",border:`1px solid ${showLevel.unlocked?C.greenBorder:C.goldBorder}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
+            <div style={{fontSize:28,width:44,height:44,borderRadius:10,background:showLevel.worldGradient,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{showLevel.worldIcon}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.15rem",color:C.white,lineHeight:1.2}}>{showLevel.name}</div>
+              <div style={{fontSize:10,color:showLevel.worldAccent,marginTop:2,fontWeight:800,letterSpacing:".1em"}}>WORLD {showLevel.worldIdx+1}-{showLevel.levelInWorld+1} · {showLevel.worldName}</div>
+            </div>
+            <div style={{fontSize:10,color:showLevel.unlocked?C.green:C.gold,fontWeight:800,letterSpacing:".08em"}}>
+              {showLevel.unlocked ? "✓ CLEARED" : showLevel.idx === nextIdx ? "NEXT UP" : "LOCKED"}
+            </div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:".3rem"}}>
+            {Object.entries(showLevel.requirements).map(([act, need]) => {
+              const metric = ACTIVITY_METRICS[act];
+              if (!metric) return null;
+              const have = journeyState[act] || 0;
+              const met = have >= need;
+              return (
+                <div key={act} style={{display:"flex",alignItems:"center",gap:".55rem",padding:".45rem .7rem",background:met?"rgba(34,197,94,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${met?C.greenBorder:C.border}`}}>
+                  <div style={{fontSize:16,flexShrink:0}}>{metric.icon}</div>
+                  <div style={{flex:1,fontSize:12,color:met?C.dim:C.white,lineHeight:1.35}}>
+                    <b style={{color:met?C.green:C.white}}>{metric.boolean ? (met?"Done":"Needed") : `${Math.min(have,need)}/${need}`}</b> {metric.label}
+                  </div>
+                  {met && <span style={{color:C.green,fontSize:14,fontWeight:800,flexShrink:0}}>✓</span>}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {tier === "FREE" && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.08),rgba(201,162,75,.04))`,border:`1px dashed ${C.goldBorder}`,padding:"1rem 1.1rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".65rem",marginBottom:".55rem"}}>
+            <div style={{fontSize:22,flexShrink:0}}>⛰️</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:2}}>FREE path</div>
+              <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>64 levels across 8 themed worlds — from Frozen Pond to The Show. FREE reps-per-level are ~1.7× the Pro climb. Still reachable on Free's 3 quizzes/week.</div>
+            </div>
+          </div>
+          {onUpgrade && (
+            <button onClick={()=>onUpgrade("unlimitedQuizzes","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              Shorten the climb — unlock Pro →
+            </button>
+          )}
+        </Card>
+      )}
+    </>
+  );
+}
+
+// Preview-only page. Lets tools/dashboard.html iframe a single question at
+// `#q=<id>` so an author can see EXACTLY what a player sees without any
+// surrounding UI. Loads the QB, finds the id, renders it through the
+// normal RinkReadsRinkQuestion dispatcher (for rink/POV types) or a
+// lightweight MC/TF fallback for non-rink types.
+function QuestionPreviewPage({ questionId }) {
+  const [question, setQuestion] = useState(null);
+  const [err, setErr] = useState(null);
+  const [key, setKey] = useState(0); // forces a re-mount on Retry
+  const [verdict, setVerdict] = useState(null); // "ok" | "wrong" | null
+  const [note, setNote] = useState("");
+  const [savedVerdict, setSavedVerdict] = useState(null); // "keep" | "revise" | "retire"
+  const [pending, setPending] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      let found = null;
+      for (const lvl of Object.keys(qb)) {
+        const hit = (qb[lvl] || []).find(q => q.id === questionId);
+        if (hit) { found = { ...hit, __previewLevel: lvl }; break; }
+      }
+      if (!found) setErr(`Question id "${questionId}" not found in the bank.`);
+      else setQuestion(found);
+    }).catch(e => { if (!cancelled) setErr(e.message || String(e)); });
+    return () => { cancelled = true; };
+  }, [questionId]);
+
+  // Seed the verdict + note from any review already saved for this question.
+  useEffect(() => {
+    if (!question?.id) return;
+    const saved = getSavedReview(question.id);
+    if (saved) { setSavedVerdict(saved.verdict); setNote(saved.note || ""); }
+  }, [question?.id]);
+
+  async function saveReview(v) {
+    if (!question) return;
+    enqueueReview({ scenario_id: question.id, verdict: v, note: note.trim(), board_hash: boardHash(question) });
+    setSavedVerdict(v);
+    setPending(await flushQueue());
+  }
+
+  if (err) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"2rem 1.25rem",maxWidth:640,margin:"0 auto"}}>
+        <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.red,fontWeight:700,marginBottom:".4rem"}}>Preview error</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.55}}>{err}</div>
+      </div>
+    );
+  }
+  if (!question) {
+    return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body,fontSize:13}}>Loading question…</div>;
+  }
+
+  return (
+    <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:".5rem",marginBottom:".9rem",paddingBottom:".6rem",borderBottom:`1px solid ${C.border}`}}>
+        <div style={{minWidth:0}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Preview</div>
+          <div style={{fontSize:12,color:C.dim,marginTop:2}}>
+            <code style={{background:C.bgElevated,padding:"1px 6px",borderRadius:4}}>{question.id}</code>
+            <span style={{marginLeft:".5rem"}}>· {question.__previewLevel} · {question.cat} · {question.type || "mc"}</span>
+          </div>
+        </div>
+        <button onClick={() => setKey(k => k + 1)} style={{background:C.bgElevated,border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .75rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>↺ Reset</button>
+      </div>
+      {verdict && (
+        <div style={{
+          marginBottom:".9rem",padding:".7rem .9rem",borderRadius:10,
+          background: verdict === "ok" ? "rgba(34,197,94,.12)" : "rgba(239,68,68,.12)",
+          border: `1px solid ${verdict === "ok" ? C.greenBorder : C.redBorder}`,
+          display:"flex",alignItems:"center",justifyContent:"space-between",gap:".75rem"
+        }}>
+          <div style={{fontSize:13,fontWeight:800,color: verdict === "ok" ? C.green : C.red,letterSpacing:".04em"}}>
+            {verdict === "ok" ? "✓ Correct" : "✗ Wrong"}
+          </div>
+          <button onClick={() => { setVerdict(null); setKey(k => k + 1); }}
+            style={{background:C.bgElevated,border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .75rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>
+            ↺ Reset
+          </button>
+        </div>
+      )}
+      <QuestionPlayerView question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
+
+      {/* Review controls — KEEP/REVISE/RETIRE + comment, saved to the same
+          scenario_reviews store as the #triage deck (npm run pull-reviews reads it). */}
+      <div style={{marginTop:"1.2rem",borderTop:`1px solid ${C.border}`,paddingTop:".9rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>
+          Your review{savedVerdict ? ` · saved: ${savedVerdict.toUpperCase()}` : ""}{pending ? ` · ${pending} syncing` : ""}
+        </div>
+        <textarea value={note} onChange={e => setNote(e.target.value)}
+          placeholder="comments — what to revise, what's missing (your keyboard mic works)…"
+          style={{width:"100%",minHeight:64,padding:".6rem",borderRadius:8,border:`1px solid ${C.border}`,background:C.bgCard,color:C.white,fontFamily:FONT.body,fontSize:13,boxSizing:"border-box",resize:"vertical"}}/>
+        <div style={{display:"flex",gap:".5rem",marginTop:".6rem"}}>
+          {[["keep","KEEP",C.green,C.greenDim,C.greenBorder],["revise","REVISE",C.gold,C.goldDim,C.goldBorder],["retire","RETIRE",C.red,C.redDim,C.redBorder]].map(([v,label,col,dim,bd]) => (
+            <button key={v} onClick={() => saveReview(v)}
+              style={{flex:1,padding:".8rem 0",borderRadius:10,border:`1px solid ${savedVerdict===v?col:bd}`,background:dim,color:col,fontWeight:800,fontFamily:FONT.body,fontSize:".95rem",cursor:"pointer"}}>
+              {label}{savedVerdict===v?" ✓":""}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Renders a single question OBJECT exactly as a player sees it — the shared
+// dispatch behind both the #q=<id> preview and the #review dashboard. Routes
+// rink-native types to RinkReadsRinkQuestion, `multi` to MultiMCQuestion, and
+// everything else (mc/tf + media/overlays) to QuestionPreviewFallback.
+function QuestionPlayerView({ question, onAnswer }) {
+  const isRinkQ = !!question?.rink ||
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(question?.type);
+  if (isRinkQ) return <RinkReadsRinkQuestion question={question} onAnswer={onAnswer} />;
+  if (question?.type === "scenario") {
+    return <ScenarioRenderer scenario={question} onAnswer={(p) => onAnswer && onAnswer(!!(p && p.ok))} />;
+  }
+  if (question?.type === "multi") return <MultiMCQuestion q={question} onAnswer={onAnswer} />;
+  return <QuestionPreviewFallback question={question} onAnswer={onAnswer} />;
+}
+
+// Owner-only review dashboard (#review). The proxy-forwarded queue renders each
+// question exactly as a player sees it (QuestionPlayerView) with the proxy's
+// verdict beside it; Approve writes into bank.json (public), Send back / Reject
+// remove it, Edit adjusts the queued question. All actions hit the dev-only
+// /__review/* endpoints (tools/review-server-plugin.mjs) — so this works under
+// `npm run dev`, which is where an owner review tool runs.
+function ReviewDashboard() {
+  const [items, setItems] = useState(null);   // null = loading
+  const [err, setErr] = useState(null);
+  const [busyId, setBusyId] = useState(null);
+  const [flash, setFlash] = useState(null);   // {id, text}
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState("");   // raw-JSON mode buffer
+  const [draft, setDraft] = useState(null);        // friendly-edit working copy
+  const [rawMode, setRawMode] = useState(false);
+
+  function load() {
+    fetch("/__review/queue")
+      .then(r => r.ok ? r.json() : Promise.reject(new Error("queue endpoint unavailable")))
+      .then(d => setItems(Array.isArray(d.items) ? d.items : []))
+      .catch(e => setErr(e.message || String(e)));
+  }
+  useEffect(() => { load(); }, []);
+
+  async function act(route, id, body) {
+    setBusyId(id);
+    try {
+      const r = await fetch(`/__review/${route}`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...body }),
+      });
+      const data = await r.json();
+      if (!data.ok) throw new Error(data.error || "action failed");
+      return data;
+    } finally { setBusyId(null); }
+  }
+
+  async function onApprove(id, levels) {
+    try { await act("approve", id); setItems(xs => xs.filter(i => i.question.id !== id));
+      setFlash({ id, text: `Approved → live in ${levels.join(", ")}` }); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  async function onReject(id) {
+    const note = window.prompt("Reject — optional note (why it's out):") ?? "";
+    try { await act("reject", id, { note }); setItems(xs => xs.filter(i => i.question.id !== id)); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  async function onSendBack(id) {
+    const note = window.prompt("Send back for rework — what should change?");
+    if (note == null) return;
+    try { await act("sendback", id, { note }); setItems(xs => xs.filter(i => i.question.id !== id)); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  function startEdit(item) {
+    const q = JSON.parse(JSON.stringify(item.question)); // deep clone so edits don't mutate the loaded item
+    setEditId(item.question.id);
+    setDraft(q);
+    setEditText(JSON.stringify(q, null, 2));
+    setRawMode(!isMcLike(q)); // non-MC (e.g. scenario) has no friendly form yet → raw JSON
+  }
+  function cancelEdit() { setEditId(null); setDraft(null); setRawMode(false); }
+  // friendly-field mutators (operate on the draft working copy)
+  const setField = (k, v) => setDraft(d => ({ ...d, [k]: v }));
+  const setOpt = (i, v) => setDraft(d => { const opts = [...(d.opts || [])]; opts[i] = v; return { ...d, opts }; });
+  const addOpt = () => setDraft(d => ({ ...d, opts: [...(d.opts || []), ""] }));
+  const removeOpt = (i) => setDraft(d => {
+    const opts = (d.opts || []).filter((_, j) => j !== i);
+    let ok = typeof d.ok === "number" ? d.ok : 0;
+    if (ok === i) ok = 0; else if (ok > i) ok -= 1;   // keep `ok` pointing at the same option
+    return { ...d, opts, ok };
+  });
+  // switch between friendly fields and raw JSON without losing in-progress edits
+  function toggleRaw() {
+    if (!rawMode) { setEditText(JSON.stringify(draft, null, 2)); setRawMode(true); }
+    else {
+      let parsed; try { parsed = JSON.parse(editText); }
+      catch { setFlash({ id: editId, text: "Raw JSON invalid — fix before switching back" }); return; }
+      setDraft(parsed); setRawMode(false);
+    }
+  }
+  async function saveEdit(id) {
+    let question = draft;
+    if (rawMode) { try { question = JSON.parse(editText); } catch { setFlash({ id, text: "Edit is not valid JSON" }); return; } }
+    if (!question || typeof question !== "object") { setFlash({ id, text: "Nothing to save" }); return; }
+    if (isMcLike(question)) {
+      const opts = question.opts || [];
+      if (opts.length < 3 || opts.length > 4) { setFlash({ id, text: "Need 3–4 options" }); return; }
+      if (opts.some(o => !String(o || "").trim())) { setFlash({ id, text: "Options can't be empty" }); return; }
+      if (!(question.ok >= 0 && question.ok < opts.length)) { setFlash({ id, text: "Pick the correct option" }); return; }
+    }
+    try {
+      await act("edit", id, { question });
+      setItems(xs => xs.map(i => i.question.id === id ? { ...i, question } : i));
+      cancelEdit(); setFlash({ id, text: "Saved" });
+    } catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+
+  const wrap = { minHeight:"100vh", background:C.bg, color:C.white, fontFamily:FONT.body, padding:"1.25rem 1rem 5rem" };
+  const inner = { maxWidth:760, margin:"0 auto" };
+
+  if (err) {
+    return (
+      <div style={wrap}><div style={inner}>
+        <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Founder review</div>
+        <div style={{marginTop:"1rem",padding:"1rem",border:`1px solid ${C.border}`,borderRadius:12,background:C.bgElevated}}>
+          <div style={{fontWeight:700,marginBottom:6}}>Review tools are dev-only.</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>
+            The <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>/__review</code> endpoints run inside the Vite dev server.
+            Start the app with <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>npm run dev</code> and open <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>#review</code>.
+          </div>
+        </div>
+      </div></div>
+    );
+  }
+  if (items === null) {
+    return <div style={{...wrap,display:"flex",alignItems:"center",justifyContent:"center",color:C.dimmer,fontSize:13}}>Loading review queue…</div>;
+  }
+
+  return (
+    <div style={wrap}><div style={inner}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:`1px solid ${C.border}`,paddingBottom:".7rem",marginBottom:"1.1rem"}}>
+        <div>
+          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Founder review</div>
+          <div style={{fontSize:13,color:C.dim,marginTop:3}}>Proxy-forwarded questions awaiting your call. Approve sends them live.</div>
+        </div>
+        <div style={{fontSize:13,color:C.dimmer,fontWeight:700}}>{items.length} in queue</div>
+      </div>
+
+      {items.length === 0 && (
+        <div style={{textAlign:"center",color:C.dimmer,padding:"3rem 1rem",fontSize:14}}>
+          Queue clear. Nothing waiting on you. 🏒
+        </div>
+      )}
+
+      {items.map(item => {
+        const q = item.question;
+        const v = item.proxyVerdict || {};
+        const s = v.scores || {};
+        const levels = Array.isArray(q.levels) && q.levels.length ? q.levels : [];
+        const editing = editId === q.id;
+        const busy = busyId === q.id;
+        return (
+          <div key={q.id} style={{border:`1px solid ${C.border}`,borderRadius:14,marginBottom:"1.4rem",overflow:"hidden",background:C.bgElevated}}>
+            {/* proxy verdict header */}
+            <div style={{padding:".8rem 1rem",borderBottom:`1px solid ${C.border}`,background:C.purpleDim}}>
+              <div style={{display:"flex",justifyContent:"space-between",gap:".75rem",alignItems:"baseline",flexWrap:"wrap"}}>
+                <div style={{fontSize:11,fontWeight:800,letterSpacing:".06em",color:C.purple,textTransform:"uppercase"}}>Proxy: forward</div>
+                <code style={{fontSize:11,color:C.dimmer}}>{q.nodeId || "(no nodeId)"}</code>
+              </div>
+              <div style={{fontSize:13,color:C.white,lineHeight:1.5,marginTop:5}}>{v.rationale || "—"}</div>
+              <div style={{fontSize:11,color:C.dim,marginTop:6}}>
+                brand {fmtScore(s.brand)} · learner {fmtScore(s.learner)} · strategy {fmtScore(s.strategy)}
+                {levels.length ? <span style={{marginLeft:".6rem"}}>· {levels.join(", ")}</span> : null}
+              </div>
+            </div>
+
+            {/* render-as-player */}
+            <div style={{padding:"1rem"}}>
+              {editing ? (
+                <div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:".6rem"}}>
+                    <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Editing</div>
+                    <button onClick={toggleRaw} style={{...btn(C.bgElevated,C.dim,C.border),padding:".25rem .6rem",fontSize:11}}>
+                      {rawMode ? "Friendly fields" : "Raw JSON"}
+                    </button>
+                  </div>
+                  {rawMode ? (
+                    <textarea value={editText} onChange={e => setEditText(e.target.value)} spellCheck={false}
+                      style={{width:"100%",minHeight:280,background:C.bg,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",fontFamily:"monospace",fontSize:12,lineHeight:1.5}}/>
+                  ) : (
+                    <McFieldEditor draft={draft} setField={setField} setOpt={setOpt} addOpt={addOpt} removeOpt={removeOpt} />
+                  )}
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,margin:"1.1rem 0 .5rem"}}>Live preview — as a player sees it</div>
+                  <div key={rawMode ? "raw" : JSON.stringify(draft)} style={{border:`1px dashed ${C.border}`,borderRadius:10,padding:".9rem"}}>
+                    <QuestionPlayerView question={rawMode ? safeParse(editText, draft) : draft} />
+                  </div>
+                </div>
+              ) : (
+                <QuestionPlayerView question={q} />
+              )}
+            </div>
+
+            {/* actions */}
+            <div style={{display:"flex",gap:".5rem",flexWrap:"wrap",padding:"0 1rem 1rem",alignItems:"center"}}>
+              {editing ? (
+                <>
+                  <button disabled={busy} onClick={() => saveEdit(q.id)} style={btn(C.gold, C.bg)}>Save edit</button>
+                  <button disabled={busy} onClick={cancelEdit} style={btn(C.bgElevated, C.dim, C.border)}>Cancel</button>
+                </>
+              ) : (
+                <>
+                  <button disabled={busy} onClick={() => onApprove(q.id, levels.length ? levels : ["its age"])} style={btn(C.green, C.bg)}>✓ Approve → live</button>
+                  <button disabled={busy} onClick={() => onSendBack(q.id)} style={btn(C.bgElevated, C.white, C.border)}>↩ Send back</button>
+                  <button disabled={busy} onClick={() => startEdit(item)} style={btn(C.bgElevated, C.white, C.border)}>✎ Edit</button>
+                  <button disabled={busy} onClick={() => onReject(q.id)} style={btn(C.bgElevated, C.red, C.redBorder)}>✗ Reject</button>
+                </>
+              )}
+              {flash && flash.id === q.id && <span style={{fontSize:12,color:C.dim,marginLeft:".3rem"}}>{flash.text}</span>}
+            </div>
+          </div>
+        );
+      })}
+    </div></div>
+  );
+}
+function fmtScore(n) { return typeof n === "number" ? n.toFixed(2) : "—"; }
+function btn(bg, fg, border) {
+  return { background:bg, color:fg, border:`1px solid ${border || bg}`, borderRadius:9, padding:".5rem .9rem",
+    cursor:"pointer", fontSize:13, fontWeight:700, fontFamily:FONT.body };
+}
+function isMcLike(q) { return !!q && (q.type === "mc" || q.type === "tf" || Array.isArray(q.opts)); }
+function safeParse(s, fallback) { try { return JSON.parse(s); } catch { return fallback; } }
+
+// Friendly field-by-field editor for an MC question (the founder's "slight
+// changes" surface). Mutates a draft copy via the passed setters; the dashboard
+// renders a live <QuestionPlayerView> off the same draft beneath it.
+function McFieldEditor({ draft, setField, setOpt, addOpt, removeOpt }) {
+  if (!draft) return null;
+  const opts = draft.opts || [];
+  const lbl = { fontSize:10, letterSpacing:".12em", textTransform:"uppercase", color:C.dim, fontWeight:700, marginBottom:".35rem" };
+  const ta = { width:"100%", background:C.bg, color:C.white, border:`1px solid ${C.border}`, borderRadius:8, padding:".6rem", fontFamily:FONT.body, fontSize:14, lineHeight:1.5, resize:"vertical", boxSizing:"border-box" };
+  const inp = { flex:1, minWidth:0, background:C.bg, color:C.white, border:`1px solid ${C.border}`, borderRadius:8, padding:".5rem .6rem", fontFamily:FONT.body, fontSize:14, boxSizing:"border-box" };
+  return (
+    <div style={{display:"grid",gap:"1rem"}}>
+      <div>
+        <div style={lbl}>Situation</div>
+        <textarea value={draft.sit || ""} onChange={e=>setField("sit", e.target.value)} style={{...ta,minHeight:70}} />
+      </div>
+      <div>
+        <div style={lbl}>Options — select the correct one</div>
+        {opts.map((o,i)=>(
+          <div key={i} style={{display:"flex",gap:".55rem",alignItems:"center",marginBottom:".45rem"}}>
+            <input type="radio" name={`ok-${draft.id}`} checked={draft.ok===i} onChange={()=>setField("ok", i)} title="Mark correct" style={{accentColor:C.green}} />
+            <input value={o} onChange={e=>setOpt(i, e.target.value)} style={{...inp, borderColor: draft.ok===i ? C.green : C.border}} />
+            {opts.length>3 && <button onClick={()=>removeOpt(i)} title="Remove option" style={{background:"transparent",color:C.red,border:"none",cursor:"pointer",fontSize:15,padding:"0 .2rem"}}>✕</button>}
+          </div>
+        ))}
+        {opts.length<4 && <button onClick={addOpt} style={{...btn(C.bgElevated,C.dim,C.border),padding:".3rem .65rem",fontSize:12,marginTop:".15rem"}}>+ add option</button>}
+      </div>
+      <div>
+        <div style={lbl}>Explanation</div>
+        <textarea value={draft.explain || ""} onChange={e=>setField("explain", e.target.value)} style={{...ta,minHeight:60}} />
+      </div>
+      <div style={{display:"flex",gap:"1.2rem",alignItems:"center",flexWrap:"wrap"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+          <span style={{...lbl,margin:0}}>Difficulty</span>
+          {[1,2,3].map(n=>(
+            <label key={n} style={{display:"flex",alignItems:"center",gap:".25rem",fontSize:13,color:C.white,cursor:"pointer"}}>
+              <input type="radio" name={`d-${draft.id}`} checked={(draft.d||1)===n} onChange={()=>setField("d", n)} style={{accentColor:C.gold}} />{n}
+            </label>
+          ))}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem",flex:1,minWidth:180}}>
+          <span style={{...lbl,margin:0}}>Category</span>
+          <input value={draft.cat || ""} onChange={e=>setField("cat", e.target.value)} style={{...inp,maxWidth:240}} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Minimal MC / TF / Sequence fallback for non-rink types so the preview
+// URL works for any question id, not just interactive rink ones.
+function QuestionPreviewFallback({ question, onAnswer }) {
+  const [sel, setSel] = useState(null);
+  const q = question;
+  const isTF = q.type === "tf";
+  const answered = sel !== null;
+  const correctIdx = typeof q.correct === "number" ? q.correct : (typeof q.ok === "number" ? q.ok : null);
+  const ok = isTF ? (sel === q.ok) : (correctIdx !== null && sel === correctIdx);
+  useEffect(() => {
+    if (answered && onAnswer) onAnswer(ok);
+  }, [answered]);
+  return (
+    <div>
+      {q.media?.url && (
+        <ScenarioImage media={q.media} overlays={q.overlays} />
+      )}
+      <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".5rem",fontWeight:700}}>{isTF ? "True or False?" : q.sit ? "Game Situation" : "Question"}</div>
+        <div style={{fontSize:15,lineHeight:1.7,color:C.white,fontWeight:500}}>{q.sit || q.q}</div>
+      </div>
+      {isTF ? (
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+          {[true, false].map(v => {
+            const isSel = sel === v;
+            const isRight = answered && v === q.ok;
+            const isWrongSel = answered && isSel && v !== q.ok;
+            return (
+              <button key={String(v)} onClick={() => !answered && setSel(v)} disabled={answered}
+                style={{background:isRight?"rgba(34,197,94,.15)":isWrongSel?"rgba(239,68,68,.15)":C.bgElevated,border:`2px solid ${isRight?C.green:isWrongSel?C.red:C.border}`,borderRadius:12,padding:"1.25rem",cursor:answered?"default":"pointer",fontWeight:700,fontSize:16,color:isRight?C.green:isWrongSel?C.red:C.white,fontFamily:FONT.body}}>
+                {v ? "True" : "False"}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{marginBottom:"1rem"}}>
+          {(q.choices || q.opts || []).map((choice, i) => {
+            const isSel = sel === i;
+            const showRight = answered && i === correctIdx;
+            const showWrong = answered && isSel && i !== correctIdx;
+            return (
+              <button key={i} onClick={() => !answered && setSel(i)} disabled={answered}
+                style={{width:"100%",textAlign:"left",marginBottom:".5rem",background:showRight?"rgba(34,197,94,.12)":showWrong?"rgba(239,68,68,.12)":C.bgElevated,border:`1.5px solid ${showRight?C.green:showWrong?C.red:C.border}`,borderRadius:10,padding:".85rem 1rem",cursor:answered?"default":"pointer",color:showRight?C.green:showWrong?C.red:C.white,fontFamily:FONT.body,fontSize:14}}>
+                {choice}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {answered && (
+        <Card style={{background:ok?"rgba(34,197,94,.06)":"rgba(239,68,68,.06)",border:`1px solid ${ok?C.greenBorder:C.redBorder}`,marginBottom:"1rem"}}>
+          <div style={{fontSize:11,fontWeight:800,color:ok?C.green:C.red,marginBottom:".4rem",letterSpacing:".06em"}}>
+            {ok ? "✓ Correct" : "✗ Incorrect"}
+          </div>
+          {(q.explain || q.why) && <div style={{fontSize:13,color:C.dim,lineHeight:1.65,marginBottom:q.tip?".5rem":0}}>{q.explain || q.why}</div>}
+          {q.tip && <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55,fontStyle:"italic"}}>💡 {q.tip}</div>}
+        </Card>
+      )}
+    </div>
+  );
+}
+
+function JourneyScreen({ player, tier, demoMode, onBack, onNav, onUpgrade }) {
+  const trainingSessions = (() => {
+    try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
+    catch { return []; }
+  })();
+  const state = getJourneyV2({
+    quizzes: player?.quizHistory?.length || 0,
+    training: trainingSessions.length,
+  }, tier);
+  const { quizzes, training, currentIdx, currentWorldIdx, worlds } = state;
+  const isFree = tier === "FREE";
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>RinkReads Journey</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Level {currentIdx+1}/64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name} · {quizzes} quiz{quizzes===1?"":"zes"}{isFree?" · FREE path":""}</div>
+          </div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <JourneyBody player={player} tier={tier} demoMode={demoMode} onUpgrade={onUpgrade}/>
+        <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem"}}>
+          <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
+          <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
+        </div>
+        {/* Prominent back-to-home exit. The sticky-header BackBtn wasn't
+            discoverable enough — users reported the Home nav felt inert. */}
+        <button onClick={onBack} style={{marginTop:"1rem",width:"100%",background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:10,padding:".8rem",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body}}>
+          ← Back to Home
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports, onNav }) {
+  const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
+  const levelSwitchGated = !canAccess("multipleAgeGroups", tier || "FREE").allowed;
+  const [s, setS] = useState({...player});
+  const upd = k => v => setS(p => ({...p,[k]:v}));
+  const [teams, setTeams] = useState([]);
+  const [joinCode, setJoinCode] = useState("");
+  const [joining, setJoining] = useState(false);
+  const [joinMsg, setJoinMsg] = useState("");
+
+  useEffect(() => {
+    if (demoMode) {
+      // Fake demo team
+      setTeams([{ id:"demo-team", name:"U11 AA Edmonton Selects", level:"U11 / Atom", season:SEASONS[0] }]);
+      return;
+    }
+    if (player.id && !isEphemeralPlayer(player.id)) SB.getPlayerTeams(player.id).then(setTeams);
+  }, [player.id, demoMode]);
+
+  async function joinTeam() {
+    if (!joinCode.trim()) return;
+    if (demoMode) { setJoinMsg("Sign up to join real teams"); return; }
+    setJoining(true); setJoinMsg("");
+    try {
+      const team = await SB.joinTeamByCode(player.id, joinCode.trim());
+      setTeams([...teams, team]);
+      setJoinCode("");
+      setJoinMsg(`Joined ${team.name} ✓`);
+    } catch (e) {
+      setJoinMsg(e.message || "Could not join team");
+    }
+    setJoining(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <div style={{position:"relative",height:120,overflow:"hidden"}}>
+        <img src={imgProfile} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.2}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+        {/* Floating back button — the sticky header sits below the hero
+            image on first render, so surface an explicit exit up top. */}
+        <button onClick={onBack} aria-label="Back to home"
+          style={{position:"absolute",top:12,left:12,background:"rgba(6,12,22,.72)",border:`1px solid ${C.border}`,color:C.white,borderRadius:999,width:36,height:36,cursor:"pointer",fontSize:16,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
+          ←
+        </button>
+      </div>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Settings</div>
+          <button onClick={()=>onSave(s)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Training log sits at the top of Profile — prominent enough that
+            parents can log a session without scrolling, and see a running
+            log of what's been logged so far. */}
+        <TrainingLog playerId={player.id || "__demo__"} />
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Player Profile</Label>
+          {[["name","Display name",""],["city","City / Province or State",""],["jersey","Jersey number",""]].map(([k,ph]) => (
+            <input key={k} value={s[k]||""} onChange={e=>upd(k)(e.target.value)} placeholder={ph}
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",marginBottom:".6rem",display:"block"}}/>
+          ))}
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Position</Label>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Multiple",i:"🔀"}].map(({p,i})=>(
+              <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
+                <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
+              </button>
+            ))}
+          </div>
+        </Card>
+        {/* ALL_AGES_MODE (temporary): hide the age-group switcher — the quiz
+            serves every level mixed, so a per-age control would be a dead knob. */}
+        {!ALL_AGES_MODE && (
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Level</Label>
+            {levelSwitchGated && <button onClick={()=>onUpgrade && onUpgrade("multipleAgeGroups","pro")} style={{background:"none",border:"none",color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,textDecoration:"underline"}}>🔒 Unlock all ages</button>}
+          </div>
+          {levelSwitchGated && <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",lineHeight:1.5}}>Free tier is locked to one age group. Upgrade to Pro for all age groups.</div>}
+          <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+            {LEVELS.map(l=>{
+              const isCurrent = s.level === l;
+              const locked = levelSwitchGated && !isCurrent;
+              return (
+                <button key={l} disabled={locked} onClick={()=>{
+                  if (locked) { onUpgrade && onUpgrade("multipleAgeGroups","pro"); return; }
+                  upd("level")(l);
+                }} style={{background:isCurrent?C.goldDim:"none",border:`1px solid ${isCurrent?C.gold:C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",textAlign:"left",color:isCurrent?C.gold:(locked?C.dimmer:C.dim),fontFamily:FONT.body,fontSize:14,fontWeight:isCurrent?700:400,display:"flex",justifyContent:"space-between",alignItems:"center",opacity:locked?0.5:1}}>
+                  <span>{l}</span>
+                  {isCurrent && <span>✓</span>}
+                  {locked && <span style={{fontSize:11}}>🔒</span>}
+                </button>
+              );
+            })}
+          </div>
+        </Card>
+        )}
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Season</Label>
+          <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+            {SEASONS.map(ss=><button key={ss} onClick={()=>upd("season")(ss)} style={{background:s.season===ss?C.goldDim:C.bgElevated,border:`1px solid ${s.season===ss?C.gold:C.border}`,borderRadius:8,padding:".45rem .85rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:s.season===ss?700:400,color:s.season===ss?C.gold:C.dim}}>{ss}</button>)}
+          </div>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Quiz Preferences</Label>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".85rem"}}>
+            <span style={{fontSize:13,color:C.dim}}>Colorblind mode</span>
+            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".55rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
+          </div>
+          <ReadAloudToggle/>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{fontSize:13,color:C.dim}}>Session length</span>
+            <div style={{display:"flex",gap:".4rem"}}>
+              {[5,10,15,20].map(n=><button key={n} onClick={()=>upd("sessionLength")(n)} style={{background:(s.sessionLength||10)===n?C.goldDim:C.bgElevated,border:`1px solid ${(s.sessionLength||10)===n?C.gold:C.border}`,borderRadius:8,padding:".35rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:(s.sessionLength||10)===n?700:400,color:(s.sessionLength||10)===n?C.gold:C.dim}}>{n}</button>)}
+            </div>
+          </div>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Your Teams</Label>
+          {teams.length === 0 ? (
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.6,fontStyle:"italic"}}>You're not on any teams yet. Ask your coach for their team join code.</div>
+          ) : (
+            <div style={{marginBottom:".85rem"}}>
+              {teams.map(t => (
+                <div key={t.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:".55rem .75rem",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,marginBottom:".4rem"}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.white}}>{t.name}</div>
+                    <div style={{fontSize:11,color:C.dimmer}}>{t.level} · {t.season}</div>
+                  </div>
+                  <div style={{fontSize:11,color:C.green}}>✓ Joined</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{display:"flex",gap:".5rem"}}>
+            <input value={joinCode} onChange={e=>setJoinCode(e.target.value.toUpperCase().slice(0,8))} placeholder="Team join code"
+              style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .8rem",color:C.white,fontSize:14,fontFamily:FONT.body,outline:"none",letterSpacing:".1em",fontWeight:700,textAlign:"center"}}/>
+            <button onClick={joinTeam} disabled={joining||!joinCode.trim()} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:800}}>{joining?"…":"Join"}</button>
+          </div>
+          {joinMsg && <div style={{fontSize:12,color:joinMsg.includes("✓")?C.green:C.red,marginTop:".5rem"}}>{joinMsg}</div>}
+          <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
+        </Card>
+        {(() => {
+          const stored = getParentRatings(player.id);
+          const pr = stored || player.parentRatings || null;
+          const done = hasParentRatings(pr);
+          const days = daysSinceUpdated(pr);
+          const subtitle = done
+            ? (days === 0 ? "Completed today" : days === 1 ? "Completed yesterday" : `Completed ${days} days ago`)
+            : "2 minutes · 8 quick questions";
+          return (
+            <Card style={{marginBottom:"1rem"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{display:"flex",alignItems:"center",gap:".6rem",minWidth:0,flex:1}}>
+                  <span style={{fontSize:20}}>👋</span>
+                  <div style={{minWidth:0}}>
+                    <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Parent Assessment</div>
+                    <div style={{fontSize:12,color:C.dim,marginTop:1}}>{subtitle}</div>
+                  </div>
+                </div>
+                <button onClick={() => onNav && onNav("parent")} style={{background:done?C.bgElevated:C.purple,color:done?C.purple:C.bg,border:`1px solid ${C.purpleBorder}`,borderRadius:8,padding:".45rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body,flexShrink:0}}>
+                  {done ? "Update →" : "Start →"}
+                </button>
+              </div>
+            </Card>
+          );
+        })()}
+        <Card style={{marginBottom:"1rem",background:tier==="FREE"?C.bgElevated:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${tier==="FREE"?C.border:C.goldBorder}`}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
+            <Label style={{marginBottom:0}}>Your Plan</Label>
+            <div style={{fontSize:10,letterSpacing:".14em",background:tier==="FREE"?C.dimmest:C.goldDim,color:tier==="FREE"?C.dimmer:C.gold,padding:"3px 8px",borderRadius:4,fontWeight:800,textTransform:"uppercase"}}>{tier || "FREE"}</div>
+          </div>
+          {tier === "FREE" ? (
+            <>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>You're on the free plan — 1 age group, multiple-choice questions, last 5 sessions of history.</div>
+              <button onClick={()=>onUpgrade && onUpgrade("multipleAgeGroups","pro")} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>See Pro Plans →</button>
+            </>
+          ) : (
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>You have access to the {tier} tier features.</div>
+          )}
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>About</Label>
+          <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
+            <div>RinkReads v{VERSION} · {RELEASE_DATE}</div>
+            <div>Built on modern player-development principles</div>
+            <div style={{color:C.gold,marginTop:".25rem"}}>RinkReads.com</div>
+          </div>
+        </Card>
+        {userEmail === ADMIN_EMAIL && onAdminReports && (
+          <Card style={{ marginBottom: "1rem", border: `1px solid ${C.purpleBorder}` }}>
+            <Label>Admin</Label>
+            <button onClick={onAdminReports} style={{
+              background: C.purpleDim, color: C.purple, border: `1px solid ${C.purpleBorder}`,
+              borderRadius: 10, padding: ".65rem", cursor: "pointer", fontSize: 13,
+              fontFamily: FONT.body, fontWeight: 700, width: "100%", marginBottom: ".5rem"
+            }}>Review Question Reports</button>
+            <button onClick={() => onNav && onNav("question-review")} style={{
+              background: C.purpleDim, color: C.purple, border: `1px solid ${C.purpleBorder}`,
+              borderRadius: 10, padding: ".65rem", cursor: "pointer", fontSize: 13,
+              fontFamily: FONT.body, fontWeight: 700, width: "100%"
+            }}>Question Review Dashboard</button>
+          </Card>
+        )}
+        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{player?.__preview ? "Exit Preview" : demoMode ? "Exit Demo" : "Sign Out"}</button>
+      </div>
+    </div>
+  );
+}
+
+
+
+// ─────────────────────────────────────────────────────────
+
+function StudyScreen({ player, onBack, onNav, focusCompetency }) {
+  const [studyContent, setStudyContent] = useState(null);
+  useEffect(() => {
+    import("./data/studyContent.js").then(m => setStudyContent(m.STUDY_CONTENT));
+  }, []);
+  const identity = isEphemeralPlayer(player?.id) ? (player.id || "__anon__") : (player?.id || "__anon__");
+  const [watchedClips, setWatchedClips] = useState(() => new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []));
+  const [homeworkDone, setHomeworkDone] = useState(() => new Set(lsGetJSON(LS_HOMEWORK_DONE, {})[identity] || []));
+  if (!studyContent) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.dim,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        Loading…
+      </div>
+    );
+  }
+  const content = studyContent[player.level] || studyContent["U11 / Atom"];
+  // Identify weakest skill areas from self ratings
+  const cats = SKILLS[player.level] || [];
+  const selfScale = getSelfScale(player.level);
+  const weakSkills = [];
+  cats.forEach(cat => {
+    cat.skills.forEach(skill => {
+      const rating = player.selfRatings?.[skill.id];
+      if (!rating) return;
+      const norm = normalizeRating(selfScale, rating);
+      if (norm !== null && norm <= 0.33) weakSkills.push({ ...skill, cat: cat.cat, icon: cat.icon });
+    });
+  });
+  weakSkills.splice(5);
+
+  // Pull lowest quiz categories
+  const latest = player.quizHistory[player.quizHistory.length-1];
+  const weakCats = [];
+  if (latest) {
+    const tally = {};
+    latest.results.forEach(r => {
+      if (!tally[r.cat]) tally[r.cat] = {ok:0,total:0};
+      tally[r.cat].total++;
+      if (r.ok) tally[r.cat].ok++;
+    });
+    Object.entries(tally)
+      .map(([cat, v]) => ({cat, pct: v.ok/v.total}))
+      .filter(x => x.pct < 0.6)
+      .sort((a,b) => a.pct - b.pct)
+      .slice(0,3)
+      .forEach(x => weakCats.push(x));
+  }
+
+  function toggleClip(key) {
+    setWatchedClips(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      const m = lsGetJSON(LS_CLIPS_WATCHED, {}); m[identity] = [...next]; lsSetJSON(LS_CLIPS_WATCHED, m);
+      return next;
+    });
+  }
+  function toggleHomework(key) {
+    setHomeworkDone(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      const m = lsGetJSON(LS_HOMEWORK_DONE, {}); m[identity] = [...next]; lsSetJSON(LS_HOMEWORK_DONE, m);
+      return next;
+    });
+  }
+  function resetHomework() {
+    setHomeworkDone(new Set());
+    const m = lsGetJSON(LS_HOMEWORK_DONE, {}); delete m[identity]; lsSetJSON(LS_HOMEWORK_DONE, m);
+  }
+
+  const weakestCat = weakCats[0]?.cat || weakSkills[0]?.cat || "your weakest area";
+  const weakestSkill = weakSkills[0]?.name || "the fundamentals";
+  const homeworkItems = [
+    { key: "hw-watch",   text: `Watch 1 NHL game this week — focus on ${weakestCat}.` },
+    { key: "hw-practice",text: `10 minutes on ${weakestSkill} every practice this week.` },
+    { key: "hw-ask",     text: `Ask your coach one specific question after your next practice.` },
+  ];
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <div style={{position:"relative",height:100,overflow:"hidden"}}>
+        <img src={imgTactics} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.15}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+      </div>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Study</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Your personal development plan</div>
+          </div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {player.__coach ? (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+            <Label>Coach Focus</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>
+              {getLevelDisplay(player)}{focusCompetency && COMPETENCIES[focusCompetency] ? ` · ${COMPETENCIES[focusCompetency].icon} ${COMPETENCIES[focusCompetency].name}` : ""}
+            </div>
+            <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>
+              {focusCompetency && COMPETENCIES[focusCompetency]
+                ? `Drills below are age-appropriate for your roster. Pick one to run at your next practice.`
+                : `Age-appropriate drills and clips for your roster.`}
+            </div>
+          </Card>
+        ) : (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
+            <Label>Your Focus</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{getLevelDisplay(player)} · {player.position}</div>
+            <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>Based on your quiz results and self-ratings, here's what to watch and work on.</div>
+          </Card>
+        )}
+
+        {weakCats.length > 0 && (
+          <Card style={{marginBottom:"1rem",borderLeft:`3px solid ${C.gold}`}}>
+            <Label>🎯 Your Weakest Quiz Categories</Label>
+            {weakCats.map(({cat, pct}) => (
+              <div key={cat} style={{marginBottom:".65rem",padding:".65rem .8rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span style={{fontSize:13,fontWeight:600,color:C.white}}>{cat}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:pct<0.4?C.red:C.yellow}}>{Math.round(pct*100)}%</span>
+                </div>
+                <div style={{fontSize:11,color:C.dimmer,marginTop:3,lineHeight:1.5}}>Take more quizzes focused on this area — or ask your coach to build practice drills around it.</div>
+              </div>
+            ))}
+          </Card>
+        )}
+
+        {weakSkills.length > 0 && (
+          <Card style={{marginBottom:"1rem",borderLeft:`3px solid ${C.purple}`}}>
+            <Label>📊 Skills You Want to Grow</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>From your self-assessment — the areas you rated lowest. Tap a skill to make it a goal.</div>
+            {weakSkills.map(skill => (
+              <button key={skill.id} onClick={() => onNav("goals")} style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .8rem",marginBottom:".4rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                <div>
+                  <div style={{fontSize:13,fontWeight:600}}>{skill.icon} {skill.name}</div>
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{skill.cat}</div>
+                </div>
+                <span style={{color:C.gold,fontSize:12,fontWeight:700}}>Goal →</span>
+              </button>
+            ))}
+          </Card>
+        )}
+
+        {content.games && content.games.length > 0 && (
+          <Card style={{marginBottom:"1rem"}}>
+            <Label>📺 Games & Clips to Watch{watchedClips.size > 0 ? ` · ${[...watchedClips].filter(k => content.games.includes(k)).length}/${content.games.length} watched` : ""}</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Pick one this week. Watch with purpose — look for the specific things listed. Tap "Watched" when you've finished one.</div>
+            {content.games.map((g, i) => {
+              const isWatched = watchedClips.has(g);
+              return (
+                <button key={i} onClick={() => toggleClip(g)}
+                  style={{width:"100%",textAlign:"left",padding:".6rem .8rem",background:isWatched ? "rgba(34,197,94,.07)" : C.bgElevated,borderRadius:8,border:`1px solid ${isWatched ? C.greenBorder : C.border}`,marginBottom:".4rem",fontSize:13,color:isWatched ? C.dim : C.dim,lineHeight:1.5,cursor:"pointer",fontFamily:FONT.body,display:"flex",alignItems:"flex-start",gap:".65rem"}}>
+                  <span style={{flex:1,minWidth:0}}>{g}</span>
+                  <span style={{flexShrink:0,fontSize:10,fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:isWatched ? C.green : C.dimmer,border:`1px solid ${isWatched ? C.greenBorder : C.border}`,padding:"2px 7px",borderRadius:10}}>
+                    {isWatched ? "✓ Watched" : "Mark watched"}
+                  </span>
+                </button>
+              );
+            })}
+          </Card>
+        )}
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>👀 How to Watch Hockey Like a Player</Label>
+          {content.watchTips.map((t, i) => (
+            <div key={i} style={{display:"flex",gap:".65rem",padding:".55rem 0",borderBottom:i<content.watchTips.length-1?`1px solid ${C.border}`:"none"}}>
+              <div style={{color:C.gold,fontWeight:700,fontSize:13,flexShrink:0}}>{i+1}.</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>{t}</div>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>🎯 Train Your Weak Spots</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>
+            {weakCats.length > 0
+              ? `Your last quiz flagged ${weakCats.map(w => w.cat).slice(0,2).join(" and ")} as weak. Drill these between sessions — you'll see the bump on your next quiz.`
+              : weakSkills.length > 0
+              ? `You rated yourself lowest on ${weakSkills[0].cat}. Pick a drill below and work it into every practice this week.`
+              : `Take a quiz to find your weakest categories — then come back and drill them here.`}
+          </div>
+          {(() => {
+            const weakCatSet = new Set(weakCats.map(w => w.cat.toLowerCase()));
+            const ranked = [...content.focusAreas].sort((a, b) => {
+              const aHit = weakCatSet.has((a.skill || "").toLowerCase()) ? 0 : 1;
+              const bHit = weakCatSet.has((b.skill || "").toLowerCase()) ? 0 : 1;
+              return aHit - bHit;
+            });
+            return ranked.map((f, i) => {
+              const isWeakHit = weakCatSet.has((f.skill || "").toLowerCase());
+              return (
+                <div key={i} style={{padding:".7rem .85rem",background:isWeakHit?"rgba(201,162,75,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${isWeakHit?C.goldBorder:C.border}`,marginBottom:".45rem"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
+                    <div style={{fontSize:13,fontWeight:700,color:C.white}}>{f.skill}</div>
+                    {isWeakHit && <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:800,flexShrink:0}}>Weak spot</div>}
+                  </div>
+                  <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{f.drill}</div>
+                </div>
+              );
+            });
+          })()}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
+            <Label style={{marginBottom:0}}>📋 Homework{homeworkDone.size > 0 ? ` · ${homeworkDone.size}/${homeworkItems.length} done` : ""}</Label>
+            {homeworkDone.size > 0 && (
+              <button onClick={resetHomework} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,textDecoration:"underline",padding:0}}>Reset for next week</button>
+            )}
+          </div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Three small commitments this week. Check them off as you finish.</div>
+          {homeworkItems.map(item => {
+            const isDone = homeworkDone.has(item.key);
+            return (
+              <button key={item.key} onClick={() => toggleHomework(item.key)}
+                style={{width:"100%",textAlign:"left",padding:".7rem .85rem",background:isDone ? "rgba(34,197,94,.07)" : C.bgElevated,borderRadius:8,border:`1px solid ${isDone ? C.greenBorder : C.border}`,marginBottom:".45rem",fontSize:13,color:C.dim,lineHeight:1.5,cursor:"pointer",fontFamily:FONT.body,display:"flex",alignItems:"flex-start",gap:".65rem"}}>
+                <span style={{flexShrink:0,width:20,height:20,borderRadius:5,border:`1.5px solid ${isDone ? C.green : C.border}`,background:isDone ? C.green : "transparent",display:"flex",alignItems:"center",justifyContent:"center",color:C.bg,fontSize:12,fontWeight:800,marginTop:1}}>
+                  {isDone ? "✓" : ""}
+                </span>
+                <span style={{flex:1,minWidth:0,textDecoration:isDone ? "line-through" : "none",color:isDone ? C.dimmer : C.dim}}>{item.text}</span>
+              </button>
+            );
+          })}
+        </Card>
+
+        <div style={{margin:"-1rem -1.25rem 1rem"}}>
+          <HockeyInsightWidget />
+        </div>
+
+        <Card style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
+          <div style={{fontSize:13,color:C.purple,fontWeight:700,marginBottom:".4rem"}}>💡 Study Tip</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>The best players watch hockey differently than fans. They watch the player <strong style={{color:C.white}}>without</strong> the puck — because that's where the game really happens. Try it this week.</div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// ROOT APP
+// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// AUTH SCREEN — login / signup
+// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// DEMO MODE — coach preview only. Player demo was removed; players sign up.
+// question.cat → coach tilt code (see COACH_PERSONAS.tilts). null → head-coach fallback.
+
+// Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
+function skillDomain(skillId) {
+  const m = skillId?.match(/^u\d+([a-z]+)\d+$/);
+  return m ? m[1] : null;
+}
+
+function bumpRating(value, scale) {
+  if (!value || !scale?.length) return value;
+  const idx = scale.findIndex(o => o.value === value);
+  if (idx < 0 || idx >= scale.length - 1) return value;
+  return scale[idx + 1].value;
+}
+
+function tiltedRatings(baseline, persona, scale) {
+  if (!persona.tilts?.length) return {...baseline};
+  const out = {...baseline};
+  for (const skillId of Object.keys(baseline)) {
+    const d = skillDomain(skillId);
+    if (d && persona.tilts.includes(d)) out[skillId] = bumpRating(baseline[skillId], scale);
+  }
+  return out;
+}
+
+function aggregateCoachRatings(coaches, scale) {
+  if (!coaches?.length || !scale?.length) return {};
+  const skillIds = new Set();
+  coaches.forEach(c => Object.keys(c.ratings || {}).forEach(id => skillIds.add(id)));
+  const agg = {};
+  for (const id of skillIds) {
+    const indices = coaches
+      .map(c => c.ratings?.[id])
+      .filter(Boolean)
+      .map(v => scale.findIndex(o => o.value === v))
+      .filter(i => i >= 0);
+    if (!indices.length) continue;
+    const avg = Math.round(indices.reduce((a,b) => a+b, 0) / indices.length);
+    agg[id] = scale[Math.min(Math.max(avg, 0), scale.length - 1)].value;
+  }
+  return agg;
+}
+
+
+// ─────────────────────────────────────────────────────────
+// RINK BACKGROUND — NHL rink geometry.
+// dark=true → night-rink for splash page (dark ice, glowing lines)
+// dark=false → pale rink for in-app diagrams
+// ─────────────────────────────────────────────────────────
+function RinkBackground({ dark = false }) {
+  const ICE    = dark ? "#03090f" : "#d7e8f5";
+  const LINE_R = dark ? "rgba(220,60,60,0.7)"  : "#b8232e";
+  const LINE_B = dark ? "rgba(50,110,230,0.75)" : "#0c5ab5";
+  const OUTLINE= dark ? "rgba(255,255,255,0.07)" : "#1c1c1c";
+  const CREASE = dark ? "rgba(50,110,230,0.18)"  : "#5aa8e6";
+  const GLOW_R = dark ? "rgba(220,60,60,0.18)"   : "none";
+  const GLOW_B = dark ? "rgba(50,110,230,0.15)"  : "none";
+  return (
+    <svg
+      viewBox="0 0 200 85"
+      preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute",inset:0,width:"100%",height:"100%"}}
+      aria-hidden="true"
+    >
+      <defs>
+        {dark && <filter id="glow-r"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>}
+        {dark && <filter id="glow-b"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>}
+      </defs>
+
+      {/* Ice surface */}
+      <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill={ICE} />
+      {dark && <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill="url(#ice-sheen)" />}
+      {/* Rink outline */}
+      <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill="none" stroke={OUTLINE} strokeWidth="0.6" />
+
+      {/* Goal lines */}
+      <line x1="11" y1="5" x2="11" y2="80" stroke={LINE_R} strokeWidth={dark?"0.5":"0.35"} filter={dark?"url(#glow-r)":undefined}/>
+      <line x1="189" y1="5" x2="189" y2="80" stroke={LINE_R} strokeWidth={dark?"0.5":"0.35"} filter={dark?"url(#glow-r)":undefined}/>
+
+      {/* Blue lines */}
+      <line x1="75" y1="0.5" x2="75" y2="84.5" stroke={LINE_B} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-b)":undefined}/>
+      <line x1="125" y1="0.5" x2="125" y2="84.5" stroke={LINE_B} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-b)":undefined}/>
+
+      {/* Center red line */}
+      <line x1="100" y1="0.5" x2="100" y2="84.5" stroke={LINE_R} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-r)":undefined}/>
+
+      {/* Center faceoff circle + dot */}
+      <circle cx="100" cy="42.5" r="15" fill={dark?GLOW_B:"none"} stroke={LINE_B} strokeWidth="0.5" filter={dark?"url(#glow-b)":undefined}/>
+      <circle cx="100" cy="42.5" r="0.8" fill={LINE_B} />
+
+      {/* Referee crease */}
+      <path d="M 90 85 A 10 10 0 0 1 110 85" fill="none" stroke={LINE_R} strokeWidth="0.3" />
+
+      {/* Neutral zone faceoff dots */}
+      <circle cx="80" cy="20.5" r="0.9" fill={LINE_R} />
+      <circle cx="80" cy="64.5" r="0.9" fill={LINE_R} />
+      <circle cx="120" cy="20.5" r="0.9" fill={LINE_R} />
+      <circle cx="120" cy="64.5" r="0.9" fill={LINE_R} />
+
+      {/* End-zone faceoff circles */}
+      {[
+        {cx:31,  cy:20.5},
+        {cx:31,  cy:64.5},
+        {cx:169, cy:20.5},
+        {cx:169, cy:64.5},
+      ].map((c, i) => (
+        <g key={i}>
+          <circle cx={c.cx} cy={c.cy} r="15" fill={dark?GLOW_R:"none"} stroke={LINE_R} strokeWidth="0.5" filter={dark?"url(#glow-r)":undefined}/>
+          <circle cx={c.cx} cy={c.cy} r="0.9" fill={LINE_R} />
+          <path d={`M ${c.cx-2} ${c.cy-3.8} L ${c.cx-2} ${c.cy-5.8} L ${c.cx-0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx+2} ${c.cy-3.8} L ${c.cx+2} ${c.cy-5.8} L ${c.cx+0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx-2} ${c.cy+3.8} L ${c.cx-2} ${c.cy+5.8} L ${c.cx-0.3} ${c.cy+5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx+2} ${c.cy+3.8} L ${c.cx+2} ${c.cy+5.8} L ${c.cx+0.3} ${c.cy+5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+        </g>
+      ))}
+
+      {/* Goal creases */}
+      <path d="M 11 37.5 A 6 6 0 0 1 11 47.5 Z" fill={CREASE} stroke={LINE_R} strokeWidth="0.3" />
+      <path d="M 189 37.5 A 6 6 0 0 0 189 47.5 Z" fill={CREASE} stroke={LINE_R} strokeWidth="0.3" />
+
+      {/* Goal nets */}
+      <rect x="9" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
+      <rect x="189" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
+
+      {/* Goalie trapezoid */}
+      <path d="M 11 34 L 0.5 28 M 11 51 L 0.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
+      <path d="M 189 34 L 199.5 28 M 189 51 L 199.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
+    </svg>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// AUTH SCREEN — login / signup
+// ─────────────────────────────────────────────────────────
+// Visual-only sample radar for the landing showcase. Hardcoded scores mirror
+// what a typical U11 Forward looks like after a handful of sessions — six
+// competencies plotted on the same polar layout the real GameSenseReportScreen
+// uses. Computes once at module load from the U11 Forward preview player so
+// the landing teaser matches what a visitor actually sees inside the sample.
+// Preview quiz history only populates positioning/decision_making/awareness;
+// synthesize plausible values for tempo/leadership so the chart renders a
+// full shape rather than a degenerate triangle.
+const PREVIEW_RADAR = (() => {
+  const { player } = buildU11ForwardPreview();
+  const real = calcCompetencyScores(player.quizHistory);
+  const synthesized = { tempo_control: 66, leadership: 58 };
+  const order = ["positioning","decision_making","awareness","tempo_control","leadership"];
+  const comps = order.map(k => ({
+    key: k,
+    label: COMPETENCIES[k].name,
+    score: real[k] > 0 ? real[k] : synthesized[k],
+  }));
+  const gs = calcGameSenseScore(Object.fromEntries(comps.map(c => [c.key, c.score])));
+  return { comps, gs };
+})();
+
+function LandingRadarCard({ onPreview }) {
+  const { comps, gs } = PREVIEW_RADAR;
+  // Widened viewBox + centered so the longer labels ("Decision-Making",
+  // "Awareness") don't clip on narrow landing cards.
+  const cx = 200, cy = 150, radius = 84;
+  const n = comps.length;
+  const pts = comps.map((c, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const r = (c.score / 100) * radius;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), label: c.label, a };
+  });
+  const axisPts = comps.map((_, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a), a };
+  });
+  const polyPts = pts.map(p => `${p.x},${p.y}`).join(" ");
+
+  const Inner = (
+    <>
+      <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample · U11 Forward</div>
+        <div style={{flex:1}}/>
+        <div style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</div>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+        <svg width="230" height="200" viewBox="0 0 400 300" style={{flexShrink:0,maxWidth:"58%"}}>
+          {[25,50,75,100].map(pct => {
+            const r = (pct/100) * radius;
+            const ring = comps.map((_, i) => {
+              const a = (Math.PI*2*i)/n - Math.PI/2;
+              return `${cx + r*Math.cos(a)},${cy + r*Math.sin(a)}`;
+            }).join(" ");
+            return <polygon key={pct} points={ring} fill="none" stroke={C.border} strokeWidth="1" opacity={pct===100?0.6:0.25}/>;
+          })}
+          {axisPts.map((p, i) => (
+            <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="1" opacity="0.4"/>
+          ))}
+          {comps.map((c, i) => {
+            const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+            const lx = cx + (radius + 24) * Math.cos(a);
+            const ly = cy + (radius + 24) * Math.sin(a);
+            const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
+            // Wrap long two-word labels onto two lines so they don't clip.
+            const words = c.label.split(/[-\s]/).filter(Boolean);
+            const twoLine = c.label.length > 9 && words.length >= 2;
+            return (
+              <text key={`l${i}`} x={lx.toFixed(1)} y={ly.toFixed(1)}
+                    fontSize="10" fontWeight="700" fill={C.dim}
+                    textAnchor={anchor} dominantBaseline="middle"
+                    fontFamily="'Inter',sans-serif">
+                {twoLine ? (
+                  <>
+                    <tspan x={lx.toFixed(1)} dy="-0.45em">{words[0]}</tspan>
+                    <tspan x={lx.toFixed(1)} dy="1.1em">{words.slice(1).join(" ")}</tspan>
+                  </>
+                ) : c.label}
+              </text>
+            );
+          })}
+          <polygon points={polyPts} fill={C.gold} fillOpacity="0.22" stroke={C.gold} strokeWidth="2"/>
+          {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={C.gold}/>)}
+        </svg>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.white,lineHeight:1.1,marginBottom:".15rem"}}>Alex <span style={{color:C.dimmer,fontWeight:600,fontSize:"0.85rem"}}>· U11 Forward</span></div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white,lineHeight:1.05,marginBottom:".2rem"}}>GS {gs}</div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem"}}>Game Sense Score · 8 sessions</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:onPreview ? ".55rem" : 0}}>
+            Six competencies. Every answer moves a number.
+          </div>
+          {onPreview && (
+            <div style={{fontSize:12,color:C.gold,fontWeight:700,letterSpacing:".01em"}}>
+              Try a demo as a U11 Forward →
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+
+  if (!onPreview) {
+    return (
+      <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+        {Inner}
+      </div>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onPreview}
+      style={{display:"block",width:"100%",textAlign:"left",background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem",cursor:"pointer",fontFamily:FONT.body,color:C.white,transition:"transform .15s ease, border-color .15s ease, box-shadow .15s ease"}}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${C.gold}22`; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+    >
+      {Inner}
+    </button>
+  );
+}
+
+// Landing insights preview — shows 3 rotating insights with a locked 4th
+// slot ("Unlock more insights — free account"). Insights come from the
+// same hockeyInsights data module the in-app widget uses. Dynamic import
+// keeps the ~60KB insights chunk off the critical path.
+function LandingInsightsCard() {
+  const [insights, setInsights] = useState(null);
+  useEffect(() => {
+    import("./data/hockeyInsights.js").then(m => {
+      const list = m.HOCKEY_INSIGHTS || [];
+      // Pick 3 random insights so each visit feels fresh.
+      const shuffled = [...list].sort(() => Math.random() - 0.5);
+      setInsights(shuffled.slice(0, 3));
+    });
+  }, []);
+  if (!insights) return null;
+  return (
+    <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".65rem"}}>Pro Hockey Intel · 3 free samples</div>
+      {insights.map((ins, i) => (
+        <div key={i} style={{display:"flex",alignItems:"baseline",gap:".6rem",padding:".55rem 0",borderBottom:i < insights.length-1 ? `1px solid ${C.border}` : "none"}}>
+          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.05rem",color:C.gold,flexShrink:0,minWidth:54}}>{ins.stat}</span>
+          <span style={{fontSize:12.5,color:C.white,lineHeight:1.45,flex:1}}>{ins.headline}</span>
+        </div>
+      ))}
+      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(201,162,75,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
+        <span style={{fontSize:14}}>🔒</span>
+        <span style={{fontSize:12,color:C.dim,flex:1,lineHeight:1.45}}>Unlock more insights — free account.</span>
+      </div>
+    </div>
+  );
+}
+
+// Rendered when Supabase fires PASSWORD_RECOVERY (user clicked a reset email).
+// Without this screen the recovery link silently logs the user in with the
+// OLD password unchanged — a real-but-easy-to-miss auth bug.
+function PasswordResetScreen({ onDone }) {
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function submit() {
+    setErr("");
+    if (!pw1 || pw1.length < 6) { setErr("Password must be at least 6 characters"); return; }
+    if (pw1 !== pw2) { setErr("Passwords don't match"); return; }
+    setLoading(true);
+    try {
+      await SB.updatePassword(pw1);
+      setDone(true);
+      setTimeout(() => onDone?.(), 1500);
+    } catch (e) {
+      setErr(e.message || "Couldn't update password");
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",padding:"1.5rem"}}>
+      <div style={{maxWidth:420,width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.75rem",boxShadow:"0 24px 60px rgba(0,0,0,.45)"}}>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",marginBottom:".4rem"}}>Set a new password</div>
+        <div style={{fontSize:13,color:C.dim,marginBottom:"1.25rem",lineHeight:1.5}}>Enter a new password for your RinkReads account. You'll stay signed in.</div>
+        {!done ? (
+          <>
+            <div style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>New password</div>
+              <input type="password" value={pw1} onChange={e=>setPw1(e.target.value)} placeholder="6+ chars" autoComplete="new-password" autoFocus
+                onKeyDown={e=>{ if (e.key === "Enter") submit(); }}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            <div style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Confirm</div>
+              <input type="password" value={pw2} onChange={e=>setPw2(e.target.value)} placeholder="Re-enter" autoComplete="new-password"
+                onKeyDown={e=>{ if (e.key === "Enter") submit(); }}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            {err && (
+              <div style={{fontSize:13,color:C.red,background:C.redDim,border:`1px solid ${C.redBorder}`,borderRadius:8,padding:".6rem .8rem",marginBottom:".75rem"}}>{err}</div>
+            )}
+            <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
+              {loading ? "…" : "Update password →"}
+            </button>
+            {err && (
+              <div style={{textAlign:"center",marginTop:".75rem"}}>
+                <button onClick={async () => {
+                  // Race signOut against a 2s timeout so a hung auth call can't
+                  // trap us here. Then hard-reload to root to fully reset
+                  // session state — the recovery flag, hash fragment, and any
+                  // in-flight auth requests all get cleaned up.
+                  try { await Promise.race([SB.signOut(), new Promise(r => setTimeout(r, 2000))]); } catch {}
+                  if (typeof window !== "undefined") window.location.href = "/";
+                }}
+                  style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+                  ← Back to sign in
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{fontSize:14,color:C.green,background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,borderRadius:8,padding:".85rem 1rem",textAlign:"center"}}>
+            ✓ Password updated. Taking you home…
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+// Recovery for an authenticated user with no `profiles` row. Collects only the
+// two fields the table actually requires (role, name) and writes it, so the
+// account stops dead-ending on the auth screen. Sign out is always offered so
+// nobody is trapped here either.
+function FinishSetupScreen({ email, onDone, onSignOut }) {
+  const [role, setRole] = useState("player");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function save() {
+    if (!name.trim()) { setErr("Enter a name so we know what to call you."); return; }
+    setBusy(true); setErr("");
+    try {
+      const { data } = await supabase.auth.getSession();
+      const uid = data?.session?.user?.id;
+      if (!uid) throw new Error("Your session expired. Sign in again.");
+      const row = await SB.ensureOwnProfile({ id: uid, role, name: name.trim() });
+      await onDone(row);
+    } catch (e) {
+      setErr(e.message || "Could not finish setting up your account.");
+    }
+    setBusy(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem"}}>
+      <div style={{width:"100%",maxWidth:420}}>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",marginBottom:".4rem"}}>Finish setting up.</div>
+        <div style={{fontSize:13,color:C.dimmer,marginBottom:"1.25rem",lineHeight:1.6}}>
+          You are signed in as {email || "this account"}, but your profile was never finished. Two quick questions and you are in.
+        </div>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".5rem"}}>I AM A…</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem",marginBottom:"1rem"}}>
+          {[["player","🏒 Player / Parent"],["coach","🎯 Coach"]].map(([v,label]) => (
+            <button key={v} onClick={() => setRole(v)}
+              style={{padding:"1rem .75rem",borderRadius:12,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13,
+                background:role===v?"rgba(234,88,12,.15)":C.bgElevated,
+                border:`2px solid ${role===v?C.orange:C.border}`,color:role===v?C.orange:C.white}}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".4rem"}}>NAME</div>
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
+          style={{width:"100%",padding:".85rem",borderRadius:12,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:15,marginBottom:".85rem"}}/>
+        {err && <div style={{color:C.red,fontSize:12,marginBottom:".75rem"}}>{err}</div>}
+        <button onClick={save} disabled={busy}
+          style={{width:"100%",padding:".95rem",borderRadius:12,border:"none",background:C.gradientPrimary,color:C.bg,fontFamily:FONT.body,fontWeight:800,fontSize:15,cursor:busy?"default":"pointer",opacity:busy?.6:1}}>
+          {busy ? "Saving…" : "Finish setup →"}
+        </button>
+        <button onClick={onSignOut}
+          style={{width:"100%",marginTop:".75rem",background:"none",border:"none",color:C.dimmer,fontSize:12,cursor:"pointer",fontFamily:FONT.body,textDecoration:"underline"}}>
+          Sign out and use a different account
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
+  const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState(prefill?.name || "");
+  const [role, setRole] = useState(prefill?.role || "player");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+  const [resetSent, setResetSent] = useState(false);
+  const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
+  // Show the dev-bypass panel whenever running `npm run dev` — the LS flag
+  // is still honoured in production builds so it stays invisible to real users.
+  const devBypass = isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV);
+
+  // Hidden tap-pattern unlock — 5 taps on the top-left invisible hotspot
+  // within 3 seconds enables dev bypass and reloads. Mirrors the URL-param
+  // unlock at App-level for owners reaching from a fresh browser without
+  // typing query params. Counter resets if 1.5s pass between taps.
+  const tapCountRef = useRef(0);
+  const tapResetTimerRef = useRef(null);
+  const tapWindowEndRef = useRef(0);
+  const TAPS_REQUIRED = 5;
+  const TAP_WINDOW_MS = 3000;
+  const TAP_GAP_MS    = 1500;
+  const handleHotspotTap = () => {
+    if (devBypass) return;
+    const now = Date.now();
+    if (now > tapWindowEndRef.current) {
+      tapCountRef.current = 1;
+      tapWindowEndRef.current = now + TAP_WINDOW_MS;
+    } else {
+      tapCountRef.current += 1;
+    }
+    clearTimeout(tapResetTimerRef.current);
+    tapResetTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, TAP_GAP_MS);
+    if (tapCountRef.current >= TAPS_REQUIRED) {
+      try {
+        enableDevBypass();
+        tapCountRef.current = 0;
+        window.location.reload();
+      } catch {}
+    }
+  };
+  const [devRole, setDevRole] = useState("player");
+  const [devLevel, setDevLevel] = useState("U11 / Atom");
+  const [devPosition, setDevPosition] = useState("Forward");
+  const [devTier, setDevTier] = useState(() => {
+    try { return (window.localStorage.getItem("rinkreads_tier_override") || "").toUpperCase() || null; }
+    catch { return null; }
+  });
+
+  useEffect(() => {
+    let alive = true;
+    loadQB().then(qb => {
+      if (!alive) return;
+      const ageGroupCount = Object.keys(qb).length;
+      const total = Object.values(qb).reduce((n, arr) => n + arr.length, 0);
+      const questionCount = Math.floor(total / 10) * 10;
+      setQbStats({ questionCount, ageGroupCount });
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  async function submit() {
+    setErr("");
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
+        if (password.length < 6) throw new Error("Password must be at least 6 characters");
+        await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
+        lsSetStr("rinkreads_has_signed_in_before", "1");
+        logSignupComplete({ role, level: prefill?.level || null });
+      } else if (mode === "forgot") {
+        if (!email.trim()) throw new Error("Enter your email to reset your password");
+        if (!supabase) throw new Error("Password reset unavailable — Supabase not configured");
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        });
+        if (error) throw error;
+        setResetSent(true);
+        setLoading(false);
+        return;
+      } else {
+        if (!email.trim() || !password) throw new Error("Email and password required");
+        await SB.signIn({ email: email.trim(), password });
+        lsSetStr("rinkreads_has_signed_in_before", "1");
+      }
+      onAuthenticated();
+    } catch (e) {
+      setErr(e.message || "Something went wrong");
+    }
+    setLoading(false);
+  }
+
+  const headline = mode === "signup" ? "Get started."
+    : mode === "forgot" ? "Reset password"
+    : "Sign in.";
+  const subhead = mode === "signup" ? "Create an account to start tracking your progress."
+    : mode === "forgot" ? "Enter your email — we'll send you a reset link."
+    : "Enter your credentials to see your development report.";
+
+  return (
+    <div style={{minHeight:"100vh",position:"relative",background:C.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
+
+      {/* Hockey-player hero photo as landing background — heavily dimmed so
+          copy reads crisply; the player is atmosphere, not foreground. */}
+      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.22,filter:"saturate(0.7) contrast(0.9)",pointerEvents:"none"}}/>
+
+      {/* Hidden 60×60 tap hotspot in the top-left corner — 5 taps within
+          3s unlocks dev bypass and reloads. Invisible to normal users; the
+          owner uses it to reach the dev panel from any browser without
+          typing the `?devbypass=` URL or opening DevTools. Sits above the
+          background overlay so taps register; below the auth card content. */}
+      <button type="button" aria-hidden="true" tabIndex={-1}
+        onClick={handleHotspotTap}
+        style={{position:"absolute",top:0,left:0,width:60,height:60,background:"transparent",border:"none",cursor:"default",padding:0,zIndex:6,outline:"none"}}/>
+
+      {/* Layered overlays — heavier navy fade + warm Oilers-orange radial glow */}
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.78) 0%,rgba(4,30,66,0.6) 45%,rgba(4,30,66,0.94) 100%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,162,75,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
+
+      {/* Subtle top-right door — flips between modes and scrolls to the
+          auth card so the user actually sees the form change. Hidden on
+          forgot-password mode where neither label fits. */}
+      {mode !== "forgot" && (
+        <button type="button"
+           onClick={() => {
+             setMode(mode === "login" ? "signup" : "login");
+             setTimeout(() => {
+               try { document.getElementById("auth")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+             }, 30);
+           }}
+           style={{position:"absolute",top:16,right:18,fontSize:12,color:"rgba(248,250,252,.6)",textDecoration:"underline dotted",fontFamily:FONT.body,cursor:"pointer",zIndex:5,background:"none",border:"none",padding:0}}>
+          {mode === "login" ? "New here? Create account" : "Already a member? Sign in"}
+        </button>
+      )}
+
+      <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
+
+        {/* Dev bypass panel — gated by rinkreads_dev_bypass LS flag; invisible
+            to real users. Jump straight into any state without email/password. */}
+        {(import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" && devBypass) && (
+          <div style={{background:"rgba(147,51,234,0.12)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:12,padding:"0.85rem 1rem",marginBottom:"1.25rem",color:C.white,fontFamily:FONT.body}}>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
+              <span style={{fontSize:14}}>🧪</span>
+              <span style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700}}>Dev bypass</span>
+              <span style={{flex:1}}/>
+              <button onClick={() => { try { window.localStorage.removeItem("rinkreads_dev_bypass"); window.location.reload(); } catch {} }}
+                style={{background:"none",border:"none",color:"rgba(196,181,253,.6)",cursor:"pointer",fontSize:11,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>disable</button>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+              {["player","coach"].map(r => (
+                <button key={r} onClick={() => setDevRole(r)}
+                  style={{background:devRole===r?"rgba(168,85,247,0.25)":"rgba(255,255,255,0.04)",border:`1px solid ${devRole===r?"rgba(168,85,247,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:".45rem",cursor:"pointer",color:devRole===r?"#e9d5ff":"rgba(248,250,252,.7)",fontFamily:FONT.body,fontSize:12,fontWeight:devRole===r?700:500,textTransform:"capitalize"}}>{r}</button>
+              ))}
+            </div>
+            {devRole === "player" && (
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+                <select value={devLevel} onChange={e=>setDevLevel(e.target.value)}
+                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:".45rem .55rem",color:C.white,fontFamily:FONT.body,fontSize:12,outline:"none"}}>
+                  {LEVELS.map(l => <option key={l} value={l} style={{background:"#1a1a2e",color:C.white}}>{l}</option>)}
+                </select>
+                <select value={devPosition} onChange={e=>setDevPosition(e.target.value)}
+                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:".45rem .55rem",color:C.white,fontFamily:FONT.body,fontSize:12,outline:"none"}}>
+                  {["Forward","Defense","Goalie","Multiple"].map(p => <option key={p} value={p} style={{background:"#1a1a2e",color:C.white}}>{p}</option>)}
+                </select>
+              </div>
+            )}
+            {/* Tier picker — writes rinkreads_tier_override so resolveTier returns the chosen tier
+                for the next dev session. Tap again to clear. */}
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700,marginBottom:".3rem",marginTop:".15rem"}}>View-as tier</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".35rem",marginBottom:".55rem"}}>
+              {["FREE","PRO","TEAM"].map(t => {
+                const active = devTier === t;
+                return (
+                  <button key={t} onClick={() => {
+                    try {
+                      if (active) { window.localStorage.removeItem("rinkreads_tier_override"); setDevTier(null); }
+                      else { window.localStorage.setItem("rinkreads_tier_override", t); setDevTier(t); }
+                    } catch {}
+                  }}
+                    style={{background:active?"rgba(168,85,247,0.25)":"rgba(255,255,255,0.04)",border:`1px solid ${active?"rgba(168,85,247,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:".4rem",cursor:"pointer",color:active?"#e9d5ff":"rgba(248,250,252,.7)",fontFamily:FONT.body,fontSize:11,fontWeight:active?700:500}}>
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+            <button onClick={() => onDevEnter && onDevEnter(devRole === "coach" ? {role:"coach"} : {role:"player", level:devLevel, position:devPosition, name:"Dev User"})}
+              style={{width:"100%",background:"linear-gradient(135deg,#a855f7,#7c3aed)",color:"#fff",border:"none",borderRadius:10,padding:".6rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13}}>
+              Enter as dev →
+            </button>
+            {/* Owner review tools — jump straight to the board grid / triage deck
+                without logging in (the screens' auth gate honours dev bypass). */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginTop:".4rem"}}>
+              <a href="#browse" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🗂 Browse grid</a>
+              <a href="#triage" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🃏 Triage deck</a>
+            </div>
+            <div style={{fontSize:10,color:"rgba(196,181,253,.55)",marginTop:".5rem",lineHeight:1.5}}>
+              Console: <code style={{color:"#e9d5ff"}}>window.__dev</code> — <code style={{color:"#e9d5ff"}}>setTier</code>, <code style={{color:"#e9d5ff"}}>markFirstSixDone</code>, <code style={{color:"#e9d5ff"}}>reset</code>, <code style={{color:"#e9d5ff"}}>exitBypass</code>
+            </div>
+          </div>
+        )}
+
+        {/* Hero brand block */}
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,162,75,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
+            <RinkReadsLogo size={26}/>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>RinkReads</span>
+          </div>
+          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.9rem,7.5vw,2.6rem)",lineHeight:1.05,margin:"0 0 .55rem",letterSpacing:"-.01em"}}>
+            Rec or AAA,<br/><span style={{color:C.gold}}>every kid plays smarter when they learn to read the game.</span>
+          </h1>
+          <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
+            Game sense, systems reads, and decision-making for U7 to U18.
+          </p>
+          {/* Stat chips */}
+          <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
+            {[
+              {n: qbStats.questionCount != null ? `${qbStats.questionCount}+` : "—", l:"Questions"},
+              {n: qbStats.ageGroupCount != null ? String(qbStats.ageGroupCount) : "—", l:"Age groups"},
+              {n:"6",l:"Question types"},
+            ].map((s,i) => (
+              <div key={i} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,padding:".3rem .85rem",display:"flex",alignItems:"baseline",gap:".3rem"}}>
+                <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:15,color:C.gold}}>{s.n}</span>
+                <span style={{fontSize:11,color:"rgba(248,250,252,.55)"}}>{ s.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Role-based entry points — four small chips so each audience
+            (parents, players, coaches, associations) has a guide without
+            overwhelming the landing hero. */}
+        <div style={{display:"flex",flexWrap:"wrap",gap:".35rem",justifyContent:"center",marginBottom:"1rem"}}>
+          {[
+            { hash:"#parents",      icon:"👪", label:"Parents — start here" },
+            { hash:"#players",      icon:"🏒", label:"Players — start here" },
+            { hash:"#coaches",      icon:"🎯", label:"Coaches — start here" },
+            { hash:"#associations", icon:"🏟️", label:"Associations — start here" },
+            { hash:"#pricing",      icon:"💳", label:"Plans & Pricing" },
+          ].map(x => (
+            <a key={x.hash} href={x.hash}
+               style={{display:"inline-flex",alignItems:"center",gap:".3rem",
+                       background:"rgba(201,162,75,0.06)",
+                       border:`1px solid rgba(201,162,75,0.25)`,
+                       borderRadius:999,padding:".3rem .7rem",
+                       color:"rgba(201,162,75,.85)",fontSize:11,fontFamily:FONT.body,
+                       textDecoration:"none",fontWeight:600,letterSpacing:".01em"}}>
+              <span style={{fontSize:12}}>{x.icon}</span>
+              <span>{x.label}</span>
+            </a>
+          ))}
+        </div>
+
+        {/* Sample Game Sense radar — visual-only preview of what a player's
+            profile looks like. No data persists pre-signup. */}
+        <LandingRadarCard onPreview={onPreview} />
+
+      {/* Auth card */}
+      <div id="auth" style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)",scrollMarginTop:"1rem"}}>
+
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.6rem,5vw,2.1rem)",margin:"0 0 .35rem",lineHeight:1.1}}>
+          {headline}
+        </h2>
+        <p style={{fontSize:13,color:"rgba(248,250,252,.5)",marginBottom:"1.5rem",lineHeight:1.55}}>{subhead}</p>
+
+        {mode === "signup" && (
+          <>
+            <div style={{marginBottom:"1rem"}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a…</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+                {[{v:"player",l:"Parent/Guardian (on behalf of player)",i:"👪"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
+                  <button key={o.v} onClick={()=>setRole(o.v)} style={{background:role===o.v?C.goldDim:C.bgCard,border:`1px solid ${role===o.v?C.gold:C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:role===o.v?C.gold:C.dim,fontFamily:FONT.body,fontWeight:role===o.v?700:500,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+                    <span style={{fontSize:16}}>{o.i}</span>{o.l}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".6rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Name</div>
+              <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player's name"}
+                style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+          </>
+        )}
+
+        {/* Email + password side-by-side on wider screens, stacked on narrow */}
+        {mode !== "forgot" ? (
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".65rem"}}>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
+              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder="you@example.com" autoComplete="email"
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Password</div>
+              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+          </div>
+        ) : (
+          <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+            <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
+            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+              style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+          </div>
+        )}
+
+        {err && (
+          <div style={{fontSize:13,color:C.red,background:C.redDim,border:`1px solid ${C.redBorder}`,borderRadius:8,padding:".6rem .8rem",marginBottom:".75rem"}}>
+            {err}
+          </div>
+        )}
+        {resetSent && (
+          <div style={{fontSize:13,color:C.green,background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,borderRadius:8,padding:".65rem .8rem",marginBottom:".75rem",lineHeight:1.5}}>
+            ✓ Check your email for a reset link. It may take a minute to arrive.
+          </div>
+        )}
+
+        {/* Big primary button — bigger than the email/password fields */}
+        <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1.1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:17,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          {loading ? (mode === "signup" ? "Creating account…" : mode === "forgot" ? "Sending…" : "Signing in…") : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
+        </button>
+
+        {/* Forgot password link — visible only on login mode */}
+        {mode === "login" && (
+          <div style={{textAlign:"center",marginTop:".75rem"}}>
+            <button onClick={()=>{setMode("forgot");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              Forgot password?
+            </button>
+          </div>
+        )}
+
+        {/* Inline mode toggle — primary path for users who land on the
+            login form but actually need to create an account. */}
+        {mode !== "forgot" && (
+          <div style={{textAlign:"center",marginTop:"1rem",paddingTop:"1rem",borderTop:"1px solid rgba(255,255,255,0.06)",fontSize:13,color:"rgba(248,250,252,.55)",fontFamily:FONT.body}}>
+            {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+            <button onClick={()=>{setMode(mode === "login" ? "signup" : "login");setErr("");setResetSent(false);}}
+              style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontFamily:FONT.body,padding:0,fontWeight:700,textDecoration:"underline"}}>
+              {mode === "login" ? "Create one →" : "Sign in →"}
+            </button>
+          </div>
+        )}
+        {mode === "forgot" && (
+          <div style={{textAlign:"center",marginTop:".75rem"}}>
+            <button onClick={()=>{setMode("login");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              ← Back to sign in
+            </button>
+          </div>
+        )}
+
+        {/* Coach preview — only coach-side demo remains; players sign up. */}
+        <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See the dashboard</div>
+          <div style={{background:"rgba(201,162,75,0.07)",border:"1px solid rgba(201,162,75,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
+              <div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,162,75,.9)",marginBottom:1}}>Team IQ by concept — where to coach next.</div>
+                <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects · 16 players</div>
+              </div>
+            </div>
+            <div style={{borderTop:"1px solid rgba(201,162,75,0.12)",paddingTop:".5rem",display:"flex",flexDirection:"column",gap:".35rem"}}>
+              {[
+                { label: "Decision-Making", pct: 72, weak: false },
+                { label: "Compete",         pct: 88, weak: false },
+                { label: "D-zone Coverage", pct: 41, weak: true  },
+                { label: "Breakouts",       pct: 64, weak: false },
+                { label: "Net-Front",       pct: 58, weak: false },
+              ].map(row => {
+                const barColor = row.weak ? "#ef4444" : row.pct >= 80 ? "#22c55e" : "rgba(201,162,75,.85)";
+                const labelColor = row.weak ? "#fca5a5" : "rgba(248,250,252,.75)";
+                return (
+                  <div key={row.label} style={{display:"grid",gridTemplateColumns:"92px 1fr 32px",alignItems:"center",gap:".5rem"}}>
+                    <span style={{fontSize:11,color:labelColor,fontWeight:row.weak?700:500,whiteSpace:"nowrap"}}>{row.label}</span>
+                    <div style={{height:6,background:"rgba(255,255,255,0.06)",borderRadius:3,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${row.pct}%`,background:barColor,borderRadius:3,transition:"width .3s"}}/>
+                    </div>
+                    <span style={{fontSize:10,color:barColor,fontWeight:700,textAlign:"right"}}>{row.pct}%</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{marginTop:".65rem",paddingTop:".45rem",borderTop:"1px solid rgba(201,162,75,0.12)",fontSize:10,color:"rgba(248,250,252,.55)",lineHeight:1.45}}>
+              <span style={{color:"#ef4444",fontWeight:800}}>🎯 Tuesday's focus:</span> D-zone coverage — 9 of 16 players below 50%.
+            </div>
+          </div>
+          <button onClick={()=>onDemo("__coach__")} style={{
+            width:"100%", background:C.gold, color:C.bg, border:"none",
+            borderRadius:12, padding:"0.95rem 1rem", cursor:"pointer",
+            fontWeight:800, fontSize:15, fontFamily:FONT.body,
+            letterSpacing:".02em", boxShadow:`0 4px 16px ${C.gold}33`,
+            display:"flex", alignItems:"center", justifyContent:"center", gap:".55rem",
+          }}>
+            <span style={{fontSize:16}}>🎯</span>
+            <span>Open the Coach Dashboard</span>
+            <span>→</span>
+          </button>
+          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved until you create a free account.</div>
+        </div>
+
+        <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1rem"}}>v{VERSION}</div>
+      </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// DEPTH CHART — coach-private lineup tool, rendered inside each team card
+// ─────────────────────────────────────────────────────────
+// NHL-style lineup card. Reads from depthChart storage, renders as forward
+// lines (LW / C / RW), D pairs (LD / RD), and goalies (Starter / Backup).
+// Coach can reassign a slot by tapping a player cell and picking from the
+// roster (bench includes anyone not yet on a line).
+
+const DEMO_COACH_TEAMS = [
+  {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS",role:"Head Coach"},
+  {id:"demo-t2",name:"U13 AAA River City Rush",level:"U13 / Peewee",season:SEASONS[0],code:"RUSH13",role:"Assistant Coach"},
+  {id:"demo-t3",name:"U9 B St. Albert Raiders",level:"U9 / Novice",season:SEASONS[0],code:"RAIDERS",role:"Assistant Coach"},
+];
+// Synthetic quiz history for each demo roster player. Result IDs align with
+// COMPETENCY_MAPPINGS so calcCompetencyScores populates all five competencies
+// (positioning, decision_making, awareness, tempo_control, leadership).
+// Tuned so the team is weakest at decision_making — lets the demo hero card
+// show a credible "Your team is weakest at Decision-Making" headline.
+function _buildCoachDemoSession(daysAgo, posCorrect, decCorrect, awaCorrect, tmpCorrect, ldrCorrect) {
+  const results = [];
+  for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+1}`, ok: i < posCorrect, d: 2, cat: "Hockey Sense" });
+  for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+8}`, ok: i < decCorrect, d: 2, cat: "Game Decision-Making" });
+  results.push({ id: "u11q16", ok: awaCorrect > 0, d: 2, cat: "Hockey Sense" });
+  // Synthetic tempo_control + leadership entries — COMPETENCY_MAPPINGS picks
+  // these up via /^u\d+tempo\d+$/ and /^u\d+lead\d+$/ patterns.
+  for (let i = 0; i < 3; i++) results.push({ id: `u11tempo${i+1}`, ok: i < tmpCorrect, d: 2, cat: "Tempo" });
+  for (let i = 0; i < 3; i++) results.push({ id: `u11lead${i+1}`, ok: i < ldrCorrect, d: 2, cat: "Leadership" });
+  const correct = results.filter(r => r.ok).length;
+  return { results, score: Math.round(correct / results.length * 100), date: new Date(Date.now() - daysAgo * 86400000).toISOString() };
+}
+function _buildCoachDemoHistory(perSession) {
+  // perSession: array of 3 [pos, dec, awa, tmp, ldr] tuples. If tmp/ldr aren't
+  // supplied (legacy 3-tuple rows) they default to plausible mid-range values.
+  return perSession.map((s, i) => _buildCoachDemoSession(
+    [15, 8, 2][i] ?? (20 - i * 4),
+    s[0], s[1], s[2],
+    s[3] ?? 2,                 // tempo default: 2/3 correct
+    s[4] ?? (s[2] >= 1 ? 2 : 1) // leadership loosely follows awareness
+  ));
+}
+// Realistic U11 roster size (15 skaters + 1 goalie). Mix of positions
+// and ability levels; team weakness stays on decision_making so the hero
+// card has something concrete to show.
+const DEMO_COACH_ROSTER = [
+  // Forwards (9)
+  {id:"dr1", name:"Cole Gretzky",      level:"U11 / Atom",position:"Forward",iq:83,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[3,3,1],[3,3,1]])},   // pos 75 dec 75 awa 100
+  {id:"dr3", name:"Marcus Sakic",      level:"U11 / Atom",position:"Forward",iq:65,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[3,1,1],[2,2,0],[3,2,1]])},   // pos 67 dec 42 awa 67
+  {id:"dr6", name:"Ethan MacKinnon",   level:"U11 / Atom",position:"Forward",iq:77,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,3,1],[3,2,0]])},   // pos 75 dec 58 awa 67
+  {id:"dr7", name:"Zoe Crosby",        level:"U11 / Atom",position:"Forward",iq:69,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[2,2,0],[3,1,1]])},   // pos 67 dec 42 awa 67
+  {id:"dr8", name:"Leo Bergeron",      level:"U11 / Atom",position:"Forward",iq:72,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,3,0],[2,2,1],[3,2,1]])},   // pos 67 dec 58 awa 67
+  {id:"dr9", name:"Ava Marchand",      level:"U11 / Atom",position:"Multiple",iq:61,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,0],[2,2,1],[3,2,0]])},   // pos 58 dec 42 awa 33
+  {id:"dr10",name:"Jaxon Draisaitl",   level:"U11 / Atom",position:"Forward",iq:80,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[4,3,1],[3,2,0]])},   // pos 83 dec 67 awa 67
+  {id:"dr11",name:"Riley McDavid",     level:"U11 / Atom",position:"Forward",iq:74,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,2,0],[3,3,1]])},   // pos 75 dec 58 awa 67
+  {id:"dr12",name:"Sam Pettersson",    level:"U11 / Atom",position:"",       iq:56,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,0],[2,1,1],[2,2,0]])},   // pos 50 dec 33 awa 33 · Not sure
+  // Defense (5)
+  {id:"dr2", name:"Nora Howe",         level:"U11 / Atom",position:"Defense",iq:71,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[2,3,1],[3,3,0],[3,2,1]])},   // pos 67 dec 67 awa 67
+  {id:"dr5", name:"Tyler Blackwood",   level:"U11 / Atom",position:"Defense",iq:58,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,1],[2,2,0],[3,2,0]])},   // pos 58 dec 42 awa 33
+  {id:"dr13",name:"Charlie Bouchard",  level:"U11 / Atom",position:"Defense",iq:66,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,0],[2,2,1],[3,2,1]])},   // pos 67 dec 50 awa 67
+  {id:"dr14",name:"Mason Pronger",     level:"U11 / Atom",position:"Defense",iq:79,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,3,1],[4,3,0]])},   // pos 83 dec 67 awa 67
+  {id:"dr15",name:"Quinn Lidstrom",    level:"U11 / Atom",position:"Multiple",iq:63,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,2,1],[2,1,0],[3,2,1]])},   // pos 58 dec 42 awa 67
+  // Goalies (2)
+  {id:"dr4", name:"Maya Hasek",        level:"U11 / Atom",position:"Goalie", iq:78,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[4,3,0],[3,2,1]])},   // pos 83 dec 67 awa 67
+  {id:"dr16",name:"Noah Price",        level:"U11 / Atom",position:"Goalie", iq:68,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,2,0],[3,1,1],[2,2,0]])},   // pos 58 dec 42 awa 33
+];
+
+// Roster row in CoachHome — compact by default, expands to show a per-player
+// 6-competency radar + top/weakest headline. Makes the coach dashboard feel
+// populated with real per-player data, not just a list of names.
+function RosterRow({ player, onRate }) {
+  const [expanded, setExpanded] = useState(false);
+  const scores = useMemo(() => calcCompetencyScores(player?.quizHistory || player?.quiz_history || []), [player]);
+  const compKeys = Object.keys(COMPETENCIES);
+  const real = compKeys.filter(k => (scores[k] || 0) > 0);
+  const avg = real.length ? Math.round(real.reduce((a, k) => a + scores[k], 0) / real.length) : null;
+  const weakest = real.length ? real.reduce((min, k) => scores[k] < scores[min] ? k : min, real[0]) : null;
+  const strongest = real.length ? real.reduce((max, k) => scores[k] > scores[max] ? k : max, real[0]) : null;
+
+  // Extra-training digest: pull latest sessions per player so the coach sees
+  // at a glance how much ice time / off-ice / video this athlete has logged.
+  const trainingLog = useMemo(() => getTrainingLog(player?.id), [player?.id]);
+  const recentSessions = (trainingLog?.sessions || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1));
+  const totalMin = recentSessions.filter(s=>s.unit==="min").reduce((n,s) => n + (Number(s.value) || 0), 0);
+  const TRAINING_ICONS = {
+    // Player-side activity types from widgets.jsx ACTIVITIES
+    power_skating:"⛸️", skills_dev:"🏒", pucks_shot:"🎯",
+    mental_skills:"🧠", dryland:"💪", practice:"🥅", game:"🏆", other:"📝",
+    // Legacy / coach-demo seed types
+    ice_time:"🏒", off_ice:"💪", stick_handling:"🪵", video:"📺",
+  };
+
+  // Mini radar geometry
+  const cx = 70, cy = 70, radius = 54, n = compKeys.length;
+  const pts = compKeys.map((k, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const r = ((scores[k] || 0) / 100) * radius;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  });
+  const axisPts = compKeys.map((_, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a) };
+  });
+  const poly = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+  return (
+    <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,marginBottom:".4rem",color:C.white,fontFamily:FONT.body}}>
+      <button onClick={() => setExpanded(e => !e)}
+        style={{width:"100%",background:"none",border:"none",padding:".7rem .85rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+        <div style={{minWidth:0,flex:1}}>
+          <div style={{fontSize:13,fontWeight:600}}>{player.name}</div>
+          <div style={{fontSize:11,color:C.dimmer}}>{player.level || "No level"} · {player.position || "TBD"}</div>
+        </div>
+        {avg !== null && (
+          <div style={{display:"flex",alignItems:"center",gap:".55rem",marginRight:".55rem"}}>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,textAlign:"right",lineHeight:1.1}}>
+              <div>GS {avg}</div>
+              {weakest && <div style={{color:C.gold}}>↓ {COMPETENCIES[weakest].name.split("-")[0]}</div>}
+            </div>
+          </div>
+        )}
+        <span style={{color:C.gold,fontSize:14,flexShrink:0}}>{expanded ? "▲" : "▼"}</span>
+      </button>
+      {expanded && (
+        <div style={{padding:".2rem .85rem .85rem",borderTop:`1px solid ${C.border}`}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginTop:".55rem"}}>
+            <svg width="140" height="140" viewBox="0 0 140 140" style={{flexShrink:0}}>
+              {[33,66,100].map(pct => {
+                const r = (pct/100) * radius;
+                const ring = compKeys.map((_, i) => {
+                  const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+                  return `${(cx + r*Math.cos(a)).toFixed(1)},${(cy + r*Math.sin(a)).toFixed(1)}`;
+                }).join(" ");
+                return <polygon key={pct} points={ring} fill="none" stroke={C.border} strokeWidth="1" opacity={pct===100?0.5:0.2}/>;
+              })}
+              {axisPts.map((p, i) => (
+                <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="0.6" opacity="0.3"/>
+              ))}
+              <polygon points={poly} fill={C.gold} fillOpacity="0.25" stroke={C.gold} strokeWidth="1.5"/>
+              {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="2" fill={C.gold}/>)}
+            </svg>
+            <div style={{flex:1,minWidth:0}}>
+              {real.length === 0 ? (
+                <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic",lineHeight:1.5}}>No quiz data yet — {player.name?.split(" ")[0] || "this player"} hasn't completed any quizzes.</div>
+              ) : (
+                <>
+                  {strongest && <div style={{fontSize:11,color:C.dim,marginBottom:".2rem"}}><span style={{color:C.green,fontWeight:700}}>Strongest:</span> {COMPETENCIES[strongest].icon} {COMPETENCIES[strongest].name} ({scores[strongest]}%)</div>}
+                  {weakest && weakest !== strongest && <div style={{fontSize:11,color:C.dim,marginBottom:".45rem"}}><span style={{color:C.gold,fontWeight:700}}>Weakest:</span> {COMPETENCIES[weakest].icon} {COMPETENCIES[weakest].name} ({scores[weakest]}%)</div>}
+                </>
+              )}
+              <button onClick={(e) => { e.stopPropagation(); onRate && onRate(); }}
+                style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem .8rem",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,marginTop:".25rem"}}>
+                Rate + private notes →
+              </button>
+            </div>
+          </div>
+          {/* Extra training log — last few sessions the player logged
+              outside the app's core quizzes. Shows the coach what extra
+              work the athlete is putting in off the team schedule. */}
+          {recentSessions.length > 0 && (
+            <div style={{marginTop:".7rem",paddingTop:".55rem",borderTop:`1px dashed ${C.border}`}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:".35rem"}}>
+                <Label style={{margin:0}}>Extra training</Label>
+                <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>{recentSessions.length} session{recentSessions.length===1?"":"s"} · {totalMin} min total</div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:".25rem"}}>
+                {recentSessions.slice(0,5).map((s, i) => (
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:11,color:C.dim,background:C.bgCard,borderRadius:6,padding:".3rem .5rem"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:".4rem",minWidth:0}}>
+                      <span style={{fontSize:13}}>{TRAINING_ICONS[s.type] || "•"}</span>
+                      <span style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.label || s.type.replace(/_/g," ")}</span>
+                    </div>
+                    <div style={{display:"flex",gap:".55rem",alignItems:"center",flexShrink:0}}>
+                      <span style={{color:C.gold,fontWeight:700}}>{s.value} {s.unit}</span>
+                      <span style={{fontSize:10,color:C.dimmer}}>{s.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Coach-facing "Focus this week" card. Renders the weakest competency
+// across the team plus a tiny heatmap of all 6 so the coach can see context.
+// CTA hands off to the existing StudyScreen with the team's level — we reuse
+// the drill/study content the app already ships rather than building a coach
+// drill picker.
+function TeamFocusCard({ team, roster, onOpenDrills }) {
+  const agg = useMemo(() => calcTeamCompetencyAverages(roster), [roster]);
+  if (agg.activePlayers === 0 || !agg.weakestKey) {
+    return (
+      <div style={{background:C.bgElevated,border:`1px dashed ${C.border}`,borderRadius:12,padding:".9rem 1rem",marginBottom:"1rem",fontSize:12,color:C.dim,lineHeight:1.5}}>
+        Add players and have them take a quiz to see what your team should work on.
+      </div>
+    );
+  }
+  const weakest = COMPETENCIES[agg.weakestKey];
+  const ageShort = (team.level || "").split(" / ")[0] || team.level || "";
+  const ordered = Object.keys(COMPETENCIES).sort((a, b) => agg.teamAverages[a] - agg.teamAverages[b]);
+  return (
+    <>
+      <div style={{background:`linear-gradient(135deg, rgba(201,162,75,0.14), rgba(201,162,75,0.06))`,
+                   border:`1px solid ${C.goldBorder}`, borderRadius:14,
+                   padding:"1rem 1.1rem", marginBottom:"1rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",
+                     color:C.gold,fontWeight:700,marginBottom:".35rem"}}>
+          Focus this week
+        </div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.25rem",
+                     color:C.white,lineHeight:1.2,marginBottom:".35rem"}}>
+          Your team is weakest at <span style={{color:weakest.color}}>{weakest.icon} {weakest.name}</span>
+        </div>
+        <div style={{fontSize:12.5,color:C.dim,marginBottom:".1rem",lineHeight:1.5}}>
+          Team average: <b style={{color:C.white}}>{agg.weakestPct}%</b>
+          {" · "}
+          <b style={{color:C.white}}>{agg.playersBelowGrade} of {agg.activePlayers}</b> below developmental level
+        </div>
+      </div>
+      <div style={{marginBottom:"1rem"}}>
+        <Label>Team competencies</Label>
+        {ordered.map(k => {
+          const comp = COMPETENCIES[k];
+          const pct = agg.teamAverages[k] || 0;
+          const isWeakest = k === agg.weakestKey;
+          return (
+            <div key={k} style={{display:"flex",alignItems:"center",gap:".6rem",padding:"4px 0"}}>
+              <div style={{flex:"0 0 120px",fontSize:12,color:C.dim,display:"flex",alignItems:"center",gap:".35rem"}}>
+                <span>{comp.icon}</span>
+                <span style={{color:isWeakest?C.white:C.dim,fontWeight:isWeakest?700:500}}>{comp.name}</span>
+              </div>
+              <div style={{flex:1,height:8,background:C.bgElevated,borderRadius:4,border:isWeakest?`1px solid ${C.goldBorder}`:"1px solid transparent",overflow:"hidden",position:"relative"}}>
+                <div style={{width:`${Math.max(2,Math.min(100,pct))}%`,height:"100%",background:comp.color,borderRadius:3}}/>
+              </div>
+              <div style={{flex:"0 0 36px",textAlign:"right",fontSize:11,color:isWeakest?C.gold:C.dim,fontWeight:isWeakest?700:500}}>{pct}%</div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+
+// Where the team plays, in the coach's own words -- "Edmonton", "Zone 5",
+// "NAIT district". Free text on purpose: the coach frames it however their
+// hockey world actually works, which is more honest than us imposing a
+// denominator we cannot verify (Thomas, 2026-08-03).
+//
+// It is substituted into the top rungs of the self-rating scale. Leaving it
+// blank is a supported state, not an incomplete one: renderAnchor() drops the
+// whole clause, so "Among the best in my age group in Edmonton." becomes
+// "Among the best in my age group." Most teams will never set it.
+function TeamRegionSection({ team }) {
+  const [value, setValue] = useState(team?.region || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function save() {
+    setSaving(true); setErr(""); setSaved(false);
+    try {
+      await SB.updateTeamRegion(team.id, value);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) {
+      setErr(e.message || "Could not save the region.");
+    }
+    setSaving(false);
+  }
+
+  return (
+    <Card>
+      <Label>📍 Region</Label>
+      <div style={{fontSize:12,color:C.dimmer,lineHeight:1.5,marginBottom:".6rem"}}>
+        Used when players rate themselves, so the top of the scale means something real: "Among the best in my age group in {value.trim() || "your region"}." Optional.
+      </div>
+      <div style={{display:"flex",gap:".4rem",flexWrap:"wrap"}}>
+        <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Edmonton"
+          style={{flex:"1 1 60%",padding:".6rem .7rem",borderRadius:10,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:14}}/>
+        <SecBtn onClick={save} disabled={saving} style={{width:"auto"}}>
+          {saving ? "Saving…" : saved ? "✓ Saved" : "Save"}
+        </SecBtn>
+      </div>
+      {err && <div style={{color:C.red,fontSize:12,marginTop:".4rem"}}>{err}</div>}
+    </Card>
+  );
+}
+
+function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup, onOpenDrills }) {
+  const isDemo = demoMode || profile.id === "__demo_coach__";
+  const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
+  const [loading, setLoading] = useState(!isDemo);
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newLevel, setNewLevel] = useState("U11 / Atom");
+  const [newSeason, setNewSeason] = useState(SEASONS[0]);
+  const [expandedTeam, setExpandedTeam] = useState(isDemo ? "demo-t1" : null);
+  const [rosters, setRosters] = useState(isDemo ? {"demo-t1": DEMO_COACH_ROSTER} : {});
+
+  // Quest checklist state (coach variant)
+  const flags = useQuestFlags(questFlagsBump);
+  const identity = isDemo ? "__demo_coach__" : (profile?.id || "__anon_coach__");
+  const effectiveTier = subscriptionTier || (isDemo ? "TEAM" : "FREE");
+  const questResults = QUESTS_COACH.map(q => computeQuestProgress(q, { flags, teams, rosters, tier: effectiveTier }));
+  const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
+  const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
+  function handleQuestTap(q) {
+    if (q.gate && !canAccess(q.gate, effectiveTier).allowed) {
+      onPromptUpgrade && onPromptUpgrade(q.gate);
+    }
+  }
+  function handleDismissQuest() {
+    const m = lsGetJSON(LS_QUEST_DISMISSED, {});
+    m[identity] = "1";
+    lsSetJSON(LS_QUEST_DISMISSED, m);
+    onBumpQuestFlags && onBumpQuestFlags();
+  }
+  function handleAllComplete() {
+    const m = lsGetJSON(LS_FIRST_LINE_SEEN, {});
+    if (m[identity] === "1") return;
+    m[identity] = "1";
+    lsSetJSON(LS_FIRST_LINE_SEEN, m);
+    if (isDemo) onSaveProgress && onSaveProgress();
+    else onFirstLine && onFirstLine();
+  }
+
+  useEffect(() => { if (isDemo) return; (async () => {
+    const t = await SB.getCoachTeams(profile.id);
+    setTeams(t);
+    setLoading(false);
+    // Single-team coach (common case) — auto-expand so training / analytics /
+    // homework are all one scroll away, no tap required.
+    if (t.length === 1 && !expandedTeam) toggleRoster(t[0].id);
+  })(); }, []);
+
+  async function createTeam() {
+    if (!newName.trim()) return;
+    try {
+      const team = await SB.createTeam({ coachId: profile.id, name: newName.trim(), level: newLevel, season: newSeason });
+      setTeams([team, ...teams]);
+      setCreating(false); setNewName("");
+    } catch (e) { toast.error(e.message || "Could not create team."); }
+  }
+
+  async function toggleRoster(teamId) {
+    if (expandedTeam === teamId) { setExpandedTeam(null); return; }
+    setExpandedTeam(teamId);
+    if (!rosters[teamId]) {
+      const r = await SB.getTeamRoster(teamId);
+      // Bulk-fetch quiz history for the roster so TeamFocusCard + the new
+      // analytics section can compute team-wide accuracy without N+1 round
+      // trips. RLS limits the rows to this coach's players.
+      const playerIds = (r || []).map(p => p?.id).filter(Boolean);
+      const byPlayer = await SB.getTeamQuizHistory(playerIds);
+      const withHistory = (r || []).map(p => ({
+        ...p,
+        quiz_history: byPlayer[p.id] || [],
+      }));
+      setRosters(prev => ({ ...prev, [teamId]: withHistory }));
+    }
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:40}}>
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".25rem"}}>
+              <RinkReadsLogo size={22}/>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>RinkReads</span>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:500}}>v{VERSION}</span>
+            </div>
+            <div style={{fontSize:13,color:C.dimmer}}>{profile.name} · Coach</div>
+          </div>
+          <button onClick={onSignOut} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".5rem .85rem",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>Sign out</button>
+        </div>
+
+        {/* Teams up top — first thing a coach sees. Each card shows the
+            coach's role on that team (Head Coach / Assistant Coach) so a
+            multi-team coach can tell at a glance what they're in charge of. */}
+        <Label style={{marginTop:".25rem"}}>Your teams</Label>
+        {loading ? (
+          <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div>
+        ) : teams.length === 0 ? (
+          <Card style={{marginBottom:"1rem"}}><div style={{color:C.dimmer,textAlign:"center",padding:"1rem"}}>No teams yet. Create your first team to get started.</div></Card>
+        ) : teams.map(t => {
+          const roster = rosters[t.id] || [];
+          const expanded = expandedTeam === t.id;
+          const role = t.role || "Head Coach";
+          const isHeadCoach = role === "Head Coach";
+          return (
+            <Card key={t.id} style={{marginBottom:".75rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",cursor:"pointer"}} onClick={()=>toggleRoster(t.id)}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{t.name}</div>
+                  <div style={{fontSize:11,color:C.dimmer,marginBottom:4}}>{t.level} · {t.season}</div>
+                  <span style={{display:"inline-block",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,padding:"2px 8px",borderRadius:999,background:isHeadCoach?"rgba(201,162,75,0.12)":"rgba(91,164,232,0.12)",color:isHeadCoach?C.gold:C.blue,border:`1px solid ${isHeadCoach?"rgba(201,162,75,0.35)":"rgba(91,164,232,0.35)"}`}}>
+                    {isHeadCoach ? "★ Head Coach" : "Assistant Coach"}
+                  </span>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0,marginLeft:"1rem"}}>
+                  <div style={{fontSize:10,letterSpacing:".14em",color:C.dimmer,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Join Code</div>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,letterSpacing:".1em"}}>{t.code}</div>
+                </div>
+              </div>
+              {/* Quick-access chip row, visible when collapsed so the coach
+                  sees what's inside the team without expanding first. */}
+              {!expanded && (
+                <div style={{display:"flex",gap:".3rem",marginTop:".5rem",flexWrap:"wrap"}}>
+                  {[
+                    {icon:"💪",label:"Training"},
+                    {icon:"📋",label:"Homework"},
+                    {icon:"🏆",label:"Challenges"},
+                    {icon:"📊",label:"Analytics"},
+                  ].map((chip, i) => (
+                    <span key={i} onClick={(e)=>{e.stopPropagation();toggleRoster(t.id);}}
+                      style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:999,padding:".2rem .55rem",fontSize:10.5,color:C.dim,fontFamily:FONT.body,fontWeight:600,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:".25rem"}}>
+                      <span style={{fontSize:12}}>{chip.icon}</span>
+                      <span>{chip.label}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {expanded && (
+                <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
+                  <TeamFocusCard team={t} roster={roster} onOpenDrills={onOpenDrills}/>
+                  <Label>Roster ({roster.length})</Label>
+                  {roster.length === 0 ? (
+                    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>No players yet — share the join code <span style={{color:C.gold,fontWeight:700}}>{t.code}</span> with players.</div>
+                  ) : roster.map(p => (
+                    <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
+                  ))}
+                  <TeamRegionSection team={t} />
+                  <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
+                  <CoachTeamAnalyticsSection roster={roster}/>
+                  <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
+                  <CoachChallengeSection teamId={t.id} coachId={profile.id} teamLevel={t.level} roster={roster}/>
+                  {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
+                    <CoachTrainingSection teamId={t.id} roster={roster}/>
+                  )}
+                </div>
+              )}
+            </Card>
+          );
+        })}
+
+        {/* Coach demo skips the First-Five onboarding journey — we want
+            demo coaches to see a fully-populated team right away, the way
+            it looks once they've been using the app with real data. */}
+        {!isDemo && !questDismissed && !firstLineSeen && (
+          <QuestChecklist
+            role="coach"
+            quests={QUESTS_COACH}
+            results={questResults}
+            onTap={handleQuestTap}
+            onDismiss={handleDismissQuest}
+            onAllComplete={handleAllComplete}
+            showSignupCTA={isDemo}
+            onSignup={onSignup}
+          />
+        )}
+
+        {!isDemo && !questDismissed && !firstLineSeen && (
+          <div style={{margin:"0 -1.25rem 1rem"}}>
+            <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
+          </div>
+        )}
+
+        {!creating ? (
+          <PrimaryBtn onClick={()=>setCreating(true)} style={{marginBottom:"1rem",marginTop:".5rem"}}>+ Create New Team</PrimaryBtn>
+        ) : (
+          <Card style={{marginBottom:"1rem"}}>
+            <Label>New Team</Label>
+            <input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Team name (e.g. Oilers U11 A)" autoFocus
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",marginBottom:".6rem"}}/>
+            <div style={{display:"flex",gap:".5rem",marginBottom:".6rem"}}>
+              <select value={newLevel} onChange={e=>setNewLevel(e.target.value)}
+                style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .6rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none"}}>
+                {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+              </select>
+              <select value={newSeason} onChange={e=>setNewSeason(e.target.value)}
+                style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .6rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none"}}>
+                {SEASONS.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div style={{display:"flex",gap:".5rem"}}>
+              <button onClick={()=>setCreating(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body,fontWeight:600}}>Cancel</button>
+              <button onClick={createTeam} disabled={!newName.trim()} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:800}}>Create</button>
+            </div>
+          </Card>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// POST-SIGNUP PROFILE SETUP (player picks level/position)
+// ─────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────
+// APP ROOT
+// ─────────────────────────────────────────────────────────
+export default function App() {
+  const [authReady, setAuthReady] = useState(false);
+  const [profile, setProfile] = useState(null);
+  // "pending" until loadUser has actually finished looking for the profiles row;
+  // "missing" once its retry budget is spent. Separates a signup still in flight
+  // from a genuinely stranded account -- both of which look like "session, no
+  // profile" and were previously treated as the latter. See preAppScreen.
+  const [profileProbe, setProfileProbe] = useState("pending");
+  const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
+  const [demoMode, setDemoMode] = useState(false);
+  // Tracked-fresh ref so async Supabase auth callbacks see the latest demoMode
+  // even when their closure was captured before dev-bypass entry. Without this,
+  // a stale `onAuthChange` callback firing INITIAL_SESSION / TOKEN_REFRESHED /
+  // SIGNED_OUT with `session === null` clobbers a dev/demo profile via the
+  // `else { setProfile(null) }` branch (root cause of the gear→landing bug).
+  const demoModeRef = useRef(false);
+  demoModeRef.current = demoMode;
+  const [demoCoachRatings, setDemoCoachRatings] = useState(null);
+  // Restore the screen the player was on before a reload or a crash. Lazily
+  // initialised so it costs nothing on the common path, and the module only
+  // returns an allow-listed string -- never an in-progress quiz, never an
+  // object screen whose live payload cannot survive a reload.
+  const [screen, setScreen] = useState(() => recallScreen() || "home");
+  // Skill Path lesson focus — when set, the next quiz session is scoped
+  // to this ledger node's concept and its result clears/stars the node.
+  const [pathFocus, setPathFocus] = useState(null); // pathNode | null
+
+  // Persist the current screen so a reload lands where the player was. Object
+  // screens clear the memory rather than writing a half-record -- their live
+  // payload cannot survive a reload, and restoring the kind without it is the
+  // exact crash class fixed in e999307.
+  useEffect(() => { rememberScreen(screen); }, [screen]);
+  const [prevScore, setPrevScore] = useState(null);
+  const [totalSessions, setTotalSessions] = useState(0);
+  const [quizResults, setQuizResults] = useState([]);
+  const [seqPerfect, setSeqPerfect] = useState(false);
+  const [mistakeStreak, setMistakeStreak] = useState(0);
+  const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
+  const [signupPrefill, setSignupPrefill] = useState(null); // {role, level, name} | null
+  const [firstLineToast, setFirstLineToast] = useState(false);
+  const [questFlagsBump, setQuestFlagsBump] = useState(0);
+  const bumpQuestFlags = useCallback(() => setQuestFlagsBump(b => b + 1), []);
+  const [userEmail, setUserEmail] = useState(null);
+  const [showMilestone5Banner, setShowMilestone5Banner] = useState(false);
+  const [weeklyResults, setWeeklyResults] = useState(null);
+  const [weeklyScore, setWeeklyScore] = useState(null);
+
+  // Hash routing — shareable #parents URL reachable pre- and post-auth.
+  // TOC anchors inside ParentsPage (#why, #not, etc.) don't match this route
+  // marker, so intra-page scroll links don't trigger navigation.
+  const [hashRoute, setHashRoute] = useState(() => {
+    try { return (window.location.hash || "").replace(/^#/, ""); } catch { return ""; }
+  });
+  useEffect(() => {
+    const handler = () => {
+      try { setHashRoute((window.location.hash || "").replace(/^#/, "")); } catch {}
+    };
+    window.addEventListener("hashchange", handler);
+    return () => window.removeEventListener("hashchange", handler);
+  }, []);
+  useEffect(() => {
+    if (hashRoute === "parents" && screen !== "parents") setScreen("parents");
+    if (hashRoute === "coaches" && screen !== "coaches") setScreen("coaches");
+    if (hashRoute === "players" && screen !== "players") setScreen("players");
+    if (hashRoute === "associations" && screen !== "associations") setScreen("associations");
+    if (hashRoute === "admin" && screen !== "admin-dashboard") setScreen("admin-dashboard");
+  }, [hashRoute, screen]);
+  // Dev-bypass toggle from URL: visiting /#devbypass sets the LS flag so the
+  // dev panel appears on AuthScreen — useful in production deployments where
+  // import.meta.env.DEV is false. Visiting /#devbypass-off clears the flag.
+  // Hash is wiped after toggling so the URL is clean and the toggle doesn't
+  // re-fire on subsequent navigations.
+  useEffect(() => {
+    if (hashRoute !== "devbypass" && hashRoute !== "devbypass-off") return;
+    try {
+      if (hashRoute === "devbypass") {
+        window.localStorage.setItem("rinkreads_dev_bypass", "1");
+      } else {
+        window.localStorage.removeItem("rinkreads_dev_bypass");
+      }
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      setHashRoute("");
+      // Force AuthScreen to re-render with the dev panel visible. Reload is
+      // the most reliable cross-state way to flip the conditional gate.
+      window.location.reload();
+    } catch {}
+  }, [hashRoute]);
+  function clearParentsHash() {
+    try {
+      const h = (window.location.hash || "").replace(/^#/, "");
+      if (["parents","coaches","players","associations","pricing","admin"].includes(h)) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        setHashRoute("");
+      }
+    } catch {}
+  }
+
+  // Resolve tier once per render
+  const tier = resolveTier({ profile, demoMode });
+
+  function promptUpgrade(feature, target) {
+    setUpgradePrompt({ feature, target: target || null });
+  }
+  function triggerSignup(source = "auth_direct") {
+    markSignupIntent(source);
+    setSignupPrefill({
+      role: profile?.role || "player",
+      level: player?.level || null,
+      name: player?.name || profile?.name || "",
+    });
+    exitDemo();
+  }
+  function closeUpgrade() {
+    if (upgradePrompt?.feature) { markGatedAck(upgradePrompt.feature); bumpQuestFlags(); }
+    setUpgradePrompt(null);
+  }
+
+  // Run season reset check on boot so free-tier switch counters refresh each September
+  useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
+
+  // URL-param unlock for dev bypass. Visit `?devbypass=<DEV_BYPASS_SECRET>`
+  // once → flag set, param scrubbed, page reloads with bypass active. Lets
+  // the owner reach the dev panel from any browser/account without DevTools.
+  // Runs SYNC on first mount so the reload happens before the auth screen
+  // paints with stale state.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const provided = params.get("devbypass");
+      if (provided && provided === DEV_BYPASS_SECRET && !isDevBypassEnabled()) {
+        enableDevBypass();
+        params.delete("devbypass");
+        const next = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+        window.history.replaceState({}, "", next);
+        window.location.reload();
+      }
+    } catch {}
+  }, []);
+
+  // One-time cleanup: the player-demo scaffold used __demo__ LS slots in a few
+  // tables. Now that player demo is gone, silently drop them on boot so a
+  // fresh install doesn't carry any stale fantasy-world data.
+  useEffect(() => {
+    try {
+      const tk = window.localStorage.getItem("rinkreads_training_log");
+      if (tk) {
+        const all = JSON.parse(tk);
+        let mutated = false;
+        if (all && "__demo__" in all) { delete all["__demo__"]; mutated = true; }
+        // The active player preview keeps its training history across reloads.
+        if (mutated) window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
+      }
+      window.localStorage.removeItem("rinkreads_pending_transfer_v1");
+      window.localStorage.removeItem("rinkreads_demo_snapshot_v1");
+      window.localStorage.removeItem("rinkreads_demo_quiz_taken");
+    } catch {}
+  }, []);
+
+  // Mark profile-viewed quest flag when user opens Game Sense report
+  useEffect(() => {
+    if (screen === "gamesense") { markProfileViewed(); bumpQuestFlags(); }
+  }, [screen, bumpQuestFlags]);
+
+  function enterDemo(levelOrRole) {
+    // Only coach demo remains. Player demo was removed — players sign up and
+    // work is persisted from the start.
+    if (levelOrRole !== "__coach__") return;
+    window.scrollTo(0, 0);
+    setDemoMode(true);
+    setDemoCoachRatings(null);
+    setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
+    seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
+    // Pre-seed realistic training history per player so the coach dashboard
+    // shows extra-training data (ice time, practice, off-ice, stick-handling,
+    // video review) next to each athlete the moment the demo opens.
+    seedDemoTrainingForRoster(DEMO_COACH_ROSTER, 5);
+    setScreen("home");
+  }
+
+  // Ephemeral Pro-tier preview. Dynamic-import the seed so the landing bundle
+  // stays small. Snapshot LS keys we'll overwrite so exitDemo can restore.
+  async function enterPlayerPreview() {
+    window.scrollTo(0, 0);
+    const seed = buildU11ForwardPreview();
+    try {
+      // Insights-read: merge seed keys with whatever was there, stash the
+      // original so exitDemo can restore it.
+      const priorInsights = window.localStorage.getItem("rinkreads_insights_read_v1");
+      window.localStorage.setItem("rinkreads_preview_snap_insights_v1", priorInsights || "");
+      const prior = priorInsights ? JSON.parse(priorInsights) : [];
+      const merged = Array.from(new Set([...(Array.isArray(prior)?prior:[]), ...seed.insightsReadKeys]));
+      window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(merged));
+      // Training log slot under the preview id.
+      const tk = window.localStorage.getItem("rinkreads_training_log");
+      const all = tk ? JSON.parse(tk) : {};
+      if (!Object.hasOwn(all, PREVIEW_PLAYER_ID)) all[PREVIEW_PLAYER_ID] = { sessions: seed.trainingSessions };
+      window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
+      // Fake tier. resolveTier reads LS on every render → next render returns PRO.
+      window.localStorage.setItem("rinkreads_tier_override", "PRO");
+    } catch {}
+    setDemoMode(true);
+    setDemoCoachRatings(seed.coachRatings);
+    setProfile({ id: PREVIEW_PLAYER_ID, role: "player", name: seed.player.name, level: seed.player.level, position: seed.player.position, __preview: true });
+    setPlayer(seed.player);
+    const latest = seed.player.quizHistory[seed.player.quizHistory.length - 1];
+    setPrevScore(latest ? latest.score : null);
+    setTotalSessions(seed.player.quizHistory.length);
+    // If a question playlist (?ids=) is on the URL, the user came from the
+    // standalone questions-dashboard.html "Play" button — skip home and
+    // drop them straight into the quiz so the playlist actually plays.
+    let wantsQuiz = false;
+    try { wantsQuiz = !!new URLSearchParams(window.location.search).get("ids"); } catch {}
+    setScreen(wantsQuiz ? "quiz" : "home");
+  }
+
+  function exitDemo() {
+    try {
+      window.localStorage.removeItem("rinkreads_tier_override");
+      // Restore insights-read snapshot (if one was stashed by enterPlayerPreview).
+      const snap = window.localStorage.getItem("rinkreads_preview_snap_insights_v1");
+      if (snap !== null) {
+        if (snap) window.localStorage.setItem("rinkreads_insights_read_v1", snap);
+        else window.localStorage.removeItem("rinkreads_insights_read_v1");
+        window.localStorage.removeItem("rinkreads_preview_snap_insights_v1");
+      }
+      // Drop preview training slot.
+      const tk = window.localStorage.getItem("rinkreads_training_log");
+      if (tk) {
+        const all = JSON.parse(tk);
+        if (all && "__preview__" in all) { delete all["__preview__"]; window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all)); }
+      }
+      window.localStorage.removeItem("rinkreads_demo_quiz_taken");
+      // Clear the synthetic dev profile so we don't auto-re-enter on
+      // reload. Leave the `rinkreads_dev_bypass` flag itself alone — it's
+      // an intentional developer setting and only the dev should remove it
+      // (via `window.__dev.exitBypass()` or `#devbypass-off`).
+      clearDevProfile();
+    } catch {}
+    setDemoMode(false);
+    setDemoCoachRatings(null);
+    setProfile(null);
+    setPlayer(null);
+    setPrevScore(null);
+    setTotalSessions(0);
+    clearDemoDepthChart("demo-t1");
+    setScreen("home");
+  }
+
+  // Dev bypass: same "skip Supabase" plumbing as demo mode, but with a real
+  // empty player state (not seeded fantasy data) so the UI matches what a
+  // brand-new signup looks like. Only reachable when rinkreads_dev_bypass === "1".
+  function enterDevBypass(cfg) {
+    window.scrollTo(0, 0);
+    if (cfg.role === "coach") {
+      const prof = { id: "__dev_coach__", role: "coach", name: cfg.name || "Dev Coach", __dev: true };
+      setDevProfile(prof);
+      setDemoMode(true);
+      setDemoCoachRatings(null);
+      setProfile(prof);
+      seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
+      setScreen("home");
+      return;
+    }
+    const p = buildDevPlayer(cfg);
+    const prof = { id: p.id, role: "player", name: p.name, level: p.level, position: p.position, __dev: true };
+    setDevProfile(prof);
+    setDemoMode(true);
+    setDemoCoachRatings(null);
+    setProfile(prof);
+    setPlayer(p);
+    setPrevScore(null);
+    setTotalSessions(0);
+    setScreen("home");
+  }
+
+  // Auto-enter player preview when `?demo=player` is in the URL and there's
+  // no existing profile. Used by the standalone questions-dashboard.html so
+  // its "Play in app" links don't bounce unauthed users to the login screen.
+  // Idempotent — only fires once when there's no profile yet.
+  useEffect(() => {
+    if (profile) return;
+    let want = false;
+    try { want = new URLSearchParams(window.location.search).get("demo") === "player"; } catch {}
+    if (want) enterPlayerPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
+
+  // Restore dev bypass on reload + expose window.__dev helpers.
+  // Auto-entry requires `?devbypass=1` in the URL so a stale LS flag from a
+  // past troubleshooting session never hijacks the landing page.
+  useEffect(() => {
+    if (!isDevBypassEnabled()) return;
+    let autoRestore = false;
+    try { autoRestore = new URLSearchParams(window.location.search).get("devbypass") === "1"; } catch {}
+    if (autoRestore) {
+      const saved = getDevProfile();
+      if (saved && !demoMode) {
+        if (saved.role === "coach") {
+          enterDevBypass({ role: "coach", name: saved.name });
+        } else {
+          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name, quizHistory: saved.quizHistory });
+        }
+      }
+    }
+    window.__dev = {
+      enterAs: (cfg) => enterDevBypass(cfg || {}),
+      setTier: (t) => { try { window.localStorage.setItem("rinkreads_tier_override", String(t).toUpperCase()); window.location.reload(); } catch {} },
+      clearTier: () => { try { window.localStorage.removeItem("rinkreads_tier_override"); window.location.reload(); } catch {} },
+      reset: () => { clearDevProfile(); try { window.localStorage.removeItem("rinkreads_tier_override"); } catch {} window.location.reload(); },
+      exitBypass: () => { clearDevProfile(); try { window.localStorage.removeItem("rinkreads_dev_bypass"); } catch {} window.location.reload(); },
+      markFirstSixDone: () => {
+        try {
+          // Acknowledge every gated feature so locked quests count as done
+          window.localStorage.setItem("rinkreads_gated_quests_ack_v1", JSON.stringify(["smartGoals","progressSnapshots"]));
+          window.localStorage.setItem("rinkreads_profile_viewed_v1", "1");
+          window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(["a","b","c"]));
+        } catch {}
+        window.location.reload();
+      },
+    };
+    console.log("[RinkReads] Dev bypass active. Helpers: window.__dev", Object.keys(window.__dev));
+  }, []); // intentionally run once; no deps
+
+  // Hydrate from Supabase on mount, subscribe to auth changes
+  useEffect(() => {
+    preloadQB();
+    if (!hasSupabase) { setAuthReady(true); return; }
+    if (demoMode) { setAuthReady(true); return; }
+    let mounted = true;
+    const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 2000);
+    (async () => {
+      try {
+        const session = await SB.getSession();
+        if (session?.user && mounted) {
+          // A session exists: disarm the 2s authReady escape so the app can't
+          // paint the logged-out landing while the profile is still loading
+          // (the sign-in flash). The escape stays armed only for the
+          // no-session / hung-network path, which renders landing anyway.
+          clearTimeout(timeout);
+          setUserEmail(session.user.email || null);
+          await loadUser(session.user.id);
+        }
+      } catch(e) { console.error("Session check failed:", e); }
+      if (mounted) { clearTimeout(timeout); setAuthReady(true); }
+    })();
+    const { data } = SB.onAuthChange((session, event) => {
+      // Demo / dev-bypass sessions must be immune to Supabase auth events:
+      // there is no real Supabase session in those modes, so an async
+      // INITIAL_SESSION / SIGNED_OUT firing after dev-bypass entry would
+      // otherwise wipe the synthetic profile and bounce the user to landing.
+      if (!mounted || demoModeRef.current) return;
+
+      // This callback MUST NOT await Supabase calls. supabase-js awaits every
+      // onAuthStateChange subscriber before resolving the auth call that fired
+      // it, so calling back into Supabase here makes signUp()/signIn() wait on
+      // a callback that is itself waiting on Supabase -- a deadlock. The HTTP
+      // request completes fine (observed: POST /auth/v1/signup returned 200 in
+      // 211ms) but the promise never settles, so signUp() hit its own 12s
+      // timeout and the user saw "RinkReads signup timed out after 12000ms"
+      // for an account that had in fact been created. Reproduced 2026-08-02.
+      //
+      // Deferring to a macrotask lets the auth call settle first, then the
+      // profile load runs normally. The synchronous setters stay inline so the
+      // signed-out path still clears state immediately.
+      if (session?.user) {
+        setUserEmail(session.user.email || null);
+        // Only reload the profile on events that actually change WHO is signed
+        // in. TOKEN_REFRESHED fires on a timer for a session that has not
+        // changed, and loadUser replaces `player` wholesale — so a refresh
+        // landing mid-session used to silently discard anything not yet synced
+        // to Supabase. USER_UPDATED likewise carries no new profile.
+        const RELOADS_PROFILE = ["INITIAL_SESSION", "SIGNED_IN", "PASSWORD_RECOVERY"];
+        if (event && !RELOADS_PROFILE.includes(event)) return;
+        setTimeout(() => {
+          if (!mounted || demoModeRef.current) return;
+          loadUser(session.user.id).catch((e) => console.error("loadUser after auth change failed:", e));
+        }, 0);
+      }
+      // Reset the probe too, or the next sign-in inherits the last account's
+      // verdict -- a "missing" left over from a stranded account would show the
+      // recovery form instantly to whoever signs in next, before we have looked.
+      else { setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); forgetScreen(); setScreen("home"); }
+    });
+    return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
+  }, [demoMode]);
+
+  // Password recovery: when a reset email link lands the user, Supabase
+  // creates a recovery session and fires PASSWORD_RECOVERY. Without routing
+  // to a "set new password" screen, the recovery completes silently with
+  // the OLD password unchanged — broken UX. Route them to PasswordResetScreen.
+  useEffect(() => {
+    if (!hasSupabase) return;
+    const { data } = SB.onPasswordRecovery(() => {
+      setScreen("password-reset");
+    });
+    return () => data?.subscription?.unsubscribe?.();
+  }, []);
+
+  async function loadUser(userId, attempt = 0) {
+    const p = await SB.getProfile(userId);
+    if (!p) {
+      // A brand-new account has no profile row yet: SB.signUp() writes it
+      // AFTER supabase.auth.signUp() resolves, so the SIGNED_IN subscriber can
+      // query profiles before the row exists. Returning silently here leaves
+      // `profile` null, and the render gate below (`if (!profile)`) then shows
+      // the auth screen again -- which is exactly the "click Create Account,
+      // wait ~2s, land back on Create Account" report from 2026-08-02. The
+      // account was created every time; only the UI disagreed.
+      //
+      // Retry briefly instead of giving up. Bounded so a genuinely
+      // profile-less auth user (three exist in production) still settles on
+      // the auth screen rather than looping forever.
+      if (attempt < 5) {
+        setProfileProbe("pending");
+        setTimeout(() => { loadUser(userId, attempt + 1).catch(() => {}); }, 200 * (attempt + 1));
+      } else {
+        // Budget spent. The row is genuinely absent, not slow -- this is the
+        // stranded-account case FinishSetupScreen exists for. Recording it as
+        // state instead of returning silently is what lets the render gate tell
+        // the two cases apart.
+        setProfileProbe("missing");
+      }
+      return;
+    }
+    setProfileProbe("loaded");
+    setProfile(p);
+    if (p.role === "player" && p.level) {
+      // Build enriched player object from Supabase data
+      const [sessions, goals, selfRatings] = await Promise.all([
+        SB.getPlayerSessions(userId),
+        SB.getPlayerGoals(userId),
+        SB.getSelfRatings(userId),
+      ]);
+      const quizHistory = sessions.map(s => ({ results: s.results, score: s.score, date: s.completed_at }));
+      const enriched = {
+        id: p.id,
+        name: p.name,
+        level: p.level,
+        position: p.position === "Not Sure" ? "Multiple" : (p.position || "Multiple"),
+        // birth_year is optional — only populated when the user chose year
+        // of birth during the welcome wizard. Absence is fine; display
+        // helpers fall back to `level` ("U11 / Atom").
+        ...(p.birth_year ? { birthYear: p.birth_year } : {}),
+        ...(p.signup_mode ? { signupMode: p.signup_mode } : {}),
+        selfRatings,
+        quizHistory,
+        goals,
+        season: p.season || SEASONS[0],
+        sessionLength: p.session_length || 10,
+        colorblind: !!p.colorblind,
+        coachCode: "",
+        isAdmin: !!p.is_admin,
+      };
+      // Local cache wins over the server copy. It was written synchronously at
+      // the moment of the user's action; the server copy may be missing a write
+      // that failed, timed out, or is still in flight. Preferring the server
+      // here would re-introduce the exact loss the cache exists to stop.
+      const merged = mergeCachedPlayer(enriched);
+      setPlayer(merged);
+      const mergedHistory = merged.quizHistory || quizHistory;
+      const latest = mergedHistory[mergedHistory.length-1];
+      setPrevScore(latest ? latest.score : null);
+      setTotalSessions(mergedHistory.length);
+    }
+  }
+
+  async function handleQuizFinish(results, sq, ms) {
+    const score = calcWeightedIQ(results);
+    const newTotal = totalSessions + 1;
+    const newHistory = [...(player.quizHistory||[]), {results, score, date:new Date().toISOString()}];
+    const updatedPlayer = {...player, quizHistory: newHistory};
+    commitPlayer(updatedPlayer);
+    setQuizResults(results);
+    setSeqPerfect(sq);
+    setMistakeStreak(ms);
+    setPrevScore(score);
+    setTotalSessions(newTotal);
+    if (tier === "FREE") incrementFreeQuizCount();
+    // Only the acquisition-demo flow (sample preview, landing "Coach Dashboard")
+    // should hit the cap. Dev-bypass testing sessions must not burn this flag.
+    if (demoMode && !profile?.__dev) { lsSetStr("rinkreads_demo_quiz_taken", "1"); }
+    if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("rinkreads_milestone5_shown")) {
+      setShowMilestone5Banner(true);
+      localStorage.setItem("rinkreads_milestone5_shown", "true");
+    }
+    try {
+      const sd = updateStreak(getStreakData());
+      localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
+    } catch(e) {}
+    // Skill Path: a lesson launched from a path node clears/stars that
+    // node. Reward-only — a rough lesson just leaves the node active.
+    if (pathFocus?.conceptId) {
+      try {
+        const correct = results.filter(r => r.ok).length;
+        const out = recordNodeResult(player?.id || "__demo__", pathFocus.band, pathFocus, { correct, total: results.length });
+        if (out.firstClear) {
+          toast.celebrate({ title: `${pathFocus.name} cleared!`, body: `+${out.xpEarned} XP · ${"★".repeat(out.stars)} — the path rolls on.`, icon: "🏒" });
+        } else if (out.cleared && out.xpEarned > 0) {
+          toast.celebrate({ title: `+${out.xpEarned} XP`, body: `${pathFocus.name} · best ${"★".repeat(out.stars)}`, icon: "⚡" });
+        }
+      } catch {}
+    }
+    // Bump the weekly + category streaks and fire celebrate toasts on
+    // meaningful milestones. Best-effort — silent on LS failure.
+    if (player?.id && !isEphemeralPlayer(player.id)) {
+      try {
+        const weekly = bumpWeeklyStreak(player.id);
+        if (weekly.milestone) {
+          toast.celebrate({ title: `${weekly.milestone}-week streak!`, body: "Showing up is half of getting better.", icon: "🗓️" });
+        }
+        // ONE toast, however many milestones fired.
+        //
+        // This used to emit a separate celebrate per category, stacked on top of
+        // the weekly-streak and path-clear toasts. Finishing a good session
+        // could therefore throw four or five overlapping cards across the
+        // screen at once — "5 straight in Puck Skills", "10 straight in Hockey
+        // Sense", "20 straight in Offensive Play" — which covered the results
+        // underneath and read as the app freezing rather than as a reward.
+        // Collapsing them keeps the celebration and returns the screen.
+        const catMilestones = updateCategoryStreaks(player.id, results);
+        if (catMilestones.length === 1) {
+          const m = catMilestones[0];
+          toast.celebrate({ title: `${m.count} straight in ${m.cat}!`, body: "Pattern-matching locked in.", icon: "📊" });
+        } else if (catMilestones.length > 1) {
+          const best = catMilestones.reduce((a, b) => (b.count > a.count ? b : a));
+          toast.celebrate({
+            title: `${best.count} straight in ${best.cat}!`,
+            body: `Plus streaks in ${catMilestones.length - 1} more categor${catMilestones.length - 1 === 1 ? "y" : "ies"}. Pattern-matching locked in.`,
+            icon: "📊",
+          });
+        }
+      } catch {}
+    }
+    if (!demoMode) {
+      try { await SB.saveQuizSession(player.id, { results, score, sessionLength: player.sessionLength }); }
+      catch(e) { console.error(e); }
+      SB.recordQuestionAnswersBatch(results.map(r => ({ questionId: r.id, correct: r.ok })));
+    }
+    setScreen("results");
+  }
+
+  // Durable-first. localStorage is written synchronously, BEFORE any network
+  // call and before any navigation, so Supabase is a sync target rather than
+  // the system of record. Same shape as utils/trainingLog.js — the only
+  // First-Five write that has never lost data.
+  function commitPlayer(next) {
+    cachePlayer(next);
+    setPlayer(next);
+    return next;
+  }
+
+  // A failed sync is not a failed save. Say so honestly rather than silently
+  // succeeding (the old handlers swallowed the error and navigated home as if
+  // nothing had happened) or alarming a kid about data they still have.
+  function warnSyncFailed(body) {
+    toast.warning(body, { duration: 4000 });
+  }
+
+  async function handleSkillsSave(ratings, { navigate = true } = {}) {
+    // 1. Durable + visible first. Nothing below can undo this.
+    commitPlayer({ ...player, selfRatings: ratings });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    // 2. Sync. Bounded, and its failure is reported, never swallowed.
+    try {
+      await withTimeout(SB.saveSelfRatings(player.id, ratings), WRITE_TIMEOUT_MS, "saveSelfRatings");
+    } catch (e) {
+      console.error(e);
+      warnSyncFailed("Saved on this device — we'll sync your ratings next time you open the app.");
+    }
+  }
+
+  async function handleGoalsSave(goals, { navigate = true } = {}) {
+    commitPlayer({ ...player, goals });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    // Per-category try/catch: one bad category must not abandon the rest. The
+    // old loop wrapped the whole for-loop in one try, so the first throw
+    // silently dropped every goal after it.
+    const failed = [];
+    for (const [cat, g] of Object.entries(goals)) {
+      if (!g?.goal) continue;
+      try { await withTimeout(SB.saveGoal(player.id, cat, g), WRITE_TIMEOUT_MS, `saveGoal(${cat})`); }
+      catch (e) { console.error(e); failed.push(cat); }
+    }
+    if (failed.length) warnSyncFailed(`Saved on this device — ${failed.join(", ")} will sync next time you open the app.`);
+  }
+
+  async function handleProfileSave(settings, { navigate = true } = {}) {
+    // Whitelist rather than spread. `settings` is a snapshot taken when the
+    // Profile screen mounted and still carries the selfRatings/goals/history it
+    // saw then — spreading it reverts anything saved while Profile was open.
+    const PATCHABLE = ["name", "level", "position", "season", "sessionLength", "colorblind"];
+    const patch = {};
+    for (const f of PATCHABLE) if (settings[f] !== undefined) patch[f] = settings[f];
+    commitPlayer({ ...player, ...patch });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    try {
+      await withTimeout(SB.updateProfile(player.id, {
+        name: patch.name,
+        level: patch.level,
+        position: patch.position,
+        season: patch.season,
+        session_length: patch.sessionLength,
+        colorblind: patch.colorblind,
+      }), WRITE_TIMEOUT_MS, "updateProfile");
+    } catch (e) {
+      console.error(e);
+      warnSyncFailed("Saved on this device — your settings will sync shortly.");
+    }
+  }
+
+  async function handleSignOut() {
+    if (demoMode) { exitDemo(); return; }
+    clearCachedPlayer(player?.id);
+    await SB.signOut();
+    setProfile(null); setPlayer(null);
+    setScreen("home");
+  }
+
+  // Loading while auth settles
+  if (!authReady) {
+    return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+  }
+
+  // Pre-auth question-preview route: `#q=<questionId>` renders the question
+  // standalone with no header/nav/auth gate. Used by tools/dashboard.html
+  // to iframe the actual rendered scene next to each bank row.
+  if (hashRoute.startsWith("q=")) {
+    const qid = decodeURIComponent(hashRoute.slice(2));
+    return <QuestionPreviewPage questionId={qid}/>;
+  }
+  // Owner-only raw play test harness. Gated the same way the dev-bypass panel
+  // is (App.jsx ~6829): VITE_ENABLE_DEV_BYPASS=1 AND (LS flag or `npm run dev`).
+  // So it can't be reached pre-auth on the production beta build, or on a
+  // bare local `npm run dev` without the env flag set. (`#playtest`)
+  if (
+    hashRoute === "playtest" &&
+    import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" &&
+    (isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV))
+  ) {
+    return <RinkPlayTest/>;
+  }
+  // Scenario playground — flip through + play every seed in the real engine
+  // to feel the interaction before it ships. (`#scenarios`)
+  if (hashRoute === "scenarios") {
+    return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
+  }
+  // Shareable prototype routes. Hosted review uses separate device-local practice records.
+  // This does not promote draft lessons into the live curriculum or change main navigation.
+  const practiceReviewPlayer = import.meta.env.DEV ? player : undefined;
+  if (['shootout-before','shootout-now','brain-gym'].includes(hashRoute)) {
+    return <Suspense fallback={<LazyFallback/>}><GymComparison key={hashRoute} view={hashRoute==='shootout-before'?'before':hashRoute==='shootout-now'?'now':'gym'}/></Suspense>;
+  }
+  if (hashRoute === "practice-arena") {
+    return <Suspense fallback={<LazyFallback/>}><PracticeArena key={practiceReviewPlayer?.id || "practice-preview"} player={practiceReviewPlayer}/></Suspense>;
+  }
+  if (hashRoute === "legacy-two-on-one") {
+    return <Suspense fallback={<LazyFallback/>}><LegacyTwoOnOne/></Suspense>;
+  }
+  if (hashRoute === "one-on-one") {
+    return <Suspense fallback={<LazyFallback/>}><OneOnOnePractice playerId={practiceReviewPlayer?.id || "practice-preview"}/></Suspense>;
+  }
+  // Hidden manual-only 3D prototype route. No nav entry; browse directly to #dev-3d-scenario.
+  if (hashRoute === "dev-3d-scenario") {
+    return <Suspense fallback={<LazyFallback/>}><Dev3DScenarioRoute/></Suspense>;
+  }
+  // Owner-only review dashboard. Backed by the dev-only /__review/* endpoints
+  // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
+  if (hashRoute === "review") {
+    return <ReviewDashboard/>;
+  }
+  // Owner-only mobile triage deck (Supabase-backed, works in production). Auth-gated inside ReviewScreen. (`#triage`)
+  if (hashRoute === "triage") {
+    return <Suspense fallback={<LazyFallback/>}><ReviewScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
+  }
+  // Owner-only browse grid of all boards (Supabase-backed). (`#browse`)
+  if (hashRoute === "browse") {
+    return <Suspense fallback={<LazyFallback/>}><BrowseScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
+  }
+
+  // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
+  if (!profile && hashRoute === "parents") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <ParentsPage
+          onNavigate={() => clearParentsHash()}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
+        />
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "coaches") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <CoachesPage
+          onNavigate={() => clearParentsHash()}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
+        />
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "players") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <PlayersPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/>
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "associations") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <AssociationsPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/>
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "pricing") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <PlansScreen onBack={() => clearParentsHash()} tier="FREE"/>
+      </Suspense>
+    );
+  }
+
+  // Not logged in → auth screen
+  if (!profile) {
+    if (!hasSupabase) {
+      return <div style={{minHeight:"100vh",background:C.bg,color:C.white,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem",fontFamily:FONT.body,textAlign:"center"}}>
+        <div>
+          <div style={{fontSize:"1.2rem",color:C.red,marginBottom:"1rem"}}>Supabase not configured</div>
+          <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>Create a <code style={{color:C.gold}}>.env</code> file with<br/><code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</div>
+        </div>
+      </div>;
+    }
+    // A SESSION with no profile row is recoverable, not a dead end. Sending
+    // these users to the signup form trapped them: the session persisted, so
+    // every reload returned here, creating another account did not help because
+    // the old session still loaded, and signing up with the same address was
+    // refused as "already registered". Reproduced on production 2026-08-03.
+    const preApp = preAppScreen({
+      hasSupabase,
+      hasSession: !!userEmail,
+      hasProfile: false,
+      probe: profileProbe,
+    });
+    // Still looking. Every brand-new signup passes through here, because
+    // SIGNED_IN fires before signUp() has written the profiles row -- showing
+    // the recovery form during that window told a new user their account was
+    // broken, and let a coach who filled it in be saved as a player.
+    if (preApp === "loading") {
+      return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+    }
+    if (preApp === "finish-setup") {
+      return <FinishSetupScreen
+        email={userEmail}
+        onDone={async (row) => { setProfile(row); await loadUser(row.id); }}
+        onSignOut={handleSignOut}
+      />;
+    }
+    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} onDevEnter={enterDevBypass} onPreview={enterPlayerPreview} prefill={signupPrefill}/>;
+  }
+
+  // Coach home
+  if (profile.role === "coach") {
+    const coachAccess = canAccess("coachDashboard", tier);
+    if (!coachAccess.allowed) {
+      return (
+        <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+          <StickyHeader>
+            <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+              <button onClick={handleSignOut} style={{background:"none",border:"none",color:C.white,cursor:"pointer",fontSize:24,padding:0}}>←</button>
+              <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Coach Dashboard</div>
+            </div>
+          </StickyHeader>
+          <div style={{padding:"2rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+            <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+              <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Coach Dashboard</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Full team management, player ratings, and coaching tools are available on the TEAM plan. Contact us to upgrade.</div>
+              <a href="mailto:rinkreads@gmail.com?subject=RinkReads TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
+            </Card>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
+          ::-webkit-scrollbar { width: 4px; }
+          ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
+          input, textarea, button, select { font-family: 'Inter', system-ui, sans-serif; }
+          button:active { opacity: .8; }
+          textarea { resize: none; }
+        `}</style>
+        <div hidden={typeof screen === "object" && ["rate", "drills"].includes(screen?.kind)}><CoachHome
+          profile={profile}
+          onSignOut={handleSignOut}
+          demoMode={demoMode}
+          subscriptionTier={tier}
+          questFlagsBump={questFlagsBump}
+          onPromptUpgrade={promptUpgrade}
+          onBumpQuestFlags={bumpQuestFlags}
+          onSaveProgress={() => triggerSignup("save_progress")}
+          onFirstLine={() => setFirstLineToast(true)}
+          onSignup={() => triggerSignup("quest_cta_coach")}
+          onOpenPlayer={(p) => {
+            // Coach rating for this player
+            const pk = p.id;
+            const playerLevel = p.level || "U11 / Atom";
+            // We'll open a rating screen inline
+            window.scrollTo(0, 0);
+            setScreen({kind:"rate", player:p, playerLevel});
+          }}
+          onOpenDrills={(level, competencyKey) => {
+            lsSetStr("rinkreads_coach_focus_seen_v1", "1");
+            bumpQuestFlags && bumpQuestFlags();
+            setScreen({kind:"drills", level: level || "U11 / Atom", competencyKey});
+          }}
+        /></div>
+        {typeof screen === "object" && screen.kind === "rate" && (
+          <Suspense fallback={<LazyFallback/>}><CoachAssessment key={`${profile.id}:${screen.player.id}`}
+            coach={profile}
+            player={screen.player}
+            playerLevel={screen.playerLevel}
+            onDone={()=>setScreen("home")}
+          /></Suspense>
+        )}
+        {typeof screen === "object" && screen.kind === "drills" && (
+          <StudyScreen
+            player={{ id:"__coach__", level: screen.level, selfRatings:{}, quizHistory:[], __coach:true }}
+            onBack={()=>setScreen("home")}
+            onNav={setScreen}
+            focusCompetency={screen.competencyKey}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Player without completed profile → profile setup
+  if (profile.role === "player" && (!profile.level || !profile.position)) {
+    return <Suspense fallback={<LazyFallback/>}><ProfileSetup profile={profile} onComplete={async () => { await loadUser(profile.id); }}/></Suspense>;
+  }
+
+  // Player not fully loaded yet
+  if (!player) return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading profile…</div>;
+
+  return (
+    <>
+      <style>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
+        input, textarea, button, select { font-family: 'Inter', system-ui, sans-serif; }
+        button:active { opacity: .8; }
+        textarea { resize: none; }
+      `}</style>
+
+      {/* Top-of-page exit banner. Dev sessions get a muted variant (so the
+          tester still sees ~the real UI) but the exit button is always
+          reachable — the previous version hid the banner entirely for dev
+          users, leaving no way back to landing. */}
+      {demoMode && (
+        <div style={{position:"sticky",top:0,background:profile?.__dev ? C.bgElevated : C.purple,color:profile?.__dev ? C.dim : C.bg,padding:".4rem 1rem",fontSize:11,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem",borderBottom:profile?.__dev ? `1px solid ${C.border}` : "none"}}>
+          {profile?.__dev ? `🛠️ Dev bypass · ${tier}` : profile?.__preview ? "👀 Sample player · practice stays on this device." : "🎮 Demo player · practice stays on this device."}
+          <button onClick={exitDemo} style={{background:profile?.__dev ? C.bgCard : C.white,color:profile?.__dev ? C.gold : C.bg,border:profile?.__dev ? `1px solid ${C.goldBorder}` : "none",borderRadius:6,padding:"3px 10px",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
+        </div>
+      )}
+
+      <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={(s)=>{ if (s && typeof s === "object" && s.__leak) { setPathFocus({ cat: s.__leak }); setScreen("quiz"); } else setScreen(s); }} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
+        {screen?.kind === "player-learning" && <Suspense fallback={<LazyFallback/>}><PracticeArena key={`${player.id}:${screen.search}`} player={player} initialSearch={screen.search} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("rinkreads_demo_quiz_taken") === "1"; } catch { return false; } })()
+          ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
+          : tier === "FREE" && !demoMode && isAtFreeQuizCap()
+          ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
+          : <Quiz key={pathFocus?.id || "free"} player={player} focus={pathFocus} onFinish={handleQuizFinish} onBack={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} tier={tier} onUpgrade={promptUpgrade}/>
+        )}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "path" && <PathScreen player={player} onBack={()=>setScreen("home")} onStartLesson={(node)=>{ setPathFocus(node); setScreen("quiz"); }}/>}
+        {screen === "challenges" && <ChallengesHub player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
+        {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={(r, opts) => handleSkillsSave(r, { navigate: opts?.final !== false })} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
+        {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
+        {/* The new U7 builder is an adult-assisted next-practice phrase, with no SMART or numeric effort form. */}
+        {screen === "goals" && (canSetGoals(player?.level) || levelToBand(player?.level)==="U7") && (canAccess("smartGoals", tier).allowed
+          ? <Suspense fallback={<LazyFallback/>}><GoalBuilder key={player.id} player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/></Suspense>
+          : <GatedGoalsScreen onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
+        )}
+        {screen === "weekly"  && (canAccess("weeklyChallenge", tier).allowed
+          ? (weeklyResults
+            ? <WeeklyResults score={weeklyScore} results={weeklyResults} player={player} onHome={()=>{setWeeklyResults(null);setScreen("home");}}/>
+            : <WeeklyQuiz player={player} onBack={()=>setScreen("home")} onFinish={(res, sc) => { setWeeklyResults(res); setWeeklyScore(sc); }}/>)
+          : <GatedScreen feature="weeklyChallenge" title="Weekly Challenge" description="A new curated 10-question challenge every Monday. Same questions for every player — compete against yourself and compare with teammates." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("weeklyChallenge","pro")} target="pro"/>
+        )}
+        {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
+        {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
+        {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {screen === "cogym" && <Suspense fallback={<LazyFallback/>}><CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "readplay" && <Suspense fallback={<LazyFallback/>}><ReadThePlay player={player} onBack={()=>setScreen("home")}/></Suspense>}
+        <FeedbackWidget screen={screen} version={VERSION} />
+        {screen === "training" && (
+          <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+            <StickyHeader>
+              <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+                <BackBtn onClick={()=>setScreen("home")}/>
+                <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>💪 Off-Ice Training</div>
+              </div>
+            </StickyHeader>
+            <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+              {/* Opens expanded HERE only. This screen's entire body is this one
+                  card, so a collapsed card meant a screen whose sole purpose is
+                  logging rendered nothing that looked tappable (SHELL-10). The
+                  Home and Profile instances stay collapsed, where the card is
+                  one of many. `defaultExpanded` is initial state only, so the
+                  player can still collapse it. */}
+              <TrainingLog playerId={player.id || "__demo__"} defaultExpanded />
+            </div>
+          </div>
+        )}
+        {typeof screen === "object" && screen.kind === "challenge" && (
+          <ChallengeRunScreen
+            challenge={screen.challenge}
+            playerId={player.id}
+            onBack={() => setScreen("home")}
+            onDone={() => setScreen("home")}
+          />
+        )}
+        {typeof screen === "object" && screen.kind === "qotd" && (
+          <QotDScreen
+            question={screen.question}
+            player={player}
+            onBack={() => setScreen("home")}
+          />
+        )}
+        {typeof screen === "object" && screen.kind === "speed" && (
+          <SpeedRoundScreen
+            player={player}
+            onBack={() => setScreen("home")}
+            onDone={() => setScreen("home")}
+          />
+        )}
+        {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
+        {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
+        {screen === "password-reset" && <PasswordResetScreen onDone={() => setScreen("home")}/>}
+        {screen === "admin-dashboard" && (
+          <AdminRoute onDenied={() => { clearParentsHash(); setScreen("home"); }}>
+            {({ profile: adminProfile, email: adminEmail }) => (
+              <AdminLayout profile={adminProfile} email={adminEmail} />
+            )}
+          </AdminRoute>
+        )}
+        {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
+        {screen === "parents" && <Suspense fallback={<LazyFallback/>}><ParentsPage
+          onNavigate={(route) => { clearParentsHash(); setScreen("home"); /* "sample" also routes home for now — no public sample route yet */ }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
+        /></Suspense>}
+        {screen === "players" && <Suspense fallback={<LazyFallback/>}><PlayersPage onNavigate={() => { clearParentsHash(); setScreen("home"); }} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/></Suspense>}
+        {screen === "associations" && <Suspense fallback={<LazyFallback/>}><AssociationsPage onNavigate={(r)=>{ clearParentsHash(); if (r==="coaches") setScreen("coaches"); else setScreen("home"); }} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/></Suspense>}
+        {screen === "coaches" && <Suspense fallback={<LazyFallback/>}><CoachesPage
+          onNavigate={(route) => {
+            clearParentsHash();
+            if (route === "coach-demo") {
+              // Launch the coach preview with the demo roster — same flow the
+              // landing card uses, no sign-up required.
+              enterDemo("__coach__");
+            } else if (route === "coach-signup" && !profile) {
+              setSignupPrefill({ role: "coach" });
+              setScreen("home");
+            } else if (route === "parents") {
+              setScreen("parents");
+            } else {
+              setScreen("home");
+            }
+          }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
+        /></Suspense>}
+      </div>
+
+      {typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations","admin-dashboard","password-reset"].includes(screen) && (
+        <BottomNav active={screen} onNav={(next) => {
+          // In preview mode, tapping Home while already on home returns to
+          // the public landing — otherwise the button appears inert and
+          // users have no obvious way out of the preview.
+          if (profile?.__preview && next === "home" && screen === "home") { exitDemo(); return; }
+          setScreen(next);
+        }} tier={tier} level={player?.level}/>
+      )}
+
+      {upgradePrompt && (
+        <UpgradePrompt
+          feature={upgradePrompt.feature}
+          target={upgradePrompt.target}
+          onClose={closeUpgrade}
+          onViewPlans={() => { closeUpgrade(); setScreen("plans"); }}
+        />
+      )}
+      {firstLineToast && (
+        <div onClick={()=>setFirstLineToast(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:210,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:18,padding:"1.75rem 1.5rem",maxWidth:360,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
+            <div style={{fontSize:42,marginBottom:".3rem"}}>{BADGES.FIRST_LINE.icon}</div>
+            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>Badge unlocked</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",lineHeight:1.15,marginBottom:".4rem"}}>{BADGES.FIRST_LINE.name}</div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:"1.1rem"}}>{BADGES.FIRST_LINE.desc}. Welcome to RinkReads.</div>
+            <button onClick={()=>setFirstLineToast(false)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".8rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+              Keep going →
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Sign-up chip only shows for genuine demo/preview flows — not dev-bypass
+          sessions (the tester is impersonating a real FREE/PRO/TEAM user and
+          shouldn't see a sign-up CTA). */}
+      {demoMode && !profile?.__dev && !firstLineToast && screen !== "results" && (
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",bottom:88,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,162,75,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+          <span style={{fontSize:12}}>🏒</span>
+          Sign Up Free →
+        </button>
+      )}
+      {screen === "plans" && <Suspense fallback={<LazyFallback/>}><PlansScreen onBack={()=>setScreen("home")} tier={tier}/></Suspense>}
+      <ToastContainer/>
+    </>
+  );
+}
+
+// Helper: cap quiz history for tiers without fullSessionHistory
+function tierLimitedPlayer(player, tier) {
+  if (!player) return player;
+  if (canAccess("fullSessionHistory", tier).allowed) return player;
+  const cap = 5;
+  if (!player.quizHistory || player.quizHistory.length <= cap) return player;
+  return { ...player, quizHistory: player.quizHistory.slice(-cap) };
+}
+
+// Generic gated-screen wrapper for full-screen locked features
+function GatedScreen({ feature, title, description, onBack, onUnlock, target = "pro" }) {
+  const tierName = target.charAt(0).toUpperCase() + target.slice(1);
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>{title}</div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"2rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>{title}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>{description}</div>
+          <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+            Unlock with {tierName} →
+          </button>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// Plans screen — showcase all tiers
+
+// ─────────────────────────────────────────────────────────
+// COACH RATING SCREEN (authenticated version)
+// ─────────────────────────────────────────────────────────
+function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
+  const [ratings, setRatings] = useState({});
+  const [notes, setNotes] = useState({});
+  const [privateNote, setPrivateNote] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [activeSkill, setActiveSkill] = useState(null);
+  const cats = SKILLS[playerLevel] || [];
+  const allSkills = cats.flatMap(c => c.skills.map(s => ({...s, cat:c.cat, icon:c.icon})));
+  const rated = Object.values(ratings).filter(v=>v).length;
+  const coachScale = getCoachScale(playerLevel);
+  const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
+  const LS_DEMO_NOTES = "rinkreads_demo_coach_notes_v1";
+  function loadDemoNote(pid) {
+    try { const m = JSON.parse(window.localStorage.getItem(LS_DEMO_NOTES) || "{}"); return m[pid] || ""; }
+    catch { return ""; }
+  }
+  function saveDemoNote(pid, text) {
+    try {
+      const m = JSON.parse(window.localStorage.getItem(LS_DEMO_NOTES) || "{}");
+      if (text) m[pid] = text; else delete m[pid];
+      window.localStorage.setItem(LS_DEMO_NOTES, JSON.stringify(m));
+    } catch {}
+  }
+
+  const scaleIntro = {
+    "growth":     "Rate each skill using the growth scale — where is this player in their development journey?",
+    "competency": "Rate each skill using the competency scale — how reliably does this player execute in games?",
+    "percentile": "Rate each skill using the percentile system.",
+  };
+  const legendTitle = {growth:"Growth Scale",competency:"Competency Scale",percentile:"Percentile Scale"};
+
+  const isDemo = coach?.id === "__demo_coach__" || String(player?.id || "").startsWith("dr") || String(player?.id || "").startsWith("__demo");
+  useEffect(() => {
+    if (isDemo) {
+      setPrivateNote(loadDemoNote(player.id));
+      setLoading(false);
+      return;
+    }
+    (async () => {
+      const [existing, note] = await Promise.all([
+        SB.getCoachRatingsForPlayer(player.id),
+        SB.getCoachPlayerNote(player.id),
+      ]);
+      setRatings(existing.ratings || {});
+      setNotes(existing.notes || {});
+      setPrivateNote(note || "");
+      setLoading(false);
+    })();
+  }, []);
+
+  async function save() {
+    setSaving(true);
+    try {
+      if (isDemo) {
+        saveDemoNote(player.id, privateNote.trim());
+      } else {
+        // Verify the coach id we're about to write with matches the
+        // authenticated session. RLS would reject a mismatch anyway, but a
+        // stale profile object or swapped session produces a cryptic error;
+        // catch it here with a user-actionable message.
+        const session = await SB.getSession();
+        if (!session?.user?.id) {
+          throw new Error("Your session may have expired — try signing in again.");
+        }
+        if (session.user.id !== coach.id) {
+          throw new Error("Coach identity mismatch — please sign out and sign back in.");
+        }
+        await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+        await SB.saveCoachPlayerNote(coach.id, player.id, privateNote.trim());
+      }
+      if (Object.values(ratings || {}).some(v => v)) lsSetStr(LS_COACH_RATED, "1");
+      if (Object.values(notes || {}).some(v => v && String(v).trim()) || privateNote.trim()) lsSetStr(LS_COACH_NOTED, "1");
+      setSaved(true);
+    } catch (e) { toast.error(e.message || "Could not save ratings."); }
+    setSaving(false);
+  }
+
+  return (
+    <div style={{position:"fixed",inset:0,background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1.5rem 1.25rem",overflowY:"auto",zIndex:100}}>
+      <div style={{maxWidth:560,margin:"0 auto"}}>
+        <BackBtn onClick={onDone}/>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{player.name}</div>
+          <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
+          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>{scaleIntro[coachScaleType] || scaleIntro.ladder}</div>
+        </Card>
+
+        {/* Private coach notes — only the coach who writes them can read them.
+            Intended for season-long observations, parent conversations, call-ups,
+            behaviour patterns, etc. Persisted to coach_ratings with a sentinel
+            skill_id so no schema change was required. */}
+        <Card style={{marginBottom:"1.5rem",borderLeft:`3px solid ${C.gold}`}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
+            <Label>🔒 Private Notes</Label>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>Only you can see these</div>
+          </div>
+          <textarea
+            value={privateNote}
+            onChange={e => setPrivateNote(e.target.value)}
+            placeholder={`Observations about ${player.name?.split(" ")[0] || "this player"} — effort, attitude, patterns you notice, what to work on next, conversations with parents…`}
+            rows={4}
+            style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"vertical",lineHeight:1.6,minHeight:90}}
+          />
+        </Card>
+
+        {loading ? <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div> : (<>
+          <Card style={{marginBottom:"1.25rem"}}>
+            <Label>{legendTitle[coachScaleType]}</Label>
+            <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+              {coachScale.map(r => (
+                <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                  <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:95}}>{r.label}</div>
+                  {r.sub && (
+                    <div style={{fontSize:12,color:C.dimmer}}>
+                      {r.sub.includes("·") ? (
+                        <>
+                          <span>{r.sub.split("·")[0].trim()}</span>
+                          <span style={{color:C.dimmest,marginLeft:".35rem"}}>· {r.sub.split("·")[1].trim()}</span>
+                        </>
+                      ) : r.sub}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
+            <div style={{fontSize:13,color:C.dim,fontWeight:600}}>{rated}/{allSkills.length} skills rated</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{rated===allSkills.length?"All done ✓":"Rate each skill below"}</div>
+          </div>
+          <ProgressBar value={rated} max={allSkills.length} color={C.gold} height={5}/>
+          <div style={{height:"1rem"}}/>
+
+          {cats.map(cat => (
+            <div key={cat.cat} style={{marginBottom:"1.25rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".6rem"}}>
+                <span style={{fontSize:15}}>{cat.icon}</span>
+                <span style={{fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>{cat.cat}</span>
+              </div>
+              {cat.skills.map(skill => {
+                const rating = ratings[skill.id];
+                const isActive = activeSkill === skill.id;
+                const ratingColor = rating ? getScaleColor(coachScale, rating) : null;
+                const ratingLabel = rating ? getScaleLabel(coachScale, rating) : null;
+                return (
+                  <div key={skill.id} style={{marginBottom:".6rem"}}>
+                    <button onClick={() => setActiveSkill(isActive ? null : skill.id)}
+                      style={{width:"100%",background:rating?`${ratingColor}10`:C.bgCard,border:`1px solid ${rating?ratingColor+"40":C.border}`,borderLeft:`3px solid ${rating?ratingColor:"transparent"}`,borderRadius:12,padding:".85rem 1rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:14,fontWeight:600,marginBottom:2}}>{skill.name}</div>
+                        <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{skill.desc}</div>
+                      </div>
+                      <div style={{flexShrink:0,marginLeft:"1rem",textAlign:"right"}}>
+                        {rating ? <div style={{fontSize:12,fontWeight:700,color:ratingColor}}>{ratingLabel}</div> : <div style={{fontSize:11,color:C.dimmer}}>Tap to rate</div>}
+                        <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{isActive?"▲":"▼"}</div>
+                      </div>
+                    </button>
+                    {isActive && (
+                      <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",marginTop:".35rem",display:"flex",flexDirection:"column",gap:".4rem"}}>
+                        {coachScale.map(r => (
+                          <button key={r.value} onClick={() => setRatings(p=>({...p,[skill.id]:r.value}))}
+                            style={{background:ratings[skill.id]===r.value?`${r.color}18`:"none",border:`1px solid ${ratings[skill.id]===r.value?r.color+"50":C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",display:"flex",alignItems:"center",gap:".75rem",fontFamily:FONT.body}}>
+                            <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                            <div style={{textAlign:"left"}}>
+                              <div style={{fontSize:13,fontWeight:700,color:r.color}}>{r.label}</div>
+                              {r.sub ? (
+                                <div style={{fontSize:11,color:C.dimmer}}>
+                                  {r.sub.includes("·") ? (
+                                    <>
+                                      <span>{r.sub.split("·")[0].trim()}</span>
+                                      <span style={{color:C.dimmest,marginLeft:".35rem"}}>· {r.sub.split("·")[1].trim()}</span>
+                                    </>
+                                  ) : r.sub}
+                                </div>
+                              ) : null}
+                            </div>
+                            {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
+                          </button>
+                        ))}
+                        {rating && (
+                          <div style={{marginTop:".5rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`}}>
+                            <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".35rem"}}>💬 Discussion note (optional)</div>
+                            <textarea value={notes[skill.id]||""} onChange={e=>setNotes(p=>({...p,[skill.id]:e.target.value}))}
+                              placeholder={`What's one thing ${player.name} could work on?`}
+                              rows={2}
+                              style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .7rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.5}}/>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
+          {saved ? (
+            <Card style={{background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,textAlign:"center",padding:"1.5rem"}}>
+              <div style={{fontSize:28,marginBottom:".5rem"}}>✅</div>
+              <div style={{fontWeight:700,fontSize:15,color:C.green,marginBottom:".35rem"}}>Ratings Saved</div>
+              <div style={{fontSize:13,color:C.dim}}>{player.name} will see your ratings and notes in their report.</div>
+              <PrimaryBtn onClick={onDone} style={{marginTop:"1rem"}}>Back to Teams</PrimaryBtn>
+            </Card>
+          ) : (
+            <PrimaryBtn onClick={save} disabled={saving || rated === 0} style={{marginBottom:"1rem"}}>
+              {saving ? "Saving…" : `Save Ratings (${rated}/${allSkills.length} rated)`}
+            </PrimaryBtn>
+          )}
+        </>)}
+      </div>
+    </div>
+  );
+}
+
+

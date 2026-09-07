@@ -1,0 +1,878 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changes": [
+    {
+      "scenarioId": "exp26-u11-010",
+      "questionId": "exp26-u11-010-q7",
+      "reason": "Replace the absent F2 and a guaranteed-outcome distractor with plausible receiving mistakes.",
+      "before": {
+        "id": "exp26-u11-010-q7",
+        "type": "choice",
+        "prompt": "What should F1 know about your receiving target?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The wider target is available only while D1 stays inside it"
+          },
+          {
+            "id": "b",
+            "text": "The target guarantees a clean turn"
+          },
+          {
+            "id": "c",
+            "text": "F2 owns the pass"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message ties the target to D1 and F1's route, keeping the choice conditional."
+      },
+      "after": {
+        "id": "exp26-u11-010-q7",
+        "type": "choice",
+        "prompt": "What should F1 know about your receiving target?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The wider target is available only while D1 stays inside it"
+          },
+          {
+            "id": "b",
+            "text": "I will turn up ice before locating the arriving puck"
+          },
+          {
+            "id": "c",
+            "text": "Keep aiming at my old spot if I move wider"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message ties the target to D1 and F1's route, keeping the choice conditional."
+      },
+      "beforeContentHash": "ed43b03fa73d6b4b3035c4b2dfd0f5037ad763847f0ead539088181db3c1918d",
+      "afterContentHash": "bd58938e54621661266e72764bcb8bebad985f0a3a9202b0fcbbed250070481e"
+    },
+    {
+      "scenarioId": "exp26-u11-010",
+      "questionId": "exp26-u11-010-q8",
+      "reason": "The wrong option should test a receiving assumption, not mention an absent F2.",
+      "before": {
+        "id": "exp26-u11-010-q8",
+        "type": "multi",
+        "prompt": "Which two details support the wider reception?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 can reach the diagonal target"
+          },
+          {
+            "id": "b",
+            "text": "D1 is not closing it yet"
+          },
+          {
+            "id": "c",
+            "text": "F2 is up ice so the touch is pre-set"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The passer and defender cues make the target usable; the next touch still needs a scan."
+      },
+      "after": {
+        "id": "exp26-u11-010-q8",
+        "type": "multi",
+        "prompt": "Which two details support the wider reception?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 can reach the diagonal target"
+          },
+          {
+            "id": "b",
+            "text": "D1 is not closing it yet"
+          },
+          {
+            "id": "c",
+            "text": "YOU have already chosen the next touch before checking the arrival"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The passer and defender cues make the target usable; the next touch still needs a scan."
+      },
+      "beforeContentHash": "cfedfe271c3395aeaf6df086b7b96f6ebf383ae03428c06d1ec38d64ea84b4ea",
+      "afterContentHash": "1936685b2e4ff745d3f35e3710f38040bf59c35edf716377ded581ef2bcbd336"
+    },
+    {
+      "scenarioId": "exp26-u11-011",
+      "questionId": "exp26-u11-011-q7",
+      "reason": "Use actual F1/YOU/D1 passing choices instead of nonexistent F2 or fixed-bounce certainty.",
+      "before": {
+        "id": "exp26-u11-011-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate before the wall option?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 blocks the direct lane; watch the rebound near the wall"
+          },
+          {
+            "id": "b",
+            "text": "The wall will return it the same way"
+          },
+          {
+            "id": "c",
+            "text": "F2 must stay still"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message names D1 and the rebound, explaining why the route needs another read."
+      },
+      "after": {
+        "id": "exp26-u11-011-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate before the wall option?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 blocks the direct lane; watch the rebound near the wall"
+          },
+          {
+            "id": "b",
+            "text": "Aim at the same board spot even if I move"
+          },
+          {
+            "id": "c",
+            "text": "Use the direct pass before checking D1’s stick"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message names D1 and the rebound, explaining why the route needs another read."
+      },
+      "beforeContentHash": "ead8acec1461b9cd8df02cdd5f7d3a309998cecad5ec3d19db4f470c1543f81b",
+      "afterContentHash": "1a730460c866a59a7f269e081e6594e6f2f4ad743fbbb20924f180b18dd5d9fd"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q1",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q1",
+        "type": "choice",
+        "prompt": "After the entry pass, which Navy player is the carrier?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The setup assigns possession to F2 after the entry pass."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q1",
+        "type": "choice",
+        "prompt": "After the entry pass, which Navy player is the carrier?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F3"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The setup assigns possession to F2 after the entry pass."
+      },
+      "beforeContentHash": "0d1fb008476bbe551e47ff62bc9366ca0daa8d95676d367f09138ca1e5190732",
+      "afterContentHash": "a98d00df09bf23fa2e15e86e64402c56b20a14bdefe893cebd8b934c31e6059b"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q2",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q2",
+        "type": "multi",
+        "prompt": "Which two details matter when filling high support?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's puck position"
+          },
+          {
+            "id": "b",
+            "text": "Gold's inside coverage"
+          },
+          {
+            "id": "c",
+            "text": "A high support spot chosen without checking F2’s lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q2",
+        "type": "multi",
+        "prompt": "Which two details matter when filling high support?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's puck position"
+          },
+          {
+            "id": "b",
+            "text": "Gold's inside coverage"
+          },
+          {
+            "id": "c",
+            "text": "A high support spot chosen without checking F2’s lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+      },
+      "beforeContentHash": "17db16df2fa2fa6de473ed59989a0ee3c867e7fa1f207815d3e8dd569d9266ae",
+      "afterContentHash": "c9b3197d9d820b32aa7c52ddd0e37185f2ad7bcdfa7f2c4a4733834465b5419e"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q3",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q3",
+        "type": "sequence",
+        "prompt": "Arrange the post-entry support change.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find F2 and the inside coverage"
+          },
+          {
+            "id": "b",
+            "text": "Offer a separated high lane"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the carrier and exit"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The support lane is useful only if it remains reachable from F2."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q3",
+        "type": "sequence",
+        "prompt": "Arrange the post-entry support change.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find F2 and the inside coverage"
+          },
+          {
+            "id": "b",
+            "text": "Offer a separated high lane"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the carrier and exit"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The support lane is useful only if it remains reachable from F2."
+      },
+      "beforeContentHash": "e8881aeb11b00e821a39279d40a4c0b9031fb704154d5e4eaf13d43065a2a5e4",
+      "afterContentHash": "73b41754a385ce03b4372b353404515de0556c78c69dec024e62306ff35c4fbc"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q4",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q4",
+        "type": "position",
+        "prompt": "Move YOU into a high-slot support example after F2 receives.",
+        "actorId": "h1",
+        "reference": {
+          "x": 20.5,
+          "y": 4
+        },
+        "basis": "coaching",
+        "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q4",
+        "type": "position",
+        "prompt": "Move YOU into a high-slot support example after F2 receives.",
+        "actorId": "h1",
+        "reference": {
+          "x": 20.5,
+          "y": 4
+        },
+        "basis": "coaching",
+        "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+      },
+      "beforeContentHash": "2b9f90393e2e58b1fc004efc69304676ca81056adb84d7c14261215648b878a7",
+      "afterContentHash": "b5f06fd36307a0507730d92a8efc510123712af245e632482e5d7e8f6649f829"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q5",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q5",
+        "type": "choice",
+        "prompt": "F2 loses the puck to Gold 2. What takes priority?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Re-read the transition and recover toward the dangerous lane"
+          },
+          {
+            "id": "b",
+            "text": "Stay high waiting for F2"
+          },
+          {
+            "id": "c",
+            "text": "Assume the entry is still controlled"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession changed, so the role changes before the old support route is continued."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q5",
+        "type": "choice",
+        "prompt": "F2 loses the puck to Gold 2. What takes priority?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Re-read the transition and recover toward the dangerous lane"
+          },
+          {
+            "id": "b",
+            "text": "Stay high waiting for F2"
+          },
+          {
+            "id": "c",
+            "text": "Assume the entry is still controlled"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession changed, so the role changes before the old support route is continued."
+      },
+      "beforeContentHash": "9b474169472926b84565add5ab5420ed2b4344dbfa8c44254288c5fc07d23bfc",
+      "afterContentHash": "482bb482c474f60209886d93a5cd7f6a00be1f8fda6766833af0d8cfa93628ab"
+    },
+    {
+      "scenarioId": "exp26b-u15-005",
+      "questionId": "exp26b-u15-005-q6",
+      "reason": "Correct the false blue-line location for YOU and use the visible F3 as the alternative carrier choice.",
+      "before": {
+        "id": "exp26b-u15-005-q6",
+        "type": "explain",
+        "prompt": "Which support space did YOU fill, and what route does it leave F2?",
+        "basis": "coaching",
+        "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+      },
+      "after": {
+        "id": "exp26b-u15-005-q6",
+        "type": "explain",
+        "prompt": "Which support space did YOU fill, and what route does it leave F2?",
+        "basis": "coaching",
+        "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+      },
+      "beforeContentHash": "657b25e26682905465c7ff6b92ea88b202fd829c3cbf0e6f283ec15103b01d0a",
+      "afterContentHash": "19aaabbd0bd775a72bb6fe1dd957efdad2fbab968233273b25534ef1afe613a0"
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26b-u15-005",
+      "before": {
+        "id": "exp26b-u15-005",
+        "version": 1,
+        "ageBand": "U15",
+        "title": "Replace high support after entry",
+        "family": "entry-support-replace",
+        "topic": "Zone-entry support",
+        "objective": "Fill a changed high support role without crowding the puck carrier.",
+        "briefing": "Navy attacks the Gold net. YOU is near the right blue line after F2 received the entry pass; F3 is low and Gold 1 and Gold 2 are inside. The next support job depends on the carrier and the defenders.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 20,
+              "y": 8,
+              "facing": -1.7
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": 0,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": -5,
+              "facing": 2.3
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 10,
+              "y": 4,
+              "facing": -0.4
+            },
+            {
+              "id": "a2",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 6,
+              "facing": -2
+            },
+            {
+              "id": "a3",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": -1,
+              "facing": 2.9
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "F2 owns the puck after the stated entry pass.",
+          "YOU is the high support option.",
+          "Gold has two inside defenders."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-practice-2020",
+            "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+            "section": "Printed page 2, Entries — Delay",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-005-q1",
+            "type": "choice",
+            "prompt": "After the entry pass, which Navy player is the carrier?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1"
+              },
+              {
+                "id": "b",
+                "text": "F2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The setup assigns possession to F2 after the entry pass."
+          },
+          {
+            "id": "exp26b-u15-005-q2",
+            "type": "multi",
+            "prompt": "Which two details matter when filling high support?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2's puck position"
+              },
+              {
+                "id": "b",
+                "text": "Gold's inside coverage"
+              },
+              {
+                "id": "c",
+                "text": "A high support spot chosen without checking F2’s lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+          },
+          {
+            "id": "exp26b-u15-005-q3",
+            "type": "sequence",
+            "prompt": "Arrange the post-entry support change.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find F2 and the inside coverage"
+              },
+              {
+                "id": "b",
+                "text": "Offer a separated high lane"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the carrier and exit"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The support lane is useful only if it remains reachable from F2."
+          },
+          {
+            "id": "exp26b-u15-005-q4",
+            "type": "position",
+            "prompt": "Move YOU into a high-slot support example after F2 receives.",
+            "actorId": "h1",
+            "reference": {
+              "x": 20.5,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+          },
+          {
+            "id": "exp26b-u15-005-q5",
+            "type": "choice",
+            "prompt": "F2 loses the puck to Gold 2. What takes priority?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Re-read the transition and recover toward the dangerous lane"
+              },
+              {
+                "id": "b",
+                "text": "Stay high waiting for F2"
+              },
+              {
+                "id": "c",
+                "text": "Assume the entry is still controlled"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession changed, so the role changes before the old support route is continued."
+          },
+          {
+            "id": "exp26b-u15-005-q6",
+            "type": "explain",
+            "prompt": "Which support space did YOU fill, and what route does it leave F2?",
+            "basis": "coaching",
+            "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26b-u15-005",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Replace high support after entry",
+        "family": "entry-support-replace",
+        "topic": "Zone-entry support",
+        "objective": "Fill a changed high support role without crowding the puck carrier.",
+        "briefing": "Navy attacks Gold’s net. After F2 receives the entry pass, YOU are on the wall side of F2 and F3 supports lower in the zone. Gold 1 and Gold 2 defend inside while D1 is nearer the blue line. The next support job depends on F2 and those defenders.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 20,
+              "y": 8,
+              "facing": -1.7
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": 0,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": -5,
+              "facing": 2.3
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 10,
+              "y": 4,
+              "facing": -0.4
+            },
+            {
+              "id": "a2",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 6,
+              "facing": -2
+            },
+            {
+              "id": "a3",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 23,
+              "y": -1,
+              "facing": 2.9
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "F2 owns the puck after the stated entry pass.",
+          "YOU is the high support option.",
+          "Gold has two inside defenders."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-practice-2020",
+            "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+            "section": "Printed page 2, Entries — Delay",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-005-q1",
+            "type": "choice",
+            "prompt": "After the entry pass, which Navy player is the carrier?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F3"
+              },
+              {
+                "id": "b",
+                "text": "F2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The setup assigns possession to F2 after the entry pass."
+          },
+          {
+            "id": "exp26b-u15-005-q2",
+            "type": "multi",
+            "prompt": "Which two details matter when filling high support?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F2's puck position"
+              },
+              {
+                "id": "b",
+                "text": "Gold's inside coverage"
+              },
+              {
+                "id": "c",
+                "text": "A high support spot chosen without checking F2’s lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+          },
+          {
+            "id": "exp26b-u15-005-q3",
+            "type": "sequence",
+            "prompt": "Arrange the post-entry support change.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find F2 and the inside coverage"
+              },
+              {
+                "id": "b",
+                "text": "Offer a separated high lane"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the carrier and exit"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The support lane is useful only if it remains reachable from F2."
+          },
+          {
+            "id": "exp26b-u15-005-q4",
+            "type": "position",
+            "prompt": "Move YOU into a high-slot support example after F2 receives.",
+            "actorId": "h1",
+            "reference": {
+              "x": 20.5,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+          },
+          {
+            "id": "exp26b-u15-005-q5",
+            "type": "choice",
+            "prompt": "F2 loses the puck to Gold 2. What takes priority?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Re-read the transition and recover toward the dangerous lane"
+              },
+              {
+                "id": "b",
+                "text": "Stay high waiting for F2"
+              },
+              {
+                "id": "c",
+                "text": "Assume the entry is still controlled"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession changed, so the role changes before the old support route is continued."
+          },
+          {
+            "id": "exp26b-u15-005-q6",
+            "type": "explain",
+            "prompt": "Which support space did YOU fill, and what route does it leave F2?",
+            "basis": "coaching",
+            "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "id": "u13_gap_pivot_match_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.gap-control",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "gap-control",
+    "angling",
+    "defensive-zone-coverage",
+    "react"
+  ],
+  "cat": "Defensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.46,
+      "y": 0.48,
+      "tag": "D"
+    },
+    {
+      "id": "fwd",
+      "kind": "defender",
+      "x": 0.64,
+      "y": 0.42,
+      "tag": "F"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.642,
+      "y": 0.418
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "You are the defender. The forward is building speed at you. Tap the ice you should pivot back to so you can match their speed and keep the play in front."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.36,
+    "y": 0.5,
+    "tolerance": 0.1
+  },
+  "mc": {
+    "stem": "You are the defenseman. The forward is catching a breakout pass and building speed. What is your best read?",
+    "opts": [
+      "Pivot backward early and match their speed with a controlled gap",
+      "Hold the blue line flat-footed and reach if the puck is chipped by you",
+      "Lunge straight at the puck carrier even though they already have speed",
+      "Turn away from the rush and retreat deep into the slot too early"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. A forward with momentum beats a flat-footed defender. Pivot early to match speed, keep the play in front, and control the gap.",
+    "wrong": "Waiting flat-footed or lunging lets a forward with speed beat you. Pivot back early to match their speed and keep them in front."
+  },
+  "tip": "Against a forward with speed, pivot back early to match their pace and keep the gap tight.",
+  "why": "At U13 a forward with momentum can beat a defender who waits flat-footed. Pivoting early matches speed and keeps the play in front."
+}

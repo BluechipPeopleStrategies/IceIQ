@@ -2,6 +2,11 @@ import { readFile } from 'node:fs/promises';
 
 const root = new URL('../', import.meta.url);
 const screenshots = [
+  'sgs-mixed-desktop.png',
+  'rink-side-neutral-players.png',
+  'shootout-art-desktop.png',
+  'shootout-art-phone.png',
+  'defender-perspective-desktop.png',
   'read-scene-desktop.png',
   'curriculum-3d-desktop.png',
   'sgs-3v3-desktop.png',

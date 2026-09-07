@@ -1,0 +1,1827 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-32",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q1",
+      "baseContentHash": "f4ddd9d518efc5dc1c10d9564c03e1189286c664b21b4d47b10db27ca886950b",
+      "verdict": "retain",
+      "reason": "Basis-scene choice is directly supported: Gold 1 (away-skater-1) owns the puck at x=-28, which is beyond the Navy goal line (~x=-27.13), so \"Behind the net\" is correct and the other two options are clearly wrong locations.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q2",
+      "baseContentHash": "6e1ed311ec107964645ac754384ec6da74186ff51f62898ee81e9fe094256498",
+      "verdict": "retain",
+      "reason": "Multi-select correctly rewards naming who pressures the puck and who continues Gold 2 coverage; \"only that the puck moved\" is a believable but incomplete-communication distractor, not an absolutist giveaway.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A team could also fold in a third detail (e.g. new ice time/pressure angle) without being wrong; the two-item answer is a minimum standard, not exclusive."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q3",
+      "baseContentHash": "89de1ecb9fb9e6defc9fae3b707aa26e11059400d89d9d99d99d570139badedc",
+      "verdict": "retain",
+      "reason": "Sequence (track side change -> confirm pressure -> maintain/adjust slot assignment) is a defensible communication order for this drill and is explicitly caveated as exercise-specific, not a universal defensive system, consistent with the sequence-format rule that order must teach something real.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Some systems confirm pressure responsibility before or simultaneously with tracking the side change (scanning and communicating can overlap); either order is coachable if the slot assignment is not abandoned."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q4",
+      "baseContentHash": "e88565b8950cc51c4bd70c70b68a2dbf8e918627c9b6a033bacb02186d2eec57",
+      "verdict": "retain",
+      "reason": "Position reference (-24,3) is on ice, stays on YOU's own side (y positive, matching YOU's y=6 sign) and is closer to the middle/net than YOU's starting spot (-23,6), matching the 'inside support' claim. Carried-puck offset for this actor also lands on ice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A slightly deeper or shallower inside point on the same side is equally defensible; the reference is one example, not the only correct dot, and other team systems may hold YOU wider."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q5",
+      "baseContentHash": "f928367f62f6574a91e3fe8e0a83a26cc27e0e645dda086f8df3772616ae9d61",
+      "verdict": "retain",
+      "reason": "Hypothetical (C drawn away, Gold 2 uncovered) is explicitly framed as a changed condition, not a scene claim; recognizing the slot assignment needs help/communication is the only option that accounts for the changed assumption, and the other two options are plausible but wrong reads (assuming no change, or ignoring the far threat), not absolutist trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Depending on team rules, the answer could be YOU or D2 stepping in rather than a shared call; the question only asks what must be recognized, not who specifically must act."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q6",
+      "baseContentHash": "c7153b4147bd9f72ebf655043bbcd8d44ab86b56327f71d97fdf9d3a06f12205",
+      "verdict": "retain",
+      "reason": "Reflection question has no answer key (correctly a basis:coaching explain type) and asks the learner to identify what a bare \"switch\" call omits; grammar is correct (\"Why is 'switch'...\" refers to the word, a singular noun, not YOU).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A learner could also answer in terms of missing urgency/timing rather than missing player/threat identity; both are defensible expansions of \"incomplete.\""
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q7",
+      "baseContentHash": "888a6ea31546171fbc373d2ae0beb74acd105c782198698f7169ffdb63ac1999",
+      "verdict": "retain",
+      "reason": "Correct option (\"Gold 1 is changing sides; call the low exchange with D2\") matches the stated roster and the drill's low-exchange plan; distractors (bare \"switch\", C chasing alone) are realistic incomplete-communication habits, not jokes.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A team that names the receiving defender first (\"D2, take the puck side\") rather than the attacker first is an equally valid call structure."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q8",
+      "baseContentHash": "01709116ae4e4363ca40fb5562772b33640f17a69688ec8415ef9511465c3959",
+      "verdict": "retain",
+      "reason": "Multi-select correctly rewards Gold 1's new side and C's inside position as the two cues that shape the handoff; 'the word switch without a player name' is consistent with q6/q7's theme that a bare call is incomplete, not a duplicate trivia option.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Puck possession quality (contested vs. controlled) could be argued as a third relevant cue; the two-item answer is a minimum, not exclusive."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q9",
+      "baseContentHash": "9334d3bbac7c548983ec78e8dd67f6f776ad4ea002e4ff8d110ccc39c728b59b",
+      "verdict": "retain",
+      "reason": "Position reference (-21,2) sits ~2.8m from C (-19,0), clearly separate, and stays on YOU's original (positive-y) side consistent with the stated hypothetical that Gold 1 has moved to D2's side. Carried-puck offset lands on ice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "YOU could instead hold a slightly lower slot point nearer the net rather than mid-slot; the reference is an example, and the explanation already notes the handoff is not automatic."
+    },
+    {
+      "scenarioId": "exp26-u15-008",
+      "questionId": "exp26-u15-008-q10",
+      "baseContentHash": "0d91e9a7782943308299dbc74705a3740eca0e96a502a0a877b2dd88b1291d6f",
+      "verdict": "repair",
+      "reason": "Lowercase \"you\" in \"What do you name?\" violates mandatory house style (all-caps YOU), the same defect class found in packet-31 and explicitly flagged as real, not house style. Everything else in the question (hypothetical framing, roster, explanation) is sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=-23,y=6, facing -2.467 rad",
+          "home-skater-2 (D2) at x=-23,y=-6, facing 2.129 rad",
+          "home-skater-3 (C) at x=-19,y=0, facing 2.923 rad",
+          "away-skater-1 (Gold 1) at x=-28,y=2, owns the puck",
+          "away-skater-2 (Gold 2) at x=-17,y=-1",
+          "away-skater-3 (Gold 3) at x=-19,y=9",
+          "home-goalie-4 (G) at x=-26,y=0",
+          "Navy goal line is near x=-27.13; Gold 1 at x=-28 is beyond it (behind the net), goalie at x=-26 is in front of it"
+        ],
+        "stated": [
+          "Briefing: Gold 1 controls the puck behind the Navy net",
+          "Briefing: YOU and D2 are on opposite sides (y=6 vs y=-6, confirmed)",
+          "Briefing: the drill's plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed",
+          "House convention: Navy/home attacks +x and defends its own net near x=-27.13"
+        ],
+        "unproven": [
+          "Whether Gold 1 actually changes sides to D2's side (q3/q7/q9 pose this as a hypothetical only)",
+          "Whether C is actually drawn/pulled away from the slot (q5/q10 pose this as a hypothetical only)",
+          "Any skating speed, reaction time, or guaranteed interception outcome"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Communicating the threat and the takeover assignment can also be phrased as a single combined call rather than two separate names; the fix here only corrects the pronoun case, not the teaching content."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q1",
+      "baseContentHash": "7596b6a6adcec5eac03248375d3c98d8aa003ebc93c98bf354fa96f29fb42df3",
+      "verdict": "retain",
+      "reason": "Basis-scene choice is verified: F1 (x=28) and F2 (x=23) both exceed YOU's x=16, and Navy attacks +x, so both are genuinely deeper into Gold's end. D1/D2 (x=11 each) are shallower, and \"Gold 1 and Gold 3\" mixes in opponents, so option (a) is the only correct pairing.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q2",
+      "baseContentHash": "a3b1f3abcf8acf9a87446581bf8b00365038b0c1f5ea50433fe1f71a592bbc1a",
+      "verdict": "retain",
+      "reason": "Multi-select correctly rewards checking F1's ability to see out of pressure and Gold 2's middle position as the two checks that matter for keeping a high outlet; option (a) is a legitimate but unselected strategic question, not a giveaway.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A coach could add checking F2's passing lane back up as a third relevant cue; the two-item answer is a minimum standard."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q3",
+      "baseContentHash": "03d7455b5284bc038b143590faa67c34f38a9c0d924952cbf042a7ad92fe9137",
+      "verdict": "retain",
+      "reason": "Sequence (notice F2 join low -> check the high-slot pocket -> reoffer high support) is a defensible read order for this specific cycle and is explicitly caveated that timing should follow the carrier's pressure, not a fixed universal order.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Checking the high-slot pocket and noticing F2 join low can happen in the same scan; either could come first without being wrong."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q4",
+      "baseContentHash": "ce9df78bbdb6c280fb2834a25f0aa623dad4c34f94c71826c4bf41f2635d0d70",
+      "verdict": "retain",
+      "reason": "Position reference (18,4) is on ice, ~12.8m from F1 (28,-4) and ~13.9m from F2 (23,-9): clearly separated from both low forwards, consistent with the 'high-slot pocket' claim. Carried-puck offset lands on ice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A slightly wider or narrower high pocket is equally defensible; the reference is one example lane, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q5",
+      "baseContentHash": "2162d554a59cbb393490d81eae57c80b550cfe5628c756f398a1822aaa782150",
+      "verdict": "repair",
+      "reason": "Lowercase \"you\" in option (c), \"Shoot automatically because you are high,\" is the same mandatory-style defect flagged in packet-31 (all-caps YOU required); the correct answer (b) and the rest of the question are sound.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A defensible response could also be a quick shot if the lane and pressure clearly justify it; the question already frames \"read the new pressure\" as the general skill rather than banning a shot outright."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q6",
+      "baseContentHash": "04530805e4d5723b66df7f962c38b94eebe0c7ecffbdda4e3d882878f6855cb9",
+      "verdict": "retain",
+      "reason": "Reflection question (basis:coaching, no answer key) correctly asks for a depth/angle/support comparison rather than a scored answer; grammar is correct throughout.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A learner could frame the difference around risk (turnover exposure low vs. high) instead of passing angle; both are defensible axes of comparison."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q7",
+      "baseContentHash": "3114a433f3ca80a0ed9bc5224d43c1142ebd4dd235bf801d41237b19a97bb646",
+      "verdict": "retain",
+      "reason": "Correct option (\"I am high; show me if F1 can use the outlet\") matches the stated high-outlet role; the other two options are realistic but wrong reads (dismissing the high lane, over-committing to F1 as receiver), not jokes or absolutist tells.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A call naming F1 directly by label (e.g. 'F1, I'm your high outlet') is an equally valid phrasing of the same message."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q8",
+      "baseContentHash": "de5f99cc9e5bd86b7491e6757251caedecbf2e39e2974f9e78347a52311887e3",
+      "verdict": "repair",
+      "reason": "Option (c) has a subject-verb agreement error, 'YOU is closest to the boards' (should be 'YOU are'), the single most common defect class in prior packets. Recomputing distances to the boards (y=+-12.954) also shows YOU (y=0, ~12.95m from the boards) is actually the *farthest* home skater from the boards, not the closest (F2 at y=-9 is ~3.95m away) -- so the option's premise was also factually false against the displayed geometry, not just an incomplete distractor. Replaced with a cue that doesn't assert a false position claim.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Board proximity is a real (if secondary) factor coaches sometimes cite for staying wide vs. central; it is a legitimate but non-decisive cue here, which the replacement wording preserves without the false claim."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q9",
+      "baseContentHash": "7ca9d6c238ec138422a53da501c2b6587da312b4158732cc931f45de1e69f788",
+      "verdict": "repair",
+      "reason": "q9's prompt ('Move YOU into a high-slot pocket separated from the low forwards') is a near-verbatim restatement of q4's prompt ('Move YOU into a high-slot pocket separated from the two low forwards'), with only a small reference-point shift and no new cue, condition or decision -- the duplication pattern flagged in prior packets (siblings restating an earlier prompt in a different coordinate rather than teaching something new). Repaired by adding the explicit F1-to-F2 cycle hypothetical already used elsewhere in this family, so q9 now tests adjusting the support angle to a new puck carrier rather than repeating q4's static read.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A support point closer to the strong-side wall could also keep a lane open from F2; the reference is one example, and the explanation already notes another pocket may work."
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "questionId": "exp26-u15-009-q10",
+      "baseContentHash": "b51901828e1367d60b9b0ab6aeac5ffa82c8dea579804174c55e7a672696d4d6",
+      "verdict": "retain",
+      "reason": "Reflection question (basis:coaching, no answer key) correctly asks what to scan after receiving the pass, naming Gold coverage, F2's route and the net-side lane -- all consistent with the visible roster and stated roles, without asserting a guaranteed outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "home-skater-1 (YOU) at x=16,y=0, facing -0.322 rad",
+          "home-skater-2 (F1) at x=28,y=-4, owns the puck, facing 0",
+          "home-skater-3 (F2) at x=23,y=-9, facing 0.785 rad",
+          "home-skater-4 (D1) at x=11,y=5",
+          "home-skater-5 (D2) at x=11,y=-5",
+          "away-skater-1 (Gold 1) at x=25,y=-5",
+          "away-skater-2 (Gold 2) at x=21,y=0",
+          "away-skater-3 (Gold 3) at x=18,y=6",
+          "Gold's goal line is near x=27.13; F1 at x=28 is beyond it (below the goal line); F2 at y=-9 sits close to the side boards (bound is y=-12.954)"
+        ],
+        "stated": [
+          "Briefing: F1 controls below the attacking goal line",
+          "Briefing: F2 has moved down the side boards to support",
+          "Briefing: YOU are arriving from the high slot",
+          "Briefing: the exercise calls for one forward to remain higher than the puck as an outlet",
+          "House convention: Navy/home attacks +x, so a greater x is deeper into Gold's end"
+        ],
+        "unproven": [
+          "Whether F1 actually cycles the puck to F2 (q9 poses this as a hypothetical only)",
+          "Whether any Gold defender actually pressures a specific lane",
+          "Any skating speed or completed-pass outcome from a still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A learner could also name checking the far post/weak-side lane as a fourth scan item; the listed three are not exhaustive."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u15-008",
+      "baseVersion": 1,
+      "baseScenarioHash": "58396ac6fd413f4904f0778ab36414682db44bb6263ba040d11c9336d3a01d74",
+      "replacement": {
+        "id": "exp26-u15-008",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Communicate when the puck goes behind the net",
+        "family": "defensive-zone-role-switch",
+        "topic": "Coverage communication",
+        "objective": "Handle a stated coverage exchange without losing a slot threat.",
+        "briefing": "Gold 1 controls the puck behind the Navy net. YOU and D2 are on opposite sides. The drill’s plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": 6,
+              "facing": -2.4668517113662407
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": -6,
+              "facing": 2.129395642138459
+            },
+            {
+              "id": "home-skater-3",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -19,
+              "y": 0,
+              "facing": 2.922923707715851
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -28,
+              "y": 2,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -17,
+              "y": -1,
+              "facing": 2.875340604438868
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -19,
+              "y": 9,
+              "facing": -2.4805494847391065
+            },
+            {
+              "id": "home-goalie-4",
+              "label": "G",
+              "team": "home",
+              "role": "goalie",
+              "x": -26,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold 1 is behind Navy’s goal line, beyond the goalie.",
+          "Gold 1 controls the puck behind the Navy net. YOU and D2 are on opposite sides. The drill’s plan has the nearest defender follow the puck side while C protects Gold 2 in the slot; no automatic side swap is assumed."
+        ],
+        "tags": [
+          "defensive-zone-role-switch"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, Team Play / Defensive Skills",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u15-008-q1",
+            "type": "choice",
+            "prompt": "Where is the puck carrier relative to the Navy net?",
+            "options": [
+              {
+                "id": "a",
+                "text": "At the attacking point"
+              },
+              {
+                "id": "b",
+                "text": "Behind the net"
+              },
+              {
+                "id": "c",
+                "text": "At the neutral-zone centre"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "Gold 1 is behind Navy’s goal line, beyond the goalie.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u15-008-q2",
+            "type": "multi",
+            "prompt": "Choose two details to communicate during a side change.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Who pressures the puck next"
+              },
+              {
+                "id": "b",
+                "text": "Only that the puck moved"
+              },
+              {
+                "id": "c",
+                "text": "Who continues to cover Gold 2"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "A clear role message should preserve both puck pressure and inside awareness.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-008-q3",
+            "type": "sequence",
+            "prompt": "Arrange one response if Gold 1 moves behind the net to D2’s side.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Track the carrier’s side change"
+              },
+              {
+                "id": "b",
+                "text": "Confirm the pressure responsibility"
+              },
+              {
+                "id": "c",
+                "text": "Maintain the slot assignment while adjusting"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This sequence follows the exercise’s stated roles, not a universal defensive system."
+          },
+          {
+            "id": "exp26-u15-008-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare an inside support position on your side of the net.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -24,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "The reference retains an inside view while leaving a possible pressure role to D2. Different team systems may place YOU elsewhere."
+          },
+          {
+            "id": "exp26-u15-008-q5",
+            "type": "choice",
+            "prompt": "C is drawn away and Gold 2 becomes uncovered. What should be recognized?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The original coverage remains intact"
+              },
+              {
+                "id": "b",
+                "text": "Only the carrier matters behind the net"
+              },
+              {
+                "id": "c",
+                "text": "The slot assignment needs help or communication"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The play’s assumptions have changed, so the unprotected threat must enter the next read.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-008-q6",
+            "type": "explain",
+            "prompt": "Why is “switch” alone sometimes an incomplete message here?",
+            "basis": "coaching",
+            "explanation": "Specify which threat and which teammate the exchange concerns, including the remaining slot responsibility."
+          },
+          {
+            "id": "exp26-u15-008-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate when Gold moves behind the net?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 is changing sides; call the low exchange with D2"
+              },
+              {
+                "id": "b",
+                "text": "Switch is enough by itself"
+              },
+              {
+                "id": "c",
+                "text": "C should chase the puck alone"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call identifies the route and the teammate who may exchange low coverage."
+          },
+          {
+            "id": "exp26-u15-008-q8",
+            "type": "multi",
+            "prompt": "Which two cues shape a side change?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1's new side"
+              },
+              {
+                "id": "b",
+                "text": "C's inside position"
+              },
+              {
+                "id": "c",
+                "text": "The word switch without a player name"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Side and player relationships make the handoff clear."
+          },
+          {
+            "id": "exp26-u15-008-q9",
+            "type": "position",
+            "prompt": "After Gold 1 carries to D2’s side, move YOU to a slot-support position separate from C.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -21,
+              "y": 2
+            },
+            "basis": "coaching",
+            "explanation": "This hypothetical side change lets YOU compare a middle support position while D2 reads the puck-side route. Stay separate from C and communicate Gold 2’s slot threat; the handoff is not automatic."
+          },
+          {
+            "id": "exp26-u15-008-q10",
+            "type": "explain",
+            "prompt": "C is pulled away and Gold 2 becomes uncovered. What do YOU name?",
+            "basis": "coaching",
+            "explanation": "Name Gold 2 and the open slot lane. Communicate whether YOU or D2 can take that reachable threat while the other player tracks Gold 1; C leaving does not create an automatic side swap."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u15-008-q10"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u15-008-q10"
+          ],
+          "issue": "Lowercase \"you\" in the prompt (\"What do you name?\") violates the mandatory all-caps YOU house style.",
+          "change": "Changed prompt to \"C is pulled away and Gold 2 becomes uncovered. What do YOU name?\" No other field touched.",
+          "evidence": "AUTHORING-CONTRACT.md and calibration-adjudication.md both confirm all-caps YOU is required, and packet-31 found the same lowercase defect surviving a prior no-open-ai-finding label."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u15-008-q1",
+            "contentHash": "f4ddd9d518efc5dc1c10d9564c03e1189286c664b21b4d47b10db27ca886950b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q2",
+            "contentHash": "6e1ed311ec107964645ac754384ec6da74186ff51f62898ee81e9fe094256498",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q3",
+            "contentHash": "89de1ecb9fb9e6defc9fae3b707aa26e11059400d89d9d99d99d570139badedc",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q4",
+            "contentHash": "e88565b8950cc51c4bd70c70b68a2dbf8e918627c9b6a033bacb02186d2eec57",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q5",
+            "contentHash": "f928367f62f6574a91e3fe8e0a83a26cc27e0e645dda086f8df3772616ae9d61",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q6",
+            "contentHash": "c7153b4147bd9f72ebf655043bbcd8d44ab86b56327f71d97fdf9d3a06f12205",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q7",
+            "contentHash": "888a6ea31546171fbc373d2ae0beb74acd105c782198698f7169ffdb63ac1999",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q8",
+            "contentHash": "01709116ae4e4363ca40fb5562772b33640f17a69688ec8415ef9511465c3959",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q9",
+            "contentHash": "9334d3bbac7c548983ec78e8dd67f6f776ad4ea002e4ff8d110ccc39c728b59b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-008-q10",
+            "contentHash": "b83da89ac6a0c7cca73ef6d85b93dab2d4be9a8a0742c90258c20099a1f2afa0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed against the replacement scenario object; the grammar/wording/duplication fix was verified against the actual (unchanged) roster and coordinates."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u15-009",
+      "baseVersion": 1,
+      "baseScenarioHash": "b7137deaa09d4c365e81806f0d5b15e2476ad78224613b9d2a570a12d0857327",
+      "replacement": {
+        "id": "exp26-u15-009",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Replace the teammate who cycles below the goal line",
+        "family": "cycle-support-rotation",
+        "topic": "Offensive support",
+        "objective": "Keep a useful high option when a forward moves low.",
+        "briefing": "F1 controls below the attacking goal line. F2 has moved down the side boards to support. YOU are arriving from the high slot. The exercise calls for one forward to remain higher than the puck as an outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 16,
+              "y": 0,
+              "facing": -0.3217505543966422
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 28,
+              "y": -4,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 23,
+              "y": -9,
+              "facing": 0.7853981633974483
+            },
+            {
+              "id": "home-skater-4",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 5,
+              "facing": -0.48689923181126904
+            },
+            {
+              "id": "home-skater-5",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": -5,
+              "facing": 0.058755822715722696
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 25,
+              "y": -5,
+              "facing": 0.3217505543966422
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 21,
+              "y": 0,
+              "facing": -0.5191461142465229
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 6,
+              "facing": -0.7853981633974483
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Both F1 and F2 have greater x positions, deeper toward the attacking end.",
+          "F1 controls below the attacking goal line. F2 has moved down the side boards to support. YOU are arriving from the high slot. The exercise calls for one forward to remain higher than the puck as an outlet."
+        ],
+        "tags": [
+          "cycle-support-rotation"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, Team Play / Offensive Skills: cycling and support",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u15-009-q1",
+            "type": "choice",
+            "prompt": "Which two forwards are already deeper in Gold’s end than YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 and F2"
+              },
+              {
+                "id": "b",
+                "text": "D1 and D2"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1 and Gold 3"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "Both F1 and F2 have greater x positions, deeper toward the attacking end.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u15-009-q2",
+            "type": "multi",
+            "prompt": "Which two checks help retain a high outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether every forward should follow the puck low"
+              },
+              {
+                "id": "b",
+                "text": "F1’s ability to see out of pressure"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2’s position in the middle"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "The assigned high role creates another option but still needs a lane.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-009-q3",
+            "type": "sequence",
+            "prompt": "Arrange a high-support read during this cycle.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice F2 joining low"
+              },
+              {
+                "id": "b",
+                "text": "Check the open high-slot pocket"
+              },
+              {
+                "id": "c",
+                "text": "Reoffer high support behind the puck"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The exercise defines the high role; actual timing should follow the carrier’s pressure."
+          },
+          {
+            "id": "exp26-u15-009-q4",
+            "type": "position",
+            "prompt": "Move YOU into a high-slot pocket separated from the two low forwards.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 18,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "The reference changes the lane around Gold 2 without joining the low cluster. Another high pocket may work."
+          },
+          {
+            "id": "exp26-u15-009-q5",
+            "type": "choice",
+            "prompt": "If F1 passes to YOU in that pocket, what should happen next?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Return the puck low without looking"
+              },
+              {
+                "id": "b",
+                "text": "Read the new pressure before choosing shot, pass or carry"
+              },
+              {
+                "id": "c",
+                "text": "Shoot automatically because YOU are high"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The support movement creates a new decision rather than a predetermined finish.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-009-q6",
+            "type": "explain",
+            "prompt": "Explain the difference between the high slot and following F2 down the half wall.",
+            "basis": "coaching",
+            "explanation": "Use depth, passing angle and the team’s remaining support—not just the two area names."
+          },
+          {
+            "id": "exp26-u15-009-q7",
+            "type": "choice",
+            "prompt": "What should YOU call while F2 cycles below?",
+            "options": [
+              {
+                "id": "a",
+                "text": "I am high; show me if F1 can use the outlet"
+              },
+              {
+                "id": "b",
+                "text": "The low cycle makes the high lane irrelevant"
+              },
+              {
+                "id": "c",
+                "text": "F1 is the preferred receiver even if the high lane closes"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call preserves a high option while the low carrier changes."
+          },
+          {
+            "id": "exp26-u15-009-q8",
+            "type": "multi",
+            "prompt": "Which two cues support staying high?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 and F2 occupy different low spaces"
+              },
+              {
+                "id": "b",
+                "text": "The carrier can see a high outlet"
+              },
+              {
+                "id": "c",
+                "text": "The distance to the boards decides whether to stay high"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Separation and visibility explain the high support choice."
+          },
+          {
+            "id": "exp26-u15-009-q9",
+            "type": "position",
+            "prompt": "F1 cycles the puck down to F2 below the goal line. Move YOU to a new high-slot pocket that keeps a passing lane open from F2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 14,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "This point adjusts the angle to F2's new puck touch instead of F1's original spot, while staying clear of the low forwards. Another high pocket may also keep the lane open."
+          },
+          {
+            "id": "exp26-u15-009-q10",
+            "type": "explain",
+            "prompt": "F1 passes to YOU in the pocket. What should be scanned next?",
+            "basis": "coaching",
+            "explanation": "Check Gold coverage, F2's route, and the net-side lane before choosing a shot, pass, or reset."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u15-009-q5",
+        "exp26-u15-009-q8",
+        "exp26-u15-009-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u15-009-q5"
+          ],
+          "issue": "Lowercase \"you\" in option (c), \"Shoot automatically because you are high.\"",
+          "change": "Changed option (c) text to \"Shoot automatically because YOU are high.\" Answer key (b) and all other fields unchanged.",
+          "evidence": "Same mandatory-style rule as above; house style requires all-caps YOU everywhere, including inside distractor options."
+        },
+        {
+          "questionIds": [
+            "exp26-u15-009-q8"
+          ],
+          "issue": "Option (c), \"YOU is closest to the boards,\" has a subject-verb agreement error and is also geometrically false: recomputed distance-to-boards for each home skater (boards at y=+-12.954) shows YOU (y=0) is 12.95m from the boards, the farthest of the five home skaters, not the closest (F2 at y=-9 is 3.95m away).",
+          "change": "Replaced option (c) text with \"The distance to the boards decides whether to stay high,\" removing both the grammar error and the false positional claim while keeping a plausible-but-insufficient cue as the wrong answer. Answer key (a,b) unchanged.",
+          "evidence": "Computed sqrt-distance from each home actor y-coordinate to y=+-12.954 directly from setup.actors in the scenario."
+        },
+        {
+          "questionIds": [
+            "exp26-u15-009-q9"
+          ],
+          "issue": "q9's prompt duplicated q4's prompt almost verbatim (\"Move YOU into a high-slot pocket separated from the low forwards\" vs. \"...separated from the two low forwards\"), differing only by a reference-point shift, with no new cue or decision -- the sibling-duplication defect class from packet-31's lesson 9.",
+          "change": "Changed q9's prompt to introduce an explicit hypothetical (\"F1 cycles the puck down to F2 below the goal line. Move YOU to a new high-slot pocket that keeps a passing lane open from F2.\"), moved the reference point to (14,3) (~15m from both F1 and F2, ~3.6m from D1, confirmed on ice), and rewrote the explanation to justify the new angle relative to F2's puck touch instead of restating q4's static read.",
+          "evidence": "Prompt-string comparison against q4, and recomputed distances from the new reference (14,3) to F1 (28,-4), F2 (23,-9) and D1 (11,5)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u15-009-q1",
+            "contentHash": "7596b6a6adcec5eac03248375d3c98d8aa003ebc93c98bf354fa96f29fb42df3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q2",
+            "contentHash": "a3b1f3abcf8acf9a87446581bf8b00365038b0c1f5ea50433fe1f71a592bbc1a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q3",
+            "contentHash": "03d7455b5284bc038b143590faa67c34f38a9c0d924952cbf042a7ad92fe9137",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q4",
+            "contentHash": "ce9df78bbdb6c280fb2834a25f0aa623dad4c34f94c71826c4bf41f2635d0d70",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q5",
+            "contentHash": "b26b7dfe29e5c2fcfbd6b2f66fd953409018f5a24517f4eb90c96c2686a9349c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed against the replacement scenario object; the grammar/wording/duplication fix was verified against the actual (unchanged) roster and coordinates."
+          },
+          {
+            "questionId": "exp26-u15-009-q6",
+            "contentHash": "04530805e4d5723b66df7f962c38b94eebe0c7ecffbdda4e3d882878f6855cb9",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q7",
+            "contentHash": "3114a433f3ca80a0ed9bc5224d43c1142ebd4dd235bf801d41237b19a97bb646",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          },
+          {
+            "questionId": "exp26-u15-009-q8",
+            "contentHash": "4762f7a329eff25a2ada21287c2588291b556aa22d8d06518f9d7a7850537fad",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed against the replacement scenario object; the grammar/wording/duplication fix was verified against the actual (unchanged) roster and coordinates."
+          },
+          {
+            "questionId": "exp26-u15-009-q9",
+            "contentHash": "3986f8c0f809810ab6e5b28a38285c739e02351a70c4fdeb42129d302b2c45ec",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Recomputed against the replacement scenario object; the grammar/wording/duplication fix was verified against the actual (unchanged) roster and coordinates."
+          },
+          {
+            "questionId": "exp26-u15-009-q10",
+            "contentHash": "b51901828e1367d60b9b0ab6aeac5ffa82c8dea579804174c55e7a672696d4d6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the reviewed original; hash recomputed against the replacement object (version bump only, scene fields identical) to confirm it still matches the retained coverage row."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T12:00:00Z",
+      "access": "read",
+      "scope": "Single-page U15/U18 'LTPD Stage - Train to Train' skills matrix (titled internally 'Draft 2017 - Bantam - Midget Pathway'). Team Play/Defensive Skills lists 'Timing And Support - Spatial Awareness', 'Situational Gap Control', 'Read and React' and 'Communication'; Team Play/Offensive Skills lists 'Cycling', 'Smart Puck Support Principles (Under Pressure)', 'Entries', 'Retrievals', 'Hinging', 'Delays' and 'Net Drives'. It names these as topic labels for the age band; it contains no coordinates, coaching scripts, guaranteed outcomes or the specific coverage-communication/cycle-support wording used in exp26-u15-008 or exp26-u15-009. Supports age/topic placement only, exactly as sources.json's own use field discloses; does not certify the setup, alternatives or suggested answers.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U15/U18, Train to Train LTPD stage",
+      "claim": "Coverage communication (exp26-u15-008) and cycle/offensive support (exp26-u15-009) are age-appropriate U15 team-play topics."
+    }
+  ],
+  "remainingQuestionIds": []
+}

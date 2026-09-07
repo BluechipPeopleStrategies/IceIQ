@@ -1,0 +1,86 @@
+{
+  "id": "u7_time_space_open_ice_mc_v1",
+  "type": "scenario",
+  "nodeId": "u7.time-and-space",
+  "level": "U7 / Initiation",
+  "levels": [
+    "U7 / Initiation"
+  ],
+  "themes": [
+    "puck-support",
+    "decision-making",
+    "offensive-zone",
+    "positioning"
+  ],
+  "cat": "Hockey Sense",
+  "difficulty": 1,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.78,
+      "y": 0.72,
+      "tag": "YOU"
+    },
+    {
+      "id": "tm",
+      "kind": "teammate",
+      "x": 0.88,
+      "y": 0.86
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.882,
+      "y": 0.858
+    },
+    {
+      "id": "d1",
+      "kind": "defender",
+      "x": 0.85,
+      "y": 0.8
+    },
+    {
+      "id": "d2",
+      "kind": "defender",
+      "x": 0.9,
+      "y": 0.72
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Your teammate is stuck with the puck on the boards with two checkers. Tap the open ice you should skate to instead of the crowded corner."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.7,
+    "y": 0.5,
+    "tolerance": 0.1
+  },
+  "mc": {
+    "stem": "Your teammate is stuck on the boards. You are the other player without the puck, skating toward the same corner. What are you doing wrong?",
+    "opts": [
+      "Skating into the crowd instead of staying in open ice",
+      "Skating too far from the puck to touch it right away",
+      "Skating right next to my teammate so I can get the rebound",
+      "Slowing down so I don't run into the defenders"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. Two players in one corner just makes a bigger crowd. Skate to the open middle so your teammate has somewhere to pass.",
+    "wrong": "Skating into the same corner makes the crowd bigger and gives your teammate nowhere to pass. The open ice in the middle is the better spot."
+  },
+  "tip": "When a teammate is stuck in a crowd, skate to open space so they have somewhere to pass.",
+  "why": "Young players swarm the puck. Finding open ice away from the battle creates a passing option and spreads the play out."
+}

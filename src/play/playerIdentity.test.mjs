@@ -29,12 +29,12 @@
 // Same JSX-through-esbuild approach as youngRinkView.test.mjs — no new
 // dependency, nothing written into the source tree.
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { transformWithEsbuild } from "vite";
+import { build } from "esbuild";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -43,29 +43,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const CACHE = join(HERE, "..", "..", "node_modules", ".cache", "identity-test");
 mkdirSync(CACHE, { recursive: true });
 
-// Transform a JSX module (and anything it imports) on demand.
-const seen = new Map();
-async function loadJsx(absPath) {
-  if (seen.has(absPath)) return seen.get(absPath);
-  const src = readFileSync(absPath, "utf8");
-  const out = await transformWithEsbuild(src, absPath, { loader: "jsx", jsx: "automatic" });
-  const outPath = join(CACHE, absPath.replace(/[^a-z0-9]/gi, "_") + ".mjs");
-  // Rewrite relative .jsx imports to their transformed twins.
-  let code = out.code;
-  const rel = [...code.matchAll(/from\s+"(\.[^"]+\.jsx)"/g)].map(m => m[1]);
-  for (const r of rel) {
-    const target = join(dirname(absPath), r);
-    const t = await loadJsx(target);
-    code = code.split(`"${r}"`).join(`"${pathToFileURL(t).href}"`);
-  }
-  code = code.replace(/from\s+"(\.[^"]+\.js)"/g, (m, p) =>
-    `from "${pathToFileURL(join(dirname(absPath), p)).href}"`);
-  writeFileSync(outPath, code);
-  seen.set(absPath, outPath);
-  return outPath;
-}
-
-const mod = await import(pathToFileURL(await loadJsx(join(HERE, "AnimatedPlay.jsx"))).href);
+// Bundle the actual player, including the shared3D boundary. SSR renders its
+// loading state; interaction and exact3D props are exercised in AnimatedPlay3D.test.
+const output = join(CACHE, "player.mjs");
+await build({ entryPoints: [join(HERE, "AnimatedPlay.jsx")], outfile: output,
+  bundle: true, packages: "external", platform: "node", format: "esm", jsx: "automatic",
+  loader: { ".css": "empty" }, logLevel: "silent" });
+const mod = await import(pathToFileURL(output).href);
 const AnimatedPlay = mod.default;
 const { ALL_ANIMATED_PLAYS } = await import(pathToFileURL(join(HERE, "playCatalog.js")).href);
 

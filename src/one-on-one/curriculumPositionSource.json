@@ -1,0 +1,90 @@
+{
+  "id": "practice-draft-u15-two-angles-mc",
+  "type": "mc",
+  "sit": "F1 needs an outlet. What should you preserve here?",
+  "opts": [
+    "Your separate passing angle with receiving space.",
+    "A spot next to F2 on the same pressured route.",
+    "A spot behind D1 on the F2 lane.",
+    "A spot beside F1 in the puck space."
+  ],
+  "ok": 0,
+  "why": "You provide a distinct clear outlet. Joining F2’s route duplicates that pressured option instead of helping F1 escape it.",
+  "tip": "Different angles create different choices.",
+  "visual": {
+    "view": "half-right",
+    "actors": [
+      {
+        "id": "YOU",
+        "team": "home",
+        "role": "skater",
+        "x": 19,
+        "y": 6,
+        "label": "YOU",
+        "hasPuck": false,
+        "facing": -2.20657787396789
+      },
+      {
+        "id": "F1",
+        "team": "home",
+        "role": "skater",
+        "x": 14,
+        "y": 0,
+        "label": "F1",
+        "hasPuck": true,
+        "facing": 0
+      },
+      {
+        "id": "F2",
+        "team": "home",
+        "role": "skater",
+        "x": 20,
+        "y": -5,
+        "label": "F2",
+        "hasPuck": false,
+        "facing": 2.301428892364348
+      },
+      {
+        "id": "D1",
+        "team": "away",
+        "role": "skater",
+        "x": 17,
+        "y": -2.5,
+        "label": "D1",
+        "hasPuck": false,
+        "facing": 2.1467149264132495
+      },
+      {
+        "id": "D2",
+        "team": "away",
+        "role": "skater",
+        "x": 21,
+        "y": -4,
+        "label": "D2",
+        "hasPuck": false,
+        "facing": 2.4896126806848144
+      },
+      {
+        "id": "G",
+        "team": "away",
+        "role": "goalie",
+        "x": 25,
+        "y": 0,
+        "label": "",
+        "hasPuck": false,
+        "facing": 3.0836575599663765
+      }
+    ],
+    "caption": "D1 and D2 pressure F2’s route. You offer F1 a separate, clear passing lane.",
+    "arrows": [],
+    "coordinateSystem": "rink-centred-metres",
+    "presentation": "authored-static-draft",
+    "hideBlueLines": true,
+    "renderRequirements": [
+      "One puck on the hasPuck actor.",
+      "YOU label and outline; teams also differ by shape or pattern.",
+      "Show caption and arrow labels; arrows depict only their explicit authored cue."
+    ],
+    "netContext": "right-net-is-attacking-net"
+  }
+}

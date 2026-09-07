@@ -1,0 +1,12 @@
+import {execFileSync} from 'node:child_process';
+const diff=execFileSync('git',['diff','--','src/one-on-one/PracticeScene.jsx'],{encoding:'utf8'});
+const firstHunk=diff.indexOf('@@');
+if(firstHunk<0)throw Error('Expected unstaged PracticeScene changes.');
+const header=diff.slice(0,firstHunk);
+const hunks=diff.slice(firstHunk).split(/(?=^@@ )/m).filter(Boolean);
+const chosen=hunks.filter(h=>h.includes('+function Arena({ openView = false })'));
+if(chosen.length!==1)throw Error('Expected exactly one scoped openView hunk.');
+if(/PuckLocator|clearBoards|focusActorId/.test(chosen[0]))throw Error('Mixed changes in selected hunk.');
+execFileSync('git',['apply','--cached','--check','-'],{input:header+chosen[0]});
+execFileSync('git',['apply','--cached','-'],{input:header+chosen[0]});
+console.log('Staged only the Arena openView hunk; all other PracticeScene changes remain unstaged.');

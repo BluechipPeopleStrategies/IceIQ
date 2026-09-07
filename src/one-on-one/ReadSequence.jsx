@@ -27,12 +27,17 @@ import {
 } from './readSequenceCore.js';
 import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
 import { HockeyPlayerArt } from '../visuals/HockeyPlayerArt.jsx';
+import { isFocusedActor, SvgPlayerLocator } from '../visuals/PlayerLocator.jsx';
+import { SvgPuckLocator } from '../visuals/PuckLocator3D.jsx';
 import BoardInspection from '../visuals/BoardInspection.jsx';
 import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
 import ReadSequenceRecall from './ReadSequenceRecall.jsx';
 import ReadSequenceBoard from './ReadSequenceBoard.jsx';
+import ScenarioRinkView from '../visuals/ScenarioRinkView.jsx';
+import CameraViewControls from '../visuals/CameraViewControls.jsx';
+import DefenderPerspective from './DefenderPerspective.jsx';
 import { U11_PLAYER_COPY } from './readSequencePlayerCopy.js';
 import { getReadSequenceRecallStorageKey } from './readSequenceRecallStorage.js';
 import { getReadSceneBounds } from './readSequenceVisuals.js';
@@ -50,7 +55,7 @@ const { bounds: RINK_BOUNDS, landmarks: RINK_MARKS } = NHL_200X85_PROFILE;
 const HALF_WIDTH = RINK_BOUNDS.maxY;
 const GOAL_X = RINK_MARKS.goalLineRight[0];
 
-function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint, inspectable = false, initialWide = false, framingControls = true }) {
+function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets = [], onTarget, moveActorId, focusActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint, inspectable = false, initialWide = false, framingControls = true }) {
   const svg = useRef(null);
   const drag = useRef(null);
   const routeTap = useRef(null);
@@ -230,7 +235,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
           <circle className="rs-actor-hit" r={Math.max(radii[actor.id], movable ? 22 * unitsPerPixel : radii[actor.id])} fill="transparent" stroke="none" pointerEvents="all" />
           <g transform={`rotate(${-actor.facing * 180 / Math.PI})`}><HockeyPlayerArt radius={radii[actor.id]} team={actor.team} goalie={actor.role === 'goalie'} facing={actor.facing * 180 / Math.PI} /></g>
           <path className="rs-facing" d={`M ${radii[actor.id] * .62} 0 H ${radii[actor.id] * 1.24}`} />
-          {selected && <circle className="rs-move-ring" r={radii[actor.id] + .3} />}
+          {isFocusedActor(actor, focusActorId) ? <SvgPlayerLocator radius={radii[actor.id] + .3} label={actor.label || actor.id} /> : selected && <circle className="rs-move-ring" r={radii[actor.id] + .3} />}
         </g>;
       })}
       {plates.map(plate => {
@@ -247,10 +252,10 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
         onClick={() => onTarget?.(target.id)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onTarget?.(target.id); } }}>
         <circle className="rs-target-area" r={targetRadius} /><line className="rs-target-connector" x1="0" y1="0" x2={x} y2={y} /><circle className="rs-target-number" cx={x} cy={y} r={numberRadius} /><text x={x} y={y} dy=".35em" style={{ fontSize: `${numberRadius * 1.22}px` }} textAnchor="middle">{index + 1}</text>
       </g>; })}
-      <g className="rs-puck" pointerEvents="none" transform={`translate(${state.puck.x} ${state.puck.y})`}><circle r=".31" /><circle r=".48" /></g>
+      <SvgPuckLocator x={state.puck.x} y={state.puck.y} />
     </svg>
     <div className="rs-rink-legend"><span><i className="navy" /> Attack</span><span><i className="gold" /> Defend</span><span><i className="puck" /> Puck</span></div>
-  </div>{inspectable && <BoardInspection title={`${definition.ageBand} · ${changedCue ? 'Changed opening' : 'Hockey board'}`} renderBoard={() => <RinkStage state={state} definition={definition} description={description} targets={targets} moveActorId={moveActorId} showReadLanes={showReadLanes} changedCue={changedCue} route={route} initialWide={wide} framingControls={false} />} />}</>;
+  </div>{inspectable && <BoardInspection title={`${definition.ageBand} · ${changedCue ? 'Changed opening' : 'Hockey board'}`} renderBoard={() => <RinkStage state={state} definition={definition} description={description} targets={targets} moveActorId={moveActorId} focusActorId={focusActorId} showReadLanes={showReadLanes} changedCue={changedCue} route={route} initialWide={wide} framingControls={false} />} />}</>;
 }
 
 function Progress({ session, labels = ['Choose from the cue', 'Re-scan the change', 'Move without the puck'] }) {
@@ -259,13 +264,6 @@ function Progress({ session, labels = ['Choose from the cue', 'Re-scan the chang
   return <ol className="rs-progress" aria-label={`Read ${current} of 3`}>
     {labels.map((label, index) => <li key={label} className={index + 1 === current ? 'active' : index + 1 < current ? 'done' : ''}><span>{index + 1}</span>{label}</li>)}
   </ol>;
-}
-
-function SourceNotes({ definition }) {
-  return <details className="rs-sources"><summary>Teaching sources and evidence boundary</summary>
-    <ul>{definition.sourceRefs.map(source => <li key={source.note}><code>{source.note}</code><span>{source.use}</span></li>)}</ul>
-    <p>{definition.evidenceBoundary}</p>
-  </details>;
 }
 
 function ReadAloudControls({ parts, rate }) {
@@ -295,9 +293,24 @@ function ChangedCueComparison({ session, onSave }) {
   const [action, setAction] = useState(session.changedCue?.action || null);
   const [reason, setReason] = useState(session.changedCue?.reason || '');
   const [notice, setNotice] = useState('');
+  const [readyBoards, setReadyBoards] = useState({ original: false, changed: false });
+  const readyBoardsRef = useRef({ original: false, changed: false });
   const contentId = useId();
+  const canCompare = open && readyBoards.original && readyBoards.changed;
+
+  function boardAvailability(board, available) {
+    readyBoardsRef.current = { ...readyBoardsRef.current, [board]: available === true };
+    setReadyBoards(readyBoardsRef.current);
+  }
+
+  function toggleComparison() {
+    readyBoardsRef.current = { original: false, changed: false };
+    setReadyBoards(readyBoardsRef.current);
+    setOpen(value => !value);
+  }
 
   function save() {
+    if (!readyBoardsRef.current.original || !readyBoardsRef.current.changed) return;
     try {
       onSave(submitChangedCueRead(session, { action, reason }));
       setNotice('Comparison recorded. Your reflection download now includes both answers.');
@@ -308,11 +321,11 @@ function ChangedCueComparison({ session, onSave }) {
     <p className="rs-step">OPTIONAL · RETURN TO THE FIRST FREEZE</p>
     <h2>One thing changes.</h2>
     <p>Look at the start again. Only D1 has moved. Would you keep your first choice or try something else?</p>
-    <button type="button" aria-expanded={open} aria-controls={contentId} onClick={() => setOpen(value => !value)}>{open ? 'Hide comparison' : session.changedCue ? 'View my changed-cue comparison' : 'Try one changed cue'}</button>
+    <button type="button" aria-expanded={open} aria-controls={contentId} onClick={toggleComparison}>{open ? 'Hide comparison' : session.changedCue ? 'View my changed-cue comparison' : 'Try one changed cue'}</button>
     {open && <div id={contentId} className="rs-comparison-content">
       <div className="rs-comparison-boards">
-        <figure><figcaption><b>Original freeze</b><span>D1 is near the line from the puck to the net.</span></figcaption><RinkStage inspectable state={comparison.originalState} showReadLanes /></figure>
-        <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><RinkStage inspectable state={comparison.changedState} showReadLanes changedCue /></figure>
+        <figure><figcaption><b>Original freeze</b><span>D1 is near the line from the puck to the net.</span></figcaption><ScenarioRinkView ageBand={U11_READ_SEQUENCE.ageBand} questionId={`${U11_READ_SEQUENCE.id}:comparison:original`} title="Original opening freeze" state={comparison.originalState} bounds={getReadSceneBounds(U11_READ_SEQUENCE)} showBothGoals={false} onAvailabilityChange={value => boardAvailability('original', value)} /></figure>
+        <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><ScenarioRinkView ageBand={U11_READ_SEQUENCE.ageBand} questionId={`${U11_READ_SEQUENCE.id}:comparison:changed`} title="Changed opening freeze: only D1 moved" state={comparison.changedState} bounds={getReadSceneBounds(U11_READ_SEQUENCE)} showBothGoals={false} onAvailabilityChange={value => boardAvailability('changed', value)} /></figure>
       </div>
       <div className="rs-cue-card"><b>What changed?</b><p>{comparison.cue}</p></div>
       <div className="rs-comparison-response">
@@ -322,9 +335,10 @@ function ChangedCueComparison({ session, onSave }) {
           <p className="rs-hint">This is a new look at the opening freeze. Your three-read play stays as you made it. This comparison does not play a new outcome.</p>
         </div>
         <div>
-          <fieldset className="rs-actions rs-comparison-actions"><legend>With D1 here, what would you do?</legend>{READ_ACTIONS.map(choice => <button type="button" key={choice} aria-pressed={action === choice} onClick={() => setAction(choice)}>{ACTION_COPY[choice].label}</button>)}</fieldset>
-          <label className="rs-reason">Why keep or change your choice?<textarea rows="4" maxLength="600" value={reason} onChange={event => setReason(event.target.value)} placeholder="I would… because D1 is now…" /><small>{reason.length}/600</small></label>
-          <button type="button" className="rs-primary" onClick={save}>Save my comparison</button>
+          <fieldset className="rs-actions rs-comparison-actions" disabled={!canCompare}><legend>With D1 here, what would you do?</legend>{READ_ACTIONS.map(choice => <button type="button" key={choice} aria-pressed={action === choice} onClick={() => { if (readyBoardsRef.current.original && readyBoardsRef.current.changed) setAction(choice); }}>{ACTION_COPY[choice].label}</button>)}</fieldset>
+          <label className="rs-reason">Why keep or change your choice? (optional)<textarea rows="4" maxLength="600" value={reason} onChange={event => setReason(event.target.value)} placeholder="I would… because D1 is now…" /><small>{reason.length}/600</small></label>
+          <button type="button" className="rs-primary" disabled={!canCompare || !action} onClick={save}>Save my comparison</button>
+          {!canCompare && <p className="rs-hint" role="status">Both rinks need to be ready before you choose. Your answer and note stay here.</p>}
           <p className="rs-hint">Explain how your choice fits the new lane or space. Different choices can be discussed when the reason fits. No automatic grade or AI opinion is added here.</p>
           {notice && <p className="rs-notice" role="status">{notice}</p>}
         </div>
@@ -343,12 +357,20 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const actionCopy = copy.actionCopy || ACTION_COPY;
   const [session, setSession] = useState(() => scratch?.session || loadSavedSequence(storageKey, definition.id) || createReadSequenceSession(definition.id));
   const [chosenAction, setChosenAction] = useState(() => scratch?.chosenAction ?? session.first?.action ?? null);
+  const [choicePreview, setChoicePreview] = useState(null);
+  const previewVersion = useRef(0);
   const [firstReason, setFirstReason] = useState(() => scratch?.firstReason ?? session.first?.reason ?? '');
   const [thirdReason, setThirdReason] = useState(() => scratch?.thirdReason ?? session.third?.reason ?? '');
   const [paused, setPaused] = useState(scratch?.paused === true);
-  const [boardView, setBoardView] = useState('3d');
+  const [rinkAvailable, setRinkAvailable] = useState(false);
+  const rinkAvailableRef = useRef(false);
   const [cameraPreset, setCameraPreset] = useState('broadcast');
+  const [cameraPresetVersion, setCameraPresetVersion] = useState(0);
   const [cameraAdjusting, setCameraAdjusting] = useState(false);
+  const [cameraPanMode, setCameraPanMode] = useState(false);
+  const [cameraResetToken, setCameraResetToken] = useState(0);
+  const [cameraCommand, setCameraCommand] = useState(null);
+  const [defenderPerspectiveActive, setDefenderPerspectiveActive] = useState(false);
   const [notice, setNotice] = useState(() => session.phase === 'complete' ? 'Your saved three-read reflection is open.' : '');
   const [reducedMotion, setReducedMotion] = useState(false);
   const [routeMode, setRouteMode] = useState(scratch?.routeMode ?? Boolean(session.third?.route));
@@ -362,7 +384,14 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const navigationFrame = useRef(null);
   const previousPhase = useRef(session.phase);
   const route = useMemo(() => getThirdReadRoute(session), [session]);
-  const state = useMemo(() => route && routeProgress != null ? sampleThirdReadRoute(session, routeProgress) : currentSequenceState(session), [session, route, routeProgress]);
+  const state = useMemo(() => {
+    if (session.phase === 'read-1' && choicePreview) {
+      const preview = submitFirstRead(session, { action: choicePreview.action, reason: '' });
+      preview.playbackProgress = choicePreview.progress;
+      return currentSequenceState(preview);
+    }
+    return route && routeProgress != null ? sampleThirdReadRoute(session, routeProgress) : currentSequenceState(session);
+  }, [session, choicePreview, route, routeProgress]);
   const activePlayback = ['consequence-1', 'consequence-2', 'replay-1', 'replay-2'].includes(session.phase);
   const canonicalReadTwo = session.first ? getReadTwoPrompt(session) : null;
   const branchCopy = copy.branches?.[session.first?.action];
@@ -377,7 +406,6 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }, [session, chosenAction, firstReason, thirdReason, routeMode, routeDraft, paused, rememberDraft]);
 
   useEffect(() => { stopSpeaking(); return stopSpeaking; }, [session.phase]);
-  useEffect(() => { setCameraAdjusting(false); }, [boardView]);
 
   useEffect(() => () => cancelAnimationFrame(navigationFrame.current), []);
 
@@ -432,7 +460,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }, [session.phase]);
 
   useEffect(() => {
-    if (!activePlayback || paused) return undefined;
+    if (!activePlayback || paused || !rinkAvailable) return undefined;
     if (reducedMotion) {
       setSession(current => ['consequence-1', 'consequence-2', 'replay-1', 'replay-2'].includes(current.phase) ? advanceSequencePlayback(current, 1) : current);
       return undefined;
@@ -443,6 +471,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
     let frame;
     let started;
     const tick = now => {
+      if (!rinkAvailableRef.current) return;
       if (started == null) started = now;
       const progress = Math.min(1, startProgress + (now - started) / duration);
       setSession(current => current.phase === phase ? advanceSequencePlayback(current, progress) : current);
@@ -450,13 +479,14 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [session.phase, paused, reducedMotion]); // playback progress advances inside one phase without restarting its clock
+  }, [session.phase, paused, reducedMotion, rinkAvailable]); // progress advances inside one phase without restarting its clock
 
   useEffect(() => {
-    if (!routePlaying || !route || reducedMotion) return undefined;
+    if (!routePlaying || !route || reducedMotion || !rinkAvailable) return undefined;
     let frame;
     let started;
     const tick = now => {
+      if (!rinkAvailableRef.current) return;
       if (started == null) started = now;
       const progress = Math.min(1, (now - started) / 3200);
       setRouteProgress(progress);
@@ -465,7 +495,22 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [routePlaying, route, reducedMotion]);
+  }, [routePlaying, route, reducedMotion, rinkAvailable]);
+
+  useEffect(() => {
+    if (!choicePreview || session.phase !== 'read-1' || paused || cameraAdjusting || !rinkAvailable || choicePreview.progress >= 1) return undefined;
+    const version = choicePreview.version, start = choicePreview.progress;
+    let frame, started;
+    const tick = now => {
+      if (!rinkAvailableRef.current || previewVersion.current !== version) return;
+      if (started == null) started = now;
+      const progress = reducedMotion ? 1 : Math.min(1, start + (now - started) / 1750);
+      setChoicePreview(current => current?.version === version ? { ...current, progress } : current);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [choicePreview?.version, session.phase, paused, cameraAdjusting, rinkAvailable, reducedMotion]);
 
   useEffect(() => {
     if (reducedMotion) setRoutePlaying(false);
@@ -473,6 +518,8 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
 
   function reset() {
     stopSpeaking();
+    previewVersion.current++;
+    setChoicePreview(null);
     setSession(createReadSequenceSession(definition.id));
     setChosenAction(null);
     setFirstReason('');
@@ -491,8 +538,13 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }
 
   function submitReadOne() {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     try {
-      const next = submitFirstRead(session, { action: chosenAction, reason: firstReason });
+      const action = choicePreview?.action || chosenAction;
+      let next = submitFirstRead(session, { action, reason: firstReason });
+      if (choicePreview?.action === action) next = advanceSequencePlayback(next, choicePreview.progress);
+      previewVersion.current++;
+      setChoicePreview(null);
       setPaused(false);
       setSession(next);
       setNotice('');
@@ -500,7 +552,17 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
     } catch (error) { setNotice(error.message); }
   }
 
+  function previewChoice(action) {
+    if (!rinkAvailableRef.current || cameraAdjusting || session.phase !== 'read-1' || !actions.includes(action)) return;
+    setChosenAction(action);
+    setChoicePreview({ action, progress: 0, version: ++previewVersion.current });
+    setPaused(false);
+    setNotice('');
+    returnToContent();
+  }
+
   function chooseTarget(targetId) {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     try {
       const next = selectSecondRead(session, targetId);
       setPaused(false);
@@ -511,11 +573,13 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }
 
   function moveActor(point) {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     try { setSession(moveThirdReadActor(session, point)); setRouteDraft(null); setRouteProgress(null); setRoutePlaying(false); setNotice(''); }
     catch (error) { setNotice(error.message); }
   }
 
   function updateRoute(waypoints) {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     const next = setThirdReadRoute(session, waypoints);
     setSession(next);
     setRouteDraft(null);
@@ -525,10 +589,12 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }
 
   function addRoutePoint(point) {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     updateRoute([...(route?.slice(1) || []), point]);
   }
 
   function changeMoveMode(planRoute) {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     if (planRoute === routeMode) return;
     setRouteMode(planRoute);
     if (planRoute) updateRoute(routeDraft || []);
@@ -541,11 +607,13 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }
 
   function previewRoute() {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     setRouteProgress(0);
     setRoutePlaying(!reducedMotion);
   }
 
   function finish() {
+    if (!rinkAvailableRef.current || cameraAdjusting) return;
     try { setSession(submitThirdRead(session, thirdReason)); setRouteProgress(null); setRoutePlaying(false); setNotice(''); returnToContent('reflection'); }
     catch (error) { setNotice(error.message); }
   }
@@ -564,7 +632,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const thirdTeaching = session.third ? thirdReadTeaching(session, { routeMode }) : null;
   const thirdPrompt = thirdTeaching?.prompt;
   const thirdCue = thirdTeaching?.cue;
-  const firstReasonLabel = copy.firstReasonLabel || 'What did you notice?';
+  const firstReasonLabel = 'What did you see? (optional)';
   const spokenParts = session.phase === 'read-1'
     ? [firstPrompt, ...actions.map(action => actionCopy[action].label), firstReasonLabel]
     : session.phase === 'read-2'
@@ -582,6 +650,9 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
 
   const boardProps = {
     state, definition,
+    questionId: `${definition.id}:${session.phase}:${session.first?.action ?? ''}:${session.second?.targetId ?? ''}`,
+    startingView: session.phase === 'read-1' ? definition.startingView : session.phase === 'read-2' ? branch?.read2?.startingView : session.phase === 'read-3' ? selectedTarget?.startingView : undefined,
+    onFirstAction: session.phase === 'read-1' && rinkAvailable ? previewChoice : undefined,
     targets: session.phase === 'read-2' ? displayTargets : [],
     onTarget: session.phase === 'read-2' ? chooseTarget : undefined,
     moveActorId: session.phase === 'read-3' ? session.third.actorId : null,
@@ -589,25 +660,27 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
     route,
     onRoutePoint: session.phase === 'read-3' && routeMode ? point => { try { addRoutePoint(point); } catch (error) { setNotice(error.message); } } : undefined,
   };
-  const visualPlaying = (activePlayback && !paused && !reducedMotion) || (routePlaying && !reducedMotion);
-  const visualTime = activePlayback ? session.playbackProgress * (['consequence-2', 'replay-2'].includes(session.phase) ? 1.25 : 1.75) : (routeProgress || 0) * 3.2;
+  const previewPlaying = session.phase === 'read-1' && choicePreview && choicePreview.progress < 1;
+  const visualPlaying = ((activePlayback || previewPlaying) && !paused && !cameraAdjusting && !reducedMotion) || (routePlaying && !reducedMotion);
+  const visualTime = choicePreview && session.phase === 'read-1' ? choicePreview.progress * 1.75 : activePlayback ? session.playbackProgress * (['consequence-2', 'replay-2'].includes(session.phase) ? 1.25 : 1.75) : (routeProgress || 0) * 3.2;
 
   return <section className="rs-lesson" aria-label={`${definition.ageBand} connected read sequence`} data-player-scope={playerId ? 'player' : 'local'}>
     <header className="rs-hero"><div><p className="rs-kicker">{definition.ageBand} · {copy.kicker || 'ODD-MAN READS'} · COACH-REVIEW DRAFT</p><h1>Three reads.<br /><em>{copy.heroAccent || 'One shifting 2-on-1.'}</em></h1><p>{copy.intro || 'Choose from what you see. Watch your choice change the play. Then read the ice again.'}</p></div><div className="rs-hero-note"><b>Short and untimed</b><span>{copy.note || 'Your explanation matters more than matching one drawing.'}</span></div></header>
     <Progress session={session} labels={copy.progressLabels} />
-    <div className="rs-workspace">
+    {isU11 && !activePlayback && <DefenderPerspective session={session} playerId={playerId} onActiveChange={setDefenderPerspectiveActive} />}
+    <div className="rs-workspace" style={defenderPerspectiveActive ? { display: 'none' } : undefined}>
       <div ref={boardPanel} className="rs-board-panel">
         {session.phase !== 'complete' && <div className="rs-board-prompt"><p className="rs-step">{boardCopy.step}</p><h2 ref={boardHeading} tabIndex="-1">{boardCopy.prompt}</h2><p className="rs-board-cue">{boardCopy.cue}</p><ReadAloudControls parts={spokenParts} rate={isYoung ? .88 : .95} /></div>}
         {session.phase === 'complete' && <div className="rs-board-prompt"><p className="rs-step">FINAL FREEZE · AFTER YOUR THREE READS</p><h2>{thirdTeaching.finalTitle}</h2><p className="rs-board-cue">{possessionSentence(state)} {thirdTeaching.finalCue}</p></div>}
-        {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
-        {boardView === '3d' && <div className="rs-camera-toolbar"><label>CAMERA ANGLE<select aria-label="Camera angle" value={cameraPreset} onChange={event => { setCameraPreset(event.target.value); setCameraAdjusting(false); }}><option value="broadcast">Broadcast</option><option value="behind-net">Behind net</option><option value="overhead">Overhead</option></select></label><button type="button" aria-pressed={cameraAdjusting} onClick={() => setCameraAdjusting(value => !value)}>{cameraAdjusting ? 'Done adjusting' : 'Adjust camera'}</button>{cameraAdjusting && <p role="status">Drag to rotate. Pinch or scroll to zoom. With the rink focused, use arrow keys and + / −. Choose Done adjusting to answer or place a player.</p>}</div>}
-        <ReadSequenceBoard {...boardProps} view={boardView} onViewChange={setBoardView} cameraPreset={cameraPreset} cameraAdjusting={cameraAdjusting}
-          playing={visualPlaying} time={visualTime} supportPoint={session.third?.point || null}
-          fallbackBoard={<RinkStage inspectable={boardView === 'board'} {...boardProps} showReadLanes={isU11 && session.phase === 'read-1'} />} />
-        {((session.phase === 'read-3' && routeMode) || (session.phase === 'complete' && route)) && <RoutePlanner key={`${storageKey}:${session.phase}`} route={route} origin={selectedTarget?.state.actors.find(actor => actor.id === session.third.actorId)} actorLabel={routeLabel} onChange={updateRoute} onAddPoint={addRoutePoint} progress={routeProgress} playing={routePlaying} reducedMotion={reducedMotion} onPreview={previewRoute} onPause={() => setRoutePlaying(false)} onProgress={progress => { setRoutePlaying(false); setRouteProgress(progress); }} readOnly={session.phase === 'complete'} />}
+        {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" disabled={!rinkAvailable || cameraAdjusting} aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" disabled={!rinkAvailable || cameraAdjusting} aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
+        <CameraViewControls preset={cameraPreset} onPresetChange={preset => { setCameraPreset(preset); setCameraPresetVersion(value => value + 1); }} adjusting={cameraAdjusting} onAdjustingChange={setCameraAdjusting} panMode={cameraPanMode} onPanModeChange={setCameraPanMode} onCameraCommand={setCameraCommand} onReset={() => setCameraResetToken(value => value + 1)} />
+        <ReadSequenceBoard {...boardProps} onAvailabilityChange={value => { rinkAvailableRef.current = value === true; setRinkAvailable(value === true); }} onUnavailable={() => { rinkAvailableRef.current = false; setRinkAvailable(false); setPaused(true); setRoutePlaying(false); setCameraAdjusting(false); }} cameraPreset={cameraPreset} cameraPresetVersion={cameraPresetVersion} cameraAdjusting={cameraAdjusting} cameraPanMode={cameraPanMode} cameraResetToken={cameraResetToken} cameraCommand={cameraCommand}
+          playing={visualPlaying} time={visualTime} supportPoint={session.third?.point || null} />
+        {session.phase === 'read-1' && <div className="rs-tap-choice"><p>Choose an action to watch it happen. You can change your choice before confirming.</p>{chosenAction && <p role="status"><b>{choicePreview ? 'Previewing' : 'Selected'}: {actionCopy[chosenAction].label}.</b> {actionCopy[chosenAction].detail}</p>}<div><button type="button" className="rs-primary" disabled={!chosenAction || !rinkAvailable || cameraAdjusting} onClick={submitReadOne}>Confirm and continue</button>{choicePreview && <button type="button" disabled={!rinkAvailable || cameraAdjusting} onClick={() => { if (!rinkAvailableRef.current || cameraAdjusting) return; previewVersion.current++; setChoicePreview(null); setPaused(false); }}>Back to the starting play</button>}</div></div>}
+        {((session.phase === 'read-3' && routeMode) || (session.phase === 'complete' && route)) && <fieldset aria-label="Route controls" disabled={!rinkAvailable || cameraAdjusting} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}><RoutePlanner key={`${storageKey}:${session.phase}`} route={route} origin={selectedTarget?.state.actors.find(actor => actor.id === session.third.actorId)} actorLabel={routeLabel} onChange={updateRoute} onAddPoint={addRoutePoint} progress={routeProgress} playing={routePlaying} reducedMotion={reducedMotion} onPreview={previewRoute} onPause={() => setRoutePlaying(false)} onProgress={progress => { if (!rinkAvailableRef.current || cameraAdjusting) return; setRoutePlaying(false); setRouteProgress(progress); }} readOnly={session.phase === 'complete'} /></fieldset>}
         <div className="rs-playback-bar">
           <span>{activePlayback ? `${['consequence-2', 'replay-2'].includes(session.phase) ? `Read 2 · ${selectedText?.label}` : `Read 1 · ${branch?.actionLabel}`} · ${Math.round(session.playbackProgress * 100)}%` : session.phase === 'read-1' ? 'Freeze · read 1' : session.phase === 'read-2' ? 'Freeze · read 2' : session.phase === 'read-3' ? 'Freeze · read 3' : 'Final position · earlier choices are listed in order'}</span>
-          <div>{activePlayback && (!reducedMotion || paused) && <button type="button" onClick={() => setPaused(value => !value)}>{paused ? 'Resume' : 'Pause'}</button>}
+          <div>{(activePlayback || previewPlaying) && (!reducedMotion || paused) && <button type="button" onClick={() => setPaused(value => !value)}>{paused ? 'Resume' : 'Pause'}</button>}
             {session.first && ['read-2', 'read-3', 'complete'].includes(session.phase) && <button type="button" onClick={replay}>{session.phase === 'read-2' ? 'Replay my first choice' : 'Replay my play'}</button>}
             <button type="button" onClick={reset}>Start over</button></div>
         </div>
@@ -618,18 +691,17 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {session.phase === 'read-1' && <>
           <p className="rs-step">READ 1 · {isYoung ? 'LOOK, THEN CHOOSE' : 'IDENTIFY THE CUE'}</p><h2 ref={phaseHeading} tabIndex="-1">{firstPrompt}</h2>
           <div className="rs-cue-card"><b>{isYoung ? 'Find your team' : 'Look at the ice'}</b><ul>{(copy.firstCues || ['D1 partly shades the shot route but does not erase every option.', 'F2 is open enough to consider, but slightly flat.', 'The goalie starts nearer the middle while the puck begins off-centre.']).map(cue => <li key={cue}>{cue}</li>)}</ul></div>
-          <fieldset className="rs-actions"><legend>What would you do?</legend>{actions.map(action => <button type="button" key={action} aria-pressed={chosenAction === action} onClick={() => setChosenAction(action)}><b>{actionCopy[action].label}</b><span>{actionCopy[action].detail}</span></button>)}</fieldset>
+          <fieldset className="rs-actions" disabled={!rinkAvailable || cameraAdjusting}><legend>Choose your play</legend>{actions.map(action => <button type="button" key={action} aria-pressed={chosenAction === action} onClick={() => previewChoice(action)}><b>{actionCopy[action].label}</b><span>{actionCopy[action].detail}</span></button>)}</fieldset>
           <label className="rs-reason">{firstReasonLabel}<textarea rows={isYoung ? 2 : 4} maxLength="600" value={firstReason} onChange={event => setFirstReason(event.target.value)} placeholder={copy.firstReasonPlaceholder || 'Name the defender, lane, support or goalie cue that shaped your choice.'} /><small>{firstReason.length}/600</small></label>
-          {isYoung && <p className="rs-hint">A few words are enough. You can say your reason to a coach and have them type it.</p>}
-          <button type="button" className="rs-primary" onClick={submitReadOne}>Play my choice →</button>
-          <details className="rs-rubric"><summary>For the coach</summary><p>{copy.firstDiscussion || 'The shot route is only partly covered and F2’s alignment is not perfect. Timing and the reason can make different actions defensible. A pass just because it is a 2-on-1, or a shot treated as a guaranteed goal, misses the read.'}</p></details>
+          {isYoung && <p className="rs-hint">You can leave this blank, or tell a coach what you noticed.</p>}
+          <button type="button" className="rs-primary" disabled={!chosenAction || !rinkAvailable || cameraAdjusting} onClick={submitReadOne}>Confirm my choice →</button>
         </>}
 
         {(session.phase === 'consequence-1' || session.phase === 'replay-1') && <div className="rs-playing" role="status"><p className="rs-step">YOUR {actionNoun.toUpperCase()} IS CHANGING THE PLAY</p><h2 ref={phaseHeading} tabIndex="-1">Watch where the players and puck move.</h2><p>{consequenceText}</p>{reducedMotion && <small>Reduced-motion mode moves directly to the next freeze.</small>}</div>}
 
         {session.phase === 'read-2' && <>
           <p className="rs-step">READ 2 · {isYoung ? 'LOOK AGAIN' : 'TIMING & SPACE'}</p><h2 ref={phaseHeading} tabIndex="-1">{readTwo.prompt}</h2><div className="rs-cue-card"><b>{isYoung ? 'What changed?' : 'Re-scan now'}</b><p>{readTwo.cue}</p></div>
-          <div className="rs-target-list">{displayTargets.map((target, index) => <button type="button" key={target.id} onClick={() => chooseTarget(target.id)}><span>{index + 1}</span><b>{target.label}</b><small>{target.kind === 'receiver' ? 'Tap receiver' : 'Tap space'}</small></button>)}</div>
+          <div className="rs-target-list">{displayTargets.map((target, index) => <button type="button" key={target.id} disabled={!rinkAvailable || cameraAdjusting} onClick={() => chooseTarget(target.id)}><span>{index + 1}</span><b>{target.label}</b><small>{target.kind === 'receiver' ? 'Tap receiver' : 'Tap space'}</small></button>)}</div>
           <p className="rs-hint">Tap a numbered marker on the rink or use these matching buttons.</p>
         </>}
 
@@ -638,10 +710,10 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {session.phase === 'read-3' && <>
           <p className="rs-step">{thirdTeaching.step}</p><h2 ref={phaseHeading} tabIndex="-1">{thirdPrompt}</h2>
           <div className="rs-cue-card"><b>{isYoung ? 'Help your team' : 'Keep the whole picture'}</b><p>{thirdCue}</p></div>
-          <p className="rs-hint">{routeMode ? 'Use the route controls below the rink to add points, undo a turn, or preview your plan.' : boardView === '3d' ? 'Tap the ice where the highlighted player should go, or use the position controls below. The tactical board also supports dragging and arrow keys.' : 'Drag the highlighted player, tap the ice, use arrow keys, or adjust the coordinates.'}</p>
-          {movingActor && !routeMode && <div className="rs-coordinate-row"><label>Rink length<RinkCoordinateInput step=".5" value={Number(movingActor.x.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={x => moveActor({ x, y: movingActor.y })} /></label><label>Rink width<RinkCoordinateInput step=".5" value={Number(movingActor.y.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={y => moveActor({ x: movingActor.x, y })} /></label></div>}
-          <label className="rs-reason">{thirdTeaching.reasonLabel}<textarea rows={isYoung ? 2 : 4} maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder={copy.thirdReasonPlaceholder || 'Explain the lane or space this creates, protects or keeps available.'} /><small>{thirdReason.length}/600</small></label>
-          <button type="button" className="rs-primary" onClick={finish}>Finish the three reads →</button>
+          <p className="rs-hint">{routeMode ? 'Use the route controls below the rink to add points, undo a turn, or preview your plan.' : 'Tap the ice where the highlighted player should go, or use the position controls below.'}</p>
+          {movingActor && !routeMode && <fieldset disabled={!rinkAvailable || cameraAdjusting} aria-label="Position controls" style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}><div className="rs-coordinate-row"><label>Rink length<RinkCoordinateInput step=".5" value={Number(movingActor.x.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={x => moveActor({ x, y: movingActor.y })} /></label><label>Rink width<RinkCoordinateInput step=".5" value={Number(movingActor.y.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={y => moveActor({ x: movingActor.x, y })} /></label></div></fieldset>}
+          <label className="rs-reason">{thirdTeaching.reasonLabel} (optional)<textarea rows={isYoung ? 2 : 4} maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder={copy.thirdReasonPlaceholder || 'Explain the lane or space this creates, protects or keeps available.'} /><small>{thirdReason.length}/600</small></label>
+          <button type="button" className="rs-primary" disabled={!rinkAvailable || cameraAdjusting} onClick={finish}>Finish the three reads →</button>
         </>}
 
         {session.phase === 'complete' && <>
@@ -656,9 +728,8 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {notice && <p className="rs-notice" role="status">{notice}</p>}
       </aside>
     </div>
-    {session.phase === 'complete' && <ReadSequenceRecall key={`${storageKey}:recall`} session={session} playerId={playerId} draftAccess={recallDraftAccess} renderBoard={(state, description) => <RinkStage state={state} definition={definition} description={description} />} />}
-    {isU11 && session.phase === 'complete' && <ChangedCueComparison key={storageKey} session={session} onSave={setSession} />}
-    <SourceNotes definition={definition} />
+    {!defenderPerspectiveActive && session.phase === 'complete' && <ReadSequenceRecall key={`${storageKey}:recall`} session={session} playerId={playerId} draftAccess={recallDraftAccess} renderBoard={(state, description) => <ScenarioRinkView ageBand={definition.ageBand} questionId={`${definition.id}:recall:${description}`} state={state} title={description} bounds={getReadSceneBounds(definition, { wide: true })} hideZoneLines={isYoung || definition.ui?.hideZoneLines === true} showBothGoals={false} />} />}
+    {!defenderPerspectiveActive && isU11 && session.phase === 'complete' && <ChangedCueComparison key={storageKey} session={session} onSave={setSession} />}
   </section>;
 }
 

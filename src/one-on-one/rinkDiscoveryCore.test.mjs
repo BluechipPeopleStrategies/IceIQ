@@ -143,6 +143,7 @@ test('the actual tour supports wrong answers, keyboard and ice answers, completi
     assert.equal(scene().props.hideZoneLines, false);
     assert.equal(scene().props.showBothGoals, true);
     assert.equal(scene().props.labelledActors, false);
+    assert.equal(scene().props.puckPresentation, 'hidden', 'A circle question must not distract with a puck');
     assert.deepEqual(scene().props.bounds, core.RINK_DISCOVERY_GEOMETRY.bounds);
     click('Show a hint'); assert.match(textOf(container), /big circle painted/);
     click('1'); assert.match(textOf(container), /Keep looking/);
@@ -153,9 +154,15 @@ test('the actual tour supports wrong answers, keyboard and ice answers, completi
     assert.equal(scene().props.onIcePoint, undefined, 'Solved prompts stop accepting scene taps');
     assert.equal(scene().props.fallback.props.onPoint, undefined);
     click('Next find'); assert.match(textOf(container), /Where is a blue line/);
+    assert.equal(scene().props.puckPresentation, 'hidden');
     assert.ok(!textOf(container).includes('big circle painted'), 'Hints reset for a new feature');
     flush(() => scene().props.onIcePoint({ x: -7.62, y: 4 }));
-    click('Next find'); click('2'); click('Next find'); click('4'); click('See my stars');
+    click('Next find');
+    assert.equal(scene().props.puckPresentation, 'hidden');
+    click('2'); click('Next find');
+    assert.equal(scene().props.puckPresentation, 'unlabelled', 'Puck identification shows the object without an answer label');
+    assert.deepEqual(scene().props.state.puck, core.RINK_DISCOVERY_GEOMETRY.puck, 'Presentation must not move the target');
+    click('4'); click('See my stars');
     assert.equal(scene(), null, 'Completion releases the drawing surface');
     assert.match(textOf(container), /4 \/ 4/);
     assert.match(textOf(container), /You explored the rink/);

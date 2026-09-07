@@ -1,0 +1,1 @@
+import fs from 'node:fs';for(let n=21;n<=34;n++){const f=`docs/factory/research/question-review/packet-${n}/root-review.md`;const t=fs.readFileSync(f,'utf8').split(/\r?\n/).map(l=>l.trimEnd()).join('\n').trimEnd()+'\n';fs.writeFileSync(f,t);fs.copyFileSync(f,'tmp/packets-production-release/'+f);}

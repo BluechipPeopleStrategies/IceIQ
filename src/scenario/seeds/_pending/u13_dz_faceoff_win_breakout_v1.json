@@ -1,0 +1,100 @@
+{
+  "id": "u13_dz_faceoff_win_breakout_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "nodeId": "u13.breakout-and-regroup",
+  "themes": [
+    "breakout",
+    "face-off",
+    "positioning",
+    "decision-making"
+  ],
+  "cat": "Breakout",
+  "difficulty": 2,
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.16,
+      "y": 0.62,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.158,
+      "y": 0.618
+    },
+    {
+      "id": "center",
+      "kind": "teammate",
+      "x": 0.22,
+      "y": 0.5,
+      "tag": "C"
+    },
+    {
+      "id": "weak_d",
+      "kind": "teammate",
+      "x": 0.1,
+      "y": 0.38,
+      "tag": "D2"
+    },
+    {
+      "id": "strong_wing",
+      "kind": "teammate",
+      "x": 0.28,
+      "y": 0.82,
+      "tag": "RW"
+    },
+    {
+      "id": "f1",
+      "kind": "defender",
+      "x": 0.22,
+      "y": 0.6,
+      "tag": ""
+    },
+    {
+      "id": "f2",
+      "kind": "defender",
+      "x": 0.26,
+      "y": 0.78,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.06,
+      "y": 0.5,
+      "tag": ""
+    }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "Your centre wins the defensive-zone draw clean back to you. Tap your first read.",
+    "from": [
+      "center",
+      "weak_d",
+      "strong_wing"
+    ],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": [
+      "weak_d"
+    ]
+  },
+  "feedback": {
+    "right": "The forecheck collapsed hard on your strong side the instant the puck landed. Your weak-side D is the safety valve — an easy D-to-D pass moves it to space with no pressure and starts the breakout clean.",
+    "wrong": "Both the centre and your strong-side wing already have a forechecker on top of them from the win — that pass is contested before it gets there. Your weak-side D is standing in space with nobody near. That's the safe first move."
+  },
+  "tip": "A clean faceoff win doesn't mean a clean lane. Check where the pressure landed before you decide where the puck goes.",
+  "why": "The forecheck's structure is built to jump the strong side the instant a draw is won there. Reading that pressure and finding the weak-side D keeps the breakout simple and possession safe, instead of forcing a pass into numbers."
+}

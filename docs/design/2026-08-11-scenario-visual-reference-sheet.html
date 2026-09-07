@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RinkReads — Scenario Visual Reference Sheet</title>
+<style>
+  :root {
+    --navy-deep: #071022;
+    --navy: #0B1A33;
+    --navy-panel: #0f2038;
+    --navy-line: #1c3255;
+    --ice: #EEF5FB;
+    --ice-dim: #cfe0ef;
+    --gold: #C9A24B;
+    --gold-soft: #e3c98a;
+    --rink-red: #D23A3A;
+    --rink-blue: #2B6FD6;
+    --team-navy: #0F4C8C;
+    --team-black: #1A1A1A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(1200px 700px at 15% -10%, #0d1f3b 0%, transparent 60%),
+      var(--navy-deep);
+    color: var(--ice);
+    font: 15px/1.55 "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    padding: 0 0 64px;
+  }
+  .mono {
+    font-family: "Cascadia Mono", "SF Mono", Consolas, "Courier New", monospace;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    padding: 46px clamp(20px, 5vw, 64px) 30px;
+    border-bottom: 1px solid var(--navy-line);
+    background: linear-gradient(180deg, rgba(201,162,75,0.06), transparent);
+  }
+  .eyebrow {
+    font-family: "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin: 0 0 14px;
+  }
+  h1 {
+    font-size: clamp(26px, 3.6vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  header p.lede {
+    max-width: 62ch;
+    color: var(--ice-dim);
+    margin: 0 0 22px;
+    font-size: 15.5px;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 12px;
+    color: var(--ice-dim);
+  }
+  .meta-row span b { color: var(--ice); font-weight: 600; }
+
+  .legend-key {
+    display: flex; gap: 14px; margin-top: 22px; flex-wrap: wrap;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 5px 11px 5px 9px; border-radius: 999px;
+  }
+  .pill.canon { background: var(--gold); color: #241a05; font-weight: 700; }
+  .pill.proposed { border: 1px solid var(--gold); color: var(--gold-soft); font-weight: 600; }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* ---------- panels ---------- */
+  main {
+    padding: 8px clamp(20px, 5vw, 64px) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(320px, 1.15fr) minmax(280px, 0.85fr);
+    gap: 0;
+    background: var(--navy-panel);
+    border: 1px solid var(--navy-line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  @media (max-width: 800px) {
+    .panel { grid-template-columns: 1fr; }
+  }
+  .panel-tick {
+    position: absolute; width: 13px; height: 13px;
+    border-color: var(--navy-line); opacity: 0.9;
+  }
+  .panel-tick.tl { top: 10px; left: 10px; border-top: 1px solid; border-left: 1px solid; }
+  .panel-tick.br { bottom: 10px; right: 10px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .stage {
+    padding: 26px 26px 22px;
+    display: flex; flex-direction: column; gap: 14px;
+    background:
+      linear-gradient(180deg, rgba(238,245,251,0.02), transparent 40px);
+  }
+  .stage-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .stage-head h2 {
+    font-size: 12.5px; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--ice-dim); font-weight: 700; margin: 0;
+  }
+  .stage-head .num { font-family: "Cascadia Mono", "SF Mono", Consolas, monospace; font-size: 12px; color: var(--navy-line); }
+  .svg-wrap {
+    background: var(--ice);
+    border-radius: 3px;
+    padding: 14px;
+    box-shadow: inset 0 0 0 1px rgba(11,26,51,0.14);
+  }
+  .svg-wrap svg { display: block; width: 100%; height: auto; }
+  .caption { font-size: 13px; color: var(--ice-dim); max-width: 58ch; margin: 0; }
+
+  .legend {
+    padding: 26px 24px;
+    border-left: 1px solid var(--navy-line);
+    display: flex; flex-direction: column; gap: 16px;
+    background: rgba(7,16,34,0.35);
+  }
+  @media (max-width: 800px) { .legend { border-left: none; border-top: 1px solid var(--navy-line); } }
+  .legend h3 {
+    font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -0.005em;
+  }
+  .legend .status-line { display: flex; align-items: center; gap: 8px; }
+  .legend .tie {
+    font-size: 12.5px; color: var(--gold-soft);
+    background: rgba(201,162,75,0.08);
+    border: 1px solid rgba(201,162,75,0.25);
+    border-radius: 3px; padding: 8px 10px;
+    font-family: "Cascadia Mono", "SF Mono", Consolas, monospace;
+  }
+  .spec-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  .spec-list li {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 13px; color: var(--ice-dim);
+  }
+  .swatch {
+    flex: 0 0 auto; width: 13px; height: 13px; border-radius: 3px;
+    margin-top: 2px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+  }
+  .spec-list code {
+    font-family: "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 12px; color: var(--gold-soft);
+  }
+  .legend p.note { font-size: 12.5px; color: #8ba2bf; margin: 4px 0 0; }
+
+  footer {
+    padding: 30px clamp(20px, 5vw, 64px) 0;
+    color: #6f88a6; font-size: 12.5px;
+    border-top: 1px solid var(--navy-line);
+    margin-top: 32px;
+  }
+  footer .mono { color: #8ba2bf; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">RinkReads · Scenario Engine · Visual Language</p>
+  <h1>Scenario visual reference sheet</h1>
+  <p class="lede">
+    Hand-drawn to match the live renderer exactly, plus three proposed extensions
+    for decision-making features already sitting on the roadmap. Panel 1 is the
+    baseline; panels 2&ndash;4 are new — nothing here is shipped code, they're a
+    starting point to react to.
+  </p>
+  <div class="meta-row">
+    <span>Coordinate space <b>rink-200×85</b> (feet, origin top-left)</span>
+    <span>Source renderer <b>src/play/AnimatedPlay.jsx</b></span>
+    <span>File <b>docs/design/2026-08-11-scenario-visual-reference-sheet.html</b></span>
+  </div>
+  <div class="legend-key">
+    <span class="pill canon"><span class="dot"></span>Canonical — matches shipped code</span>
+    <span class="pill proposed"><span class="dot"></span>Proposed — new, ties to a roadmap item</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- PANEL 1 — BASELINE STYLE SHEET -->
+  <section class="panel">
+    <span class="panel-tick tl"></span><span class="panel-tick br"></span>
+    <div class="stage">
+      <div class="stage-head"><h2>Baseline style sheet</h2><span class="num mono">01</span></div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 200 85" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowNavy" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="#0B1A33" />
+            </marker>
+          </defs>
+          <!-- boards -->
+          <rect x="1.5" y="1.5" width="197" height="82" rx="24" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1.4" />
+          <!-- goal lines -->
+          <line x1="11" y1="3" x2="11" y2="82" stroke="#D23A3A" stroke-width="0.7" />
+          <line x1="189" y1="3" x2="189" y2="82" stroke="#D23A3A" stroke-width="0.7" />
+          <!-- blue lines -->
+          <line x1="75" y1="3" x2="75" y2="82" stroke="#2B6FD6" stroke-width="1.4" />
+          <line x1="125" y1="3" x2="125" y2="82" stroke="#2B6FD6" stroke-width="1.4" />
+          <!-- center line -->
+          <line x1="100" y1="3" x2="100" y2="82" stroke="#D23A3A" stroke-width="1.1" />
+          <!-- faceoff circles -->
+          <circle cx="100" cy="42.5" r="10" fill="none" stroke="#D23A3A" stroke-width="0.6" />
+          <circle cx="31" cy="20" r="9" fill="none" stroke="#D23A3A" stroke-width="0.6" />
+          <circle cx="31" cy="65" r="9" fill="none" stroke="#D23A3A" stroke-width="0.6" />
+          <circle cx="169" cy="20" r="9" fill="none" stroke="#D23A3A" stroke-width="0.6" />
+          <circle cx="169" cy="65" r="9" fill="none" stroke="#D23A3A" stroke-width="0.6" />
+          <!-- nets -->
+          <path d="M11,36 A7,7 0 0,1 11,49" fill="#BCDCFF" stroke="#D23A3A" stroke-width="0.6" />
+          <rect x="6" y="39" width="5" height="7" fill="none" stroke="#0B1A33" stroke-width="0.5" />
+          <path d="M189,36 A7,7 0 0,0 189,49" fill="#BCDCFF" stroke="#D23A3A" stroke-width="0.6" />
+          <rect x="189" y="39" width="5" height="7" fill="none" stroke="#0B1A33" stroke-width="0.5" />
+
+          <!-- routes -->
+          <path d="M60,60 L85,52" fill="none" stroke="#0B1A33" stroke-width="0.7" marker-end="url(#arrowNavy)" />
+          <path d="M85,52 Q100,40 118,30" fill="none" stroke="#0B1A33" stroke-width="0.7" stroke-dasharray="2.4 1.8" marker-end="url(#arrowNavy)" />
+          <path d="M118,30 L142,20" fill="none" stroke="#0B1A33" stroke-width="1.6" marker-end="url(#arrowNavy)" />
+          <path d="M60,60 L45,68" fill="none" stroke="#7a8a9c" stroke-width="0.7" stroke-dasharray="1.6 1.6" />
+
+          <!-- puck -->
+          <circle cx="60" cy="60" r="1.35" fill="#111111" stroke="#FFFFFF" stroke-width="0.3" />
+
+          <!-- tokens: offense w/ puck (gold ring), teammate, defender (X), goalie -->
+          <circle cx="60" cy="60" r="4.2" fill="none" stroke="#C9A24B" stroke-width="0.6" stroke-dasharray="1.4 1.2" />
+          <circle cx="60" cy="60" r="3.4" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.5" />
+          <circle cx="142" cy="20" r="3.4" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.5" />
+          <circle cx="100" cy="46" r="3.4" fill="none" stroke="#1A1A1A" stroke-width="0.6" />
+          <line x1="98.4" y1="44.4" x2="101.6" y2="47.6" stroke="#1A1A1A" stroke-width="0.6" />
+          <line x1="101.6" y1="44.4" x2="98.4" y2="47.6" stroke="#1A1A1A" stroke-width="0.6" />
+          <rect x="184.5" y="39.5" width="4.5" height="6" rx="1.2" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.4" />
+
+          <!-- youngest-band figure token -->
+          <circle cx="45" cy="68" r="3.4" fill="#0F4C8C" />
+          <path d="M43,69 Q45,71 47,69" fill="none" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round" />
+        </svg>
+      </div>
+      <p class="caption">
+        Every element on this rink is drawn to the same spec as the shipped renderer —
+        ice, boards, lines, faceoff circles, nets, both team token colors, the defender's
+        X-overlay, the goalie's rounded token, the youngest-band "figure" smile, the puck,
+        and all four route styles (skate / pass / shot / blocked).
+      </p>
+    </div>
+    <aside class="legend">
+      <div class="status-line"><span class="pill canon"><span class="dot"></span>Canonical</span></div>
+      <h3>Baseline style sheet</h3>
+      <ul class="spec-list">
+        <li><span class="swatch" style="background:#EEF5FB"></span>Ice fill <code>#EEF5FB</code>, boards <code>#0B1A33</code></li>
+        <li><span class="swatch" style="background:#D23A3A"></span>Goal &amp; center lines <code>#D23A3A</code></li>
+        <li><span class="swatch" style="background:#2B6FD6"></span>Blue lines <code>#2B6FD6</code></li>
+        <li><span class="swatch" style="background:#0F4C8C"></span>Home token <code>#0F4C8C</code> · away <code>#1A1A1A</code></li>
+        <li><span class="swatch" style="background:#C9A24B"></span>Puck-carrier / decision ring <code>#C9A24B</code> dashed</li>
+      </ul>
+      <p class="tie">src/play/AnimatedPlay.jsx · tokenSystem.js · motionVocabulary.js</p>
+      <p class="note">Nothing to build here — this panel exists so panels 2–4 can be checked against it at a glance.</p>
+    </aside>
+  </section>
+
+  <!-- PANEL 2 — OFFSIDE / LEGAL-ILLEGAL LANE -->
+  <section class="panel">
+    <span class="panel-tick tl"></span><span class="panel-tick br"></span>
+    <div class="stage">
+      <div class="stage-head"><h2>Legal vs. illegal lane marker</h2><span class="num mono">02</span></div>
+      <div class="svg-wrap">
+        <svg viewBox="0 25 100 60" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowGold" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="#C9A24B" />
+            </marker>
+          </defs>
+          <rect x="1.5" y="26.5" width="97" height="57" rx="18" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1.4" />
+          <line x1="11" y1="28" x2="11" y2="82" stroke="#D23A3A" stroke-width="0.7" />
+          <line x1="55" y1="28" x2="55" y2="82" stroke="#2B6FD6" stroke-width="1.4" />
+          <path d="M11,55 A7,7 0 0,1 11,68" fill="#BCDCFF" stroke="#D23A3A" stroke-width="0.6" />
+
+          <!-- puck carrier at center ice, onside -->
+          <circle cx="42" cy="60" r="4.2" fill="none" stroke="#C9A24B" stroke-width="0.6" stroke-dasharray="1.4 1.2" />
+          <circle cx="42" cy="60" r="3.4" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.5" />
+
+          <!-- legal target: onside teammate, gold dashed pass -->
+          <circle cx="48" cy="42" r="3.4" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.5" />
+          <path d="M42,60 Q46,50 48,45.5" fill="none" stroke="#C9A24B" stroke-width="0.8" stroke-dasharray="2 1.6" marker-end="url(#arrowGold)" />
+
+          <!-- illegal target: teammate already across the line, same gold dash but flagged -->
+          <circle cx="66" cy="42" r="3.4" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.5" />
+          <path d="M42,60 Q56,48 65,44" fill="none" stroke="#C9A24B" stroke-width="0.8" stroke-dasharray="2 1.6" marker-end="url(#arrowGold)" />
+          <!-- hazard mark at the blue-line crossing -->
+          <rect x="53.2" y="49.2" width="3.6" height="3.6" fill="#D23A3A" transform="rotate(45 55 51)" />
+          <rect x="60" y="34" width="26" height="7" rx="3.5" fill="#FFFFFF" stroke="#D23A3A" stroke-width="0.6" />
+          <text x="73" y="38.7" text-anchor="middle" font-size="4.4" font-family="Segoe UI, sans-serif" font-weight="700" fill="#7A2A1C">OFFSIDE</text>
+        </svg>
+      </div>
+      <p class="caption">
+        Both passes use the identical gold dashed "correct read" line style from panel 1 —
+        color alone never signals legality here (the code's own accessibility rule).
+        A pass judged offside gets a small red hazard mark at the exact blue-line crossing,
+        plus the same white/gold cue-pill shape already used for coach callouts, recolored red.
+      </p>
+    </div>
+    <aside class="legend">
+      <div class="status-line"><span class="pill proposed"><span class="dot"></span>Proposed</span></div>
+      <h3>Legal vs. illegal lane marker</h3>
+      <ul class="spec-list">
+        <li><span class="swatch" style="background:#D23A3A;transform:rotate(45deg)"></span>Hazard diamond at the infraction point, not the whole route</li>
+        <li><span class="swatch" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #D23A3A"></span>Red-bordered cue pill, same shape as the gold coaching pill</li>
+        <li>Route color stays gold — legality is shape + label, never a red/green pass line</li>
+      </ul>
+      <p class="tie">Ties to TASKS.md: "Rule-legality awareness in content (offside, icing)" — Best Option now deliberately generates offside passes but has no on-ice marker yet.</p>
+      <p class="note">Surface-conditional per the roadmap note: half-ice U9 content has no offside, so this marker only ever appears on full-ice scenarios.</p>
+    </aside>
+  </section>
+
+  <!-- PANEL 3 — GOALIE STATE -->
+  <section class="panel">
+    <span class="panel-tick tl"></span><span class="panel-tick br"></span>
+    <div class="stage">
+      <div class="stage-head"><h2>Goalie state — set vs. moving</h2><span class="num mono">03</span></div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 100 44" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="98" height="42" rx="6" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1" />
+          <line x1="50" y1="1" x2="50" y2="43" stroke="#1c3255" stroke-width="0.4" stroke-dasharray="1 1.4" opacity="0.5" />
+
+          <!-- SET -->
+          <rect x="20" y="16" width="8" height="11" rx="2.4" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.6" />
+          <circle cx="24" cy="21.5" r="7.2" fill="none" stroke="#0B1A33" stroke-width="0.5" stroke-dasharray="1 1" opacity="0.55" />
+          <text x="24" y="36" text-anchor="middle" font-size="4.2" font-family="Segoe UI, sans-serif" font-weight="700" fill="#0B1A33" letter-spacing="0.06em">SET</text>
+
+          <!-- MOVING -->
+          <rect x="63" y="16" width="8" height="11" rx="2.4" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.4" opacity="0.35" />
+          <rect x="68" y="16" width="8" height="11" rx="2.4" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.4" opacity="0.6" />
+          <rect x="73" y="16" width="8" height="11" rx="2.4" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.6" />
+          <path d="M83,21.5 L89,21.5" stroke="#C9A24B" stroke-width="0.9" marker-end="url(#arrowGold2)" />
+          <defs>
+            <marker id="arrowGold2" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#C9A24B" />
+            </marker>
+          </defs>
+          <text x="77" y="36" text-anchor="middle" font-size="4.2" font-family="Segoe UI, sans-serif" font-weight="700" fill="#0B1A33" letter-spacing="0.06em">MOVING</text>
+        </svg>
+      </div>
+      <p class="caption">
+        The goalie keeps its shipped rounded-rect token in both states. "Set" adds a faint
+        stationary ring (reads as "planted"); "moving" reuses the existing ghost-trail
+        technique from outcome playback plus the gold direction arrow already used for
+        motion cues — no new drawing primitives, just a new combination of existing ones.
+      </p>
+    </div>
+    <aside class="legend">
+      <div class="status-line"><span class="pill proposed"><span class="dot"></span>Proposed</span></div>
+      <h3>Goalie state — set vs. moving</h3>
+      <ul class="spec-list">
+        <li>Set: token + static dashed ring, no trail</li>
+        <li>Moving: 3-frame opacity ramp (0.35 → 0.6 → 1.0) + gold direction arrow</li>
+        <li>Reuses the outcome ghost-trail already built for play playback</li>
+      </ul>
+      <p class="tie">Ties to TASKS.md LATER: "Goalie-reading concept (triage theme 4) — new ledger concept/node + goalie-state representation (set vs moving)."</p>
+    </aside>
+  </section>
+
+  <!-- PANEL 4 — CONSEQUENCE CHAIN -->
+  <section class="panel">
+    <span class="panel-tick tl"></span><span class="panel-tick br"></span>
+    <div class="stage">
+      <div class="stage-head"><h2>Consequence chain — two-read branch</h2><span class="num mono">04</span></div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 140 70" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowNavySm" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#0B1A33" />
+            </marker>
+          </defs>
+          <rect x="1" y="18" width="55" height="34" rx="10" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1" />
+          <circle cx="15" cy="35" r="3.6" fill="none" stroke="#C9A24B" stroke-width="0.6" stroke-dasharray="1.2 1" />
+          <circle cx="15" cy="35" r="2.8" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.4" />
+          <text x="15" y="49" text-anchor="middle" font-size="4" font-family="Segoe UI, sans-serif" font-weight="700" fill="#0B1A33">READ 1</text>
+
+          <path d="M27,29 C50,20 60,18 75,17" fill="none" stroke="#0B1A33" stroke-width="0.7" marker-end="url(#arrowNavySm)" />
+          <path d="M27,41 C50,50 60,52 75,53" fill="none" stroke="#0B1A33" stroke-width="0.7" stroke-dasharray="2 1.6" marker-end="url(#arrowNavySm)" />
+
+          <rect x="76" y="2" width="63" height="30" rx="8" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1" />
+          <circle cx="94" cy="17" r="3.2" fill="#0F4C8C" stroke="#FFFFFF" stroke-width="0.4" />
+          <text x="107" y="12" font-size="4" font-family="Segoe UI, sans-serif" font-weight="700" fill="#0B1A33">READ 2</text>
+          <text x="107" y="19" font-size="3.6" font-family="Segoe UI, sans-serif" fill="#155F38">right branch</text>
+          <rect x="76" y="38" width="63" height="30" rx="8" fill="#EEF5FB" stroke="#0B1A33" stroke-width="1" />
+          <circle cx="94" cy="53" r="3.2" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="0.4" />
+          <text x="107" y="48" font-size="4" font-family="Segoe UI, sans-serif" font-weight="700" fill="#0B1A33">READ 2</text>
+          <text x="107" y="55" font-size="3.6" font-family="Segoe UI, sans-serif" fill="#7A2A1C">wrong branch</text>
+        </svg>
+      </div>
+      <p class="caption">
+        The rink chrome, tokens and route strokes are untouched — this is a flow diagram
+        laid over three mini rink insets rather than a new drawing style. Solid connector =
+        the read that follows a correct first decision, dashed = the read that follows an
+        error, converging back to one question length either way.
+      </p>
+    </div>
+    <aside class="legend">
+      <div class="status-line"><span class="pill proposed"><span class="dot"></span>Proposed</span></div>
+      <h3>Consequence chain — two-read branch</h3>
+      <ul class="spec-list">
+        <li>3 decision nodes per play, fixed length, branches reconverge</li>
+        <li>Solid navy connector = correct-branch continuation</li>
+        <li>Dashed navy connector = error-branch continuation</li>
+        <li>"Right"/"wrong" text color is UI chrome only — never painted onto the rink itself</li>
+      </ul>
+      <p class="tie">Ties to TASKS.md LATER: "Consequence chains (two-read plays)" — outcome nodes already route via <code>setNodeId(opt.next)</code>; this is the missing visual, not new engine work.</p>
+    </aside>
+  </section>
+
+</main>
+
+<footer>
+  <p class="mono">Hand-authored SVG, colors and coordinates pulled directly from src/play/AnimatedPlay.jsx, tokenSystem.js and motionVocabulary.js — panel 1 is a direct match, panels 2–4 are unbuilt proposals for reaction, not final art.</p>
+</footer>
+
+</body>
+</html>

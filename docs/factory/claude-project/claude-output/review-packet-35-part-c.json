@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-35",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q1",
+      "baseContentHash": "fc6b24c5dd9b71dc85d57444bd652f458a40b2f99d85bfe895f2f5f0cc79016f",
+      "verdict": "repair",
+      "reason": "Question text, roster and answer are sound (F1 at (24,1) is the nearest Navy actor to Gold's net vs. F2 and 'Gold 1', a non-Navy distractor). Repair verdict is triggered only by the scene-wide grammar defect below, which changes this question's hash under the mandatory scene-cascade rule even though q1's own text is untouched.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q2",
+      "baseContentHash": "76e9e311a278f12e45d2d290e0d66158f9d7fc3e2985657105a0ae45e6803a5e",
+      "verdict": "repair",
+      "reason": "Multi-select logic is sound: (a) F1-still-screening and (b) F2-reachable are the two supported checks; (c) is a defensible 'positional autopilot' distractor, not an always/never absolute. Repair verdict is triggered only by the scene-wide grammar defect (briefing/cues), cascading to this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "alternative": "If F2 is also well covered, a defensible alternative is protecting the puck and resetting rather than forcing either the direct release or the cross-slot pass.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q3",
+      "baseContentHash": "e42d636ed5b9c17d977605092e05d4515ef7838ac10fa6a6f96e455d3d017c01",
+      "verdict": "repair",
+      "reason": "GENUINE DEFECT beyond the scene-wide grammar cascade: the sequence's original explanation ('The direct release is one branch; support and screen cues decide whether it remains useful.') did not disclose that checking Gold 1/F1's screen and comparing F2 can overlap, and did not explain why the net-side lane is re-checked last -- an artificial forced-order implication per the authoring contract's ban on a rigid look-decide-execute order for reads that can overlap. Repaired: kept the exact sequence and answer key (a,b,c) and rewrote only the explanation to state the overlap and justify the final step as a last look right before release.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "alternative": "A player might check the F2 cross-slot option before Gold 1/F1 if F2's lane opens first in peripheral vision; the final net-side re-check before release stays useful regardless of that ordering.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q4",
+      "baseContentHash": "912ec7516e430a127255b3fe77ac4005488e951e6bae25f13a7e15091d89b37b",
+      "verdict": "repair",
+      "reason": "GENUINE DEFECT beyond the scene-wide grammar cascade: the original prompt claimed the move 'separates the release from F1'. Computed geometry rejects this -- projecting YOU's original line (9,8)->net(27.13,0) gives y~1.38 at F1's x=24 (F1 actual y=1, ~0.38m off); projecting the proposed point (12,6.5)->net gives y~1.35 at x=24 (~0.35m off) -- essentially the same near-miss, not a meaningful separation. For any point position in this x-range, the ratio the net compresses lateral offset down to almost nothing by F1's depth, so a point move alone cannot honestly be described as separating from F1's screen. Repaired: kept the same reference coordinates (12,6.5, a legitimate on-ice alternative point spot) and reworded the prompt/explanation to state the angle changes without claiming F1's screen is cleared.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "alternative": "Moving laterally toward F2's side of the point is an equally defensible way to open a different picture than the (12,6.5) reference given.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q5",
+      "baseContentHash": "1fa1f36600b75d90986f2e45a9972e519054e8a7552c6b8aa1e22ac4cc97b846",
+      "verdict": "repair",
+      "reason": "GENUINE DEFECT beyond the scene-wide grammar cascade: distractor (c) read 'Assume the goalie remains screened,' naming a goalie that does not exist anywhere in this scene's setup.actors and is not introduced as an explicit hypothetical -- a direct violation of the authoring contract's 'a goalie ... must not appear in feedback unless present or explicitly introduced.' Repaired: reworded (c) to 'Assume the lane is still fully screened without rechecking,' preserving the same absolutist-assumption teaching purpose without inventing an actor.",
+      "checks": {
+        "roster": "fail",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "alternative": "Resetting to a teammate for a delayed release is also defensible if no clean lane or screen exists once F1 has moved away.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-010",
+      "questionId": "exp26b-u15-010-q6",
+      "baseContentHash": "7f7577b3a0c404481cd1687481f3c2b5e0d65a971bcdfff4243375351f1ba6d2",
+      "verdict": "repair",
+      "reason": "Explain question with no answer key; content (naming Gold 1, F1, F2 and explaining lane effects) is sound and age-appropriate. Repair verdict is triggered only by the scene-wide grammar defect, cascading to this question's hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) holds the puck at (9,8), just inside the offensive blue line (x=7.62), facing -0.1 rad (~toward +x, Gold's net).",
+          "F1 (h2, home) stands at (24,1), near Gold's net (goal line x=27.13) and within ~0.4m of the straight line from YOU's current position to net centre (computed y at x=24 is ~1.38 vs F1's actual y=1).",
+          "F2 (h3, home) stands at (14,-1), across the middle/slot area.",
+          "A1 (away, x=10,y=4) displays as 'Gold 1' per actorDisplayName/compactActorLabel (away + /^[HA]\\d+$/ label pattern); A2 displays 'Gold 2'; A3 displays 'Gold 3'.",
+          "No goalie actor exists anywhere in this scene's setup.actors array.",
+          "puck.owner = 'h1', matching the briefing's claim that YOU controls the puck."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the Gold net; YOU control(s) at the point; F1 is near the Gold crease; F2 is across the high slot; Gold 1 shades YOU.",
+          "Cues repeat the same three claims (YOU at point, F1 net-front, Gold 1 shading).",
+          "Limits field: static scene, no timing/execution/possession-outcome/system guarantee; coaching responses are ungraded."
+        ],
+        "unproven": [
+          "Whether Gold 1 (A1) is literally standing in the geometric shot lane, versus a general coaching characterization of 'shading'.",
+          "Any timing of F1 'moving away' (q5) or Gold 1 'opening the point' (q5) -- these are hypotheticals layered on a still frame, not shown events.",
+          "Whether the q4 reference point genuinely clears F1's screen (computed: it does not -- see reason below)."
+        ]
+      },
+      "alternative": "A coach could instead emphasize naming the exact lane (e.g., 'short side, off Gold 1's stick') rather than only naming players, as an equally valid feedback style.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u15-010",
+      "baseVersion": 1,
+      "baseScenarioHash": "0a18d3cee1281754bdcb27eeb284e8cfdd1b6ed65f7a7ac6faa9ff4d096a3017",
+      "replacement": {
+        "id": "exp26b-u15-010",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Change the point release picture",
+        "family": "point-release-traffic",
+        "topic": "Point attack and traffic",
+        "objective": "Compare a point release with a screen and a cross-slot option when the defender changes the lane.",
+        "briefing": "Navy attacks the Gold net. YOU control at the point; F1 is near the Gold crease, F2 is across the high slot, and Gold 1 shades YOU. The visible screen and support are conditional practice cues.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 9,
+              "y": 8,
+              "facing": -0.1
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": 1,
+              "facing": 2.6
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 14,
+              "y": -1,
+              "facing": 1.8
+            },
+            {
+              "id": "a1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 10,
+              "y": 4,
+              "facing": 2.8
+            },
+            {
+              "id": "a2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 4,
+              "facing": 2.5
+            },
+            {
+              "id": "a3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": -5,
+              "facing": 2.7
+            }
+          ],
+          "puck": {
+            "owner": "h1"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "YOU control at the point.",
+          "F1 is near the net-front lane.",
+          "Gold 1 shades the direct release."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 18–19, Shooting",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-010-q1",
+            "type": "choice",
+            "prompt": "Which Navy player is the net-front reference?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1"
+              },
+              {
+                "id": "b",
+                "text": "F2"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "F1 is the Navy player positioned near the net-front lane."
+          },
+          {
+            "id": "exp26b-u15-010-q2",
+            "type": "multi",
+            "prompt": "Which two checks shape the point decision?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether F1 still screens a useful lane"
+              },
+              {
+                "id": "b",
+                "text": "Whether F2 is reachable across the slot"
+              },
+              {
+                "id": "c",
+                "text": "The point role alone chooses the release without a lane check"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Screen quality and the cross-slot connection shape the decision after the defender shifts."
+          },
+          {
+            "id": "exp26b-u15-010-q3",
+            "type": "sequence",
+            "prompt": "Arrange a changed-lane point read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check Gold 1 and F1"
+              },
+              {
+                "id": "b",
+                "text": "Compare the release with F2"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the net-side lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Checking Gold 1/F1's screen and comparing F2 as a cross-slot option can overlap as YOU scan the ice; neither check has to finish before the other starts. The net-side lane still gets one last look right before the release, because pressure or the screen can still shift in that instant."
+          },
+          {
+            "id": "exp26b-u15-010-q4",
+            "type": "position",
+            "prompt": "Move YOU to a different point angle relative to F1's screen.",
+            "actorId": "h1",
+            "reference": {
+              "x": 12,
+              "y": 6.5
+            },
+            "basis": "coaching",
+            "explanation": "This changes the shooting line's angle without clearing F1's screen; the cross-slot option to F2 stays part of the picture too."
+          },
+          {
+            "id": "exp26b-u15-010-q5",
+            "type": "choice",
+            "prompt": "Gold 1 opens the point but F1 moves away from the crease. What deserves attention?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Compare F2 or a protected release with the lost screen"
+              },
+              {
+                "id": "b",
+                "text": "Release through the former lane before checking F1’s screen"
+              },
+              {
+                "id": "c",
+                "text": "Assume the lane is still fully screened without rechecking"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The defender and screen both changed, so the next choice depends on the new support picture."
+          },
+          {
+            "id": "exp26b-u15-010-q6",
+            "type": "explain",
+            "prompt": "What makes feedback on a point release useful in this rep?",
+            "basis": "coaching",
+            "explanation": "Name Gold 1, F1 and F2, then explain how their lanes affect a release, pass or protected reset. The screen cue can disappear before the choice."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u15-010-q1",
+        "exp26b-u15-010-q2",
+        "exp26b-u15-010-q3",
+        "exp26b-u15-010-q4",
+        "exp26b-u15-010-q5",
+        "exp26b-u15-010-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u15-010-q1",
+            "exp26b-u15-010-q2",
+            "exp26b-u15-010-q3",
+            "exp26b-u15-010-q4",
+            "exp26b-u15-010-q5",
+            "exp26b-u15-010-q6"
+          ],
+          "issue": "Subject-verb grammar defect: briefing and cues[0] both read 'YOU controls at the point' (should be 'YOU control'). This is the recurring YOU-grammar defect class flagged across 30+ prior packets and missed by the historical 'no-open-ai-finding' label on every one of this scenario's six questions.",
+          "change": "briefing and cues[0] changed from 'YOU controls at the point' to 'YOU control at the point'. Because this is scene-level text (shared by every question per the questionContentHash formula), all six questions' content hashes change even where the question's own text is untouched.",
+          "evidence": "Verified by direct string search of the full scenario JSON for the pattern 'YOU <verb>'; found exactly two instances, both 'YOU controls', both in shared scene text (briefing, cues[0]). No lowercase 'you' instances found anywhere in the scenario."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-010-q3"
+          ],
+          "issue": "Forced-order sequence explanation: the original explanation for q3 did not disclose that the two scanning checks (Gold 1/F1's screen, F2 cross-slot option) can overlap, and did not explain why the net-side lane is checked last, implying an artificial rigid look-decide-execute order banned by AUTHORING-CONTRACT.md's answer-and-teaching-contracts section.",
+          "change": "Kept the exact sequence/answer key (a,b,c unchanged). Rewrote only the explanation to state the first two checks can overlap and that the final net-side check happens last because pressure or the screen can still shift right before release.",
+          "evidence": "Direct comparison against AUTHORING-CONTRACT.md: 'Do not imply a player must stop scanning, wait to look for pressure, or follow an artificial look, decide, execute order for every read' and calibration-adjudication.md lesson 12 (keep sequence/key, rewrite explanation to disclose overlap)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-010-q4"
+          ],
+          "issue": "Geometry-contradicted tactical claim: prompt asserted the move to (12,6.5) 'separates the release from F1'. Independent coordinate computation shows the new shot line (YOU->net) still passes within ~0.35m of F1's actual position at F1's x=24, essentially unchanged from the original line's ~0.38m near-miss -- no meaningful separation is achieved by this specific point-to-point move.",
+          "change": "Kept the identical reference coordinates {x:12,y:6.5} (still a legitimate, on-ice alternative point position). Reworded the prompt from 'separates the release from F1' to 'a different point angle relative to F1's screen', and reworded the explanation to state the angle changes without clearing F1's screen.",
+          "evidence": "Computed via line YOU->netCentre(27.13,0): original (9,8) gives y=8+(24-9)*((0-8)/(27.13-9))=1.38 at x=24; proposed (12,6.5) gives y=6.5+(24-12)*((0-6.5)/(27.13-12))=1.35 at x=24. Both within ~0.4m of F1's actual y=1, i.e. materially the same screen relationship, not a separation."
+        },
+        {
+          "questionIds": [
+            "exp26b-u15-010-q5"
+          ],
+          "issue": "Dropped/invented-actor reference: distractor option (c) said 'Assume the goalie remains screened.' This scenario's setup.actors array contains no goalie (unlike its packet-32 sibling exp26-u15-010, which does model an away goalie). AUTHORING-CONTRACT.md requires that 'a goalie or a third teammate must not appear in the feedback unless present or explicitly introduced as a hypothetical.'",
+          "change": "Reworded option (c) to 'Assume the lane is still fully screened without rechecking', preserving the same absolutist-assumption distractor purpose without naming a non-existent actor. Answer key unchanged (still 'a').",
+          "evidence": "Confirmed by listing setup.actors for exp26b-u15-010 (h1,h2,h3,a1,a2,a3, all role 'skater', no role 'goalie' entry) and contrasting with the packet-32 sibling scenario exp26-u15-010, which explicitly models 'away-goalie-3' and only then references 'the goalie' in its own questions."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u15-010-q1",
+            "contentHash": "9e41f480e96a277158f01677b9fe070e85feecaecb75ecb8a50cefb8e023b86e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged; now scored against the corrected scene ('YOU control'). F1 remains the correct nearest-net-front Navy actor; 'Gold 1' distractor still correctly resolves to a1 via actorDisplayName."
+          },
+          {
+            "questionId": "exp26b-u15-010-q2",
+            "contentHash": "2c27a01b673ced243aba881c5dd32391f2a011884442c80d9aa9eaf6dc57a153",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged; passes against corrected scene. Two-check answer (a,b) remains the supported pair; (c) remains a defensible non-absolute distractor."
+          },
+          {
+            "questionId": "exp26b-u15-010-q3",
+            "contentHash": "d7322c5c0a5c794a1b7dde5095cdfa6f640c1c34eac8be2b1466357ec8409159",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Sequence and answer key (a,b,c) unchanged. New explanation discloses that the first two checks can overlap and justifies the final net-side re-check as the last look before release, resolving the forced-order defect."
+          },
+          {
+            "questionId": "exp26b-u15-010-q4",
+            "contentHash": "43617c6b26765da2ec34a755e4d2c607c4a1befe5e3395be156b421fd4d24a65",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reference point {12,6.5} unchanged (on ice, x within +-30.48, y within +-12.954; actorId h1 real). Prompt/explanation now match the computed geometry: the angle changes but F1's screen is not claimed to be cleared."
+          },
+          {
+            "questionId": "exp26b-u15-010-q5",
+            "contentHash": "8ecdda20ac035b0373618b0add5b74cb8a8f3b5fdebdc636ef2820ed654d836b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Answer key unchanged (a). Distractor (c) no longer references a non-existent goalie actor; all three options now name only real actors (F2, F1's screen, or the lane generically)."
+          },
+          {
+            "questionId": "exp26b-u15-010-q6",
+            "contentHash": "8d6f6118b14253b575a7d0d5e4ca04a655d8e0eb0c4cfb3f1fb2efe334f1f475",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Explain question, no answer key; text unchanged and remains age-appropriate and roster-accurate against the corrected scene."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T14:00:20.686Z",
+      "access": "read",
+      "scope": "Hockey Canada 'Developing Skilled Defencemen' coaching slide deck, PDF pages 18-19 ('Shooting' section), read directly via PDF page extraction (not just URL-checked). Confirmed real bullet content: 'Get shots through...miss their F...work on fake push, fake pull with movement to avoid F1 in shooting lane', 'Watch for goalie looking around a screen and shoot appropriately', 'Support your partner and be staggered in the OZ'. Supports this scenario's general coaching principle -- checking a screening teammate (F1) and a cross-ice support option (F2) before releasing a point shot. Does not certify these exact coordinates, ages, or any guaranteed shot/screen outcome.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General/defencemen-development slide deck, not age-banded to U15 specifically; used as a disclosed, adapted older-format inspiration per project rules, not a youth-specific curriculum standard.",
+      "claim": "A point shot decision should account for a screening teammate's position and the goalie's sightline/screen status before releasing, and for a support option (e.g., a cross-slot teammate) if the screen is lost."
+    }
+  ],
+  "remainingQuestionIds": []
+}

@@ -1,0 +1,4 @@
+import fs from 'node:fs';
+for(const f of ['tools/audit-experimental-coaching.mjs','tools/audit-question-expansion.mjs']){let s=fs.readFileSync(f,'utf8').replace("'packet-34-final-recheck.json'","'packet-34-final-recheck.json','packet-35-final-recheck.json'");fs.writeFileSync(f,s);}
+const f='tools/build-question-review-summary.mjs';let s=fs.readFileSync(f,'utf8').replace(' Full evidence: [packet application receipt]',' Packet 35 subsequently corrects assumed recovery coverage, carrier approach angles and unproved screens: [receipt](packet-35/application-receipt.json). Full evidence: [packet application receipt]');fs.writeFileSync(f,s);
+const p='docs/factory/research/question-review/packet-35/root-review.md';fs.writeFileSync(p,fs.readFileSync(p,'utf8').split(/\r?\n/).map(l=>l.trimEnd()).join('\n').trimEnd()+'\n');

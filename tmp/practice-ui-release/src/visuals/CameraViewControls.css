@@ -1,0 +1,34 @@
+.camera-view-controls{min-width:0;width:100%;margin:0 0 8px;color:#dce5f0;font-family:Inter,Arial,sans-serif}
+.cvc-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.cvc-presets{display:grid;grid-template-columns:repeat(4,minmax(44px,1fr));flex:1 1 186px;gap:3px;min-width:0;max-width:432px;padding:3px;border:1px solid #ffffff18;border-radius:13px;background:linear-gradient(140deg,#20374b80,#0b1a3394);box-shadow:inset 0 1px #ffffff08}
+.camera-view-controls .cvc-presets button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:44px;min-height:44px;padding:5px 3px;border:1px solid transparent;border-radius:9px;background:transparent;color:#bdcddd;font:500 9px/1.2 Inter,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+:root .pf-hub .camera-view-controls .cvc-presets button{font:500 9px/1.2 Inter,Arial,sans-serif}
+.camera-view-controls .cvc-presets button[aria-pressed=true]{border-color:#c9a24b7d;background:#c9a24b15;color:#eed696;box-shadow:inset 0 1px #efd69b18}
+.camera-view-controls .cvc-thumbnail{display:block;width:62px;max-width:100%;height:38px;flex:none;background:transparent;overflow:visible;stroke-linejoin:round;stroke-linecap:round}
+.cvc-thumbnail :is(path,circle,rect){vector-effect:non-scaling-stroke}
+.cvc-rink-shadow{fill:#020812;opacity:.6}
+.cvc-ice{fill:#d8e7ec;stroke:#91a9ba;stroke-width:1.1}
+.cvc-blue-line{fill:none;stroke:#568bae;stroke-width:1.05}
+.cvc-red-line{fill:none;stroke:#b76a70;stroke-width:.65}
+.cvc-centre-circle{fill:none;stroke:#6c9bb7;stroke-width:.55}
+.cvc-faceoff{fill:none;stroke:#bf8b90;stroke-width:.4}
+.cvc-net{fill:#f5efe0;stroke:#9b4e52;stroke-width:.75}
+.cvc-centre-dot{fill:#b76a70}
+.cvc-presets button[aria-pressed=true] .cvc-ice{stroke:#e5c575;fill:#edf2ef}
+.cvc-actions{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+.camera-view-controls .cvc-icon-button{display:grid;place-items:center;width:44px;min-width:44px;min-height:44px;padding:10px;border:1px solid #ffffff16;border-radius:10px;background:#ffffff04;color:#9bafc4;cursor:pointer}
+.camera-view-controls .cvc-icon-button>svg{width:19px;min-width:19px;max-width:19px;height:19px;flex:none;background:transparent;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.cvc-icon-button circle{fill:#182d40}
+.camera-view-controls .cvc-icon-button[aria-pressed=true]{border-color:#c9a24b7d;color:#eed696;background:#c9a24b12}
+.camera-view-controls .cvc-adjust-button{display:flex;width:auto;gap:7px;padding:10px 12px;font:600 11px/1.2 Inter,Arial,sans-serif;color:#d9e5ee}
+.cvc-adjustment-panel{margin-top:8px;padding:12px;border:1px solid #ffffff1c;border-radius:12px;background:linear-gradient(135deg,#233c508c,#101f368c)}
+.cvc-direct-controls{display:grid;grid-template-columns:.7fr 1.3fr 1.3fr;gap:14px;margin-bottom:9px}
+.cvc-control-label{display:block;margin-bottom:6px;color:#e8d59e;font:600 10px/1.4 Inter,Arial,sans-serif;letter-spacing:.04em}
+.cvc-direct-controls>div>div{display:grid;grid-template-columns:repeat(2,minmax(44px,1fr));gap:4px}
+.camera-view-controls .cvc-direct-controls button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:44px;min-height:44px;padding:5px 3px;background:#ffffff05;border:1px solid #ffffff16;border-radius:7px;color:#dce6f0;font:500 9px/1.2 Inter,Arial,sans-serif;cursor:pointer}
+.cvc-direct-controls button>span:first-child{font:400 19px/1 Inter,Arial,sans-serif}
+.camera-view-controls button:hover:not(:disabled){background:#ffffff0d;color:#f5efe0}.camera-view-controls button:focus-visible{outline:2px solid #efd69b;outline-offset:2px}.camera-view-controls button:disabled{opacity:.4;cursor:default}
+.cvc-adjustment{display:flex;align-items:center;gap:10px;margin-top:5px;padding:2px 0}.cvc-adjustment-modes{display:flex;flex-shrink:0;gap:2px;padding:2px;border:1px solid #ffffff20;border-radius:10px;background:#0b1a3366}
+.camera-view-controls .cvc-adjustment-modes button{min-width:44px;min-height:44px;padding:6px 8px;border:0;border-radius:7px;background:transparent;color:#b7c7da;font:600 11px/1.3 Inter,Arial,sans-serif;cursor:pointer}.camera-view-controls .cvc-adjustment-modes button[aria-pressed=true]{color:#eed696;background:#c9a24b19}
+.cvc-adjustment p,.cvc-instruction{margin:0;font:400 11px/1.45 Inter,Arial,sans-serif;color:#aabed0}.cvc-instruction{margin:4px 2px 0}
+@media(max-width:420px){.cvc-adjustment{align-items:flex-start;gap:8px}.cvc-presets{gap:1px}.camera-view-controls .cvc-presets button{font-size:8.5px}}
+@media(max-width:560px){.cvc-actions{margin-left:auto}.cvc-direct-controls{grid-template-columns:1fr;gap:10px}.cvc-direct-controls>div>div{grid-template-columns:repeat(4,minmax(44px,1fr))}.cvc-direct-controls>div:first-child>div{grid-template-columns:repeat(2,minmax(44px,1fr))}}

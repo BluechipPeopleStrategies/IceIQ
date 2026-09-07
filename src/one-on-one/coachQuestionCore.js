@@ -133,7 +133,7 @@ export function createLearnerAttempt(question) {
 function assertAttempt(question, attempt) {
   if (attempt?.version !== 'rinkreads-coach-attempt-v1' || attempt.questionId !== question.id || attempt.referenceRevision !== (question.revision ?? 0)) throw new TypeError('attempt belongs to a different question or reference revision');
   assertDirector(attempt.draft);
-  if (typeof attempt.reason !== 'string' || (attempt.action !== null && !COACH_ACTIONS.includes(attempt.action))) throw new TypeError('invalid learner reason or action');
+  if (typeof attempt.reason !== 'string' || attempt.reason.length > 600 || (attempt.action !== null && !COACH_ACTIONS.includes(attempt.action))) throw new TypeError('invalid learner reason or action');
   if (attempt.draft.actors.length !== question.initialDraft.actors.length) throw new TypeError('attempt actor identity changed');
   for (const original of question.initialDraft.actors) {
     const actor = attempt.draft.actors.find(item => item.id === original.id);
@@ -152,7 +152,6 @@ export function moveLearnerActor(question, attempt, actorId, point) {
 
 export function submitLearnerAttempt(question, attempt) {
   assertAttempt(question, attempt);
-  if (!hasText(attempt.reason)) throw new TypeError('Add a short reason for your choice.');
   if (question.type === 'action' && !COACH_ACTIONS.includes(attempt.action)) throw new TypeError('Choose Shoot, Pass or Carry.');
   return { ...clone(attempt), submitted: true };
 }
@@ -160,7 +159,7 @@ export function submitLearnerAttempt(question, attempt) {
 export function compareCoachAttempt(question, attempt) {
   assertQuestion(question);
   assertAttempt(question, attempt);
-  if (!attempt.submitted) throw new TypeError('Submit your reasoning before comparing.');
+  if (!attempt.submitted) throw new TypeError('Submit your choice before comparing.');
   const learner = sampleDraft(attempt.draft, 0);
   const reference = sampleDraft(question.referenceDraft, 0);
   return {

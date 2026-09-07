@@ -1,0 +1,836 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-35",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q1",
+      "baseContentHash": "957b6d847ee7f2c5e5cfe9a2d026784f7282af321fead97486f03f03b4c4932a",
+      "verdict": "repair",
+      "reason": "Scene-level defect: briefing reads 'YOU is on the near side' (subject-verb disagreement; house style requires 'YOU are'). This question's own prompt/options/explanation are grammatically correct and its geometry checks out (a1 at x=-28 is beyond the Navy goal line at x=-27.13, so 'Behind it' is the correct answer), but every question in this scene shares the same buggy briefing, so the grammar check fails at the scene level and the whole scenario needs a version-2 replacement.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q2",
+      "baseContentHash": "a46a48cf20fdf1dfd2b8925e17eab9156c1f76f80a341386226f9e56ab1b1f16",
+      "verdict": "repair",
+      "reason": "Content of q2 (naming the carrier+exit side and the inside threat+cover) is sound and not absolutist; only the shared scene-level 'YOU is' briefing defect applies.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A team could also fold in the anticipated exit side once Gold 1 nears the boards, but naming the carrier and the inside threat with its cover are the two elements every system needs regardless of exact wording."
+    },
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q3",
+      "baseContentHash": "c73daca34f9c468c820cfa9cc73791dcaf0ddfbbca342084dbf61ef5ac917c27",
+      "verdict": "repair",
+      "reason": "Sequence (identify -> call -> re-check after the exit) is a legitimate causal order, not an artificial forced 'look-decide-execute' pattern: you cannot call names before identifying them, and the re-check genuinely depends on information (the actual exit side) that does not exist until after the first two steps. No sequence repair needed beyond the shared scene-level briefing defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Identifying players and preparing to make the call can overlap in practice once a team is drilled on this exchange; the final re-check still has to come last because it depends on which side Gold 1 actually exits, which is not known beforehand."
+    },
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q4",
+      "baseContentHash": "63a41b215d92a3544f4b829f8d2fc7e0920791cfe6c0c33fcc7bbea709df26e5",
+      "verdict": "repair",
+      "reason": "Reference point (-21,-1) is on the ice, keeps YOU on the same (near, negative-y) side while moving inside toward support, and actorId h1 matches the 'YOU' subject of the prompt. Only the shared scene-level briefing defect applies.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A tighter or wider inside support point on the same near side would also work depending on how far Gold 1 has advanced; the exact metres are an example, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q5",
+      "baseContentHash": "7ff3db7013bc8671169579cce5c7c49d7758017b9f0e293ed7889a7206843488",
+      "verdict": "repair",
+      "reason": "Hypothetical (Gold 1 exits on D2's side, Gold 2 cuts inward) is explicitly stated in the prompt itself, not invented from the static scene, and the answer avoids guaranteeing an outcome. Only the shared scene-level briefing defect applies.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "If Gold 2's inward cut is well covered by C already, the most urgent update may be the side exchange alone; the two changes do not always carry equal weight."
+    },
+    {
+      "scenarioId": "exp26b-u15-008",
+      "questionId": "exp26b-u15-008-q6",
+      "baseContentHash": "667aeee3d97301e3b39e93957733e22f19c624b95c9a01b372e4aae15310df32",
+      "verdict": "repair",
+      "reason": "Explain question correctly has no answer key and does not claim a guaranteed outcome. Only the shared scene-level briefing defect applies.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=-24,y=-3,facing=1.2), h2/D2 (home, x=-24,y=5,facing=1), h3/C (home, x=-17,y=1,facing=1), a1/Gold 1 (away, x=-28,y=0,facing=2.4), a2/Gold 2 (away, x=-20,y=3,facing=2.7), a3/Gold 3 (away, x=-18,y=-7,facing=2.8).",
+          "Puck owner is a1 (Gold 1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Navy's own goal line is at x=-27.13; a1 sits at x=-28, i.e. 0.87m beyond the goal line, so Gold 1 is geometrically behind the Navy net."
+        ],
+        "stated": [
+          "Briefing: Gold attacks the Navy net.",
+          "Briefing: Gold 1 carries behind the Navy net.",
+          "Briefing: YOU is on the near side, D2 is opposite (near/far side roles as stated; grammar corrected to 'YOU are' in the replacement).",
+          "Briefing: C protects the slot against Gold 2.",
+          "Briefing: the handoff depends on which side Gold 1 exits."
+        ],
+        "unproven": [
+          "Which side Gold 1 will actually exit is not yet decided; it is posed as a hypothetical in q5, not an observed fact.",
+          "Whether any verbal call is actually made is not modeled; the scene shows positions only.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "Some systems rely on continuous scanning rather than an explicit verbal call in lower-pressure moments, but naming the exit side and the threat is the clearer teaching cue for developing U15 communication."
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q1",
+      "baseContentHash": "4c9cc107ff8f436306639b87929c32ca340aa19f786316e23b5acedf35424071",
+      "verdict": "retain",
+      "reason": "Scene-basis fact question. puck.owner=h2 confirms F1 carries below the Gold net; F1's x=28 is verified beyond the x=27.13 goal line. Actor labels resolve correctly via actorDisplayName (F1, F2, YOU). Grammar throughout this v2 scene (post the 2026-09-05 repair that fixed the earlier low-carrier/absent-D1 defect) is correct: 'YOU arrive' is proper plural-form agreement, not 'YOU is/arrives'.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q2",
+      "baseContentHash": "6a5d523b51e6920dcce5c5a13d5f27a7e4f97b972c13246cabb463e8cefc834d",
+      "verdict": "retain",
+      "reason": "Both listed details (F1's visibility above support, Gold 1's slot coverage) are real, geometry-consistent reasons a high outlet has value; the wrong option (following F2 into the same low space) is a credible but inferior choice, not an absurd distractor.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "If Gold 2 were instead screening the high lane directly, the same two facts could argue for a different, lower connection instead; the value of the high outlet is conditional on the coverage actually present."
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q3",
+      "baseContentHash": "f0e63f1e84626d6029ed8b4708d3f871d8f45f1c755cfc8363928d430bc0acc1",
+      "verdict": "retain",
+      "reason": "Sequence (locate players/defender -> offer the lane -> re-check carrier and pressure) is a legitimate order: you must locate players before offering a lane, and the re-check depends on how the play develops after the lane is offered. Not an artificial forced 'look-decide-execute' order since locating and offering a lane can overlap once players are reading the ice at speed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "An experienced player may begin drifting into the high lane while still finishing the scan, i.e. the first two steps can overlap; the final re-check still comes last because it depends on how F1 and the defenders actually respond."
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q4",
+      "baseContentHash": "a0d2363726dfdbc30cb30406548d1d8d22033736b45a0163c6318cb19487d26f",
+      "verdict": "retain",
+      "reason": "Reference point (18,4.5) is on the ice, is far from F2 (22,-8) (~12.9m apart, satisfying 'away from F2'), stays close enough to Gold 2 (14,4) to keep the 'watched higher lane' framing coherent, and actorId h1 matches the 'YOU' subject of the prompt.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "A slightly deeper or shallower high pocket would also satisfy 'away from F2 with F1 visible'; the given point is an illustrative target, not the only correct one."
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q5",
+      "baseContentHash": "01eb9477c78b8e46946292ab05d08921f9ae127df3f6645f92f0e1281acf6ed3",
+      "verdict": "retain",
+      "reason": "The hypothetical (Gold 1 leaving the slot to pressure the puck) is stated explicitly in the prompt rather than assumed from the static scene, and the correct answer avoids guaranteeing a shot or pass; it appropriately conditions the read on F1's reach and Gold 2's coverage.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "If F1 has no realistic reach to connect inside once Gold 1 pressures, holding the high outlet available (rather than forcing the inside connection) is the safer read."
+    },
+    {
+      "scenarioId": "exp26b-u15-009",
+      "questionId": "exp26b-u15-009-q6",
+      "baseContentHash": "82dd9dfe99cb33ae88bca6e47a0cd7b3e87dd3c27ca1e2035e81c4864867328b",
+      "verdict": "retain",
+      "reason": "Explain question correctly carries no answer key and does not overstate a guaranteed outcome ('can make Gold choose', 'if the route is covered, remain available or reset').",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: h1/YOU (home, x=15,y=7,facing=-1.4), h2/F1 (home, x=28,y=-5,facing=2.6), h3/F2 (home, x=22,y=-8,facing=2.4), a1/Gold 1 (away, x=21,y=1,facing=2.1), a2/Gold 2 (away, x=14,y=4,facing=2.5), a3/Gold 3 (away, x=24,y=3,facing=2.9).",
+          "Puck owner is h2 (F1); no loose puck.",
+          "Three home skaters vs three away skaters (3v3, even strength); no goalie modeled in this scene.",
+          "Gold's goal line is at x=27.13; F1 sits at x=28, i.e. 0.87m beyond the goal line, so F1 is geometrically behind the goal line as the briefing states.",
+          "Gold 2 (14,4) sits close to YOU (15,7) (~3.6m apart), consistent with 'watches the higher lane'; Gold 3 (24,3) sits close to the net (x=24 vs net at 27.13), consistent with 'protects space near the net'; Gold 1 (21,1) sits in the middle slot area between the blue line and net, consistent with 'guards the slot'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net.",
+          "Briefing: F1 carries behind the goal line.",
+          "Briefing: F2 supports along the side.",
+          "Briefing: YOU arrive high.",
+          "Briefing: Gold 1 guards the slot, Gold 2 watches the higher lane, Gold 3 protects space near the net."
+        ],
+        "unproven": [
+          "Whether F1 will actually pass to YOU, and whether that pass succeeds, is not shown or guaranteed.",
+          "Facing values are a rendering cue only and do not by themselves prove where any player is looking.",
+          "No timing, velocity, or completed-pass outcome is established by a static scene."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ],
+      "alternative": "In a system that prioritizes low cycling over a high outlet, a team might instead double down below the goal line rather than holding a separated high option; the high-outlet read is one defensible structure, not the only one."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u15-008",
+      "baseVersion": 1,
+      "baseScenarioHash": "3ed07175691bd280bd4b3db3395f78b8b7122aaf9fccbba24fa7075de979638b",
+      "replacement": {
+        "id": "exp26b-u15-008",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Call the net-side exchange",
+        "family": "behind-net-communication",
+        "topic": "Defensive coverage communication",
+        "objective": "Coordinate a behind-net exchange by naming the puck carrier, inside threat and teammate cover.",
+        "briefing": "Gold attacks the Navy net. Gold 1 carries behind the Navy net; YOU are on the near side, D2 is opposite, and C protects the slot against Gold 2. The handoff depends on which side Gold 1 exits.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": -3,
+              "facing": 1.2
+            },
+            {
+              "id": "h2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": 5,
+              "facing": 1
+            },
+            {
+              "id": "h3",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -17,
+              "y": 1,
+              "facing": 1
+            },
+            {
+              "id": "a1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -28,
+              "y": 0,
+              "facing": 2.4
+            },
+            {
+              "id": "a2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -20,
+              "y": 3,
+              "facing": 2.7
+            },
+            {
+              "id": "a3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": -7,
+              "facing": 2.8
+            }
+          ],
+          "puck": {
+            "owner": "a1"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "Gold 1 is behind the Navy net.",
+          "YOU and D2 are on opposite sides.",
+          "C is the slot support against Gold 2."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, Team Play / Defensive Skills",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u15-008-q1",
+            "type": "choice",
+            "prompt": "Where is Gold 1 relative to the Navy net?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Behind it"
+              },
+              {
+                "id": "b",
+                "text": "At the centre line"
+              },
+              {
+                "id": "c",
+                "text": "In the Gold crease"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing places Gold 1 behind the Navy net."
+          },
+          {
+            "id": "exp26b-u15-008-q2",
+            "type": "multi",
+            "prompt": "Which two names belong in a useful handoff call?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 and the side of exit"
+              },
+              {
+                "id": "b",
+                "text": "C and Gold 2 in the slot"
+              },
+              {
+                "id": "c",
+                "text": "The word switch without a threat"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The call needs the carrier route and the inside threat so the exchange can be coordinated."
+          },
+          {
+            "id": "exp26b-u15-008-q3",
+            "type": "sequence",
+            "prompt": "Arrange the behind-net response.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify Gold 1 and Gold 2"
+              },
+              {
+                "id": "b",
+                "text": "Call the side and teammate exchange"
+              },
+              {
+                "id": "c",
+                "text": "Re-check the net-side lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The exchange starts with the carrier and inside threat, then updates after the exit."
+          },
+          {
+            "id": "exp26b-u15-008-q4",
+            "type": "position",
+            "prompt": "Move YOU to an inside support position on the near side with C visible.",
+            "actorId": "h1",
+            "reference": {
+              "x": -21,
+              "y": -1
+            },
+            "basis": "coaching",
+            "explanation": "This keeps YOU connected to the carrier side while preserving C's slot relationship."
+          },
+          {
+            "id": "exp26b-u15-008-q5",
+            "type": "choice",
+            "prompt": "Gold 1 exits on D2's side and Gold 2 cuts inward. What changes first?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The side exchange and slot coverage"
+              },
+              {
+                "id": "b",
+                "text": "Stay on the original near-side assignment"
+              },
+              {
+                "id": "c",
+                "text": "Follow the carrier without naming Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Both the exit and inside route changed, so update the handoff and protect the slot."
+          },
+          {
+            "id": "exp26b-u15-008-q6",
+            "type": "explain",
+            "prompt": "Why should a behind-net call include an exit side and a threat name?",
+            "basis": "coaching",
+            "explanation": "The puck carrier can emerge on either side while the slot threat remains separate. Naming both tells teammates which relationship to exchange and which lane to protect."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u15-008-q1",
+        "exp26b-u15-008-q2",
+        "exp26b-u15-008-q3",
+        "exp26b-u15-008-q4",
+        "exp26b-u15-008-q5",
+        "exp26b-u15-008-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u15-008-q1",
+            "exp26b-u15-008-q2",
+            "exp26b-u15-008-q3",
+            "exp26b-u15-008-q4",
+            "exp26b-u15-008-q5",
+            "exp26b-u15-008-q6"
+          ],
+          "issue": "Briefing subject-verb disagreement: 'YOU is on the near side' violates the mandatory 'YOU are/have' grammar contract (AUTHORING-CONTRACT.md; calibration lesson 2).",
+          "change": "Changed briefing text from 'YOU is on the near side' to 'YOU are on the near side'. No hockey content, actor position, team, puck ownership, or coordinate changed.",
+          "evidence": "Scene-level text field; verified against every other 'YOU' instance in the scene (cues, all 6 question prompts/options/explanations) which are already grammatically correct."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u15-008-q1",
+            "contentHash": "8e3842544bfcdec233cae3fcd4630be3da332f106ae26ae195eb8d97a2e24b8f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          },
+          {
+            "questionId": "exp26b-u15-008-q2",
+            "contentHash": "93a852d053172c632f45787f9ef25a5c7156e2d6cf5983a73e8693c53b0aa23d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          },
+          {
+            "questionId": "exp26b-u15-008-q3",
+            "contentHash": "38e3d5796e13876a8646cff2e5ec6f782b54a88e10f3c49dbaf846cb4d87aa4e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          },
+          {
+            "questionId": "exp26b-u15-008-q4",
+            "contentHash": "12a88193a7be9d5e9430fd5070170c7851c9796b49fc429ff12c86b783036741",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          },
+          {
+            "questionId": "exp26b-u15-008-q5",
+            "contentHash": "37dda6544c060c58bfc97f8ecd52c365f1dc6242d84807eb28e966fe82689228",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          },
+          {
+            "questionId": "exp26b-u15-008-q6",
+            "contentHash": "af670089d1faddc1874b11efaafd37037f6779885f61838c6832caca03245365",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked after the briefing grammar fix ('YOU are on the near side'): roster/team counts (3v3), geometry (Gold 1 at x=-28 behind the x=-27.13 Navy goal line; position-question reference (-21,-1) on ice and on the same near side), answer key, feedback wording, U15-appropriate language, and the only cited source (hc-u15-u18-core, read) all still hold; grammar now passes scene-wide with no remaining lowercase 'you' or subject-verb defects found in briefing, cues, or any of the 6 questions."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Page 1 U15/U18 Train-to-Train LTPD skills matrix. 'Team Play / Defensive Skills' column lists Timing And Support - Spatial Awareness, Situational Gap Control, Read and React, Communication. 'Team Play / Offensive Skills' column lists Cycling, Smart Puck Support Principles (Under Pressure), among others. Supports age/topic placement for both exp26b-u15-008 (defensive coverage communication) and exp26b-u15-009 (cycle/high-outlet offensive support) at U15. Does not certify these exact coordinates, wording, or outcomes.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U15/U18 Train to Train LTPD stage",
+      "claim": "Age/topic placement only, per sources.json's own disclosed 'use' field."
+    }
+  ],
+  "remainingQuestionIds": []
+}

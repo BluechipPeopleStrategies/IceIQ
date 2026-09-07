@@ -1,0 +1,46 @@
+{
+  "_doc": "Art-QC lessons ledger (Layer 3 of docs/superpowers/specs/2026-07-21-art-qc-autolearning-design.md). PROTOCOL: every human or critic rejection of a visual becomes one entry here (capture), then a deterministic rule in src/play/artLint.js when computable, else a rubric line for the render critic (promote), then a golden case in scripts/test-art-lint.mjs (pin). promotedTo=null is visible debt. This file is the memory that makes art QC stricter every time something slips — the same LESSONS->GOLDEN-RULES mechanic that hardened the hockey-logic side.",
+  "lessons": [
+    {
+      "id": "AL-001",
+      "date": "2026-07-21",
+      "source": "play-kernel-standards.md (accumulated manual-playtest judgment, codified)",
+      "description": "Freeze frames must be readable: tokens that visually merge at the decision moment, anything drawn off the sheet.",
+      "promotedTo": "artLint:token-overlap, artLint:out-of-bounds",
+      "golden": "scripts/test-art-lint.mjs"
+    },
+    {
+      "id": "AL-002",
+      "date": "2026-07-21",
+      "source": "play-kernel-standards.md Cue Label Size Rule",
+      "description": "Cue labels must point at the read without covering an actor, and stay short for U13-and-under.",
+      "promotedTo": "artLint:cue-covers-actor, artLint:cue-label-length",
+      "golden": "scripts/test-art-lint.mjs"
+    },
+    {
+      "id": "AL-003",
+      "date": "2026-07-21",
+      "source": "play-kernel-standards.md Answer-Reveal / Route-Choice Neutrality Rules",
+      "description": "The freeze must show the problem, never the solution: no pass/shot arrow or cue marker on the correct answer's target before the learner answers.",
+      "promotedTo": "artLint:answer-leak-arrow, artLint:answer-leak-cue",
+      "golden": "scripts/test-art-lint.mjs"
+    },
+    {
+      "id": "AL-004",
+      "date": "2026-07-21",
+      "source": "first artLint sweep of the live catalog",
+      "description": "CAUGHT AND FIXED: 'Support too flat' cue 2.8ft from F2 (twoOnOneSupportTooFlat), 'Inside protected' cue 1.4ft from YOU and 'Middle open' cue 1.0ft from P1 (backcheckRecoveryDefenderGetsBeat) — labels sitting on top of actors in shipped plays. Proof the historical leak was real and is now machine-caught.",
+      "playId": "play_2v1_support_too_flat_u11_v1, play_backcheck_recovery_defender_gets_beat_u13_v1",
+      "promotedTo": "artLint:cue-covers-actor (rule existed same-day; plays fixed; golden pinned)",
+      "golden": "scripts/test-art-lint.mjs cue-covers golden"
+    },
+    {
+      "id": "AL-005",
+      "date": "2026-07-21",
+      "source": "first artLint sweep of the live catalog",
+      "description": "DEBT (warns, unfixed): 15 warnings across the catalog — long cue labels for young bands ('Pass lane closed', 'Support too flat', 'Inside protected'), tight-but-readable freeze spacing, near-actor cues. Review during the next playtest; either fix or codify as acceptable with adjusted thresholds.",
+      "promotedTo": null,
+      "golden": null
+    }
+  ]
+}

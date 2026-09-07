@@ -1,0 +1,665 @@
+{
+  "scenariosOwned": ["exp26-u13-007", "exp26-u13-008"],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q1",
+      "baseContentHash": "0a063c013e60122eaca51929844abcbe54e16e380473999f2b9afdcfac5f6801",
+      "verdict": "retain",
+      "reason": "Scene fact: puck owner is D2 (home-skater-2). Matches setup.puck.owner exactly. Answer key (c=D2) is correct.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) is at (-5,7); D2 (home-skater-2) is at (-5,-5), the same x as YOU.",
+          "puck.owner is home-skater-2 (D2); rendered carried-puck point computed as (-4,-4.3)."
+        ],
+        "stated": ["The briefing states YOU just passed laterally to D2 and D2 now owns the puck."],
+        "unproven": ["Whether D2 will pass, carry, or lose the puck next."]
+      },
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q2",
+      "baseContentHash": "d3a87aeafe008d0a9b39d40b846292e443d62bc9615ef4210c95c971d136a590",
+      "verdict": "retain",
+      "reason": "Two supported checks (return-pass angle, Gold 1's approach) match the briefing; the 'looks tidy' distractor is on-theme (a plausible but wrong heuristic that a young player might use to justify the exact flat positioning the scenario teaches against), not absurd trivia.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["D2 at (-5,-5) owns the puck; A1/'Gold 1' at (1,-3), 6.32m from D2."],
+        "stated": ["Briefing: Gold 1 is approaching D2."],
+        "unproven": ["Closing speed or exact time before Gold 1 reaches D2."]
+      },
+      "alternative": "If Gold 1 is still far away and D2 has a clean lane forward, checking the return-pass angle matters less right now than staying ready to advance in support.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q3",
+      "baseContentHash": "f43d39b9df9f1171f44112524401fac07c60f140864adb1ee648c9a478042524",
+      "verdict": "retain",
+      "reason": "Historical finding u13-p2-repeat... (id teaching-exp26-u13-007-q3, P3) already flagged this sequence as conditional/overlapping and recommended retaining unless a rewrite genuinely teaches better; the question's own explanation already hedges ('do not delay necessary defensive support merely to finish a pattern'), which adequately addresses the P3 concern. No further change justified.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["D2 owns the puck at (-5,-5); YOU at (-5,7)."],
+        "stated": ["Briefing describes the lateral pass and Gold 1's approach as the operative conditions for this follow-up."],
+        "unproven": ["Whether these three actions must occur strictly in this order in a live game."]
+      },
+      "alternative": "If Gold 1 is already closing fast, presenting a return option may need to happen before fully confirming D2's control, rather than waiting for step one to finish first.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q4",
+      "baseContentHash": "498ac96834a9401e109ac7c0ace784f4e9b6c552a20439d584838bf0dde63e80",
+      "verdict": "retain",
+      "reason": "Reference (-10,3) is a clearly staggered point: x=-10 is 5m more negative than D2's x=-5 ('beneath'/closer to Navy's own net), verified on-ice via isCoachRoutePoint. Movement distance from YOU's original (-5,7) is 6.40m (Math.hypot), well above the 0.1m no-op threshold. Explanation correctly avoids claiming this is the only correct spot ('not an automatic passing instruction').",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["actor home-skater-1 originally at (-5,7); reference (-10,3) is on ice; D2 at (-5,-5)."],
+        "stated": ["Briefing: passer should support closer to Navy's net than the new carrier."],
+        "unproven": ["Whether this specific point is reachable in the time available, or whether Gold 1 could close it first."]
+      },
+      "alternative": "If Gold 1 already cuts off the direct return lane from this exact spot, a shallower or more central stagger might serve the same return-outlet purpose.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q5",
+      "baseContentHash": "ddeaba3d06b636e71b40a54a636097b8cd10ba2deda066d9465fbce286c72be7",
+      "verdict": "retain",
+      "reason": "Answer (a) is the only option that avoids both a rigid-position trap ('indefinitely', option b) and a puck-watching/chasing trap (option c) -- both realistic U13 mistakes, not absurd distractors. Feedback appropriately hedges with 'might' and 'with cover retained', avoiding false certainty.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["D2 owns the puck at (-5,-5); F1 at (8,5) is a plausible forward target further up-ice."],
+        "stated": ["This is an explicit hypothetical ('if D2 sends the puck forward with control') per the briefing's own conditional-change convention."],
+        "unproven": ["Whether D2 actually will send the puck forward, or where exactly it goes."]
+      },
+      "alternative": "If D2 instead loses the puck rather than advancing it, YOU should recover coverage on the developing threat instead of continuing to advance.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q6",
+      "baseContentHash": "a81a5cb801d0ba1af95dc6863db8d7927fb2884408c427bfa4ae5772fa76b81b",
+      "verdict": "retain",
+      "reason": "Valid reflection on its own. Retained as the PRIMARY version of the staggering-vs-distance concept; its near-duplicate sibling q10 is being repaired below to remove the redundancy rather than touching this earlier-numbered original question (preserves teaching objective per calibration Lesson 5, minimizes churn).",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["Reference geometry from q4 (-10,3) illustrates a genuine stagger."],
+        "stated": ["No answer key; optional reflection."],
+        "unproven": ["N/A -- explain type, no graded claim."]
+      },
+      "alternative": "A coach might instead have players physically demonstrate the stagger on ice and have a teammate rate the passing lane, rather than only describing it verbally.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q7",
+      "baseContentHash": "c0922e797992eca87db3b548b0a258af34a479370bc62c646fddbd1dcc445144",
+      "verdict": "retain",
+      "reason": "Already repaired by an earlier packet (u13-repairs.json / historical-checks.json finding u13-p2-repeat-q7-targets) to replace a duplicate puck-owner check with a scene-specific communication call. Independently re-verified: option (b) 'The pressure is gone' is factually false given the stated approach, and option (c) is a believable bad idea (blocking a teammate's own lane); feedback explicitly hedges ('if D2 advances, re-read'). No further defect found.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["A1/'Gold 1' at (1,-3), 6.32m from D2 at (-5,-5)."],
+        "stated": ["Briefing: Gold 1 is approaching."],
+        "unproven": ["Exact timing of Gold 1's approach."]
+      },
+      "alternative": "If D2 already sees an open forward pass to F1, a shorter urgent call about the closing pressure may matter more than naming yourself as the outlet first.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q8",
+      "baseContentHash": "ab887f62a186ca4adc63ddc5c6ff5ba2b24ea860747cafb421f3e36ee7959ae8",
+      "verdict": "repair",
+      "reason": "Grammar defect: prompt reads \"Which two facts should shape YOU’s follow-up?\" -- an incorrect possessive form. AUTHORING-CONTRACT specifies natural second-person forms ('YOU are', 'YOU have', 'your') and does not sanction 'YOU's'. Repaired to 'your follow-up'. No other content, answer, or hockey meaning changed.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "fail"},
+      "sceneEvidence": {
+        "visible": ["Options and answer (a,b) unaffected by the wording fix."],
+        "stated": ["Follows directly from q7's already-repaired 'lower outlet' call."],
+        "unproven": ["N/A -- pure grammar fix."]
+      },
+      "alternative": "If Gold 1 is still far away, YOU being a lower outlet matters less right now than confirming F1 is available for the next forward pass.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q9",
+      "baseContentHash": "bdbdf004b37cd360681cd80a1ba5b9ce55a933ac2b7f1a7fa8032a8eee28cb29",
+      "verdict": "repair",
+      "reason": "Near-duplicate of q4: same actor, same 'move below/beneath D2 for a return outlet' job, but the reference point (-6,8) is only 1.41m from YOU's original position (-5,7) and only 1m more negative in x than D2 -- a far weaker illustration of the same point q4 already makes at 5m of stagger. Per AUTHORING-CONTRACT ('small coordinate shifts do not prove a different tactical situation') this adds no distinct teaching value. Repaired by introducing a genuine hypothetical condition (Gold 1 angling toward the boards) so the question tests adapting the stagger to a changed pressure angle, distinct from q4's static baseline illustration, rather than merely re-plotting the same job with weaker numbers.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "fail", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["q4's reference (-10,3) vs original q9 reference (-6,8): the latter barely differs from YOU's starting (-5,7)."],
+        "stated": ["Briefing establishes the flattened starting position (YOU and D2 share x=-5) as the exact problem being taught against."],
+        "unproven": ["Whether Gold 1 would, in a live game, actually angle toward the boards next."]
+      },
+      "alternative": "If Gold 1 is not pressuring the boards side at all, a central stagger like q4's may serve the return option just as well as a boards-avoiding one.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-007",
+      "questionId": "exp26-u13-007-q10",
+      "baseContentHash": "203fedb8a8543eeba6419b0fae9491b4feec5959bff8eb93246f2be780187c64",
+      "verdict": "repair",
+      "reason": "Near-duplicate reflection of q6: both prompts ask, in near-identical wording, why 'useful staggering' differs from merely standing/moving far apart -- the same concept tested twice with no new cue, actor responsibility, or decision added (AUTHORING-CONTRACT: 'no sibling question should ... merely repeat an earlier prompt in a different format'). Repaired by retargeting q10 to the communication concept established by the (already-repaired) q7/q8 -- a genuinely different cognitive angle (verbal clarity vs. silent positioning) rather than a second pass at q6's staggering-vs-distance question.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "fail", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["q6 and original q10 prompts differ only in surface wording ('standing far apart' vs 'moving away from D2')."],
+        "stated": ["q7/q8 (already repaired) establish the specific 'I am your lower outlet' call this new q10 builds on."],
+        "unproven": ["N/A -- explain type, no graded claim."]
+      },
+      "alternative": "A coach could instead have D2 describe out loud whether the call actually changed their read, rather than asking YOU to explain its value in the abstract.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q1",
+      "baseContentHash": "e34479985a43001886af1de40d0d0d6fc7a2c5096114c9331032f9ab46a7a360",
+      "verdict": "repair",
+      "reason": "Wording defect in the correct option: 'The wide lane beside F1' describes a lane ADJACENT TO F1, not F1's own lane -- F1 cannot be using a lane 'beside' itself. This contradicts the question's own explanation ('F1 carries in a wide lane near the side boards') and could genuinely confuse a young reader about whose lane is being asked about. Repaired option (b) text to 'The wide lane near the boards', matching the explanation exactly. Answer id (b) and all other content unchanged.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "fail"},
+      "sceneEvidence": {
+        "visible": ["F1 (home-skater-2) at (15,10), 2.95m from the y=12.954 boards -- 'near the boards' is geometrically accurate."],
+        "stated": ["Briefing: F1 carries wide into the attacking zone; YOU is 'currently on the same side' as F1."],
+        "unproven": ["N/A -- scene fact, self-evident from setup."]
+      },
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q2",
+      "baseContentHash": "226f3435b4c780d65c1f7c6d4c346e5fbc2cff466cd48d57bbd7f18d025df11e",
+      "verdict": "retain",
+      "reason": "Both correct checks (Gold 1/Gold 2 locations, route availability) match the geometry (A1 at (19,6) pressuring F1's wide lane, A2 at (22,-3) covering the middle/far-post area). Distractor (b) represents a genuine rigid-system misconception, consistent with 'do not enforce rigid positional rules.'",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["A1 at (19,6), 5.66m from F1 (15,10); A2 at (22,-3), toward the middle/low far-post area."],
+        "stated": ["Briefing names the middle route as the first support option under these conditions."],
+        "unproven": ["Whether either defender will actually move to close a lane."]
+      },
+      "alternative": "If Gold 1 and Gold 2 are both already committed away from the middle, checking your own route's availability may matter more than re-checking their exact locations.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q3",
+      "baseContentHash": "4e7f83717fbb31b0773bff4288562ecc50134b45bb2ada70c7feefd319f5c84b",
+      "verdict": "retain",
+      "reason": "Historical finding teaching-exp26-u13-008-q3 (P3) already flagged this sequence as conditional/overlapping and recommended retain-unless-better-format, treating it as editorial discretion rather than an established defect. Not forcing a rewrite; the same class of concern was found in 007-q3 (also retained). Noted for future editorial attention alongside 007-q3, but not required for this pass.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["F1 at (15,10) owns the puck; YOU at (10,7)."],
+        "stated": ["Briefing establishes the wide entry and the suggested middle-route support option."],
+        "unproven": ["Whether these three checks must occur strictly in this order in a live rep."]
+      },
+      "alternative": "If Gold 2 is already sprinting to close the middle before identifying F1's route is finished, moving to a different lane may need to happen sooner rather than waiting for every check to complete first.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q4",
+      "baseContentHash": "da1f110f04cfca61a9664ed0f7e3c07f5bc3779e1838d1e58ac39891ce33e5a6",
+      "verdict": "retain",
+      "reason": "Reference (19,-2) is 3.16m from Gold 2 (22,-3) -- distinct but in the same general middle/low area Gold 2 covers, consistent with 'recognize a support lane different from the carrier's entry route.' On ice, 12.73m from YOU's original position. Explanation correctly avoids claiming this is the only correct spot.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["F1 at (15,10, near boards); reference (19,-2) is central/low, a genuinely different lane from F1's wide one."],
+        "stated": ["Briefing: the first support option is a controlled middle route toward the far-post area."],
+        "unproven": ["Whether this exact point is reachable in the time available."]
+      },
+      "alternative": "If Gold 2 already occupies this exact middle point, a lower or higher entry point into the same general lane may open instead.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q5",
+      "baseContentHash": "e2bcab7e597b9656bd63c0be4ddd87a62e71f8446b79fc3be1272a0e69b03493",
+      "verdict": "repair",
+      "reason": "Grammar/style consistency defect: prompt uses lowercase 'you' ('what could you change?') while every other reference to the focus player throughout both scenarios uses capitalized 'YOU' (the established convention per AUTHORING-CONTRACT and every sibling question). Repaired to 'what could YOU change?'. No content or answer change.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "fail"},
+      "sceneEvidence": {
+        "visible": ["Options unaffected by the capitalization fix."],
+        "stated": ["Explicit hypothetical per the briefing's own conditional-change convention."],
+        "unproven": ["Whether Gold 2 will actually step into the route."]
+      },
+      "alternative": "If Gold 2 is only shading the middle lane rather than fully committing to it, a brief delay might still let YOU use it without a full lane change.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q6",
+      "baseContentHash": "2ff04520d48495307f0e313bb372497bd9223390f301883a24ab29bd95259349",
+      "verdict": "retain",
+      "reason": "Valid reflection on its own; retained as the primary version of the lane-separation concept. Its near-duplicate sibling q10 is being repaired below rather than this earlier-numbered original.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["F1's wide lane (near boards, y=10) vs. the middle route illustrated in q4/q7 (low/central)."],
+        "stated": ["No answer key; optional reflection."],
+        "unproven": ["N/A -- explain type."]
+      },
+      "alternative": "A coach might instead have F1 and the supporting forward walk through the entry at half speed and point out where their lanes overlap, rather than only asking players to explain it.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q7",
+      "baseContentHash": "f0aa12626578d93c09e3e9ebd21541f49d0e80ce33117aae76471f9c1f0d9e93",
+      "verdict": "retain",
+      "reason": "Already repaired by an earlier packet (u13-repairs.json / historical-checks.json finding u13-p2-repeat-q7-targets) to replace a duplicate wide-entry check with the named middle/far-post space. Independently re-verified as hockey-sound and correctly hedged ('if Gold 2 closes it, keep separation and find the next visible lane'). Noted for the record: distractor (c) 'Behind Navy's net' is a weak/implausible-in-context distractor (would require abandoning the attack entirely) rather than a believable misjudgment; not severe enough to require a repair (it is unambiguously, not merely arguably, wrong, so it does not violate the 'do not make a defensible alternative wrong' rule), but flagged as a lower-priority quality note.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["F1 at (15,10) wide; A2/'Gold 2' at (22,-3) covering the middle/far-post area."],
+        "stated": ["Briefing names the controlled middle route as the exercise's first support option."],
+        "unproven": ["Whether Gold 2 will actually close the middle lane."]
+      },
+      "alternative": "If Gold 2 already sits in the middle route before YOU move, the far-post route may not be the best complement right now compared with a different supporting lane.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q8",
+      "baseContentHash": "2ecfea10e82e0c8a3636ab0c7f4552ad4c09f601c78fcfd72bd296d9abc07485",
+      "verdict": "repair",
+      "reason": "HIGHEST-IMPACT finding: stale/contradictory feedback left over from an earlier packet's repair. The historical repair (u13-p2-dummy-distractors) replaced option (c) 'Whether the bench door is open' with 'Whether the far-post route is automatically clear because F1 is wide', but did NOT update the explanation, which still reads '...the bench is unrelated' -- a reference to a distractor that no longer exists in this question's current content. A player reading the live current-bank feedback today would be told 'the bench is unrelated' about an option that says nothing about a bench. Repaired the explanation to address the ACTUAL current option (c) instead.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "fail", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["Current option (c) text: 'Whether the far-post route is automatically clear because F1 is wide' -- contains no reference to a bench."],
+        "stated": ["u13-repairs.json / historical-checks.json record the prior 'bench door' -> 'far-post... automatically clear' distractor swap but leave this explanation line unedited."],
+        "unproven": ["N/A -- directly verifiable text mismatch within the current live packet content."]
+      },
+      "alternative": "If F1 loses control of the puck, the middle-route decision no longer applies until possession is settled again, regardless of Gold 1's position.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q9",
+      "baseContentHash": "eaf3812fd3aa1bd73f20fd426fe689af4d219b1b5094faaaf8f07620451d144c",
+      "verdict": "retain",
+      "reason": "Reference (12,5) is genuinely distinct from q4's (19,-2): both more central (lower y than F1's 10) AND trailing (lower x than F1's 15) -- correctly matches 'inside but below F1' and represents a different specific lane (far-post-adjacent, not the same middle spot as q4). Not a duplicate.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["F1 at (15,10); reference (12,5) is 2.83m from YOU's original (10,7), on ice."],
+        "stated": ["Briefing names the far-post area as part of the suggested support option."],
+        "unproven": ["Whether Gold 1 will actually close this specific lane."]
+      },
+      "alternative": "If Gold 1 shifts to cover this inside-lower spot, staying wide alongside F1 might be safer than crossing into contested ice.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "questionId": "exp26-u13-008-q10",
+      "baseContentHash": "5aa7c98ade887bb4e66bd058d0c43fc7944bd3ef837456d352f280c3423a3b27",
+      "verdict": "repair",
+      "reason": "Near-duplicate reflection of q6: both ask, in near-identical wording, why the supporting forward should avoid 'filling exactly the same lane' / 'filling F1's exact lane' as F1 -- no new cue, decision, or actor responsibility added. Repaired by retargeting to the specific value of the far-post route itself (established by q7/q9), a genuinely different angle (why THIS lane helps, not just why avoiding overlap matters) rather than a second pass at q6's question.",
+      "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "fail", "age": "pass", "sources": "pass", "grammar": "pass"},
+      "sceneEvidence": {
+        "visible": ["q6 and original q10 prompts differ only in surface wording ('exactly the same lane' vs 'F1's exact lane')."],
+        "stated": ["q7/q9 (already established) name the specific far-post route this new q10 builds on."],
+        "unproven": ["N/A -- explain type, no graded claim."]
+      },
+      "alternative": "A coach could instead ask F1, after the drill, whether the far-post route actually opened a better passing angle than a simple wide lane would have.",
+      "sourceUrls": ["https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u13-007",
+      "baseVersion": 1,
+      "baseScenarioHash": "ba21fcfd8d46f2e013a1b71f4db02cfadc9b27a000eecd6c42e4e719841cdef6",
+      "affectedQuestionIds": ["exp26-u13-007-q8", "exp26-u13-007-q9", "exp26-u13-007-q10"],
+      "reasons": [
+        {
+          "questionIds": ["exp26-u13-007-q8"],
+          "issue": "Prompt uses an incorrect possessive form, \"YOU’s follow-up\", which is not a natural or grammatical second-person construction and is not sanctioned by AUTHORING-CONTRACT's YOU/your convention.",
+          "change": "Changed the prompt to 'Which two facts should shape your follow-up?'. No other field (options, answer, explanation, basis, id) changed.",
+          "evidence": "AUTHORING-CONTRACT.md: 'Use natural second-person agreement: “YOU are”, “YOU have” ... and “your”.' The live packet-22.json text at exp26-u13-007-q8 reads \"YOU’s follow-up\", confirmed by direct read of the packet JSON."
+        },
+        {
+          "questionIds": ["exp26-u13-007-q9"],
+          "issue": "Near-duplicate of q4: identical actor and job ('move below/beneath D2 for a return outlet'), but the reference point (-6,8) is only 1.41m from YOU's own starting position (-5,7) and only 1m more negative in x than D2's x=-5 -- a far weaker illustration of the same concept q4 already covers at a genuine 5m stagger, adding no distinct teaching value.",
+          "change": "Retargeted the prompt to introduce a genuine hypothetical (Gold 1 angling toward the boards) and moved the reference to (-13,2), so the question now tests adapting the stagger to a changed pressure angle rather than re-illustrating q4's static baseline job with weaker numbers.",
+          "evidence": "Computed via Node: Math.hypot(-5-(-6), 7-8) = 1.41 for the original q9 reference vs Math.hypot(-5-(-10), 7-3) = 6.40 for q4's reference, using the same actor's same original position. AUTHORING-CONTRACT.md: 'Different IDs, player names and small coordinate shifts do not prove a different tactical situation.'"
+        },
+        {
+          "questionIds": ["exp26-u13-007-q10"],
+          "issue": "Near-duplicate reflection of q6: both prompts ask, in near-identical wording, why 'useful staggering' differs from merely standing/moving far apart -- the same concept tested twice with no new cue or actor responsibility.",
+          "change": "Retargeted the prompt and explanation to ask why naming yourself as 'the lower outlet' (the specific communication call established by q7/q8) helps more than silently being nearby -- a genuinely different angle (verbal clarity vs. positioning) rather than a second pass at q6's question.",
+          "evidence": "Direct text comparison of q6 ('How is useful staggering different from simply standing far apart?') and original q10 ('How is staggering different from simply moving away from D2?') in packet-22.json: near-identical prompts testing the identical concept."
+        }
+      ],
+      "replacement": {
+        "id": "exp26-u13-007",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Do not flatten the D-to-D reset",
+        "family": "regroup-hinge",
+        "topic": "regroup hinge",
+        "objective": "Maintain a return option after a lateral pass.",
+        "briefing": "YOU have just passed laterally to D2. D2 now owns the puck and Gold 1 is approaching. This practice pattern asks the passer to support closer to Navy’s net than the new carrier. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {"id": "home-skater-1", "label": "YOU", "team": "home", "role": "skater", "x": -5, "y": 7, "facing": -1.5707963267948966},
+            {"id": "home-skater-2", "label": "D2", "team": "home", "role": "skater", "x": -5, "y": -5, "facing": 0},
+            {"id": "home-skater-3", "label": "F1", "team": "home", "role": "skater", "x": 8, "y": 5, "facing": -2.485897027348257},
+            {"id": "away-skater-1", "label": "A1", "team": "away", "role": "skater", "x": 1, "y": -3, "facing": -2.819842099193151},
+            {"id": "away-skater-2", "label": "A2", "team": "away", "role": "skater", "x": 9, "y": 0, "facing": -2.79856871316909}
+          ],
+          "puck": {"owner": "home-skater-2"}
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The setup assigns the puck to D2 and the briefing states the pass has ended.",
+          "YOU have just passed laterally to D2. D2 now owns the puck and Gold 1 is approaching. This practice pattern asks the passer to support closer to Navy’s net than the new carrier."
+        ],
+        "tags": ["regroup-hinge"],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 14, Neutral Zone Regroups",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-007-q1",
+            "type": "choice",
+            "prompt": "Who has possession after the stated lateral pass?",
+            "options": [{"id": "a", "text": "YOU"}, {"id": "b", "text": "Gold 1"}, {"id": "c", "text": "D2"}],
+            "answer": ["c"],
+            "explanation": "The setup assigns the puck to D2 and the briefing states the pass has ended.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-007-q2",
+            "type": "multi",
+            "prompt": "Pick two useful checks for your next support movement.",
+            "options": [{"id": "a", "text": "The angle for a return pass"}, {"id": "b", "text": "Gold 1’s approach toward D2"}, {"id": "c", "text": "Whether remaining level with D2 looks tidy"}],
+            "answer": ["a", "b"],
+            "explanation": "A staggered option can help, but only if pressure and the return route permit it.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-007-q3",
+            "type": "sequence",
+            "prompt": "Order one follow-up to this D-to-D pass.",
+            "options": [{"id": "a", "text": "Confirm D2 has received"}, {"id": "b", "text": "Move beneath the new carrier"}, {"id": "c", "text": "Present an option and read the next pass"}],
+            "answer": ["a", "b", "c"],
+            "basis": "coaching",
+            "explanation": "These are suggested actions; do not delay necessary defensive support merely to finish a pattern."
+          },
+          {
+            "id": "exp26-u13-007-q4",
+            "type": "position",
+            "prompt": "Move YOU beneath D2 to illustrate a return outlet.",
+            "actorId": "home-skater-1",
+            "reference": {"x": -10, "y": 3},
+            "basis": "coaching",
+            "explanation": "A deeper diagonal can separate the return route from the approaching forechecker. It is not an automatic passing instruction."
+          },
+          {
+            "id": "exp26-u13-007-q5",
+            "type": "choice",
+            "prompt": "If D2 sends the puck forward with control, what might your next job become?",
+            "options": [{"id": "a", "text": "Advance in support while checking defensive cover"}, {"id": "b", "text": "Remain closer to Navy’s net than the old puck position indefinitely"}, {"id": "c", "text": "Follow Gold 1 away from the developing play"}],
+            "answer": ["a"],
+            "explanation": "Support should follow the new location and possession quality, with cover retained.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-007-q6",
+            "type": "explain",
+            "prompt": "How is useful staggering different from simply standing far apart?",
+            "basis": "coaching",
+            "explanation": "Describe depth, a visible lane and pressure. Large separation without a usable connection may not help."
+          },
+          {
+            "type": "choice",
+            "prompt": "What should YOU tell D2 as Gold 1 approaches?",
+            "options": [{"id": "a", "text": "I am your lower outlet"}, {"id": "b", "text": "The pressure is gone"}, {"id": "c", "text": "I will stand on D2’s lane"}],
+            "answer": ["a"],
+            "basis": "coaching",
+            "explanation": "Calling the lower outlet gives D2 a connected escape from the approaching pressure; if D2 advances, re-read the next support lane rather than staying fixed.",
+            "id": "exp26-u13-007-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two facts should shape your follow-up?",
+            "options": [{"id": "a", "text": "Gold 1 is approaching D2"}, {"id": "b", "text": "YOU can be a lower outlet"}, {"id": "c", "text": "YOU should match D2’s height"}],
+            "answer": ["a", "b"],
+            "basis": "coaching",
+            "explanation": "Pressure and a lower outlet give D2 a connected next action; matching height makes the reset flat.",
+            "id": "exp26-u13-007-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "If Gold 1 angles toward the boards to press D2, show a stagger position that still keeps a clear passing lane back to YOU.",
+            "basis": "coaching",
+            "explanation": "A stagger away from the boards-side pressure keeps the passing lane to D2 open even if Gold 1 changes its angle; the exact depth still depends on the pressure that actually develops.",
+            "actorId": "home-skater-1",
+            "reference": {"x": -13, "y": 2},
+            "id": "exp26-u13-007-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does telling D2 “I am your lower outlet” help more than simply being nearby?",
+            "basis": "coaching",
+            "explanation": "Naming yourself as the lower outlet tells D2 exactly which option is available under pressure, while just being nearby leaves D2 to guess whether YOU are ready to receive; if the situation changes, update the call rather than assume it still applies.",
+            "id": "exp26-u13-007-q10"
+          }
+        ]
+      },
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {"questionId": "exp26-u13-007-q1", "contentHash": "0a063c013e60122eaca51929844abcbe54e16e380473999f2b9afdcfac5f6801", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original; hash matches baseline exactly, confirming no unintended drift."},
+          {"questionId": "exp26-u13-007-q2", "contentHash": "d3a87aeafe008d0a9b39d40b846292e443d62bc9615ef4210c95c971d136a590", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-007-q3", "contentHash": "f43d39b9df9f1171f44112524401fac07c60f140864adb1ee648c9a478042524", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-007-q4", "contentHash": "498ac96834a9401e109ac7c0ace784f4e9b6c552a20439d584838bf0dde63e80", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-007-q5", "contentHash": "ddeaba3d06b636e71b40a54a636097b8cd10ba2deda066d9465fbce286c72be7", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-007-q6", "contentHash": "a81a5cb801d0ba1af95dc6863db8d7927fb2884408c427bfa4ae5772fa76b81b", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original; retained as the primary staggering-vs-distance question."},
+          {"questionId": "exp26-u13-007-q7", "contentHash": "c0922e797992eca87db3b548b0a258af34a479370bc62c646fddbd1dcc445144", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original (already historically repaired)."},
+          {"questionId": "exp26-u13-007-q8", "contentHash": "60be79eb32bce92a8163617b7e9a03e37636ad2cdb65f684a38758bd4cae6a6c", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Prompt corrected to 'your follow-up'; recomputed hash confirms only this question's content changed. Grammar now passes."},
+          {"questionId": "exp26-u13-007-q9", "contentHash": "b39f49c504182e153f985246c767cd154e985292372903cf4eec53ba18aeaaaf", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Retargeted to a boards-pressure hypothetical with reference (-13,2), verified on-ice via isCoachRoutePoint and distinct from q4's (-10,3) by 3.16m; no longer a near-duplicate of q4."},
+          {"questionId": "exp26-u13-007-q10", "contentHash": "4f4634f9b917b438c3ba4b3e66004fa1ad71c8d32f0b5e9ebfb55bd7f452e0f5", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Retargeted to the verbal-communication value of the q7/q8 'lower outlet' call; no longer a near-duplicate of q6."}
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-008",
+      "baseVersion": 1,
+      "baseScenarioHash": "6dcc2acf45c5830e4375002ce06b81335ab86b29a590d6256bf57d45134f3f20",
+      "affectedQuestionIds": ["exp26-u13-008-q1", "exp26-u13-008-q5", "exp26-u13-008-q8", "exp26-u13-008-q10"],
+      "reasons": [
+        {
+          "questionIds": ["exp26-u13-008-q1"],
+          "issue": "The correct option's text, 'The wide lane beside F1', describes a lane adjacent to F1 rather than F1's own lane -- F1 cannot be using a lane 'beside' itself. This contradicts the question's own explanation ('F1 carries in a wide lane near the side boards') and could confuse a young reader about whose route is being described.",
+          "change": "Changed option (b) text to 'The wide lane near the boards', matching the explanation exactly. Answer id (b) and all other fields unchanged.",
+          "evidence": "Direct read of packet-22.json exp26-u13-008-q1: option b text 'The wide lane beside F1' vs. explanation 'F1 carries in a wide lane near the side boards' -- the option and its own supporting explanation use inconsistent, self-contradictory framing for the same fact."
+        },
+        {
+          "questionIds": ["exp26-u13-008-q5"],
+          "issue": "Prompt uses lowercase 'you' ('what could you change?') where every other reference to the focus player in both owned scenarios uses capitalized 'YOU', the established convention.",
+          "change": "Changed 'you' to 'YOU' in the prompt. No other field changed.",
+          "evidence": "Direct text scan of all prompts/explanations across exp26-u13-007 and exp26-u13-008: this is the only lowercase 'you' referring to the focus player found in either owned scenario."
+        },
+        {
+          "questionIds": ["exp26-u13-008-q8"],
+          "issue": "Stale, self-contradicting feedback left over from an earlier repair: the explanation still says '...the bench is unrelated', but the current option (c) ('Whether the far-post route is automatically clear because F1 is wide') no longer mentions a bench at all -- that distractor was already replaced by a prior packet's repair (recorded in u13-repairs.json / historical-checks.json finding u13-p2-dummy-distractors) without updating this explanation.",
+          "change": "Rewrote the explanation to address the actual current option (c) instead of the no-longer-present 'bench' distractor.",
+          "evidence": "Direct read of packet-22.json exp26-u13-008-q8 (the current live snapshot content): option (c) text contains no reference to a bench, yet the explanation reads 'the bench is unrelated'. Cross-checked against u13-repairs.json lines ~3449-3508, which shows the before/after distractor swap that introduced this mismatch."
+        },
+        {
+          "questionIds": ["exp26-u13-008-q10"],
+          "issue": "Near-duplicate reflection of q6: both prompts ask, in near-identical wording, why the supporting forward should avoid filling F1's exact/same lane -- no new cue, decision, or actor responsibility added.",
+          "change": "Retargeted the prompt and explanation to the specific value of the far-post route itself (established by q7/q9) rather than restating q6's lane-separation question.",
+          "evidence": "Direct text comparison of q6 ('Why should F1 and the supporting forward avoid filling exactly the same lane?') and original q10 ('Why must the supporting forward avoid filling F1’s exact lane?') in packet-22.json: near-identical prompts testing the identical concept."
+        }
+      ],
+      "replacement": {
+        "id": "exp26-u13-008",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Help a wide carrier with a middle route",
+        "family": "wide-entry-support",
+        "topic": "wide entry support",
+        "objective": "Recognize a support lane different from the carrier’s entry route.",
+        "briefing": "F1 carries wide into the attacking zone. YOU are a supporting forward currently on the same side. In this exercise the first support option is a controlled middle route toward the far-post area. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {"id": "home-skater-1", "label": "YOU", "team": "home", "role": "skater", "x": 10, "y": 7, "facing": 0.5404195002705842},
+            {"id": "home-skater-2", "label": "F1", "team": "home", "role": "skater", "x": 15, "y": 10, "facing": 0},
+            {"id": "away-skater-1", "label": "A1", "team": "away", "role": "skater", "x": 19, "y": 6, "facing": 2.356194490192345},
+            {"id": "away-skater-2", "label": "A2", "team": "away", "role": "skater", "x": 22, "y": -3, "facing": 2.0647376957144776}
+          ],
+          "puck": {"owner": "home-skater-2"}
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "F1 carries in a wide lane near the side boards.",
+          "F1 carries wide into the attacking zone. YOU are a supporting forward currently on the same side. In this exercise the first support option is a controlled middle route toward the far-post area."
+        ],
+        "tags": ["wide-entry-support"],
+        "sources": [
+          {
+            "id": "hc-practice-2020",
+            "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+            "section": "Printed page 2, Entries — Middle Drive",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Simplified U13 adaptation of an older-age entry drill. No contested net battle or contact technique is taught. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-008-q1",
+            "type": "choice",
+            "prompt": "Which side is F1 using for the entry?",
+            "options": [{"id": "a", "text": "The opposite-side boards"}, {"id": "b", "text": "The wide lane near the boards"}, {"id": "c", "text": "The centre of the rink"}],
+            "answer": ["b"],
+            "explanation": "F1 carries in a wide lane near the side boards.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-008-q2",
+            "type": "multi",
+            "prompt": "Which two details matter before taking the suggested middle route?",
+            "options": [{"id": "a", "text": "Gold 1 and Gold 2’s locations"}, {"id": "b", "text": "Whether every entry requires the same net drive"}, {"id": "c", "text": "Whether your route remains available"}],
+            "answer": ["a", "c"],
+            "explanation": "The middle route is a teaching option under these conditions, not a mandatory route on every entry.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-008-q3",
+            "type": "sequence",
+            "prompt": "Arrange a support read for the wide entry.",
+            "options": [{"id": "a", "text": "Identify F1’s wide route"}, {"id": "b", "text": "Check middle ice and defenders"}, {"id": "c", "text": "Move on a different useful route"}],
+            "answer": ["a", "b", "c"],
+            "basis": "coaching",
+            "explanation": "The supporter must continue checking for changing coverage."
+          },
+          {
+            "id": "exp26-u13-008-q4",
+            "type": "position",
+            "prompt": "Move YOU to illustrate a separate middle support route.",
+            "actorId": "home-skater-1",
+            "reference": {"x": 19, "y": -2},
+            "basis": "coaching",
+            "explanation": "This creates a different lane from F1. Actual route timing and the defender’s movement must still be judged."
+          },
+          {
+            "id": "exp26-u13-008-q5",
+            "type": "choice",
+            "prompt": "If Gold 2 steps into that middle route, what could YOU change?",
+            "options": [{"id": "a", "text": "Continue through Gold 2 because the drill named a route"}, {"id": "b", "text": "Stop offering support entirely"}, {"id": "c", "text": "Delay or choose another support lane"}],
+            "answer": ["c"],
+            "explanation": "A defender closing a route changes the available options; another route may be equally useful.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-008-q6",
+            "type": "explain",
+            "prompt": "Why should F1 and the supporting forward avoid filling exactly the same lane?",
+            "basis": "coaching",
+            "explanation": "Different lanes can ask defenders to cover more space, provided the support remains reachable and onside."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which space should YOU offer to complement F1’s wide entry?",
+            "options": [{"id": "a", "text": "The controlled middle route toward the far-post area"}, {"id": "b", "text": "The same wide lane beside F1"}, {"id": "c", "text": "Behind Navy’s net"}],
+            "answer": ["a"],
+            "basis": "coaching",
+            "explanation": "The middle route complements F1’s wide lane and gives the carrier a different angle toward the far post; if Gold 2 closes it, keep separation and find the next visible lane.",
+            "id": "exp26-u13-008-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two checks should precede a middle route?",
+            "options": [{"id": "a", "text": "Gold 1’s inside position"}, {"id": "b", "text": "F1’s control of the puck"}, {"id": "c", "text": "Whether the far-post route is automatically clear because F1 is wide"}],
+            "answer": ["a", "b"],
+            "basis": "coaching",
+            "explanation": "The defender’s inside position and carrier control determine whether the middle route helps; F1 being wide does not by itself mean the far-post route is clear too.",
+            "id": "exp26-u13-008-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU inside but below F1 to show a far-post support route.",
+            "basis": "coaching",
+            "explanation": "The inside-lower spot gives F1 a different lane toward the far post; if Gold 1 closes it, stay connected to the wide carrier.",
+            "actorId": "home-skater-1",
+            "reference": {"x": 12, "y": 5},
+            "id": "exp26-u13-008-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does the far-post route help more than simply avoiding F1’s lane?",
+            "basis": "coaching",
+            "explanation": "The far-post route gives the carrier a second scoring angle, not just empty space; simply avoiding F1’s lane could still leave YOU somewhere unhelpful, like too far from the play or easy for Gold 2 to cover along with F1.",
+            "id": "exp26-u13-008-q10"
+          }
+        ]
+      },
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {"questionId": "exp26-u13-008-q1", "contentHash": "0b2d4189e571050a491acd5de45213a91ce3bf03e684a488bc7848d418809932", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Option (b) text corrected to 'The wide lane near the boards', now consistent with its own explanation; recomputed hash confirms only this question's content changed."},
+          {"questionId": "exp26-u13-008-q2", "contentHash": "226f3435b4c780d65c1f7c6d4c346e5fbc2cff466cd48d57bbd7f18d025df11e", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original; hash matches baseline exactly."},
+          {"questionId": "exp26-u13-008-q3", "contentHash": "4e7f83717fbb31b0773bff4288562ecc50134b45bb2ada70c7feefd319f5c84b", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-008-q4", "contentHash": "da1f110f04cfca61a9664ed0f7e3c07f5bc3779e1838d1e58ac39891ce33e5a6", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original."},
+          {"questionId": "exp26-u13-008-q5", "contentHash": "17abbfa8746fda263329c52a24d2780b588e042b77b00c9586789379a5c0e705", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Capitalization corrected to 'YOU'; recomputed hash confirms only this question's content changed. Grammar now passes."},
+          {"questionId": "exp26-u13-008-q6", "contentHash": "2ff04520d48495307f0e313bb372497bd9223390f301883a24ab29bd95259349", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original; retained as the primary lane-separation question."},
+          {"questionId": "exp26-u13-008-q7", "contentHash": "f0aa12626578d93c09e3e9ebd21541f49d0e80ce33117aae76471f9c1f0d9e93", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original (already historically repaired)."},
+          {"questionId": "exp26-u13-008-q8", "contentHash": "27b1556beb40af804be8b277902a0604cba094d5c7cd688928d18092f8915855", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Explanation rewritten to reference the actual current option (c) instead of the no-longer-present 'bench' distractor; recomputed hash confirms only this question's content changed. Feedback now passes."},
+          {"questionId": "exp26-u13-008-q9", "contentHash": "eaf3812fd3aa1bd73f20fd426fe689af4d219b1b5094faaaf8f07620451d144c", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Unchanged from original; verified genuinely distinct from q4."},
+          {"questionId": "exp26-u13-008-q10", "contentHash": "bc75c454debc5378c80e60dca94ec8cf1e84977db95dac77440aa1274910af8a", "checks": {"roster": "pass", "geometry": "pass", "answer": "pass", "feedback": "pass", "age": "pass", "sources": "pass", "grammar": "pass"}, "reason": "Retargeted to the specific value of the far-post route (built on q7/q9); no longer a near-duplicate of q6."}
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T18:00:00.000Z",
+      "access": "read",
+      "scope": "Read directly (WebFetch's text extraction failed on this PDF's binary stream, so the Read tool was used on the saved binary per the assignment's fallback instruction). Table of contents confirms 'Neutral Zone Regroups' at printed page 14. That page states verbatim: 'On a lateral pass to D partner, support underneath…when you pass the puck forward….jump up ice' and 'Stagger D, one will support the rush. One must stay back.' This directly and specifically supports exp26-u13-007's core teaching point (D-to-D lateral pass -> staggered/underneath support, not flat). It is a general Hockey Canada 'Developing Skilled Defencemen' resource, not explicitly age-banded to U13 by the document itself; treated as a general development-principle source, consistent with the calibration doc's own prior characterization of this same source ('supports checking pressure and support on retrievals... not these exact coordinates or guaranteed outcomes... a dated development source').",
+      "jurisdiction": "Canadian (Hockey Canada)",
+      "ageFormat": "General/not explicitly age-banded within the document; used here for a U13 scenario",
+      "claim": "Lateral D-to-D pass should be followed by staggered ('underneath') support rather than remaining flat/level with the new puck carrier."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+      "checkedAt": "2026-09-06T18:00:00.000Z",
+      "access": "read",
+      "scope": "Read directly (WebFetch's text extraction failed on this PDF's binary stream; the Read tool was used on the saved binary per the assignment's fallback instruction). Confirmed the document header reads 'High Performance / Haute Performance' throughout, and page 2 contains an 'Entries - Middle Drive' drill matching the cited section exactly: 'F1 takes puck around the cone and up the boards while F2 cuts hash marks and sprints over to support... F2 receives pass and drives wide while F1 goes to the middle driving mid lane directly to far post.' IMPORTANT AGE-MATCH FINDING: this source is explicitly a Hockey Canada HIGH PERFORMANCE program document, titled 'U15/U18 Practice Plan' in the project's own sources.json -- it is NOT a U13-specific resource, and its player pairing is the reverse of exp26-u13-008's (in the source, the original puck carrier cuts to the middle while the support player takes the wide lane; in exp26-u13-008, the puck carrier F1 stays wide while the support player, YOU, takes the middle route). The general tactical PRINCIPLE (offering a different lane than your teammate, with a route toward the far post) is preserved, but the specific role assignment is an original, non-source-certified adaptation, and the source itself is scaled down from an older, high-performance age band rather than pulled from U13-specific material. The scenario's own 'limits' field already discloses this ('Simplified U13 adaptation of an older-age entry drill'), so this is not a new contradiction, but it is flagged per the assignment's explicit instruction to verify cited sources actually match U13.",
+      "jurisdiction": "Canadian (Hockey Canada)",
+      "ageFormat": "High Performance / U15-U18 -- confirmed NOT U13-specific; adapted down for this U13 scenario",
+      "claim": "A supporting forward offering a middle-lane route toward the far post, distinct from the puck carrier's wide entry lane, is a recognized entry-support concept in Hockey Canada material -- though the cited instance of it is drawn from U15/U18 High Performance material, not a U13 source."
+    }
+  ],
+  "remainingQuestionIds": []
+}

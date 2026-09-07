@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const path='src/one-on-one/ExperimentalPractice.jsx';
+let source=readFileSync(path,'utf8');
+const replace=(before,after)=>{if(!source.includes(before))throw Error(`Missing anchor: ${before.slice(0,70)}`);source=source.replace(before,after);};
+replace('teamLabels={{home:\'Navy\',away:\'Gold\'}}/>','teamLabels={{home:\'Navy\',away:\'Gold\'}} onViewUsage={cameraAction=>onMetric(\'camera\',s,q,{cameraAction})}/>');
+replace('index<s.questions.length-1','index<visibleQuestions.length-1');
+replace('{count} linked questions · U7–U18','{practiceCount} practice questions · {count} in the authoring bank');
+replace("onClick={()=>toggleReview(!reviewMode)}>{reviewMode?'Return to practice':'Question workshop · browse and triage'}</button></div>","onClick={()=>toggleReview(!reviewMode)}>{reviewMode?'Return to practice':'Question workshop · browse and triage'}</button><button type=\"button\" aria-expanded={showInsights} onClick={()=>setShowInsights(v=>!v)}>{showInsights?'Hide practice report':'Practice report'}</button><a href=\"/docs/factory/curriculum-map/index.html\" target=\"_blank\" rel=\"noreferrer\">Curriculum coverage ↗</a><a href=\"/docs/factory/claude-project/START-HERE.md\" target=\"_blank\" rel=\"noreferrer\">Claude project files ↗</a></div>\n  {showInsights&&<ExperimentalPracticeInsights store={analytics}/>}\n  <p className=\"ep-hint\">Question views, checks, retries, optional skips, camera choices and flag categories are counted on this device to help improve the bank. Export them from Practice report. Written responses are not included in that report.</p>");
+replace("'rinkreads-experimental-100.json'","'rinkreads-experimental-scenarios.json'");
+replace('onRecord={record} onFlag={flag}/>','onRecord={record} onFlag={flag} onMetric={metric}/>');
+writeFileSync(path,source);

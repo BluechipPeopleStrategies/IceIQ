@@ -1,0 +1,142 @@
+{
+  "reviewer": "luna-youth-second-older",
+  "model": "gpt-5.6-luna",
+  "reviewedAt": "2026-09-05",
+  "coverage": [
+    {
+      "questionId": "exp26-u15-001-q7",
+      "scenarioId": "exp26-u15-001",
+      "scenarioVersion": 1,
+      "contentHash": "ccce082f903cfe2f01f5a40ad8cf07e8da99dbbd3806df8b1db6af813bbc7f58",
+      "decision": "pass",
+      "reason": "The repaired call names F3, the briefing's explicitly required high cover, and keeps the puck-route check conditional. D2-on-ice and F1-near-puck are credible but insufficient alternatives. The static scene does not claim that the call proves safe execution."
+    },
+    {
+      "questionId": "exp26-u15-001-q8",
+      "scenarioId": "exp26-u15-001",
+      "scenarioVersion": 1,
+      "contentHash": "921655a7b470099a5d3554ae3cc7e1edf5c406c6e5a761df7d7ec21eeb3efc99",
+      "decision": "pass",
+      "reason": "After the hypothetical F3 cover is established, loss of that cover or loss of F1's reachable puck route are the two stated changes that remove the pinch rationale. Gold staying away from the puck does not by itself cancel the option. The explanation correctly sends the player back to a fresh read."
+    },
+    {
+      "questionId": "exp26-u15-001-q9",
+      "scenarioId": "exp26-u15-001",
+      "scenarioVersion": 1,
+      "contentHash": "6bc7be6a482ab7c795dfaa6b353c691350cef97360d4f116b77ef49baee0e0cb",
+      "decision": "pass",
+      "reason": "F3 is the named replacement and the reference at (10,7) is near YOU's high area at (11,8), on the neutral-zone side of the wall contest. The explanation correctly separates illustrating cover from proving that a pinch is reachable."
+    },
+    {
+      "questionId": "exp26-u15-001-q10",
+      "scenarioId": "exp26-u15-001",
+      "scenarioVersion": 1,
+      "contentHash": "4c5243c5e488c2a9f922f7fa1522f5126b83c7a78843ceba68b897d67c5d2736",
+      "decision": "pass",
+      "reason": "The repaired prompt tests the remaining condition after F3 arrives: the puck route has moved beyond F1 toward neutral ice. Feedback correctly prioritizes holding or recovering rather than treating named cover as permission for every pinch."
+    },
+    {
+      "questionId": "exp26-u15-006-q7",
+      "scenarioId": "exp26-u15-006",
+      "scenarioVersion": 1,
+      "contentHash": "d23b506c67802a74fa8b167a59e60c6250a3484f318215d3f639d9939496e2e3",
+      "decision": "pass",
+      "reason": "The repaired call matches the scene: D1's stated responsibility is Gold 1, while YOU can name Gold 2 as the inside threat and request a call if Gold 1 cuts inside. It does not overclaim that D1 covers both attackers."
+    },
+    {
+      "questionId": "exp26-u15-006-q9",
+      "scenarioId": "exp26-u15-006",
+      "scenarioVersion": 1,
+      "contentHash": "be4d6b317949580abcc1dcb883b6f57e7b79b1c57d5ea7c4b1aba6b319032ad7",
+      "decision": "pass",
+      "reason": "The reference at (-6,-1) places YOU between Gold 2 at (-4,-1) and the Navy net at the negative-x end, while remaining separate from D1's wide carrier route. The explanation keeps handoff and reachability conditional."
+    },
+    {
+      "questionId": "exp26-u15-008-q9",
+      "scenarioId": "exp26-u15-008",
+      "scenarioVersion": 1,
+      "contentHash": "732071708b1b3e2f4d3cd3d5b4c5887ee50bc27c576c0dc89cd63009e7731d17",
+      "decision": "revise",
+      "severity": "P2",
+      "reason": "The repaired row now has the exact same actorId and reference (-24,3) as q4 and teaches nearly the same inside-support move. That removes the intended second position comparison and repeats an existing target in the same six-question scene. Replace it with a distinct named relationship while retaining the side-of-net read.",
+      "proposedQuestion": {
+        "id": "exp26-u15-008-q9",
+        "type": "position",
+        "prompt": "Move YOU into the middle-side lane between Gold 1 behind Navy's net and C's slot.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -21,
+          "y": 2
+        },
+        "basis": "coaching",
+        "explanation": "This point gives YOU an inside support relationship between Gold 1 behind Navy's net and C's slot, instead of repeating q4's current-side support point. Recheck D2's side and the carrier route before choosing whether to hold or exchange."
+      },
+      "recommendedChange": "Use the proposed middle-side reference or another materially different, scene-grounded point, then recalculate the content hash for an independent recheck."
+    },
+    {
+      "questionId": "exp26-u15-008-q10",
+      "scenarioId": "exp26-u15-008",
+      "scenarioVersion": 1,
+      "contentHash": "0d91e9a7782943308299dbc74705a3740eca0e96a502a0a877b2dd88b1291d6f",
+      "decision": "pass",
+      "reason": "The repair names Gold 2 and the open slot lane, and it conditions the choice between YOU and D2 on reachability while the other player tracks Gold 1. It correctly rejects an automatic side swap when C leaves."
+    },
+    {
+      "questionId": "exp26-u15-013-q9",
+      "scenarioId": "exp26-u15-013",
+      "scenarioVersion": 2,
+      "contentHash": "b924fddebbe2f17c5207ceb7c39c33100470b269e07413c017eca1e9a0ab2bd8",
+      "decision": "pass",
+      "reason": "The reference at (-13,3.2) is on the Navy-net side of the battle near (-10,-11 to -7) while separated from F1, and C at (-12,0) remains a visible outlet. The repair resolves the directional concern without claiming a uniquely correct skating route."
+    },
+    {
+      "questionId": "exp26b-u15-002-q4",
+      "scenarioId": "exp26b-u15-002",
+      "scenarioVersion": 1,
+      "contentHash": "85348f43ee66e7aeafb7fd85f0f11968f3ccb0e881a83cd88bb0f4b8a93497ca",
+      "decision": "pass",
+      "reason": "With Navy attacking toward positive x, moving YOU from (18,9) to (16,9) is a small blue-line-side adjustment along the half wall. The explanation correctly frames it as an angle comparison around Gold 1, not a guaranteed pass, and names the required recheck."
+    },
+    {
+      "questionId": "exp26-u18-001-q7",
+      "scenarioId": "exp26-u18-001",
+      "scenarioVersion": 1,
+      "contentHash": "db1649cbd01b1a35b6afc554ef6f4322be078cef01732bcec3c9acdefb38bc03",
+      "decision": "pass",
+      "reason": "The repaired prompt uses the briefing's actual 48-second clock and keeps a clear forward lane conditional. It avoids the false claim that a one-goal lead bans every forward option; the alternative answers are plausible late-game misreads."
+    },
+    {
+      "questionId": "exp26-u18-005-q7",
+      "scenarioId": "exp26-u18-005",
+      "scenarioVersion": 1,
+      "contentHash": "ed9de37a0116ec5ffbcd01e796796ed448332061565d18def41161b6d54ae17f",
+      "decision": "pass",
+      "reason": "The repair names F1 as the actual puck carrier and D2 as the agreed deeper cover, matching both briefing and puck owner. The request to call if either changes makes the activation conditional rather than treating the communication as proof of control."
+    },
+    {
+      "questionId": "exp26-u18-005-q8",
+      "scenarioId": "exp26-u18-005",
+      "scenarioVersion": 1,
+      "contentHash": "53a354ef2415b806a0dfc5163a6e6e2427753a06cd51bfcc88b7ba9c49b0af98",
+      "decision": "pass",
+      "reason": "The two keyed changes directly remove the drill's stated prerequisites: F1 no longer has secure possession or D2 no longer supplies deeper cover. F2 staying wide is a credible non-trigger because the prompt does not make F2's width the activation condition."
+    },
+    {
+      "questionId": "exp26-u18-005-q9",
+      "scenarioId": "exp26-u18-005",
+      "scenarioVersion": 1,
+      "contentHash": "731a581bb06ace6b4f5dc46bfdfc8d2e31b2f452e070856b20900b714b1987b6",
+      "decision": "pass",
+      "reason": "The reference at (0,4.5) is behind F1 at (3,0) in Navy's attacking direction and is separated from F3 at (8,7). Feedback preserves the required D2 cover and Gold 3 recovery read, so the position is an example lane rather than a mandatory route."
+    },
+    {
+      "questionId": "exp26-u18-007-q9",
+      "scenarioId": "exp26-u18-007",
+      "scenarioVersion": 1,
+      "contentHash": "81c7c6f04244cc35da642a211f1ce6b6858ed7c832627d82958ef2b6f88bd9f8",
+      "decision": "pass",
+      "reason": "The current repair correctly uses (10,6), near the attacking blue-line side and opposite D2 at (11,-7), rather than the earlier proposed point near D1 at (23,7), which is already the low rotation. The prompt and feedback match the briefing's temporary point-cover exchange and keep F1 visibility and exit threats conditional."
+    }
+  ],
+  "limits": []
+}

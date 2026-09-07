@@ -142,7 +142,7 @@ function boundedPoint(point) {
 }
 
 function reasonText(reason) {
-  if (typeof reason !== 'string' || !reason.trim()) throw new TypeError('Add a short reason for this position.');
+  if (typeof reason !== 'string') throw new TypeError('Use text for the optional reason.');
   if (reason.trim().length > 600) throw new RangeError('Keep the reason to 600 characters or fewer.');
   return reason.trim();
 }
@@ -304,7 +304,7 @@ export function positionChoicePoint(session, choice) {
   return { x: clamp(origin.x + (choice === 'back' ? 3 : -3) * ownNetDirection, BOARD_MARGIN, maxX), y: origin.y };
 }
 
-export function submitPositioningRead(session, reason) {
+export function submitPositioningRead(session, reason = '') {
   const template = checkedSession(session);
   if (session.phase !== 'read') throw new Error('This positioning read has already been submitted.');
   if (!session.point) throw new Error('Choose Stay, Back, Forward or a position on the rink.');

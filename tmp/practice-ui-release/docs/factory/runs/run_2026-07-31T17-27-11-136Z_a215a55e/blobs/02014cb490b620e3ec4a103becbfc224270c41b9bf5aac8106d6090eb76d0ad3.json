@@ -1,0 +1,219 @@
+{
+  "kind": "compiled-teaching-play",
+  "version": "compiled-teaching-play-v1",
+  "value": {
+    "schemaVersion": "compiled-teaching-play-v1",
+    "id": "sd_dz_breakout_variant_closed_lane_claimed_open",
+    "version": 1,
+    "compiledHash": "8ed918f6a8e5f97c3814373cbce54c56683afbf02dddb685f9a91ee4e19a3199",
+    "dependencyHashes": {
+      "definitionId": "sd_dz_breakout_variant_closed_lane_claimed_open",
+      "definitionVersion": 1,
+      "definitionContentHash": null,
+      "traceHash": "7cc3d489245c28d1118d01cdb7033cc1d6a4975a600a165869d88cce2ebf03c6",
+      "physicsProfileId": "physics-u13-v1"
+    },
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 3.5,
+        "pos": [
+          21.4884,
+          -5.9436
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 4,
+        "pos": [
+          16.764,
+          -6.858
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "eventTimes": [
+      0,
+      3,
+      4,
+      6
+    ],
+    "questionFreezeTime": 6,
+    "observableCues": [
+      "F1 (the low-side forechecker) has closed to full speed, committed to the low side of the net",
+      "F2 (the far-side forechecker) is still approaching, not yet committed to a side",
+      "the net sits between D1 and F1's angle of approach"
+    ],
+    "declaredRead": {
+      "actorId": "D1",
+      "description": "Take it back around the net to the side the forechecker has turned away from"
+    },
+    "answerProof": {
+      "derivedRead": "escape_open_side",
+      "proofChain": [
+        {
+          "candidateId": "escape_open_side",
+          "physicsClean": true,
+          "hardFailures": []
+        }
+      ],
+      "comparison": {
+        "agreement": "agree",
+        "declaredCandidateId": "escape_open_side",
+        "derivedRead": "escape_open_side",
+        "explanation": "Declared read (escape_open_side) matches the physically-derived read.",
+        "mismatchPreserved": false
+      }
+    },
+    "questionKindVariants": [
+      {
+        "kind": "lane-pick",
+        "ageBands": [
+          "U11",
+          "U13",
+          "U15",
+          "U18"
+        ],
+        "copy": {
+          "q": "You have the puck behind your net and the first forechecker is charging down one side. Tap the ice where you take the puck."
+        }
+      }
+    ]
+  }
+}

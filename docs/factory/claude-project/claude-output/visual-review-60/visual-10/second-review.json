@@ -1,0 +1,31 @@
+{
+  "packetId": "visual-10",
+  "reviewer": {
+    "identity": "Claude Sonnet 5 (claude-sonnet-5) -- same model family as the lead reviewer, not cross-model independence.",
+    "calibrationStatus": "NOT QUALIFIED TO CLEAR (4/8 known calibration defects missed). All findings below are provisional second-opinion evidence, not a trusted clearance.",
+    "toolLimitation": "No live browser/Playwright access this pass. Answers derived solely from packets/visual-10-manifest.json and packets/visual-10-blind.json. Cannot independently confirm the lead's screenshots or interaction-test transcripts."
+  },
+  "questions": [
+    {"questionId":"exp26b-u15-007-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Independently recomputed the flagged t-parameter from scratch: t=(vec.d)/|d|^2=-40/136=-0.294, matching the lead's -0.29 exactly. Corrected segment-bounded distance to YOU's endpoint=5.10 (vs raw 3.77), still farther than F1-line's 2.10 either way -- the correction reinforces, not overturns, answer (a)."},
+    {"questionId":"exp26b-u15-009-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. YOU-to-Gold2=3.16 vs YOU-to-Gold3=9.85."},
+    {"questionId":"exp26b-u15-014-q2","myBlindAnswer":["a","b"],"matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold1 nearer F1-line (1.25 vs 4.57, both valid); Gold2 nearer F2-line (2.55 vs 3.59, both valid); Gold3 has t=-0.118 on the F2-line (I checked this independently, an unflagged but real instance of the same pattern) giving a corrected distance of 6.71 -- either way far larger than Gold2's 2.55, falsifying (c)."},
+    {"questionId":"exp26b-u15-014-q5","myBlindAnswer":"c","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Only Gold3 (x=-4) has lower x than YOU (x=-1), i.e. is behind YOU toward navy's own net; Gold1 (x=2) and Gold2 (x=6) are both ahead."},
+    {"questionId":"exp26b-u15-015-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold2 perp. distance to F1-line=0.50 (t=0.554, valid) vs to F2-line -- I additionally checked this one's t (1.189, past F2's endpoint) and used the corrected nearest-point distance (5.39) rather than only the naive 5.26; the qualitative answer (a) is unaffected either way."},
+    {"questionId":"exp26-u18-001-q5","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Gold1 perp. distance to F1-line=2.82 (t=0.376, valid) vs to F2-line=0.90 (t=0.246, valid) -- both segment-valid, no correction needed."},
+    {"questionId":"exp26-u18-001-q7","myBlindAnswer":"a","matchesAuthoredKey":true,"matchesLeadReviewer":true,
+     "agreement":"Agree, no defect. Independently recomputed the flagged t-parameter from scratch: t=(vec.d)/|d|^2=-22/130=-0.169, matching the lead's -0.17 exactly. Corrected segment-bounded distance to YOU's endpoint=4.47 (vs raw 4.04), still clearly farther than F3-line's 2.09 either way -- confirms the coordinator's note that the answer holds regardless of correction."}
+  ],
+  "overallDisagreements": "None. All 7 blind answers match the authored after-solve key and the lead reviewer's blind/after-key findings. Both t-parameters the coordinator specifically flagged for re-derivation (exp26b-u15-007-q5: -0.294, exp26-u18-001-q7: -0.169) were recomputed from scratch and match the lead's figures exactly; in both cases the segment-corrected distance is larger than the naive infinite-line distance, and the qualitative answer is unchanged either way. I also independently found and checked two further, unflagged instances of the same pattern in this packet (exp26b-u15-014-q2 option c, t=-0.118; exp26b-u15-015-q5's F2-line, t=1.189) -- neither changes its question's correct answer, recorded for completeness.",
+  "limitsOnThisAgreement": [
+    "Same-model convergence (both reviewers are Claude Sonnet 5) is weaker independence than cross-model or human agreement.",
+    "No screenshot/live-app inspection this pass; cannot confirm the lead's interaction-test transcripts, only the underlying coordinate math.",
+    "Neither reviewer is currently qualified to issue a trusted clearance; this packet's 'no defect found' is two unqualified, provisional passes that agree, not sign-off.",
+    "Per the coordinator, this is packet 10 of 11 -- only visual-11 remains."
+  ]
+}

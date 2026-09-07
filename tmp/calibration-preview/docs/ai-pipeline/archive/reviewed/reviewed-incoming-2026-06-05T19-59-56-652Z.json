@@ -1,0 +1,738 @@
+[
+  {
+    "id": "gen_u7_reading-the-play_rdp01",
+    "type": "mc",
+    "nodeId": "u7.defense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Defensive Play",
+    "d": 1,
+    "sit": "Your goalie saves the puck to the corner. Two players from the other team skate toward it. You are the closest defender to your net.",
+    "opts": [
+      "Skate to the front of your net and keep your stick on the ice",
+      "Chase both attackers deep into the corner",
+      "Stand behind your own net and wait",
+      "Skate up to the blue line for a pass"
+    ],
+    "ok": 0,
+    "explain": "The puck is in the corner, but the dangerous place is in front of your goalie. At U7, the simple read is to protect the net first."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp02",
+    "type": "tf",
+    "nodeId": "u7.defense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Defensive Play",
+    "d": 1,
+    "sit": "If a player on the other team has the puck behind your net, you should chase them around the back and leave the front of the net open.",
+    "ok": false,
+    "tip": "Protect the house.",
+    "why": "They cannot score from behind the net. Stay near the front so you can stop a pass or loose puck by your goalie."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp03",
+    "type": "next",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "Your teammate is skating down the side and is about to shoot. You are skating down the middle.",
+    "opts": [
+      "Skate into the corner in case the puck misses",
+      "Stop near the side of the net with your stick on the ice for a rebound",
+      "Skate up to your teammate and crowd the puck",
+      "Stop high in the zone and watch"
+    ],
+    "ok": 1,
+    "explain": "Shots often bounce off the goalie. If you stop near the net with your stick ready, you can be first to the rebound.",
+    "tip": "Stop at the net."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp04",
+    "type": "mistake",
+    "nodeId": "u7.transition",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "The other team steals the puck and skates fast toward your net. A defender stops at the center red line and watches them go by.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They stopped skating instead of coming back to help protect their net",
+      "They should have chased from behind with only their stick",
+      "They should have waited at the blue line for a pass",
+      "They should have stayed near the other team's net"
+    ],
+    "ok": 0,
+    "explain": "When the other team gets the puck, your job changes to defense. Skate back hard and help your goalie."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp05",
+    "type": "mc",
+    "nodeId": "u7.puck-skills",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Puck Skills",
+    "d": 1,
+    "sit": "You are standing in front of the other team's net. Your teammate has the puck in the corner and looks at you.",
+    "opts": [
+      "Wave your hands while your stick is off the ice",
+      "Skate right up to your teammate and bring traffic with you",
+      "Keep your stick blade flat on the ice as a target",
+      "Turn your back and skate away from the net"
+    ],
+    "ok": 2,
+    "explain": "A good pass needs a clear target. Keeping your stick on the ice shows where the puck should go and gets you ready to shoot."
+  },
+  {
+    "id": "gen_u7_decision-making_dec01",
+    "type": "mc",
+    "nodeId": "u7.hockey-sense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are skating down the ice with the puck. A defender is standing still in front of you. The side of the ice is empty.",
+    "opts": [
+      "Put your head down and skate straight at the defender",
+      "Stop moving and wait for them to move away",
+      "Steer to the empty side and skate past them",
+      "Shoot the puck from far away before you get closer"
+    ],
+    "ok": 2,
+    "explain": "When someone blocks your path, look for open ice. Steering to the empty side is safer than skating into traffic."
+  },
+  {
+    "id": "gen_u7_decision-making_dec02",
+    "type": "tf",
+    "nodeId": "u7.hockey-sense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "When you hear the referee blow the whistle, you should keep playing just in case the puck goes in.",
+    "ok": false,
+    "tip": "Stop on the whistle.",
+    "why": "The whistle means the play is stopped. Good players stop right away and get ready for the next play."
+  },
+  {
+    "id": "gen_u7_decision-making_dec03",
+    "type": "next",
+    "nodeId": "u7.transition",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You dig the puck out of the corner beside your own goalie. A defender is standing in front of your net.",
+    "opts": [
+      "Skate the puck up the boards, keeping it close to the wall",
+      "Skate the puck right across the front of your own net",
+      "Leave the puck in the corner and skate away",
+      "Pass it backward toward your own goalie"
+    ],
+    "ok": 0,
+    "explain": "The front of your own net is dangerous. The boards are the safer path when you are leaving your zone.",
+    "tip": "Use the boards."
+  },
+  {
+    "id": "gen_u7_decision-making_dec04",
+    "type": "mistake",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "A player gets a pass in the middle of the ice. Only the goalie is between them and the net. They pass the puck backward right away.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have shot from farther away",
+      "They passed instead of skating toward the net to shoot",
+      "They should have skated into the corner to be safe",
+      "They should have waited until a defender caught them"
+    ],
+    "ok": 1,
+    "explain": "When you have open ice and a chance to score, keep your feet moving toward the net and shoot."
+  },
+  {
+    "id": "gen_u7_decision-making_dec05",
+    "type": "mc",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "You are on a breakaway with only the goalie in front of you. A player from the other team is skating hard behind you.",
+    "opts": [
+      "Stop skating and let them catch up",
+      "Keep skating fast toward the net and shoot",
+      "Turn around and skate back toward the player chasing you",
+      "Shoot the puck into the corner and chase it"
+    ],
+    "ok": 1,
+    "explain": "On a breakaway, speed helps you stay ahead. Keep your feet moving and go to the net."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas01",
+    "type": "mc",
+    "nodeId": "u7.hockey-sense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You get the puck near the boards. A player from the other team skates at you. The ice along the wall is open.",
+    "opts": [
+      "Keep your feet moving and skate up the boards into open ice",
+      "Stop skating and hide the puck between your skates",
+      "Pass across the front of your own net",
+      "Stand still and wait for help"
+    ],
+    "ok": 0,
+    "explain": "Open ice helps you escape. Keep moving into the space instead of stopping where pressure can catch you."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas02",
+    "type": "tf",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "If two of your teammates are already in the corner battling for the puck, you should skate into the same corner and stand beside them.",
+    "ok": false,
+    "tip": "Find open ice.",
+    "why": "If two teammates are already near the puck, they need someone open. Move to space so they have a pass."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas03",
+    "type": "next",
+    "nodeId": "u7.transition",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You are skating with the puck, but it slips off your stick. It is only a few feet away.",
+    "opts": [
+      "Keep skating in a big circle to come back for it",
+      "Give up and let the other team have it",
+      "Look at your stick before chasing the puck",
+      "Stop, turn, and get back on the puck"
+    ],
+    "ok": 3,
+    "explain": "Everyone loses the puck sometimes. Stop and turn right away so you can win it back.",
+    "tip": "Stop and turn."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas04",
+    "type": "mistake",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "Your teammate has the puck on the boards. Two defenders are poking at them. You skate right up next to your teammate and stand still.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They joined the crowd instead of finding open ice",
+      "They should have poked the puck away from their teammate",
+      "They should have hidden behind the other team's net",
+      "They should have skated back to their own goalie"
+    ],
+    "ok": 0,
+    "explain": "If you stand in the same crowd, your teammate has no easy pass. Move to open ice and show your stick."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas05",
+    "type": "mc",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "You pick up a loose puck in the middle of the ice. Nobody is between you and the other team's goalie.",
+    "opts": [
+      "Pass to a teammate who is covered",
+      "Carry the puck toward the net as fast as you can",
+      "Skate backward with the puck",
+      "Shoot from center ice right away"
+    ],
+    "ok": 1,
+    "explain": "When you have open ice, use it. Carrying the puck closer gives you a better chance to score."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup01",
+    "type": "mc",
+    "nodeId": "u7.puck-skills",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Puck Skills",
+    "d": 1,
+    "sit": "You are in the corner with the puck. A defender's stick blocks the direct pass, and your teammate is open nearby.",
+    "opts": [
+      "Bank the puck softly off the boards to your teammate",
+      "Try to chop the puck through the defender's stick",
+      "Cover the puck with your hand",
+      "Shoot the puck high at the glass"
+    ],
+    "ok": 0,
+    "explain": "The boards can help you pass around a stick. A soft bank pass can reach your teammate when the straight pass is blocked."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup02",
+    "type": "tf",
+    "nodeId": "u7.hockey-sense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "When a defender follows you around the back of the net, stopping and going back the other way can help you find open ice.",
+    "ok": true,
+    "tip": "Use the net as a shield.",
+    "why": "The net can block the defender's path. A quick stop and turn can help you skate out the open side."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup03",
+    "type": "next",
+    "nodeId": "u7.transition",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You have the puck near your goal line. A forechecker is coming to trap you on the wall.",
+    "opts": [
+      "Force the puck straight up the wall into pressure",
+      "Throw the puck blindly to the front of your own net",
+      "Fake up the boards, turn back, and skate behind your net",
+      "Stop on the wall and wait"
+    ],
+    "ok": 2,
+    "explain": "A simple fake can make space. Show one way, then turn to the open ice behind your net.",
+    "tip": "Fake one way, go the other."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup04",
+    "type": "mistake",
+    "nodeId": "u7.transition",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "A player picks up a loose puck in their defensive zone. A forechecker skates toward them, and the player smacks the puck into a crowded corner.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They panicked and threw the puck away instead of skating to open ice",
+      "They should have passed through the forechecker's skates",
+      "They should have skated into their goalie",
+      "They should have shot from their own zone"
+    ],
+    "ok": 0,
+    "explain": "When pressure comes, do not throw the puck away. Use your feet to turn toward open ice and keep the puck safer."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup05",
+    "type": "mc",
+    "nodeId": "u7.offense",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "A defender slides on the ice in front of you to block your shot.",
+    "opts": [
+      "Shoot right into the defender's pads",
+      "Pull the puck around them and shoot through the open lane",
+      "Pass backward right away even though you can shoot",
+      "Leave the puck and skate away"
+    ],
+    "ok": 1,
+    "explain": "When a defender slides down, they cannot turn quickly. Pull the puck around them and use the open lane."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp01",
+    "type": "mc",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are backchecking hard through the middle. The puck carrier is skating down the wing, and your defenseman has a good angle on them. Another opponent is driving straight toward your net.",
+    "opts": [
+      "Chase the puck carrier and leave the middle open",
+      "Pick up the player driving the net and take away their stick",
+      "Stop skating once you cross your blue line",
+      "Drift behind your own net and wait for the puck"
+    ],
+    "ok": 1,
+    "explain": "Read the biggest threat. If your defenseman has the puck carrier angled, the open player going to the net is more dangerous. Cover that player first."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp02",
+    "type": "tf",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When you are defending a 2-on-1, you should rush straight at the puck carrier and leave the pass option open.",
+    "ok": false,
+    "tip": "Take away the pass.",
+    "why": "On a 2-on-1, the goalie can handle the shot better if the defender protects the middle and takes away the dangerous pass."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp03",
+    "type": "next",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your team is cycling the puck low in the corner. You are the high forward (F3). You see the defense has collapsed below the faceoff dots.",
+    "opts": [
+      "Join the crowded corner battle",
+      "Back all the way out to the red line",
+      "Slide into the open high slot, show your stick, and stay ready to recover",
+      "Stand beside the goalie and wait for a rebound"
+    ],
+    "ok": 2,
+    "explain": "F3 can use the space the defense gives up, but still has to stay responsible. The high slot is open, and you are still above the puck if possession changes.",
+    "tip": "Find quiet ice above the puck."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp04",
+    "type": "mistake",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A center takes a defensive-zone faceoff. They win the puck cleanly to their defenseman, but instead of tying up the opposing center, they skate away toward the blue line.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have tried to shoot off the draw",
+      "They failed to tie up their check, giving the opposing center a free path to the net",
+      "They should have chased their own defenseman for the puck",
+      "They should have left the circle before the puck was dropped"
+    ],
+    "ok": 1,
+    "explain": "Winning the draw is only the first job. In the defensive zone, the center still has to stop their check from getting to the net."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp05",
+    "type": "mc",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your defenseman shoots from the point. The goalie kicks a rebound into the low slot and is down away from the puck.",
+    "opts": [
+      "Take a big wind-up before shooting",
+      "Stop hard, keep your stick on the ice, and shoot quickly",
+      "Pass the puck back to the point to reset",
+      "Carry the puck behind the net for a wraparound"
+    ],
+    "ok": 1,
+    "explain": "A loose rebound near the net is a quick-play chance. When the goalie is down and away from the puck, shoot quickly before defenders recover."
+  },
+  {
+    "id": "gen_u11_decision-making_dec01",
+    "type": "mc",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are a defenseman at the offensive blue line. You catch a pass, but two defenders are blocking the lane to the net. Your center is open in the corner.",
+    "opts": [
+      "Shoot into the defenders' shin pads",
+      "Hold the puck at the blue line until pressure reaches you",
+      "Pass down to your open center to keep possession",
+      "Stickhandle into the crowded high slot"
+    ],
+    "ok": 2,
+    "explain": "A blocked point shot can turn into a rush against you. If the shooting lane is closed, move the puck to an open teammate and keep the play alive."
+  },
+  {
+    "id": "gen_u11_decision-making_dec02",
+    "type": "tf",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When leading a 3-on-2 rush, the best decision is always to dump the puck into the corner.",
+    "ok": false,
+    "tip": "Use your numbers.",
+    "why": "A 3-on-2 gives your team an advantage. Carry or pass to make the defenders choose, instead of giving the puck away automatically."
+  },
+  {
+    "id": "gen_u11_decision-making_dec03",
+    "type": "next",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You recover a loose puck below your own goal line. Two forecheckers are closing from one side, but your winger is open on the far boards with a clear lane.",
+    "opts": [
+      "Try to stickhandle through both forecheckers",
+      "Pass firmly to your open winger on the far boards",
+      "Rim the puck hard without checking the lane",
+      "Skate the puck across the front of your own net"
+    ],
+    "ok": 1,
+    "explain": "Pressure on one side usually opens space somewhere else. A firm pass to the open winger moves the puck away from danger and starts the breakout.",
+    "tip": "Pass away from pressure."
+  },
+  {
+    "id": "gen_u11_decision-making_dec04",
+    "type": "mistake",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player receives a pass in the offensive slot with a clear lane to the net. Instead of shooting, they force a backhand pass to a covered teammate back door.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have held the puck longer to draw more defenders",
+      "They passed up a strong scoring chance to force a low-percentage pass",
+      "They should have dumped the puck into the corner",
+      "They should have skated away from the slot first"
+    ],
+    "ok": 1,
+    "explain": "In the slot, a clear shooting lane is a great chance. Forcing a pass to a covered teammate gives the defense time to recover."
+  },
+  {
+    "id": "gen_u11_decision-making_dec05",
+    "type": "mc",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are the last defender back. An opposing player skates at you 1-on-1 with speed and tries to push the puck wide.",
+    "opts": [
+      "Turn your hips, keep your body between them and the net, and steer them to the boards",
+      "Dive forward and hope your stick reaches the puck",
+      "Skate straight at them and guess which way they will go",
+      "Stop skating and reach with one hand"
+    ],
+    "ok": 0,
+    "explain": "The last defender protects the middle first. If you dive or guess, you can give up a clean chance. Angle the puck carrier toward the boards."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas01",
+    "type": "mc",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You receive a breakout pass in the neutral zone. The opposing defenseman steps up quickly to close your space. Your teammate is skating past them along the boards.",
+    "opts": [
+      "Try to toe-drag through the defender's stick",
+      "Chip the puck softly into the space behind the defenseman for your teammate",
+      "Stop moving and let the pressure reach you",
+      "Shoot the puck high around the glass with no target"
+    ],
+    "ok": 1,
+    "explain": "When a defender steps up, they leave space behind them. A soft chip lets your teammate skate onto the puck with speed."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas02",
+    "type": "tf",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When you have the puck in the offensive zone and the middle is open, skating into a crowded corner is the best way to create space.",
+    "ok": false,
+    "tip": "Use the open middle.",
+    "why": "Corners can protect the puck, but they are not the best choice when the middle is open. Moving or passing toward open ice creates more danger."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas03",
+    "type": "next",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your defenseman has the puck in your zone. The other team's wingers are covering the boards and taking away the easy wall pass.",
+    "opts": [
+      "Stand on the boards anyway and call for the puck",
+      "Skate down beside your own goal line and crowd your defenseman",
+      "Cut through the middle to give your defenseman a clear passing option",
+      "Skate into the offensive zone and wait for a long pass"
+    ],
+    "ok": 2,
+    "explain": "If the boards are covered, the middle may be open. Cutting through the middle gives your defenseman a useful passing option.",
+    "tip": "Cut through the middle."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas04",
+    "type": "mistake",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player carries the puck up the wing. A defender has a tight gap and matches their speed. Instead of passing, chipping, or delaying, the player tries to skate straight through the defender.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They did not recognize that the defender had taken away their space",
+      "They should have shot from the red line",
+      "They should have skated backward into the neutral zone",
+      "They should have stopped and waited on the boards"
+    ],
+    "ok": 0,
+    "explain": "When a defender matches your speed and closes your space, forcing the puck through them is low percentage. Pass, chip, or delay for support."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas05",
+    "type": "mc",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are regrouping in the neutral zone with the puck. The other team is changing lines, giving you open ice in front of you.",
+    "opts": [
+      "Pass the puck backward right away to slow the game down",
+      "Dump the puck in even though the defenders are not set",
+      "Attack the open space with speed before they organize",
+      "Stop skating and wait for the new players to get on the ice"
+    ],
+    "ok": 2,
+    "explain": "A line change can create time and space. Attacking quickly forces the other team to defend before they are set."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup01",
+    "type": "mc",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You pick up a loose puck in your own corner. A forechecker is coming fast from the goal line and trying to trap you on the boards.",
+    "opts": [
+      "Force the puck straight up the wall into the forechecker's stick",
+      "Throw the puck blindly to the front of your own net",
+      "Fake up the boards, pull the puck back, and skate behind your net",
+      "Stop on the wall and wait for pressure"
+    ],
+    "ok": 2,
+    "explain": "A simple fake can create your own space. Showing up the wall can freeze the forechecker long enough for you to escape behind the net."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup02",
+    "type": "tf",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "If a defender has you pinned on the boards, the best move is always to hack the puck forward into their skates.",
+    "ok": false,
+    "tip": "Use your support.",
+    "why": "Hacking forward usually gives the puck away. Under pressure, protect it and use a support option, like kicking or nudging it back to a teammate."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup03",
+    "type": "next",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You enter the offensive zone 1-on-1. The defender has a tight gap and takes away your path to the net.",
+    "opts": [
+      "Shoot directly into the defender's pads",
+      "Slow up, protect the puck, and wait for a teammate to become a late option",
+      "Push the puck through the defender's skates",
+      "Turn all the way back to the center red line"
+    ],
+    "ok": 1,
+    "explain": "When the first option is gone, a delay can create a new one. Slowing up gives support time to arrive and keeps possession.",
+    "tip": "Delay for support."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup04",
+    "type": "mistake",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player receives a pass in the high slot but a defender drops down to block the lane. Instead of changing the angle, the player shoots directly into the defender.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They did not pull the puck to the side to open a clear shooting lane",
+      "They used a wrist shot instead of a slapshot",
+      "They should have dumped the puck into the corner",
+      "They should have passed backward out of the zone"
+    ],
+    "ok": 0,
+    "explain": "When a defender goes down, they cannot adjust quickly. A small drag or side-step can open a cleaner lane to the net."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup05",
+    "type": "mc",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are pressured on the half-wall. You saw your center open in the slot, but the direct passing lane is blocked and you cannot turn for a forehand pass.",
+    "opts": [
+      "Hold the puck until the pressure takes it away",
+      "Throw a blind backhand pass through the defender",
+      "Bank the puck off the boards so it angles toward your open center",
+      "Spin into the pressure before making a pass"
+    ],
+    "ok": 2,
+    "explain": "A direct pass is blocked, but the boards can create a new lane. An indirect pass works when you know your teammate is open and can angle the puck to them."
+  }
+]

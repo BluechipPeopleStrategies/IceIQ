@@ -1,0 +1,1 @@
+import {load} from './packet-root-builder.mjs';for(const n of [37,38]){const c=load(n);for(const s of c.scenes){console.log('\n'+s.id+' '+s.title+'\n'+s.briefing+'\n'+JSON.stringify(s.setup));for(const q of s.questions)console.log(JSON.stringify(q));}}

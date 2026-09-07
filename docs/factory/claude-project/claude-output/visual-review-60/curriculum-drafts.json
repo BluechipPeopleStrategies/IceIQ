@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-not-reviewed",
+  "author": "Claude Sonnet 5 (claude-sonnet-5), this session -- NOT qualified to clear hockey judgments this run (see output/calibration/reconciliation.json). Nothing here has been rendered in the live app, hash-registered, human-coach-approved, or curriculum-admitted. These are original content proposals only.",
+  "explicitCaveats": [
+    "No scene JSON below has been added to experimental-bank/ or experimental-expansion/. No contentHash has been computed. These are NOT deployable as-is; they need scene-schema authoring, engine rendering, a fresh blind-solve by a qualified reviewer, and human coach sign-off before any bank admission.",
+    "All 12 questions use only the 5 question types already supported in the live bank as of sourceCommit f1f5667bc5daa7ac7edae010e36b8c87873e6645: choice, multi, explain, position, sequence. No new delivery format is proposed or assumed.",
+    "All coordinates are illustrative placeholders expressing the intended geometry (relative distances/angles), not values verified against the actual rendering engine's coordinate system or rink bounds. An author with engine access must re-fit real coordinates before these become renderable scenes.",
+    "Proposed IDs use a 'draft26-' prefix, distinct from every existing 'exp26'/'exp26b' prefix in the live bank, so they cannot collide with or be mistaken for deployed content.",
+    "Each brief traces directly to one ranked gap in output/curriculum-gap-plan.json by id."
+  ],
+  "lessonBriefs": [
+    {
+      "briefId": "draft26-brief-skating-u15-u18",
+      "gapPlanId": "gap-skating-movement-u15-u18",
+      "ageBands": ["U15", "U18"],
+      "objective": "Pair a skating/edge-work visible cue (tight turn, backward-to-forward pivot) with the geometry-comparison question pattern already proven throughout the deployed bank, so older players connect skating mechanics to the tactical reads they already practice.",
+      "developmentalNote": "Not a skating-technique tutorial. The learner is not asked to judge blade mechanics; the scene uses a visible pivot or turn as the SETUP for a standard positional-geometry question, consistent with every other question type in the bank.",
+      "questionsIncluded": ["draft26-u15-skate-001-q1", "draft26-u18-skate-002-q1"]
+    },
+    {
+      "briefId": "draft26-brief-u7-vocabulary",
+      "gapPlanId": "u7-rink-vocabulary-label",
+      "ageBands": ["U7"],
+      "objective": "Teach rink landmark vocabulary (blue line, faceoff circle, crease) using the existing 'choice' type, as a prerequisite for the rink-relative language the rest of the bank already assumes.",
+      "developmentalNote": "Pure identification, no tactical decision required. Intended as an on-ramp before U7's existing tactical-choice scenarios.",
+      "questionsIncluded": ["draft26-u7-vocab-001-q1", "draft26-u7-vocab-002-q1"]
+    },
+    {
+      "briefId": "draft26-brief-u9-receive-motion",
+      "gapPlanId": "u9-receive-on-the-move",
+      "ageBands": ["U9"],
+      "objective": "Freeze a receiver a moment before the puck arrives, with one open and one blocked route, using the existing 'choice' type -- extends the near/far-support pattern already used one age band up (U11) down into U9's receiving-specific framing.",
+      "developmentalNote": "Still a static freeze, consistent with every scene in the current bank ('movement and outcomes are not simulated'). The freeze is chosen to represent the moment just before reception, not after.",
+      "questionsIncluded": ["draft26-u9-receive-001-q1", "draft26-u9-receive-002-q1"]
+    },
+    {
+      "briefId": "draft26-brief-u11-cause-effect",
+      "gapPlanId": "u11-cause-and-effect-family",
+      "ageBands": ["U11"],
+      "objective": "Name and formalize a 'read-the-change' family at U11: each scene states one explicit hypothetical action by a named actor as the scene's PRIMARY objective, and asks what changes about the learner's best read -- distinct from the existing incidental 'Imagine' questions scattered through other families.",
+      "developmentalNote": "Directly responsive to START-HERE.md's suggestion to pilot a U11 cause-and-effect family. Uses 'choice' and 'explain' types, both already supported.",
+      "questionsIncluded": ["draft26-u11-cause-001-q1", "draft26-u11-cause-001-q2", "draft26-u11-cause-002-q1", "draft26-u11-cause-002-q2"]
+    }
+  ],
+  "questionDrafts": [
+    {
+      "questionId": "draft26-u15-skate-001-q1",
+      "scenarioId": "draft26-u15-skate-001",
+      "ageBand": "U15",
+      "type": "choice",
+      "briefId": "draft26-brief-skating-u15-u18",
+      "sceneSummary": "YOU carry the puck along the boards and execute a tight inside turn (edge-work cue) to escape a forechecker, opening two possible passing lanes to Gold1 and Gold2 as YOU come out of the turn.",
+      "illustrativeActors": {
+        "YOU": {"role": "puck carrier, mid-turn", "position": [-8, -30]},
+        "F1": {"role": "forechecker, committed wide before the turn", "position": [-14, -34]},
+        "Gold1": {"team": "home", "position": [-2, -15]},
+        "Gold2": {"team": "home", "position": [4, -32]}
+      },
+      "prompt": "YOU just used a tight inside edge to turn away from F1 along the boards. Which teammate does that turn open up?",
+      "options": ["Gold 1, now open through the middle", "Gold 2, still covered along the boards", "Neither, F1 recovers immediately"],
+      "correctAnswer": "Gold 1, now open through the middle",
+      "rationale": "The turn's whole tactical value is that it buys space away from F1's committed angle, toward the middle where Gold1 is positioned. Gold2 sits back in the direction F1 can still recover toward.",
+      "renderNotes": "Scene should render the turn as two sequential facing/position states or a single frozen mid-turn pose, whichever the scene schema's existing 'facing' field already supports -- needs confirming against schema before authoring for real."
+    },
+    {
+      "questionId": "draft26-u18-skate-002-q1",
+      "scenarioId": "draft26-u18-skate-002",
+      "ageBand": "U18",
+      "type": "choice",
+      "briefId": "draft26-brief-skating-u15-u18",
+      "sceneSummary": "YOU are defending and must pivot from backward to forward skating to close on an attacker (F1) who has just changed direction, while a second attacker (F2) trails behind.",
+      "illustrativeActors": {
+        "YOU": {"role": "defender, pivoting backward-to-forward", "position": [0, 10]},
+        "F1": {"role": "puck carrier, changed direction", "position": [6, 4]},
+        "F2": {"role": "trailing support", "position": [14, -2]}
+      },
+      "prompt": "YOU just pivoted from backward to forward skating to close on F1. What should that pivot be aimed at controlling?",
+      "options": ["F1's inside lane toward the net, since F1 has the puck", "F2's passing lane, since F2 is trailing", "Both equally, split the difference"],
+      "correctAnswer": "F1's inside lane toward the net, since F1 has the puck",
+      "rationale": "The pivot's purpose is to regain gap control on the immediate puck threat (F1), not to split attention toward a trailing, currently puck-less support option (F2).",
+      "renderNotes": "Backward-to-forward pivot cue needs a schema field or a two-state facing change; not confirmed to exist in the current scene schema."
+    },
+    {
+      "questionId": "draft26-u7-vocab-001-q1",
+      "scenarioId": "draft26-u7-vocab-001",
+      "ageBand": "U7",
+      "type": "choice",
+      "briefId": "draft26-brief-u7-vocabulary",
+      "sceneSummary": "A clean overhead rink view with the blue line and a faceoff circle both clearly rendered, no puck or tactical decision involved.",
+      "illustrativeActors": {},
+      "prompt": "Which line divides the rink into the attacking zone and the middle of the ice?",
+      "options": ["The blue line", "The boards", "The faceoff circle"],
+      "correctAnswer": "The blue line",
+      "rationale": "Pure landmark identification, using vocabulary the rest of the U7 band already assumes the learner knows.",
+      "renderNotes": "No actors needed; reuses the existing rink-outline rendering with no players placed."
+    },
+    {
+      "questionId": "draft26-u7-vocab-002-q1",
+      "scenarioId": "draft26-u7-vocab-002",
+      "ageBand": "U7",
+      "type": "position",
+      "briefId": "draft26-brief-u7-vocabulary",
+      "sceneSummary": "Same clean rink view; the learner is asked to identify a landmark using the position-selection interaction rather than multiple choice.",
+      "illustrativeActors": {},
+      "prompt": "Tap the faceoff circle closest to the net on the left side of the rink.",
+      "options": null,
+      "correctAnswer": "left-side faceoff circle nearest the net (specific target region defined by scene authoring, not by this draft)",
+      "rationale": "Tests the same vocabulary as draft26-u7-vocab-001-q1 through the app's existing tap/position interaction instead of multiple choice, giving two delivery styles for the same underlying concept.",
+      "renderNotes": "Needs confirming that the 'position' question type supports a landmark-region target rather than only an actor-position target -- flagged as needing an engineering check before authoring for real."
+    },
+    {
+      "questionId": "draft26-u9-receive-001-q1",
+      "scenarioId": "draft26-u9-receive-001",
+      "ageBand": "U9",
+      "type": "choice",
+      "briefId": "draft26-brief-u9-receive-motion",
+      "sceneSummary": "Gold1 is mid-stride, about to receive a pass from YOU. F1 covers Gold1's route toward the net; the route toward open ice away from F1 is clear.",
+      "illustrativeActors": {
+        "YOU": {"role": "passer", "position": [0, 0]},
+        "Gold1": {"role": "receiver, mid-stride", "position": [10, 3]},
+        "F1": {"role": "defender, covering the net-side route", "position": [13, 1]}
+      },
+      "prompt": "Gold1 is about to receive the puck. Which direction should Gold1 be ready to move it, based on where F1 is?",
+      "options": ["Away from F1, toward open ice", "Straight toward the net, through F1", "Back toward YOU"],
+      "correctAnswer": "Away from F1, toward open ice",
+      "rationale": "F1 has already committed to covering the net-side route, so the open space is away from F1, not through the defender.",
+      "renderNotes": "Freeze point should be the moment just before puck arrival, per the gap plan's stated intent -- needs a 'timing' or 'phase' field if the schema distinguishes pre- vs post-reception freezes; not confirmed to exist."
+    },
+    {
+      "questionId": "draft26-u9-receive-002-q1",
+      "scenarioId": "draft26-u9-receive-002",
+      "ageBand": "U9",
+      "type": "choice",
+      "briefId": "draft26-brief-u9-receive-motion",
+      "sceneSummary": "Gold2 is mid-stride approaching a loose puck with two possible next options once received: pass to Gold1 (open) or Gold3 (covered by F2).",
+      "illustrativeActors": {
+        "Gold1": {"role": "open support", "position": [-6, 8]},
+        "Gold2": {"role": "receiver, mid-stride, about to reach the puck", "position": [2, 2]},
+        "Gold3": {"role": "covered support", "position": [9, -3]},
+        "F2": {"role": "defender, tight to Gold3", "position": [9.5, -3.5]}
+      },
+      "prompt": "As Gold2 reaches the puck, who is the better next option?",
+      "options": ["Gold 1, who is open", "Gold 3, who is tightly covered by F2"],
+      "correctAnswer": "Gold 1, who is open",
+      "rationale": "Gold3 is marked tightly by F2; Gold1 has clear separation.",
+      "renderNotes": "Same freeze-timing caveat as draft26-u9-receive-001-q1."
+    },
+    {
+      "questionId": "draft26-u11-cause-001-q1",
+      "scenarioId": "draft26-u11-cause-001",
+      "ageBand": "U11",
+      "type": "choice",
+      "briefId": "draft26-brief-u11-cause-effect",
+      "sceneSummary": "Baseline freeze: YOU has the puck, Gold1 is the current best passing option, F1 is positioned well off Gold1's lane.",
+      "illustrativeActors": {
+        "YOU": {"role": "puck carrier", "position": [0, 0]},
+        "Gold1": {"role": "primary support", "position": [8, 5]},
+        "F1": {"role": "defender, currently off Gold1's lane", "position": [5, -4]}
+      },
+      "prompt": "Right now, who is YOU's best passing option?",
+      "options": ["Gold 1", "No one, hold the puck"],
+      "correctAnswer": "Gold 1",
+      "rationale": "Establishes the baseline read before the paired hypothetical question (draft26-u11-cause-001-q2) changes one condition.",
+      "renderNotes": "Baseline half of a two-question pair; both questions share one scene."
+    },
+    {
+      "questionId": "draft26-u11-cause-001-q2",
+      "scenarioId": "draft26-u11-cause-001",
+      "ageBand": "U11",
+      "type": "explain",
+      "briefId": "draft26-brief-u11-cause-effect",
+      "sceneSummary": "Same scene as draft26-u11-cause-001-q1. This question adds the explicit hypothetical: 'Suppose F1 slides two steps toward Gold1, cutting off that lane.'",
+      "illustrativeActors": {
+        "YOU": {"role": "puck carrier", "position": [0, 0]},
+        "Gold1": {"role": "primary support, now covered under the hypothetical", "position": [8, 5]},
+        "F1": {"role": "defender, hypothetically shifted", "position": [7, 3]}
+      },
+      "prompt": "Suppose F1 slides two steps toward Gold1 the moment before YOU passes, cutting off that lane. What should YOU do differently?",
+      "options": null,
+      "correctAnswer": "Free-text/explain response expected to identify that Gold1 is no longer the right target and name an alternative (hold, look for a second option, or delay) -- exact acceptable-answer set needs authoring against the 'explain' type's actual grading rubric, not assumed here.",
+      "rationale": "This is the family's defining move: state one explicit hypothetical change to a single actor, and require the learner to update their read rather than repeat the baseline answer.",
+      "renderNotes": "Needs confirming how the 'explain' type's grading/acceptable-answer mechanism works in the current engine before finalizing the accepted-answer list."
+    },
+    {
+      "questionId": "draft26-u11-cause-002-q1",
+      "scenarioId": "draft26-u11-cause-002",
+      "ageBand": "U11",
+      "type": "choice",
+      "briefId": "draft26-brief-u11-cause-effect",
+      "sceneSummary": "Baseline freeze: Gold1 carries the puck along the boards with a clear lane to the net; F1 trails behind, not yet in position to block.",
+      "illustrativeActors": {
+        "Gold1": {"role": "puck carrier", "position": [-6, -20]},
+        "F1": {"role": "trailing defender", "position": [-10, -24]}
+      },
+      "prompt": "Right now, does Gold1 have a clear lane to the net?",
+      "options": ["Yes", "No"],
+      "correctAnswer": "Yes",
+      "rationale": "Baseline half of the paired question (draft26-u11-cause-002-q2).",
+      "renderNotes": "Baseline half of a two-question pair; both share one scene."
+    },
+    {
+      "questionId": "draft26-u11-cause-002-q2",
+      "scenarioId": "draft26-u11-cause-002",
+      "ageBand": "U11",
+      "type": "choice",
+      "briefId": "draft26-brief-u11-cause-effect",
+      "sceneSummary": "Same scene as draft26-u11-cause-002-q1, with the added hypothetical: 'Suppose F1 catches up and steps directly into the lane.'",
+      "illustrativeActors": {
+        "Gold1": {"role": "puck carrier", "position": [-6, -20]},
+        "F1": {"role": "defender, hypothetically now in the lane", "position": [-7, -21]}
+      },
+      "prompt": "Suppose F1 catches up and steps directly into the lane Gold1 was using. What is Gold1's best option now?",
+      "options": ["Keep going through the same lane, since it worked a moment ago", "Look for a different lane or a teammate, since F1 has now closed it"],
+      "correctAnswer": "Look for a different lane or a teammate, since F1 has now closed it",
+      "rationale": "Directly tests whether the learner updates the read when told a specific condition changed, rather than defaulting to the previously correct answer -- the core skill this family targets.",
+      "renderNotes": "Same scene reused with a stated hypothetical shift, consistent with draft26-u11-cause-001's pair structure."
+    }
+  ],
+  "totalDraftCount": {"lessonBriefs": 4, "questionDrafts": 12},
+  "nextSteps": [
+    "A qualified reviewer (human coach or a session that passes calibration) re-checks every rationale above before any scene JSON is authored.",
+    "An engineer confirms which scene-schema fields actually exist (facing/phase/pivot cues, position-type region targets, explain-type grading) before coordinates are finalized -- several renderNotes above flag unconfirmed assumptions.",
+    "Once schema-confirmed, author real scene JSON in a NEW file (not touching any existing experimental-bank/experimental-expansion file), compute real content hashes, and run a fresh blind-then-key pass exactly like Work 1's methodology before any bank admission is considered.",
+    "None of this work edits, stages, or deploys anything to the live bank. Per the assignment's explicit boundary, that step is out of scope for this session."
+  ]
+}

@@ -57,7 +57,36 @@ test('question save requires an explicit explanation and action key when relevan
   assert.throws(() => saveCoachReference(question), /explanation/);
   assert.throws(() => createLearnerAttempt(question), /save|reference/i);
   assert.throws(() => saveCoachReference({ ...question, type: 'action', coachExplanation: 'Pass to the open teammate.' }), /action/);
-  assert.throws(() => submitLearnerAttempt(readyQuestion(), createLearnerAttempt(readyQuestion())), /reason/);
+  const actionQuestion = readyQuestion('action');
+  assert.throws(() => submitLearnerAttempt(actionQuestion, createLearnerAttempt(actionQuestion)), /Choose/);
+});
+
+test('learner explanations are optional while the actual choice and author explanation remain distinct', () => {
+  for (const type of ['position', 'action']) {
+    const question = readyQuestion(type);
+    const original = structuredClone(question);
+    const attempt = { ...createLearnerAttempt(question), action: type === 'action' ? 'pass' : null };
+    for (const reason of ['', '   ', 'I see space.']) {
+      const submitted = submitLearnerAttempt(question, { ...attempt, reason });
+      assert.equal(submitted.submitted, true);
+      const comparison = compareCoachAttempt(question, submitted);
+      assert.equal(comparison.learnerReason, reason);
+      assert.equal(comparison.coachExplanation, question.coachExplanation);
+      for (const key of ['score', 'correct', 'grade', 'passed']) assert.equal(key in comparison, false);
+    }
+    assert.deepEqual(question, original);
+    assert.equal(attempt.submitted, false);
+  }
+});
+
+test('optional learner notes still require strings and respect the 600 character boundary', () => {
+  const question = readyQuestion();
+  const attempt = createLearnerAttempt(question);
+  for (const reason of [null, undefined, 4, {}, 'x'.repeat(601)]) {
+    assert.throws(() => submitLearnerAttempt(question, { ...attempt, reason }), /learner reason/);
+    assert.throws(() => compareCoachAttempt(question, { ...attempt, submitted: true, reason }), /learner reason/);
+  }
+  assert.equal(submitLearnerAttempt(question, { ...attempt, reason: 'x'.repeat(600) }).reason.length, 600);
 });
 
 test('validated JSON rejects nonfinite positions, unknown actions, changed identities and uncontrolled reference edits', () => {

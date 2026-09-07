@@ -1,0 +1,10 @@
+.rr-icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.rr-glass { background: linear-gradient(145deg,#ffffff13,#ffffff04); border: 1px solid #ffffff29; box-shadow: inset 0 1px #ffffff29,0 8px 26px #0002; backdrop-filter: blur(18px) saturate(135%); -webkit-backdrop-filter: blur(18px) saturate(135%); }
+button.rr-glass { color: #f5efe6; cursor: pointer; transition: border-color .18s,background .18s,box-shadow .18s; }
+button.rr-glass:hover { border-color: #ecd18a80; background-color: #ffffff07; }
+.rr-bottom-nav { position: fixed; bottom: max(12px,env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(560px,calc(100% - 24px)); display: flex; gap: 4px; padding: 6px; border: 1px solid #ffffff29; border-radius: 23px; background: linear-gradient(155deg,#26394ee8,#0d1c32ed); box-shadow: inset 0 1px #ffffff24,0 14px 45px #0006; backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%); z-index: 100; }
+.rr-bottom-nav button { flex: 1; position: relative; min-width: 0; min-height: 56px; padding: 7px 3px; border: 1px solid transparent; border-radius: 17px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; background: transparent; color: #a9bacd; cursor: pointer; font: 550 10px/1.1 Inter,Arial,sans-serif; }
+.rr-bottom-nav button:hover { color: #f5efe6; background: #ffffff08; }
+.rr-bottom-nav button[aria-current=page] { background: linear-gradient(150deg,#e6c57425,#bd8e3410); border-color: #e4c77e66; color: #f1d99f; box-shadow: inset 0 1px #ffe7ae47,0 3px 12px #0002; }
+.rr-nav-lock { position: absolute; top: 5px; right: 8px; color: #d9bc77; }
+@media (max-width:360px) { .rr-bottom-nav { width: calc(100% - 14px); gap: 1px; padding: 4px; } }

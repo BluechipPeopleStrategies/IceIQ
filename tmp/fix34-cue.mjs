@@ -1,0 +1,1 @@
+import fs from 'node:fs';import {load,finish} from './packet-root-builder.mjs';const c=load(34),p=JSON.parse(fs.readFileSync('docs/factory/research/question-review/packet-34/proposed-repairs.json'));c.scenes=c.scenes.map(s=>p.packets[0].scenarios.find(r=>r.scenarioId===s.id)?.replacement||s);for(const s of c.scenes)if(!s.cues.length)s.cues=[s.briefing];finish(c,{});

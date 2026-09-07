@@ -1,0 +1,4 @@
+import fs from 'node:fs';import sharp from 'sharp';
+const dir='tmp/packets-production-release/docs/factory/research/question-review/net-overlap-repairs';
+const ids=JSON.parse(fs.readFileSync(dir+'/receipt.json')).changes.map(s=>s.sceneId);
+for(const kind of ['desktop','phone']){const w=600,h=500,layers=[];for(let i=0;i<ids.length;i++){layers.push({input:await sharp(`${dir}/captures/${ids[i]}-${kind}.png`).resize(w-12,h-32,{fit:'contain',background:'#0b1827'}).png().toBuffer(),left:i%3*w+6,top:Math.floor(i/3)*h+30});layers.push({input:Buffer.from(`<svg width="600" height="28"><text x="8" y="20" fill="white" font-family="Arial" font-size="18">${ids[i]}</text></svg>`),left:i%3*w,top:Math.floor(i/3)*h});}await sharp({create:{width:w*3,height:h*3,channels:3,background:'#0b1827'}}).composite(layers).png().toFile(`${dir}/${kind}-sheet.png`);}

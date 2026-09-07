@@ -1,0 +1,114 @@
+{
+  "id": "gvis_u11_decision-making_tufb_mc_b",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "themes": [
+    "decision-making",
+    "pass-selection",
+    "vision",
+    "offensive-zone"
+  ],
+  "cat": "Offensive Zone",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "tag": "YOU",
+      "x": 0.93,
+      "y": 0.7
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.932,
+      "y": 0.698
+    },
+    {
+      "id": "slot_lw",
+      "kind": "teammate",
+      "tag": "LW",
+      "x": 0.8,
+      "y": 0.4
+    },
+    {
+      "id": "wall_rw",
+      "kind": "teammate",
+      "tag": "RW",
+      "x": 0.88,
+      "y": 0.27
+    },
+    {
+      "id": "ld",
+      "kind": "teammate",
+      "tag": "LD",
+      "x": 0.65,
+      "y": 0.22
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.87,
+      "y": 0.33
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.65,
+      "y": 0.28
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You have the puck in the corner. One defender is crashing the wall, another is clogging the point lane. Tap the open teammate to pass to.",
+    "from": [
+      "slot_lw",
+      "wall_rw",
+      "ld"
+    ],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": [
+      "slot_lw"
+    ]
+  },
+  "mc": {
+    "opts": [
+      "Pass to the LW in the slot",
+      "Pass up the wall to the RW",
+      "Send it back to the LD at the point",
+      "Hold the corner and protect the puck"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "X1 loaded up on the wall, cutting off the RW but leaving the LW free in the slot. A quick pass there puts your team in a dangerous scoring position.",
+    "wrong": "X1 is sitting right in the wall lane — the RW isn't open. X2 is shading the point, so the LD is covered too. The LW has stepped into the slot behind X1 with no defender in sight."
+  },
+  "tip": "When a defender cheats to the boards, they're handing you the slot. Find the teammate sneaking into the space they just gave up.",
+  "why": "X1 closing hard on the wall vacates the slot entirely. At U11, the key read is noticing which zone a defender just left — not just where the puck can travel.",
+  "read": {
+    "cue": "X1 has stepped toward the wall lane, leaving the slot unguarded behind them",
+    "decoy": {
+      "x": 0.88,
+      "y": 0.27
+    }
+  },
+  "stemId": "gvis_u11_decision-making_tufb",
+  "nodeId": "u11.decision-making",
+  "levels": [
+    "U11 / Atom"
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "scenariosOwned": ["exp26b-u11-008"],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q1",
+      "baseContentHash": "b58fe5c68b09023613d39be4567494177bf066db9ee779b23b39e4d91c160ec5",
+      "verdict": "retain",
+      "reason": "Independently recomputed with the real questionContentHash/scenarioSnapshotHash helpers: base hash and the scenario snapshot hash both match the manifest exactly, confirming this is the already-applied second-round repair (u11-actor-repairs.json) and not stale. Recomputed the actor geometry directly: Navy (home) attacks +x; YOU (h1) is at (-8,-4), D1 (a1, the only away/Gold actor) at (-2,2), F2 (h2, home) at (1,-8). The carried puck (makeScene formula x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing), facing=0) resolves to (-7,-3.3). Distance puck->D1 = 7.29m, puck->F2 = 9.28m, so D1 is genuinely nearer to YOU/the puck than F2 (and is the only opponent, so trivially the 'nearest'). D1.x=-2 and F2.x=1 are both ahead of YOU (x=-8) on the +x attack, and F2.x=1 > D1.x=-2, so F2 is genuinely farther toward the +x end where Gold defends ('Gold's net') than D1. Both distractors (a guaranteed future race outcome, a guaranteed next pass) describe things a static freeze frame cannot show, and the explanation says so explicitly rather than inventing certainty. This is a well-repaired basis:scene question; I found no residual defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home/Navy) carries the puck at (-8,-4), facing 0 rad (+x).",
+          "D1 (a1, away/Gold) stands at (-2,2), facing approx -2.7 rad; D1 is the only opponent actor in this scene.",
+          "F2 (h2, home/Navy) stands at (1,-8), facing 0.2 rad.",
+          "Carried-puck render position (verified via the real carry formula) is (-7,-3.3), on ice.",
+          "Numerically, D1 (-2,2) is 7.29m from the carried puck and F2 (1,-8) is 9.28m from it; F2's x=1 is farther in the +x attacking direction than D1's x=-2."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. YOU has the puck in the neutral zone; D1 is ahead and inside, while F2 is wide ahead.'",
+          "Scenario limits explicitly disclaim timing, execution, possession outcome or a universal system."
+        ],
+        "unproven": [
+          "Whether D1 would actually win a future race to a loose puck (no puck is currently loose; possession is intact).",
+          "Whether F2 will receive a pass at all.",
+          "Any skating speed, reaction time or gap-closing ability implied by facing angles alone."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q2",
+      "baseContentHash": "248fb61aa335b66a52d1a05eda7e4820d6bd49f531ff824e8dd3cdf1078a2706",
+      "verdict": "retain",
+      "reason": "Multi-select answer [a,b] identifies the forward lane staying open and D1's ability to close from inside as the two cues that should change a carry decision; distractor c ('F2 is wide so the carry must continue') is an absolute generalization the explanation directly rejects ('F2 is an option, not a command'), matching the calibration lesson against turning a defensible alternative into a forced key while also not letting an absolute distractor slip through. Checked option parallelism: two options open with 'Whether...' and the third is a declarative clause; this is a stylistic asymmetry, not a comprehension or correctness problem, and rewriting it would not fix any actual defect (calibration lesson 5: do not turn a small wording issue into an unsupported change). Hash and geometry (D1 at (-2,2) genuinely able to close from inside toward YOU's lane; F2 genuinely wide at y=-8) both verified.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-2,2) is the only defender able to pressure the carry from the inside lane.",
+          "F2 (h2) sits wide at (1,-8), a separate route from YOU's lane."
+        ],
+        "stated": [
+          "Briefing: the rep includes a stated small-area rule (one controlled touch before deciding whether to continue the carry)."
+        ],
+        "unproven": [
+          "Whether the forward lane will actually stay open past the next touch.",
+          "Whether D1 will actually close; only D1's current position and the stated cue are given, not a guaranteed movement."
+        ]
+      },
+      "alternative": "If the forward lane is already crowded by a teammate or the boards even though D1 has not moved, protecting the puck rather than continuing the carry can also be defensible; the two named cues (lane openness, D1's ability to close) still govern that call rather than F2's position alone.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q3",
+      "baseContentHash": "485cbc81b4acecaabf8bf0de4114e083b2a8786b2baa91ca7b4b7aedfb2362ed",
+      "verdict": "retain",
+      "reason": "Sequence order (check the lane and D1 -> take the controlled touch -> re-read F2 and the next lane) is tied to the scene's own explicitly stated small-area rule (one controlled touch before deciding), not an invented universal 'look-decide-execute' order the calibration doc warns against. The mandated touch is a real, stated checkpoint in the briefing, so reading before it and re-reading after it is a defensible reason for a sequence format rather than a forced artificial one. Answer covers all three options exactly once, matching the sequence contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (only opponent) and F2 (only teammate other than YOU) are the two actors relevant to the scan."
+        ],
+        "stated": [
+          "Briefing explicitly states the small-area rule: 'take one controlled touch before deciding whether to continue the carry.' This is the concrete reason the touch sits in the middle of the sequence rather than being an invented step."
+        ],
+        "unproven": [
+          "Whether scanning and moving overlap in real time is not shown by a static scene; the sequence models one defensible order around the stated touch, not a claim about continuous real-time gaze."
+        ]
+      },
+      "alternative": "A player who scans continuously through the touch rather than in three discrete steps is not wrong; this sequence illustrates one clean way to use the mandated controlled touch, not the only acceptable scan pattern.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q4",
+      "baseContentHash": "32bc79c2601c04da299e6d5deb4695890e43c5309363ac0c84ffe06abf0a632a",
+      "verdict": "retain",
+      "reason": "Position question targets actorId h1, which is genuinely the actor labeled YOU (positionSubjectIssue check returns null), satisfying the prompt's 'Move YOU' subject. Reference (-4,-4.5) is on ice (isCoachRoutePoint true), moves +4m in the +x attacking direction from YOU's start (-8,-4) consistent with 'forward lane', and does not sit on top of D1 (-2,2) (6.8m away) or literally on F2's own route (1,-8). I checked whether the reference is farther from F2 than YOU's start point and found it is actually closer (6.10m vs 9.85m at the start) -- per calibration lesson 4 ('a short move can open an angle... do not invent a universal minimum movement distance'; actor-centre collinearity/closeness alone is a warning, not proof of a blocked or invalid example), a coaching-basis illustrative point is not required to maximize raw distance from a teammate, only to represent a distinct, on-ice forward lane that does not converge on F2's actual route -- which it does not (different x and y). No defect found; basis is correctly coaching, not scene.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) starts at (-8,-4); reference example point is (-4,-4.5), 4.03m away and on ice.",
+          "F2 (h2) is at (1,-8); D1 (a1) is at (-2,2). The reference point is 6.10m from F2's actual position and 6.80m from D1's, so it does not overlap either actor's spot."
+        ],
+        "stated": [],
+        "unproven": [
+          "Whether this exact point is the only or best forward lane; the question and explanation both frame it as one example, not an exclusive correct target."
+        ]
+      },
+      "alternative": "A different forward-lane point closer to centre ice or nearer the boards would equally satisfy 'leaves room from F2' as long as it advances toward +x and does not converge on F2's actual route; this reference is one illustrative example, not the only correct target.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q5",
+      "baseContentHash": "c19dbe7967364d39ad230a4d6f95846f1068df33650a33b47d1b73ad6e807f83",
+      "verdict": "retain",
+      "reason": "Question explicitly introduces a hypothetical change ('D1 turns and reaches the wide lane') rather than asserting it as an already-visible fact, matching the contract's requirement that hypothetical changes be explicitly stated. Answer 'a' (protect or use F2 if that lane remains reachable) is conditional, not a guaranteed outcome; distractor b describes acting on stale information (the first lane, which the hypothetical says has since closed) and distractor c is a believable but passive/unhelpful youth habit (freezing up rather than reassessing), not an absurd giveaway. Feedback ties directly to the changed cue ('D1 has changed the lane') without asserting certainty about which specific response is correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Current freeze: D1 at (-2,2), F2 at (1,-8) -- the 'wide lane' referenced is F2's side of the ice."
+        ],
+        "stated": [
+          "Question explicitly frames D1 reaching the wide lane as a hypothetical change ('D1 turns and reaches the wide lane before your next touch'), not something shown in the static scene."
+        ],
+        "unproven": [
+          "Whether F2's lane remains reachable after the hypothetical is left conditional ('if that lane remains reachable'), not asserted."
+        ]
+      },
+      "alternative": "If F2's lane is also no longer reachable in this hypothetical, protecting the puck along the boards until support arrives is an equally defensible response; the key condition is that the original wide lane has closed, not one fixed follow-up action.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-008",
+      "questionId": "exp26b-u11-008-q6",
+      "baseContentHash": "2d251dfd1312562387ba05ab758cc02dd0f4e6da43bef917c1cc64c9bb3f7577",
+      "verdict": "retain",
+      "reason": "Explain-type reflection with no options or answer key (matches the contract: explain has no options/answer, ungraded, optional). Prompt asks the player to reason about a hypothetical D1 movement not shown in the current freeze, which is appropriate for a coaching-basis reflection and does not assert a single correct trigger.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-2,2) is the only defender whose movement is relevant to this reflection."
+        ],
+        "stated": [
+          "Explanation frames this as an ungraded discussion prompt ('Explain where F2 or a protected touch could replace the carry'), consistent with the no-answer-key contract for explain questions."
+        ],
+        "unproven": [
+          "No specific D1 movement is shown; the question is explicitly hypothetical."
+        ]
+      },
+      "alternative": "D1 stepping up to pressure the puck directly (not just closing the lane laterally) is another movement that should trigger the same stop-and-reassess response; there is no single correct trigger for this reflection.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    }
+  ],
+  "repairs": [],
+  "sourceChecks": [
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+      "checkedAt": "2026-09-05T22:43:00Z",
+      "access": "read",
+      "scope": "A plain fetch returned HTTP 403; a retry with a standard browser User-Agent header returned HTTP 200 and the full article. Confirmed the page contains a 'Building Skills Through Progression' section (stationary puck-handling -> moving -> adding teammates/game scenarios) and an 'Incorporating Vision & Scanning' section (reading the play, assessing defender positions, identifying open ice) exactly as named in sources.json/curriculum-coverage.json for this scenario. The article states puck control 'should be taught and reinforced at all age levels,' so it makes no age-specific claim that could conflict with U11, and it supports the general coaching principle only -- the scene's exact coordinates, decision cues and answer choices remain original, non-source-certified content, per the source's own 'use' note.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages (article states puck control should be taught/reinforced at every age level; not U11-specific)",
+      "claim": "Puck carriers should build handling/decision skill progressively and use scanning to read defender positions and open ice space before deciding whether to continue a carry."
+    }
+  ]
+}

@@ -1,0 +1,1521 @@
+{
+  "scenariosOwned": [
+    "exp26-u13-005",
+    "exp26-u13-006"
+  ],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q1",
+      "baseContentHash": "337011a625270b70cbbb274e8f53625d92b827eef680dc1525859f59927a97a9",
+      "verdict": "retain",
+      "reason": "Puck ownership is directly readable from setup.puck (owner:null) and matches the briefing's stated 'possession is not established.' Answer (b) is the only option consistent with that fact; (a) and (c) both assert a specific owner the setup contradicts. No roster, geometry, age or grammar issue found on independent re-check.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "setup.puck = {owner:null, x:-22, y:7}, confirmed on ice (isCoachRoutePoint) via Node this session.",
+          "D1 (home-skater-2) at (-23,8); A1/Gold 1 at (-20,7) -- both within ~1.4-2m of the puck, consistent with 'a bouncing loose puck' contested by both."
+        ],
+        "stated": [
+          "Briefing: 'possession is not established.'"
+        ],
+        "unproven": [
+          "Which team's next touch actually secures the puck -- this is a static freeze, not an animated outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q2",
+      "baseContentHash": "6160ddba5042a14328cea1722d960713081546d073b677bcbd211c4a3206e8f0",
+      "verdict": "retain",
+      "reason": "Checked A2/Gold 2's position (-17,-4) against the AUTHORING-CONTRACT blue-line constant (x=-7.62 on Navy's defended side): -17 is well inside that line, i.e. genuinely 'inside the zone,' confirming option (c). Option (a) (Gold 1 can contest) matches the stated 1-2m proximity to the puck computed above. Option (b) is a correctly-rejected absolute ('every loose puck will become a breakout'), consistent with the contract's ban on guaranteed-outcome distractors.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "A2/Gold 2 at (-17,-4); Navy's defended blue line at x=-7.62 (AUTHORING-CONTRACT.md) -- (-17) is 9.38m inside it, computed this session.",
+          "A1/Gold 1 at (-20,7), 2.0m from the puck (-22,7)."
+        ],
+        "stated": [
+          "Briefing: Gold 1 'is close enough to contest the next touch.'"
+        ],
+        "unproven": [
+          "Whether Gold 2 will actually join the play if D1 wins the puck."
+        ]
+      },
+      "alternative": "A coach could instead frame the second reason as 'the net-front area would be uncovered,' since YOU is the only defender left there; both that framing and the scene's own 'Gold 2 remains inside the zone' land on the same underlying point (a second live threat still exists) and are equally defensible.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q3",
+      "baseContentHash": "c75766bbb0fe543bdeb8d5f3ae8daeb02424a177be79eae5e75298dcdd710dfb",
+      "verdict": "retain",
+      "reason": "Historical review (historical-checks.json id teaching-exp26-u13-005-q3, P3) flagged that the three listed checks can overlap in time rather than being a strict timeline. On independent re-read, the question's own explanation already states this directly ('Checks can overlap; the important point is not assuming a win'), which is the same resolution the calibration packet adopted for the analogous U13-010 q3 case (calibration-adjudication.md: 'Explain that watching, moving and offering the stick overlap. The coaching response is not an objectively scored timeline'). No further change needed; retaining as an explicitly-scoped, non-rigid ordering.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck loose at (-22,7); D1 and Gold 1 both within ~2m of it; Gold 2 inside the defended zone at (-17,-4)."
+        ],
+        "stated": [
+          "Briefing establishes the contested-touch situation these three checks respond to."
+        ],
+        "unproven": [
+          "A fixed order in which a real player would perform these checks -- the explanation itself disclaims one."
+        ]
+      },
+      "alternative": "Checking the remaining net-front threat before confirming who controls the puck is an equally defensible order; the sequence's own explanation already treats the three checks as overlapping rather than strictly ordered.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q4",
+      "baseContentHash": "26e4d545f6c5156f00bfc6408eccb7352fb8163c152df29ebb52c3b0b73c3b00",
+      "verdict": "retain",
+      "reason": "Reference point (-21,1) computed 3.16m from YOU's start (-22,-2), clears the 0.1m minimum-move rule, and isCoachRoutePoint confirms it is on ice (Node-verified this session). Distance from Navy's own net front (-25.76,0, derived from rinkAnchors.js netFrontRight mirrored to Navy's defended end) is 4.87m, close enough to remain a 'net-side' example while shifting toward the puck-side (y=+1) for an outlet angle, matching the stated teaching purpose. Basis is correctly 'coaching' (position questions cannot claim scene/objective grading per experimentalBankCore.js validation), and the explanation correctly disclaims exclusivity ('Multiple positions are defensible').",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU start (-22,-2); reference (-21,1); move distance 3.16m (Node-computed, hypot).",
+          "Own net front approx (-25.76,0), derived by mirroring rinkAnchors.js netFrontRight into metres this session."
+        ],
+        "stated": [
+          "Briefing: YOU is 'the other defender near the front of your net.'"
+        ],
+        "unproven": [
+          "Whether this specific point beats every other nearby net-side point -- explanation already disclaims a single correct dot."
+        ]
+      },
+      "alternative": "A narrower adjustment, e.g. turning to see both D1 and Gold 2 from close to the original spot without shifting toward y=+1, is an equally defensible response if YOU judges the outlet angle is not yet needed.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q5",
+      "baseContentHash": "342d598cc24a021f8ad3bd9b101c5f9aa6e62df9f4d04f7dd42d3464c5fbfd7e",
+      "verdict": "retain",
+      "reason": "This question explicitly introduces its own hypothetical change ('D1 now controls the puck and Gold 1 skates past'), which is the required way to add a condition beyond the frozen setup (AUTHORING-CONTRACT.md). Given that stated change, option (c) (reassess whether to widen into an outlet) is the coaching-defensible answer; (a) contradicts the stated new fact (control is no longer contested) and (b) invents an unstated disappearance of Gold 2. Explanation correctly keeps Gold 2 an open, unresolved cue rather than asserting it is safe.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Original puck loose at (-22,7); A2/Gold 2 at (-17,-4) remains present in the setup regardless of this hypothetical."
+        ],
+        "stated": [
+          "Question's own hypothetical: 'D1 now controls the puck and Gold 1 skates past.'"
+        ],
+        "unproven": [
+          "Where Gold 2 moves once D1 controls the puck -- the scene is static and this hypothetical does not say."
+        ]
+      },
+      "alternative": "A coach could instead have YOU check Gold 2's position immediately rather than widen first, if Gold 2 is judged the more live threat; both reads are defensible depending on which cue the coach wants emphasized.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q6",
+      "baseContentHash": "142a831002afae685c2a0255cfe115b45432dfb2637267a329f6f02d122b0d1b",
+      "verdict": "retain",
+      "reason": "Reflection question, coaching basis, no answer key, consistent with the AUTHORING-CONTRACT reflection rules (no writing requirement, no scoring). Explanation gives a real, checkable model answer (controlled possession + a usable next option) rather than accepting mere proximity to the puck as sufficient, matching the 'reject false certainty' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 beside the loose puck at (-22,7); no owner assigned in setup."
+        ],
+        "stated": [
+          "Briefing frames this as a contested, unresolved touch."
+        ],
+        "unproven": [
+          "What D1 will actually do once/if control is secured."
+        ]
+      },
+      "alternative": "A player could also cite a completed give-and-go or a clear verbal call from D1 as the visible marker of a breakout opportunity, not only clean stick control.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q7",
+      "baseContentHash": "610d0b38d4977e2fe37d046e01571345bd9e4ad3e96a016c2424d983db4143bb",
+      "verdict": "repair",
+      "reason": "Answer content is correct (possession of a loose, unowned puck is genuinely unknown at this freeze; D1's jersey colour and the net location are both already established facts, so (a) is the only defensible answer) and roster/geometry/age/sources all check out. However, the explanation contains a subject-verb agreement defect on YOU: 'if D1 controls it, YOU supports breakout' should be 'YOU support' (the assignment names YOU subject-verb agreement as the single most recurring defect class; AUTHORING-CONTRACT.md requires 'YOU have/are' base-verb agreement). Grammar fails; verdict is repair with a minimal explanation-only fix (see repairs[]).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "setup.puck = {owner:null,...}, confirmed via Node this session.",
+          "D1 (home team) is Navy by roster/team field, so 'jersey colour' is already an established, not unknown, fact.",
+          "Navy net location is fixed by the scenario's own coordinate frame, not unknown."
+        ],
+        "stated": [
+          "Briefing states possession is not established."
+        ],
+        "unproven": [
+          "Which team's next touch resolves the contest."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q8",
+      "baseContentHash": "6e9f0b6a39dfbce20d39fb0b339f9f995775583e492fb1a8426ced869bcb0cee",
+      "verdict": "retain",
+      "reason": "Cross-checked against historical-checks.json (id u13-p2-dummy-distractors) and the repair receipt in repairs/u13-repairs.json: the prior 'guaranteed bounce direction' wrong-option was already replaced with 'Tell D1 the puck is theirs before the contest is settled' (afterContentHash 6e9f0b6a...), and this packet's baseContentHash for q8 matches that after-hash exactly (confirmed by direct hash computation this session), so the fix is already live and current. On independent re-read: (a) and (b) are the two scene-grounded communication cues (pressure distance, lane status); (c) is a real, credible failure mode (premature possession call) rather than an absurd distractor, matching the contract's 'credible distractors' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (A1) 2.0m from the puck; D1 1.4m from the puck, both computed this session."
+        ],
+        "stated": [
+          "Briefing: possession not established."
+        ],
+        "unproven": [
+          "Whether the puck actually bounces to either player -- correctly left open by this option set."
+        ]
+      },
+      "alternative": "A coach could also accept 'stay quiet and let D1 read it alone' as a defensible call in a game with less communication emphasis, but within this drill's explicit teaching purpose (partner communication), (a)/(b) remain the clearer answer.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q9",
+      "baseContentHash": "ae50b5fcb7847d526cb79368580e825c5b2e799ebfdbc000eb7765670ea428b3",
+      "verdict": "retain",
+      "reason": "Reference (-20,-1) computed 2.24m from YOU's start (-22,-2), clears the minimum-move rule, and is confirmed on ice. Distance from own net front (-25.76,0) is 5.85m versus Gold 1's (A1, -20,7) 9.07m from the same net front, so YOU's new position is genuinely closer to the net than Gold 1 -- a defensible reading of 'keeping the net between you and Gold 1' as net-side positioning (matching the curriculum's defensive-side-positioning concept: 'staying between your check and the net'), even though YOU and Gold 1 share the same x-coordinate and are not on a literal straight line through the net. Flagging this loose phrasing as a noted, non-blocking ambiguity rather than a defect, consistent with the contract's 'a position question ... is not an exclusive correct dot' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU start (-22,-2) -> reference (-20,-1), distance 2.24m.",
+          "Own net front ~(-25.76,0); YOU-to-net 5.85m vs Gold 1(-20,7)-to-net 9.07m -- all computed this session via Node."
+        ],
+        "stated": [
+          "Briefing: YOU is the other defender near the front of the net."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually attacks toward this exact lane if D1 loses the puck."
+        ]
+      },
+      "alternative": "Staying at the original spot but simply turning to track both D1 and Gold 1, without shifting position, is an equally defensible response if YOU judges the current net-side angle is already adequate.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-005",
+      "questionId": "exp26-u13-005-q10",
+      "baseContentHash": "7fc6a0e640b8fa96591911d5b8d1131e8f2d227ad1b2bccd820376769ed07199",
+      "verdict": "retain",
+      "reason": "Reflection question, coaching basis, no answer key, consistent with reflection rules. Explanation gives a checkable model answer (clear stick control changing the job to outlet/spacing) and correctly conditions the alternative ('if the puck remains loose, keep the net-side lane protected') rather than asserting one outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 beside the loose puck; no owner assigned."
+        ],
+        "stated": [
+          "Briefing frames YOU's job as net-side partner support while possession is unresolved."
+        ],
+        "unproven": [
+          "The exact moment control is judged 'clear' in a live game -- inherently a judgment call, correctly left open."
+        ]
+      },
+      "alternative": "A player could also cite D1 communicating readiness to move the puck (e.g. calling for support) as the trigger, not only visible stick control.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q1",
+      "baseContentHash": "041526c618fbb8bb588f0b13ffb4bc550f586e7d3c684849edd1486da5ad8439",
+      "verdict": "retain",
+      "reason": "The 'F2' role name is explicitly assigned to YOU in the scenario's own briefing ('YOU are F2 at nearly the same depth as F1; the coach has asked F2 to offer deeper middle support'), not inferred from a system name -- confirmed correct per AUTHORING-CONTRACT ('check every named player against the actual roster ... unless present or explicitly introduced as a hypothetical'). Ran questionActorWarnings() this session: it flags 'F2' as not a displayed actor label, which is the expected/benign case here since F2 is an explicitly-introduced role designation for YOU, not a missing or wrong-player error. Answer (a) is directly stated; (b)/(c) both contradict the briefing.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU/home-skater-1 (2,6), D1 (-9,-2) owns puck, F1 (4,9), Gold 1 (-1,4), Gold 2 (8,-4)."
+        ],
+        "stated": [
+          "Briefing explicitly assigns YOU the role 'F2' and the task 'offer deeper middle support.'"
+        ],
+        "unproven": [
+          "Any system-wide meaning of 'F2' beyond this one drill's role assignment."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q2",
+      "baseContentHash": "65affcbb416e606354dce9467900576b1e48751460e07239ba5bcdd63e7b8986",
+      "verdict": "retain",
+      "reason": "F1 is at (4,9), high/wide near the boards; a 'deeper middle' option for YOU (F2) genuinely requires both a more central y and a position closer to Navy's own net (smaller x) than F1's, matching (b)/(c). Option (a) ('matching F1's exact position') is correctly rejected -- it is the literal opposite of the stated coaching assignment.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (4,9); YOU start (2,6)."
+        ],
+        "stated": [
+          "Briefing: F2's role is 'deeper middle support', distinct from F1's height."
+        ],
+        "unproven": [
+          "The exact degree of depth/centrality a real coach would demand."
+        ]
+      },
+      "alternative": "A coach could instead ask for more width away from F1's lane rather than more central depth, but the briefing specifically calls for depth ('deeper middle'), making (b)/(c) the clearer scene-grounded pair.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q3",
+      "baseContentHash": "ba375a60e459d6de1aaca888163562c65439a37342e9aaa856b1c581bd26eecb",
+      "verdict": "retain",
+      "reason": "Historical review (historical-checks.json id teaching-exp26-u13-006-q3, P3) flagged the three steps as overlapping/conditional rather than strictly ordered. The question's own explanation already states this ('The support routine is flexible and should respond to the puck'), the same resolution adopted for the analogous U13-010 q3 case in calibration-adjudication.md. Retaining as an explicitly non-rigid routine.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 owns the puck at (-9,-2); F1 high at (4,9)."
+        ],
+        "stated": [
+          "Briefing assigns YOU the deeper-middle-support role."
+        ],
+        "unproven": [
+          "A fixed real-time order for noticing F1, offering the target, and adjusting -- explanation disclaims one."
+        ]
+      },
+      "alternative": "Offering the middle target before fully confirming F1's exact height is also defensible if D1 already needs an option immediately.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q4",
+      "baseContentHash": "9a65f3f106b2acf119347d2c207b0573471dbfee17582053e75d77839c453a34",
+      "verdict": "retain",
+      "reason": "Reference (-4,0) computed 8.49m from YOU's start (2,6), clears the minimum-move rule, and is confirmed on ice. It is genuinely deeper (x=-4 < F1's x=4, i.e. closer to Navy's own net) and genuinely more central (y=0, versus F1's y=9 near the boards and D1's y=-2), matching the stated 'deeper middle support' objective and giving D1 a real, different-height passing option. Explanation correctly hedges that Gold 1 must still be checked before treating it as an open lane.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU start (2,6) -> reference (-4,0), distance 8.49m.",
+          "F1 at (4,9): reference is both lower in x and closer to y=0 than F1, confirmed this session."
+        ],
+        "stated": [
+          "Briefing: coach asked F2 for deeper middle support."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 actually closes this exact lane -- correctly left conditional."
+        ]
+      },
+      "alternative": "A shallower point such as (0,2) would also satisfy 'deeper and more central than F1' without moving as far, and remains an equally defensible example.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q5",
+      "baseContentHash": "900de842f94aa9fc6aa6270a166c7c38d042c937dd32a99a61ff56659f8597af",
+      "verdict": "retain",
+      "reason": "Question explicitly introduces its own hypothetical ('Gold 1 moves directly onto your new lane'), the required way to add a condition beyond the frozen setup. Given that stated change, (b) (re-create the option or help clear F1's route) is coaching-defensible; (a) contradicts the assigned role by abandoning the deeper option, and (c) asserts a guaranteed outcome the contract disallows ('demand the same pass regardless').",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1/A1 original position (-1,4)."
+        ],
+        "stated": [
+          "Question's own hypothetical: Gold 1 moves onto the new lane."
+        ],
+        "unproven": [
+          "Exactly where Gold 1 moves to -- the hypothetical states the effect (blocks the lane), not a new coordinate."
+        ]
+      },
+      "alternative": "Holding the current spot briefly to see whether D1 has a different read first, before changing the angle again, is also a defensible first response.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q6",
+      "baseContentHash": "831f34da01192153900c86593879f17da82566c93005f1f4ef124338f172ee2f",
+      "verdict": "retain",
+      "reason": "Reflection question, coaching basis, no answer key. Explanation correctly conditions the claim on defenders ('Spacing depends on defenders, not just symmetry') rather than asserting same-height support is always bad, consistent with the 'avoid tactical absolutes' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (4,9); YOU start (2,6), a different height already in the base setup."
+        ],
+        "stated": [
+          "Briefing assigns YOU a deeper role than F1."
+        ],
+        "unproven": [
+          "How a specific opposing defence would actually cover two same-height forwards."
+        ]
+      },
+      "alternative": "A coach could instead stress that same-height support only becomes a problem when a single defender can reach both forwards; symmetry alone is not automatically bad.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q7",
+      "baseContentHash": "6430b0e861b283e2a0be4b65a5f6a5812fd3ad6f24d2635f101100bd3730fe88",
+      "verdict": "retain",
+      "reason": "Cross-checked against historical-checks.json (id u13-p2-repeat-q7-targets) and repairs/u13-repairs.json: the original q7 ('What did the coach ask YOU to provide?') repeated q1's own target and was already replaced with this communication-call question (afterContentHash 6430b0e8...), and this packet's baseContentHash for q7 matches that after-hash exactly (direct hash computation this session), so the fix is already live. On independent re-read, 'Middle support below F1' is the correct call given the assigned role; the two wrong options either abandon the role or falsely claim an unearned opening.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (4,9); D1 owns the puck at (-9,-2)."
+        ],
+        "stated": [
+          "Briefing assigns YOU (F2) the deeper-middle-support role."
+        ],
+        "unproven": [
+          "Whether Gold 1 is actually about to close that lane at this exact instant."
+        ]
+      },
+      "alternative": "Calling D1 by name directly ('D1, I'm low') is an equally valid communication style, provided the deeper-middle information is still conveyed.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q8",
+      "baseContentHash": "7e885bf529962229e5cf7fa8b01ae62c6614281dd08732570f478354734f461b",
+      "verdict": "retain",
+      "reason": "F1's high/wide position (4,9) and D1's stated need for a different passing height are both directly supported by the setup and briefing, matching (a)/(b). Option (c) ('YOU and F1 should overlap') is correctly rejected -- it contradicts the scenario's own explicit teaching point in q6/q10 that matching height removes separation.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (4,9), near the boards side (bounds maxY=12.954)."
+        ],
+        "stated": [
+          "Briefing: coach specifically asked for a DIFFERENT (deeper) option than F1's."
+        ],
+        "unproven": [
+          "Whether D1 will actually use the deeper option this rep, versus the direct up pass to F1."
+        ]
+      },
+      "alternative": "A coach could also cite Gold 1's coverage angle as a relevant fact, though it isn't offered as a choice here; among the given options, (a)/(b) are the clearer fit.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q9",
+      "baseContentHash": "e088982e7d74259366739054cf6ab9d5af88886360bd060f83bf5d1d23eba5e3",
+      "verdict": "repair",
+      "reason": "GEOMETRY/ANSWER-EVIDENCE DEFECT, computed this session. The reference point {x:1,y:9} shares F1's exact y-coordinate (F1 is at (4,9), a fixed setup fact) -- i.e. the keyed 'middle support pocket' example is at the SAME height as F1, not a different one. This directly contradicts the scenario's own explicit teaching claim in q6 and q10 ('two players at the same height make D1's job/reset harder ... allowing one defender to cover both') and contradicts this question's own explanation, which asserts the point 'separates YOU from F1' -- a claim the y=9/y=9 coincidence does not support. The x-value (1 < F1's 4) is correctly deeper, but depth alone without a height difference does not satisfy 'middle support' as taught elsewhere in this same scenario. Repaired by moving the reference to {x:1,y:3}: keeps the same x (still deeper than F1), still clears the 0.1m minimum-move rule (3.16m from YOU's start), stays on ice, and now genuinely differs in height from F1 (|3-9|=6m), matching the explanation's existing claim without needing to reword it.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 fixed at (4,9). Original reference (1,9): identical y to F1, computed this session.",
+          "YOU start (2,6); distance to (1,9) was 3.16m (valid move), but the resulting point does not separate height from F1."
+        ],
+        "stated": [
+          "Briefing + q6/q10 explanations both establish that same-height support is the specific problem this scenario teaches."
+        ],
+        "unproven": [
+          "Whether a real defender would actually be able to cover both YOU and F1 at literally the same height -- the scenario asserts this as its teaching point rather than proving it with physics, which this review accepts as the stated coaching claim, not an invented one."
+        ]
+      },
+      "alternative": "A slightly different central point, e.g. (0,4) or (-1,2), would work equally well as the 'middle support pocket' provided it stays clearly deeper than F1 in x and clearly different in y from F1's height; the corrected (1,3) is one defensible example among several, not an exclusive target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "questionId": "exp26-u13-006-q10",
+      "baseContentHash": "04d3c1641a03528a349726d979b800913bd45fcf063186657571bb7d04355838",
+      "verdict": "retain",
+      "reason": "Reflection question, coaching basis, no answer key. Explanation correctly conditions the claim ('if one lane closes, the other can remain') rather than asserting a guaranteed outcome, and is consistent with (and reinforces, rather than contradicts) the corrected q9 geometry.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 at (4,9); YOU base position (2,6) already a different height in the untouched setup."
+        ],
+        "stated": [
+          "Briefing + q6 establish the same-height problem this question reflects on."
+        ],
+        "unproven": [
+          "How a specific real defence would actually respond -- correctly left as a reflection, not a graded claim."
+        ]
+      },
+      "alternative": "A player could also point to communication (a missed 'I'm here' call) rather than pure geometry as the reason a defender covers both, and that is an equally defensible reflection answer.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u13-005",
+      "baseVersion": 1,
+      "baseScenarioHash": "314243078a005b8de0f9f5bf53777c5ea1551614573f6ec4ed7614efc2decb9e",
+      "replacement": {
+        "id": "exp26-u13-005",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Support a partner with a bouncing puck",
+        "family": "defensive-partner-support",
+        "topic": "defensive partner support",
+        "objective": "Read possession quality before leaving a defensive support position.",
+        "briefing": "D1 is beside a bouncing loose puck. Gold 1 is close enough to contest the next touch. YOU are the other defender near the front of your net; possession is not established. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -2,
+              "facing": 1.5707963267948966
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": 8,
+              "facing": -0.7853981633974483
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -20,
+              "y": 7,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "home-skater-3",
+              "label": "C",
+              "team": "home",
+              "role": "skater",
+              "x": -13,
+              "y": 2,
+              "facing": 2.6344941491974563
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -17,
+              "y": -4,
+              "facing": 1.9974238199217726
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -22,
+            "y": 7
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The puck has no owner in this setup, matching the stated contested touch.",
+          "D1 is beside a bouncing loose puck. Gold 1 is close enough to contest the next touch. YOU are the other defender near the front of your net; possession is not established."
+        ],
+        "tags": [
+          "defensive-partner-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 13, Breakouts: possession quality",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-005-q1",
+            "type": "choice",
+            "prompt": "Is the puck currently assigned to either team?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Yes, YOU own it"
+              },
+              {
+                "id": "b",
+                "text": "No, it is shown loose"
+              },
+              {
+                "id": "c",
+                "text": "Yes, D1 owns it"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The puck has no owner in this setup, matching the stated contested touch.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-005-q2",
+            "type": "multi",
+            "prompt": "Choose two reasons to avoid leaving too early.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 can contest the puck"
+              },
+              {
+                "id": "b",
+                "text": "Every loose puck will become a breakout"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2 remains inside the zone"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Possession and remaining threats matter. A partner’s proximity is not proof of control.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-005-q3",
+            "type": "sequence",
+            "prompt": "Arrange a cautious support read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check who controls the puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the remaining threat near the net"
+              },
+              {
+                "id": "c",
+                "text": "Move to support the outcome you actually see"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Checks can overlap; the important point is not assuming a win."
+          },
+          {
+            "id": "exp26-u13-005-q4",
+            "type": "position",
+            "prompt": "Move YOU to balance net-side support with a possible outlet angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -21,
+              "y": 1
+            },
+            "basis": "coaching",
+            "explanation": "A modest change can offer support while remaining between an inside attacker and the net. Multiple positions are defensible."
+          },
+          {
+            "id": "exp26-u13-005-q5",
+            "type": "choice",
+            "prompt": "D1 now controls the puck and Gold 1 skates past. What can you reassess?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether a loose-puck battle still exists unchanged"
+              },
+              {
+                "id": "b",
+                "text": "Whether Gold 2 has disappeared from the play"
+              },
+              {
+                "id": "c",
+                "text": "Whether to widen into a clear outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "Secure control may permit a wider support position, but Gold 2 still needs to be read.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-005-q6",
+            "type": "explain",
+            "prompt": "What visible sign would tell you this situation has become a breakout opportunity?",
+            "basis": "coaching",
+            "explanation": "Describe controlled possession and a usable next option, rather than simply seeing D1 near the puck."
+          },
+          {
+            "type": "choice",
+            "prompt": "What remains unknown at this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Which team will control the bouncing puck"
+              },
+              {
+                "id": "b",
+                "text": "D1’s jersey colour"
+              },
+              {
+                "id": "c",
+                "text": "Where the Navy net is"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The puck has no owner, so possession is unresolved; if D1 controls it, YOU support breakout, while Gold control starts a defensive read.",
+            "id": "exp26-u13-005-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues should YOU communicate to D1?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 is close to the next touch"
+              },
+              {
+                "id": "b",
+                "text": "The net-side support lane is covered or open"
+              },
+              {
+                "id": "c",
+                "text": "Tell D1 the puck is theirs before the contest is settled"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure distance and inside support tell D1 whether to protect or move it; the bounce direction is not guaranteed.",
+            "id": "exp26-u13-005-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU slightly inside to support D1 while keeping the net between you and Gold 1.",
+            "basis": "coaching",
+            "explanation": "The inside support spot protects the net and leaves D1 the puck-side route; if Gold 1 wins it, step to the new carrier.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -20,
+              "y": -1
+            },
+            "id": "exp26-u13-005-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "What visible sign would change your job from partner support to breakout support?",
+            "basis": "coaching",
+            "explanation": "Clear control on D1’s stick changes the task from contest coverage to outlet and spacing; if the puck remains loose, keep the net-side lane protected.",
+            "id": "exp26-u13-005-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-005-q7"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-005-q7"
+          ],
+          "issue": "Subject-verb agreement defect on YOU in the explanation: 'if D1 controls it, YOU supports breakout' uses the third-person-singular verb form with YOU. This is the assignment's named single most recurring defect class.",
+          "change": "Corrected 'YOU supports breakout' to 'YOU support breakout' in the explanation. No other field (prompt, options, answer, basis) changed.",
+          "evidence": "questionContentHash before=610d0b38d4977e2fe37d046e01571345bd9e4ad3e96a016c2424d983db4143bb, after=578d73e97218edd9642adc97f44c364bd03e73f214b3f92684100f01e524f02c (computed via docs/factory/claude-project/validation/tools/question-batch-core.mjs questionContentHash, Node-verified this session). The other nine questions' recomputed hashes against the replacement are byte-identical to the packet's baseContentHash values, confirming no unintended change and no key-order drift."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-005-q1",
+            "contentHash": "337011a625270b70cbbb274e8f53625d92b827eef680dc1525859f59927a97a9",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q2",
+            "contentHash": "6160ddba5042a14328cea1722d960713081546d073b677bcbd211c4a3206e8f0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q3",
+            "contentHash": "c75766bbb0fe543bdeb8d5f3ae8daeb02424a177be79eae5e75298dcdd710dfb",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q4",
+            "contentHash": "26e4d545f6c5156f00bfc6408eccb7352fb8163c152df29ebb52c3b0b73c3b00",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q5",
+            "contentHash": "342d598cc24a021f8ad3bd9b101c5f9aa6e62df9f4d04f7dd42d3464c5fbfd7e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q6",
+            "contentHash": "142a831002afae685c2a0255cfe115b45432dfb2637267a329f6f02d122b0d1b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q7",
+            "contentHash": "578d73e97218edd9642adc97f44c364bd03e73f214b3f92684100f01e524f02c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: explanation verb corrected to 'YOU support breakout'. Answer, options, prompt and all other fields unchanged and re-verified against the scene (loose puck, unowned)."
+          },
+          {
+            "questionId": "exp26-u13-005-q8",
+            "contentHash": "6e9f0b6a39dfbce20d39fb0b339f9f995775583e492fb1a8426ced869bcb0cee",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q9",
+            "contentHash": "ae50b5fcb7847d526cb79368580e825c5b2e799ebfdbc000eb7765670ea428b3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-005-q10",
+            "contentHash": "7fc6a0e640b8fa96591911d5b8d1131e8f2d227ad1b2bccd820376769ed07199",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q7 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u13-006",
+      "baseVersion": 1,
+      "baseScenarioHash": "518fab6f9893b3e4117b5628bb27c2a9ea4043a191913586c55ca2c84b96c3a5",
+      "replacement": {
+        "id": "exp26-u13-006",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Make room beneath the regroup",
+        "family": "neutral-zone-middle-support",
+        "topic": "neutral zone middle support",
+        "objective": "Provide a deeper middle option during a neutral-zone reset.",
+        "briefing": "D1 holds a neutral-zone reset. F1 is high along the side boards. YOU are F2 at nearly the same depth as F1; the coach has asked F2 to offer deeper middle support. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 2,
+              "y": 6,
+              "facing": -2.5127963671743605
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -9,
+              "y": -2,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 4,
+              "y": 9,
+              "facing": -2.439335722080786
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -1,
+              "y": 4,
+              "facing": -2.498091544796509
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 8,
+              "y": -4,
+              "facing": 3.024483909022929
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The role is stated in the briefing and is not inferred from a system name.",
+          "D1 holds a neutral-zone reset. F1 is high along the side boards. YOU are F2 at nearly the same depth as F1; the coach has asked F2 to offer deeper middle support."
+        ],
+        "tags": [
+          "neutral-zone-middle-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-practice-2020",
+            "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+            "section": "Printed page 2, NZ Up — 2 on 1",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Adapted down from the U15/U18 drill to a slower U13 support read; no original diagram is copied. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-006-q1",
+            "type": "choice",
+            "prompt": "Which supporting role does the coach give F2?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Deeper middle support"
+              },
+              {
+                "id": "b",
+                "text": "A stationary spot beside F1"
+              },
+              {
+                "id": "c",
+                "text": "A rush directly to the far net"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The role is stated in the briefing and is not inferred from a system name.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-006-q2",
+            "type": "multi",
+            "prompt": "What two features could make F2’s option different from F1’s?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Matching F1’s exact position"
+              },
+              {
+                "id": "b",
+                "text": "A more central angle"
+              },
+              {
+                "id": "c",
+                "text": "A position closer to Navy’s net"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "Different depth and angle can create another choice; a defender may still close it.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-006-q3",
+            "type": "sequence",
+            "prompt": "Arrange a possible regroup support routine.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice F1’s high position"
+              },
+              {
+                "id": "b",
+                "text": "Offer a deeper middle target"
+              },
+              {
+                "id": "c",
+                "text": "Adjust as D1 chooses a route"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The support routine is flexible and should respond to the puck."
+          },
+          {
+            "id": "exp26-u13-006-q4",
+            "type": "position",
+            "prompt": "Move YOU into a deeper middle support example.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -4,
+              "y": 0
+            },
+            "basis": "coaching",
+            "explanation": "This location gives D1 a different depth from F1. Check Gold 1 before treating it as a passing lane."
+          },
+          {
+            "id": "exp26-u13-006-q5",
+            "type": "choice",
+            "prompt": "Gold 1 moves directly onto your new lane. What might you do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Rush beside F1 and remove the deeper option"
+              },
+              {
+                "id": "b",
+                "text": "Change the angle again or help clear F1’s route"
+              },
+              {
+                "id": "c",
+                "text": "Demand the same pass regardless"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "An option should be re-created when the marker moves.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-006-q6",
+            "type": "explain",
+            "prompt": "Why can two forwards at the same height make D1’s job harder?",
+            "basis": "coaching",
+            "explanation": "They may be covered by similar pressure and leave no release toward their own net. Spacing depends on defenders, not just symmetry."
+          },
+          {
+            "type": "choice",
+            "prompt": "What should YOU call before dropping below F1?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Middle support below F1"
+              },
+              {
+                "id": "b",
+                "text": "I will match F1’s height"
+              },
+              {
+                "id": "c",
+                "text": "The far net is open"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call names the deeper middle support the coach assigned, giving D1 a different height to see; if Gold 1 closes that lane, call the next connected angle.",
+            "id": "exp26-u13-006-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two facts make a deeper route useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 is already high on the boards"
+              },
+              {
+                "id": "b",
+                "text": "D1 needs a different passing height"
+              },
+              {
+                "id": "c",
+                "text": "YOU and F1 should overlap"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "F1’s high position and D1’s need for a different lane make the deeper route useful; overlap removes the separation.",
+            "id": "exp26-u13-006-q8"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU below F1 into the coach-assigned middle support pocket.",
+            "basis": "coaching",
+            "explanation": "The lower-middle spot separates YOU from F1 and gives D1 a safer connection; if Gold 1 follows, preserve the lane behind the pressure.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 1,
+              "y": 3
+            },
+            "id": "exp26-u13-006-q9"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why can two players at the same height make D1’s reset harder?",
+            "basis": "coaching",
+            "explanation": "They present one predictable line, allowing one defender to cover both, while different heights create a forward and backward choice; if one lane closes, the other can remain.",
+            "id": "exp26-u13-006-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-006-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-006-q9"
+          ],
+          "issue": "Geometry/answer-evidence defect: the position reference {x:1,y:9} shares F1's exact y-coordinate (F1 fixed at (4,9)), so the keyed 'middle support pocket' example does not actually differ in height from F1 -- contradicting this same scenario's own explicit teaching claim in q6/q10 that same-height support lets one defender cover both players, and contradicting this question's own explanation, which asserts the point 'separates YOU from F1'.",
+          "change": "Changed the reference from {x:1,y:9} to {x:1,y:3}: keeps x=1 (still deeper/closer to Navy's own net than F1's x=4), still clears the 0.1m minimum-move rule (3.16m from YOU's start at (2,6)), remains on ice, and now genuinely differs in height from F1 by 6m, matching the explanation's existing claim without needing to reword it.",
+          "evidence": "questionContentHash before=e088982e7d74259366739054cf6ab9d5af88886360bd060f83bf5d1d23eba5e3, after=9abb7ebb9796449499f4cb1e9b713e67ea20b0f822eda10fe165fbf100bef3a7 (computed via question-batch-core.mjs questionContentHash, Node-verified this session). isCoachRoutePoint({x:1,y:3}) = true; distance from YOU's start (2,6) = 3.16m; |3-9| = 6m height separation from F1, all computed this session. The other nine questions' recomputed hashes against the replacement are byte-identical to the packet's baseContentHash values."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-006-q1",
+            "contentHash": "041526c618fbb8bb588f0b13ffb4bc550f586e7d3c684849edd1486da5ad8439",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q2",
+            "contentHash": "65affcbb416e606354dce9467900576b1e48751460e07239ba5bcdd63e7b8986",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q3",
+            "contentHash": "ba375a60e459d6de1aaca888163562c65439a37342e9aaa856b1c581bd26eecb",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q4",
+            "contentHash": "9a65f3f106b2acf119347d2c207b0573471dbfee17582053e75d77839c453a34",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q5",
+            "contentHash": "900de842f94aa9fc6aa6270a166c7c38d042c937dd32a99a61ff56659f8597af",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q6",
+            "contentHash": "831f34da01192153900c86593879f17da82566c93005f1f4ef124338f172ee2f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q7",
+            "contentHash": "6430b0e861b283e2a0be4b65a5f6a5812fd3ad6f24d2635f101100bd3730fe88",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q8",
+            "contentHash": "7e885bf529962229e5cf7fa8b01ae62c6614281dd08732570f478354734f461b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          },
+          {
+            "questionId": "exp26-u13-006-q9",
+            "contentHash": "9abb7ebb9796449499f4cb1e9b713e67ea20b0f822eda10fe165fbf100bef3a7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-checked against the version-2 replacement: reference point corrected to (1,3), now genuinely 6m different in height from F1 (4,9), matching the explanation's existing 'separates YOU from F1' claim and no longer contradicting q6/q10's same-height teaching point. On ice, clears the minimum-move rule."
+          },
+          {
+            "questionId": "exp26-u13-006-q10",
+            "contentHash": "04d3c1641a03528a349726d979b800913bd45fcf063186657571bb7d04355838",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Byte-identical to the version-1 question (confirmed via direct object comparison this session); recomputed contentHash against the version-2 scene matches the original baseContentHash exactly, since only q9 and the scenario version changed. All seven checks re-verified against the replacement content, not assumed."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T15:00:00Z",
+      "access": "read",
+      "scope": "Read directly (WebFetch's text extraction failed on this image-heavy PDF, so the saved binary was read with the Read tool's PDF page-range mode, pages 12-14). Page 13 ('Breakouts') states: 'Read puck possession quality when supporting your D partner. Good decision from net front to creating an open passing lane.' This directly supports exp26-u13-005's objective ('Read possession quality before leaving a defensive support position'). The document does not carry an explicit U13 age label in the pages read; it reads as a general defenceman-development resource, not age-certified for U13 specifically -- exp26-u13-005's own 'limits' field already discloses this as original synthesis, not source-certified for the exact coordinates or outcomes.",
+      "jurisdiction": "Canadian (Hockey Canada)",
+      "ageFormat": "General/development resource, not age-banded in the pages checked; used here as a principle source for a U13 adaptation, consistent with the scenario's own limits disclosure.",
+      "claim": "Supports 'read possession quality before leaving a defensive support position' as a real, stated Hockey Canada coaching principle; does not certify the specific coordinates, wording or outcomes in exp26-u13-005."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+      "checkedAt": "2026-09-06T15:00:00Z",
+      "access": "read",
+      "scope": "Read directly (WebFetch's text extraction failed; the saved binary was read with the Read tool's PDF page-range mode, pages 1-3). Page 2, 'NZ Up - 2 on 1' drill, states: 'F2 provides middle support to D1 and low support, with speed, to F1... Key Teaching Points: D move your feet. F2 get over to provide middle support below F1.' This is a direct, on-point match for exp26-u13-006's objective (F2 offering deeper middle support below F1 during a neutral-zone regroup). The document is explicitly titled 'U15 / U18 Practice Plan' / 'High Performance Program', i.e. an older-age, high-performance resource -- NOT a U13 source. exp26-u13-006's own 'limits' field already discloses this honestly ('Adapted down from the U15/U18 drill to a slower U13 support read; no original diagram is copied'), so the scenario does not overclaim U13 certification for this source.",
+      "jurisdiction": "Canadian (Hockey Canada High Performance Program)",
+      "ageFormat": "U15/U18 High Performance -- explicitly an older-age source, adapted down to U13 with that adaptation disclosed in the scenario's own limits field, not presented as U13-validated.",
+      "claim": "Supports the 'F2 offers deeper middle support below F1' neutral-zone-regroup concept as a genuine Hockey Canada drill; the U13 adaptation (slower tempo, no original diagram copied) is the scenario's own synthesis, not source-certified for U13."
+    }
+  ],
+  "remainingQuestionIds": []
+}

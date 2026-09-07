@@ -1,0 +1,1455 @@
+{
+  "reviewer": "second independent lane / GPT-5.6 Luna",
+  "reviewKind": "AI coaching review",
+  "reviewedAt": "2026-09-05",
+  "fileHashes": {
+    "docs/factory/research/2026-09-05-critical-coaching-review-rubric.md": "c45b7c0b134c70b40a3c807c64b7d420e370626c29a03d7e5b9ea4425eeb9404",
+    "docs/factory/research/question-review/young-first.json": "525a9cb0e3c402f56de40ea6b5f65504809fe74367c5722c1f83788974aed5e7",
+    "docs/factory/research/question-review/middle-first.json": "95be9322173d15373e5383d6892c15178dcde4bd1a3107ad580cade1e185959a",
+    "docs/factory/research/question-review/older-first.json": "07be360828cc8fe213546aa69e817c195f8f5cd9baffa21e9cee25977a3c2ad6",
+    "src/one-on-one/experimentalBankCore.js": "e6d93aa5dd529c4ca77ba2386599bfa2511bdcb6658971d5e14fcaad800166dc",
+    "src/one-on-one/experimental-bank/u9.json": "0cfe46ca0a3e183c9d2ca445864654b7e8bd9d41819d081d3e142c76756f046b",
+    "src/one-on-one/experimental-bank/u11.json": "464c5da2259f4eeaa0a3144841fdc275dfaa6b5ffcbb0e279f0b39a104041a0f",
+    "src/one-on-one/experimental-bank/u13.json": "ade5ccf2eec37a3df72e0bbdb4eabcfc0ab078417d1bf9d8d691df9ab5c134d5",
+    "src/one-on-one/experimental-bank/u15.json": "8548ac1238386e7ae09243a0a1ff9fdbf179c7a1ba0b776fa77027e7d28ffaa4",
+    "src/one-on-one/experimental-bank/u18.json": "62648eab345059d2728930e187753016dda209979839cce602d3f6fd19b26923"
+  },
+  "coverageCounts": {
+    "requiredQuestions": 127,
+    "flagged": 83,
+    "highRisk": 53,
+    "passed": 44
+  },
+  "coverage": [
+    {
+      "questionId": "exp26-u9-006-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u9-010-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-010-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-010-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u9-010-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-010-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-010-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "backward-skating technique and safety; static freeze cannot validate execution",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-013-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-013-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-013-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u9-013-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-013-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-013-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "U9 half-ice change and possession rules are jurisdiction/model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-014-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-014-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-014-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u9-014-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-014-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u9-014-q6",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "goalie-freeze restart and retreat rule are model dependent",
+      "findingIds": [
+        "second-003"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-001-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-002-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-003-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-004-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-005-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-006-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-006-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-006-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-006-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-006-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-006-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-007-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-008-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-009-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-010-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-011-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-012-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-013-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-014-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-015-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-016-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-017-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-018-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-019-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-020-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-021-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-022-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-022-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-022-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-022-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-022-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-022-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Faceoff aftermath and contest responsibilities can vary by competition and local rules; the stem explicitly says no violation is assessed.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-023-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-024-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-024-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-024-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u11-024-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-024-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-024-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Blue-line reset is adjacent to offside/timing rules; this drill explicitly limits the claim.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u11-025-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-001-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-002-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-003-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-004-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-005-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-006-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-007-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-008-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-009-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-010-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-011-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-012-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-013-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-014-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-014-q5",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-004"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-015-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-016-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-017-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-018-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u13-018-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u13-018-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-018-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u13-018-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u13-018-q6",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Rebound/covered-puck decisions depend on goalie control and stoppage context; static setup cannot certify timing or technique.",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u13-019-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-020-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-021-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-022-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-023-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-024-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u13-025-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-001-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-002-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-002-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-003-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-003-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-004-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-004-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-005-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-006-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-007-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-008-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-009-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-010-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-010-q5",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-005"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-011-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-011-q2",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-011-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-011-q4",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-011-q5",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u15-012-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-013-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-013-q5",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-005"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-014-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u15-015-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-001-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-002-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-003-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u18-003-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-004-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u18-004-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-005-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-006-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-007-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-008-q1",
+      "scenarioVersion": 1,
+      "status": "pass",
+      "highRisk": true,
+      "riskReason": "Special-teams, faceoff or goalie-outlet context requires second review",
+      "findingIds": []
+    },
+    {
+      "questionId": "exp26-u18-008-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-009-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    },
+    {
+      "questionId": "exp26-u18-010-q3",
+      "scenarioVersion": 1,
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "second-001"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "second-001",
+      "adjudication": "revised",
+      "severity": "P2",
+      "questionIds": [
+        "exp26-u9-006-q3",
+        "exp26-u9-010-q3",
+        "exp26-u9-013-q3",
+        "exp26-u9-014-q3",
+        "exp26-u11-001-q3",
+        "exp26-u11-002-q3",
+        "exp26-u11-003-q3",
+        "exp26-u11-004-q3",
+        "exp26-u11-005-q3",
+        "exp26-u11-006-q3",
+        "exp26-u11-007-q3",
+        "exp26-u11-008-q3",
+        "exp26-u11-009-q3",
+        "exp26-u11-010-q3",
+        "exp26-u11-011-q3",
+        "exp26-u11-012-q3",
+        "exp26-u11-013-q3",
+        "exp26-u11-014-q3",
+        "exp26-u11-015-q3",
+        "exp26-u11-016-q3",
+        "exp26-u11-017-q3",
+        "exp26-u11-018-q3",
+        "exp26-u11-019-q3",
+        "exp26-u11-020-q3",
+        "exp26-u11-021-q3",
+        "exp26-u11-022-q3",
+        "exp26-u11-023-q3",
+        "exp26-u11-024-q3",
+        "exp26-u11-025-q3",
+        "exp26-u13-001-q3",
+        "exp26-u13-002-q3",
+        "exp26-u13-003-q3",
+        "exp26-u13-004-q3",
+        "exp26-u13-005-q3",
+        "exp26-u13-006-q3",
+        "exp26-u13-007-q3",
+        "exp26-u13-008-q3",
+        "exp26-u13-009-q3",
+        "exp26-u13-010-q3",
+        "exp26-u13-011-q3",
+        "exp26-u13-012-q3",
+        "exp26-u13-013-q3",
+        "exp26-u13-014-q3",
+        "exp26-u13-015-q3",
+        "exp26-u13-016-q3",
+        "exp26-u13-017-q3",
+        "exp26-u13-018-q3",
+        "exp26-u13-019-q3",
+        "exp26-u13-020-q3",
+        "exp26-u13-021-q3",
+        "exp26-u13-022-q3",
+        "exp26-u13-023-q3",
+        "exp26-u13-024-q3",
+        "exp26-u13-025-q3",
+        "exp26-u15-001-q3",
+        "exp26-u15-002-q3",
+        "exp26-u15-003-q3",
+        "exp26-u15-004-q3",
+        "exp26-u15-005-q3",
+        "exp26-u15-006-q3",
+        "exp26-u15-007-q3",
+        "exp26-u15-008-q3",
+        "exp26-u15-009-q3",
+        "exp26-u15-010-q3",
+        "exp26-u15-011-q3",
+        "exp26-u15-012-q3",
+        "exp26-u15-013-q3",
+        "exp26-u15-014-q3",
+        "exp26-u15-015-q3",
+        "exp26-u18-001-q3",
+        "exp26-u18-002-q3",
+        "exp26-u18-003-q3",
+        "exp26-u18-004-q3",
+        "exp26-u18-005-q3",
+        "exp26-u18-006-q3",
+        "exp26-u18-007-q3",
+        "exp26-u18-008-q3",
+        "exp26-u18-009-q3",
+        "exp26-u18-010-q3"
+      ],
+      "scenarioIds": [
+        "exp26-u9-006",
+        "exp26-u9-010",
+        "exp26-u9-013",
+        "exp26-u9-014",
+        "exp26-u11-001",
+        "exp26-u11-002",
+        "exp26-u11-003",
+        "exp26-u11-004",
+        "exp26-u11-005",
+        "exp26-u11-006",
+        "exp26-u11-007",
+        "exp26-u11-008",
+        "exp26-u11-009",
+        "exp26-u11-010",
+        "exp26-u11-011",
+        "exp26-u11-012",
+        "exp26-u11-013",
+        "exp26-u11-014",
+        "exp26-u11-015",
+        "exp26-u11-016",
+        "exp26-u11-017",
+        "exp26-u11-018",
+        "exp26-u11-019",
+        "exp26-u11-020",
+        "exp26-u11-021",
+        "exp26-u11-022",
+        "exp26-u11-023",
+        "exp26-u11-024",
+        "exp26-u11-025",
+        "exp26-u13-001",
+        "exp26-u13-002",
+        "exp26-u13-003",
+        "exp26-u13-004",
+        "exp26-u13-005",
+        "exp26-u13-006",
+        "exp26-u13-007",
+        "exp26-u13-008",
+        "exp26-u13-009",
+        "exp26-u13-010",
+        "exp26-u13-011",
+        "exp26-u13-012",
+        "exp26-u13-013",
+        "exp26-u13-014",
+        "exp26-u13-015",
+        "exp26-u13-016",
+        "exp26-u13-017",
+        "exp26-u13-018",
+        "exp26-u13-019",
+        "exp26-u13-020",
+        "exp26-u13-021",
+        "exp26-u13-022",
+        "exp26-u13-023",
+        "exp26-u13-024",
+        "exp26-u13-025",
+        "exp26-u15-001",
+        "exp26-u15-002",
+        "exp26-u15-003",
+        "exp26-u15-004",
+        "exp26-u15-005",
+        "exp26-u15-006",
+        "exp26-u15-007",
+        "exp26-u15-008",
+        "exp26-u15-009",
+        "exp26-u15-010",
+        "exp26-u15-011",
+        "exp26-u15-012",
+        "exp26-u15-013",
+        "exp26-u15-014",
+        "exp26-u15-015",
+        "exp26-u18-001",
+        "exp26-u18-002",
+        "exp26-u18-003",
+        "exp26-u18-004",
+        "exp26-u18-005",
+        "exp26-u18-006",
+        "exp26-u18-007",
+        "exp26-u18-008",
+        "exp26-u18-009",
+        "exp26-u18-010"
+      ],
+      "category": "teaching",
+      "issue": "The first reviews correctly identify a repeated scan/act/recheck sequence pattern, but their claim that the app scores or enforces a mandatory A-to-B-to-C order is incorrect. These are coaching-basis questions, so reviewResponse returns matched:null; the initial question order is shuffled; option ids a/b/c are internal storage and the UI presents shuffled option text. The repeated three-slot interaction still weakens six-question variety and can imply a rigid learning routine where scanning, movement, reception and communication overlap.",
+      "evidence": "Every reviewed q3 answer is [a,b,c]. Examples: exp26-u9-006-q3, exp26-u11-006-q3, exp26-u15-001-q3, exp26-u18-009-q3. Explanations call the order suggested/conditional. experimentalBankCore.js scores only basis=scene; coaching returns matched:null.",
+      "recommendedChange": "Retain sequence only when ordering is the teaching target. Convert repeated tactical q3 slots to scenario-specific branch, multi-select or explanation prompts; where retained, label the list a discussion scaffold and allow overlapping actions or defensible alternatives.",
+      "sourceUrls": []
+    },
+    {
+      "id": "second-002",
+      "adjudication": "rejected",
+      "severity": "P2",
+      "questionIds": [
+        "exp26-u9-010-q4"
+      ],
+      "scenarioIds": [
+        "exp26-u9-010"
+      ],
+      "category": "teaching",
+      "issue": "The first-review concern treats a static position illustration as an unsafe backward-skating prescription. That overstates what this question claims.",
+      "evidence": "The prompt asks for another practice position while facing play; the explanation says it is not a universal gap and does not prove the skate feasible. The basis is coaching and the scenario says the picture is a freeze, not a moving trace.",
+      "recommendedChange": "No bank change required. If later used as an on-ice drill, a coach supplies movement and stop cues; do not encode the coordinate as a skating score.",
+      "sourceUrls": []
+    },
+    {
+      "id": "second-003",
+      "adjudication": "accepted",
+      "severity": "P2",
+      "questionIds": [
+        "exp26-u9-014-q6"
+      ],
+      "scenarioIds": [
+        "exp26-u9-014"
+      ],
+      "category": "rules",
+      "issue": "The rule teaching is materially correct, but “charging straight at Gold1” is unnecessarily contact-coded and the explanation should name the model’s retreat distance.",
+      "evidence": "Current Hockey Canada U9 half-ice guidance says a goalie freeze gives the defending team possession and attackers back off three metres. The prompt uses charging language and the explanation omits the three-metre cue.",
+      "recommendedChange": "Use “skating into Gold1’s space before the official allows play” and state the three-metre retreat/no-bodychecking context for this named U9 model.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9/associations/seasonal-structure"
+      ]
+    },
+    {
+      "id": "second-004",
+      "adjudication": "accepted",
+      "severity": "P2",
+      "questionIds": [
+        "exp26-u13-014-q5"
+      ],
+      "scenarioIds": [
+        "exp26-u13-014"
+      ],
+      "category": "ambiguity",
+      "issue": "The single-choice key is not unique: if C recovers alongside Gold1, both the assumption that you are completely alone and which threat C can help cover should be updated.",
+      "evidence": "Option a says “The assumption that you are completely alone”; option c says “Which threat C can help cover”; answer is [c]. The new C recovery changes both propositions.",
+      "recommendedChange": "Rewrite option a as a false action (“Keep treating yourself as completely alone”) or ask specifically which threat C can help cover.",
+      "sourceUrls": []
+    },
+    {
+      "id": "second-005",
+      "adjudication": "accepted",
+      "severity": "P2",
+      "questionIds": [
+        "exp26-u15-010-q5",
+        "exp26-u15-013-q5"
+      ],
+      "scenarioIds": [
+        "exp26-u15-010",
+        "exp26-u15-013"
+      ],
+      "category": "ambiguity",
+      "issue": "The first-review ambiguity finding is confirmed. Each single-choice item has two materially true updates.",
+      "evidence": "u15-010-q5: F1 moving away invalidates both changed traffic/passing options (a) and the same-screen assumption (b). u15-013-q5: Gold2 moving onto C’s outlet invalidates both the next passing option (a) and the assumption C is still free (b).",
+      "recommendedChange": "Make each item multi-select, combine overlapping options, or rewrite one distractor to test a distinct error.",
+      "sourceUrls": []
+    }
+  ],
+  "limits": [
+    "Read complete scenario fields and all six questions for every required ID from u9/u11/u13/u15/u18; no browser rendering was certified.",
+    "Static setups cannot prove skating speed, timing, future possession, offside status or execution success; this was applied only where it affected a claim, not as generic rejection of static positioning prompts.",
+    "U9 official receipt checked 2026-09-05: Hockey Canada Seasonal Structure states half-ice rules, no offside/icing, line-change relinquishment, continuous play and three-metre retreat after goalie freeze. Hockey Alberta allows optional full-ice transition for eight-year-olds from December 26 or later, so local/date-dependent U9 claims require jurisdiction context.",
+    "AI coaching review only; not credentialed human-coach approval."
+  ]
+}

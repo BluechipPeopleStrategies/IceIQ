@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "physics-profile-v1",
+  "id": "physics-u18-v1",
+  "ageBand": "U18",
+  "skillTier": null,
+  "rinkFrameProfileId": "nhl-200x85-v1",
+  "player": {
+    "topSpeedMPS": {
+      "value": 10.32,
+      "stdDev": 0.48,
+      "source": "cited",
+      "citation": "J. Functional Morphology & Kinesiology, 2025, Post-PHV stage (~16.0yo): on-ice max speed (V0) 10.32+/-0.48 m/s (37 km/h). https://pmc.ncbi.nlm.nih.gov/articles/PMC12821503/"
+    },
+    "accel0to10mS": {
+      "value": 1.84,
+      "stdDev": 0.11,
+      "source": "cited",
+      "citation": "Same source, Post-PHV 0-10m acceleration: 1.84+/-0.11s. (A second source, PMC11307188, gives 15.2-15.4yo elite/sub-elite 0-4m acceleration of 0.868s/0.914s -- not directly comparable to a 0-10m split, so not blended in here; kept as a cross-reference in docs/scenario-engine/physics-sourcing.md.)"
+    },
+    "avgAccelMPS2": {
+      "value": 5.91,
+      "source": "derived-from-citation",
+      "citation": "Computed from accel0to10mS via kinematics (d = 0.5*a*t^2, d=10m)."
+    },
+    "turningRadiusM": {
+      "value": 30.03,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published turning-radius figure exists at any age. Estimated as v^2 / (0.6 * avgAccelMPS2)."
+    },
+    "stoppingDistanceM": {
+      "value": 9.01,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published stopping-distance figure exists at any age. Estimated as v^2 / (2 * avgAccelMPS2)."
+    },
+    "reactionDelayS": {
+      "value": 0.3,
+      "source": "engineering-estimate-pending-source-general-athlete-proxy",
+      "citation": "No ice-hockey-specific youth reaction-time study exists. This band is closest to the adult proxy data's own population (PMC11207928, mean age 25.2y is adult, but U18 is nearest to it of any band here); 250-350ms range applied flat across all bands per docs/scenario-engine/physics-sourcing.md."
+    }
+  },
+  "puck": {
+    "passSpeedMPS": {
+      "value": 18.00,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Reference band for the pass-speed scaling used by every other profile: ~40mph, an engineering estimate deliberately kept well below the cited adult 70-110mph shot-velocity range (Anderson & Smith / Hache, https://ssl.wsu.edu/documents/2015/10/experimental-characterization-of-ice-hockey-sticks-and-pucks.pdf/), since a pass is gentler than a shot and U18 players are not yet at adult/pro strength. No direct youth pass-velocity study exists to calibrate against."
+    },
+    "iceDecelerationMPS2": {
+      "value": 0.981,
+      "source": "cited",
+      "citation": "mu*g using Hache's puck-on-ice friction coefficient (~0.1, https://physicsworld.com/a/physics-on-ice/) and standard gravity (9.81 m/s^2). Real, age-independent physical constant."
+    }
+  },
+  "dependencyVersions": {
+    "rinkFrame": "rink-frame-v1",
+    "physicsSourcing": "docs/scenario-engine/physics-sourcing.md@2026-07-30"
+  }
+}

@@ -95,7 +95,8 @@ test('continuous carries retain possession during the second animation while pas
 test('first-read input is bounded and never changes the prior session on failure', () => {
   const initial = createReadSequenceSession();
   assert.throws(() => submitFirstRead(initial, { action: 'teleport', reason }), /Shoot, Pass or Carry/);
-  assert.throws(() => submitFirstRead(initial, { action: 'pass', reason: '   ' }), /reason/);
+  assert.equal(submitFirstRead(initial, { action: 'pass', reason: '   ' }).first.reason, '');
+  assert.throws(() => submitFirstRead(initial, { action: 'pass', reason: null }), /reason/);
   assert.throws(() => submitFirstRead(initial, { action: 'pass', reason: 'x'.repeat(601) }), /600/);
   assert.equal(initial.phase, 'read-1');
   assert.equal(initial.first, null);
@@ -118,7 +119,7 @@ test('read three moves only the named off-puck actor inside the canonical rounde
 
 test('third explanation completes a draft for coach review without automatic scoring', () => {
   const session = moveThirdReadActor(reachReadThree('carry', 'attack-outside'), { x: 17, y: -1.8 });
-  assert.throws(() => submitThirdRead(session, ''), /reason/);
+  assert.equal(submitThirdRead(session, '').phase, 'complete');
   const complete = submitThirdRead(session, 'I moved into a middle support lane where F1 can still see me.');
   assert.equal(complete.phase, 'complete');
   assert.equal(complete.reviewStatus, 'draft-for-coach-review');
@@ -267,7 +268,7 @@ test('comparison accepts revised or retained actions with reasons without changi
     assert.deepEqual(replayBothConsequences(updated).changedCue, updated.changedCue);
   }
   assert.deepEqual(complete, before);
-  assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: ' ' }), /reason/);
+  assert.equal(sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: ' ' }).changedCue.reason, '');
   assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: 'x'.repeat(601) }), /600/);
   assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'teleport', reason }), /Shoot, Pass or Carry/);
   assert.throws(() => sequenceCore.submitChangedCueRead(createReadSequenceSession(), { action: 'shoot', reason }), /three reads/i);

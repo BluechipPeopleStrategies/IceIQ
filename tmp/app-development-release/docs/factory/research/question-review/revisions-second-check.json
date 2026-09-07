@@ -1,0 +1,54 @@
+{
+  "reviewer": "second independent lane / GPT-5.6 Luna",
+  "reviewKind": "revision second check",
+  "reviewedAt": "2026-09-05",
+  "hashMethod": "sha256(JSON.stringify({scene,question:q})); scene is the current scenario with questions and version removed",
+  "coverageCounts": {
+    "requiredQuestions": 4,
+    "passed": 4,
+    "flagged": 0
+  },
+  "results": [
+    {
+      "questionId": "exp26-u13-014-q5",
+      "scenarioId": "exp26-u13-014",
+      "scenarioVersion": 2,
+      "status": "pass",
+      "contentHash": "39a0b8d6e32fa1f116ccfe672a95c0fd28a5d133f875f19032e87e48f2e85e85",
+      "findingIds": [],
+      "reason": "The multi-select now tests the two distinct updates created by C's recovery: reassessing whether the defender still covers alone and communicating which threat C can cover. The distractor to stop tracking Gold 2 is clearly wrong. The full scenario says C is recovering through the middle and does not prescribe a fixed movement or universal system."
+    },
+    {
+      "questionId": "exp26-u15-010-q5",
+      "scenarioId": "exp26-u15-010",
+      "scenarioVersion": 2,
+      "status": "pass",
+      "contentHash": "457a895eeea45e00ce04aea04e23da045a5132e0cd4c1656ac8dec5a20c4d2bf",
+      "findingIds": [],
+      "reason": "The multi-select correctly captures both rechecking the changed shot/passing lanes and checking whether useful screen remains. The immediate-shot distractor conflicts with the stated conditional, position-only teaching view."
+    },
+    {
+      "questionId": "exp26-u15-013-q5",
+      "scenarioId": "exp26-u15-013",
+      "scenarioVersion": 2,
+      "status": "pass",
+      "contentHash": "574cd561f75c824fb7be1c072b53b624ac2db4d0da366d858a8af7e5362a1223",
+      "findingIds": [],
+      "reason": "The multi-select now separates the conditional next pass after Navy wins the puck from checking whether C remains a safe receiver. The assumption that Gold 2 moving proves F1 won the puck is a clear distractor, consistent with the scenario's loose-touch uncertainty."
+    },
+    {
+      "questionId": "exp26-u9-014-q6",
+      "scenarioId": "exp26-u9-014",
+      "scenarioVersion": 2,
+      "status": "pass",
+      "contentHash": "4ff4c5403d87d81182efe168006f57a8ba92b86b7d67651d8906eaabdaa05b47",
+      "findingIds": [],
+      "reason": "The explanation now states the three-metre retreat and defending-team restart possession, while explicitly qualifying that local U9 formats may differ. This matches the current Hockey Canada half-ice model and the scenario's stated goalie-freeze event."
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Rechecked current version-2 scenario and question content for all four revision IDs; no bank edits or browser rendering were performed.",
+    "The 79 repeated-sequence teaching findings remain outside this bounded revision check and are not marked approved here."
+  ]
+}

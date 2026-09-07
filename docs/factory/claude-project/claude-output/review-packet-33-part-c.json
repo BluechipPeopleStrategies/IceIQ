@@ -1,0 +1,890 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-33",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q1",
+      "baseContentHash": "ee41f7038ca158fc4a7082769f704a2fc6ade8988e18824e5ce4094bd0282f56",
+      "verdict": "repair",
+      "reason": "Option c ('Gold 3') offers an opponent as a candidate 'teammate' answer to 'Which teammate is below the attacking goal-line area?' -- Gold 3/A3 is on the away team, so any reader can eliminate it on team-color alone with zero hockey judgment, and it is also nowhere near the goal line (~12m away). This is the opponent-as-teammate giveaway distractor pattern flagged across prior packets (lesson 10). The correct answer (F1) and the other distractor (D1) are sound; only option c needs to name a genuine teammate who is plausibly-but-actually not below the goal line.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q2",
+      "baseContentHash": "27589aa64c40261e773c4bfd532cd1d3d992cff19914e8b4da79e3a0602e5643",
+      "verdict": "retain",
+      "reason": "Both correct checks (whether the low route stays open; whether F1 can receive away from Gold 2) are supported by computed geometry: the low route to F1 clears Gold 1/Gold 2 by 3.59m/4.71m at closest approach, and Gold 2 sits only 2.24m from F2, so neither correct option overclaims a guaranteed outcome. The third option ('the assumption that a covered slot must still be forced') represents a real coaching caution against forcing a bad look, not a joke or trivia distractor.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "A coach could add a third defensible check: whether D1 stepping up from the point creates a new outlet, since a stretched Gold defence can open a route this scene does not itself test.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q3",
+      "baseContentHash": "78d20dd7a7eb7e614e5e98206bfcd2652227c0fcfa882322db695068ed448710",
+      "verdict": "repair",
+      "reason": "The sequence (recognize the crowded slot -> compare low/high outlets -> use an available connection and reoffer) reads as a mandatory look-decide-execute order -- the exact pattern AUTHORING-CONTRACT.md bars ('Scanning and moving can overlap... Do not imply a player must... follow an artificial look, decide, execute order for every read'). The prior AI pass already flagged this as teaching-P3 ('editorial opportunity, not an established tactical error') but left it unresolved. Per the calibration-adjudication precedent (U13-010 q3), the fix keeps the sequence and its answer key and instead rewrites the explanation to disclose the overlap and state why the final step still comes last.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "Recognizing the slot is crowded and comparing low/high outlets can genuinely happen together as scanning continues; only using the connection and reoffering has to come last, since it depends on what those reads show.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q4",
+      "baseContentHash": "fdc5efc502f00171170b11a350f9a2dcaffc54cb791abbaf7e66e7b2bbda03c7",
+      "verdict": "retain",
+      "reason": "Reference point (21,-7) is on ice (isCoachRoutePoint true) and is a modest, genuinely different pocket from YOU's start (19,-9) -- it changes the exact relation to Gold 1 (20,-4) and F1 (28,-3) as the explanation claims, without asserting a scored or uniquely optimal target.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "YOU could instead hold the half-wall spot and have D1 walk the point for a new point-shot angle, comparing puck movement instead of skater movement.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q5",
+      "baseContentHash": "07750c3b4a7f708161f36b2f8bb8057e563a8afaf20727faa908c0a95f666ff4",
+      "verdict": "retain",
+      "reason": "The hypothetical ('Gold 1 leaves the slot route to pressure YOU') is explicitly framed as a change to the static picture, not an invented fact. F2's route becoming usable is the supported check, and the explanation's hedge that 'Gold 2 may still affect the pass' is accurate: Gold 2 sits only 2.24m from F2.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "A defensible alternative check: whether D1 at the point is now a safer outlet than forcing the developing F2 look, since abandoning the slot can also open a simpler retreat pass.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q6",
+      "baseContentHash": "58cff653df38b84e4728147fa017143bc361808a53cac7e1117ede05f44944a0",
+      "verdict": "retain",
+      "reason": "Naming below-the-goal-line (F1) versus the high point/slot (D1/F2 area) and contrasting the pressure each offers matches the actual scene geometry; this is a reflection with no answer key to leak, and it does not merely restate q1's or q8's graded content in a different format.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "A student could also name the puck-side half wall itself as a third support area (where YOU currently stands), since holding the wall is itself a support decision made instead of forcing the slot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q7",
+      "baseContentHash": "68d19bfcdbfcdda208ca7803477dac9ea0463c32d6baac30e514850708d09241",
+      "verdict": "retain",
+      "reason": "Correct option a communicates the low-support role and keeps the slot branch conditional, matching F1's actual availability below the goal line. The two wrong options ('the slot is always covered', 'F1 stays the low outlet even when the carrier angle changes') are plausible overclaims consistent with the scenario's own caution against guaranteed reads, not throwaway jokes -- 'always' is the object of the lesson here, not an unlabeled absolutist tell.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "'I'm low, but check the point first' is an equally defensible message, since it surfaces D1 as an option before committing to the slot branch.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q8",
+      "baseContentHash": "43111476bcbee60c0662629ccaa96336ea4d4d3666eb1f8a968f9a3a4fb07392",
+      "verdict": "retain",
+      "reason": "Both correct cues (Gold 1 leaving the slot route; F2 remaining reachable) are the same two facts tested individually in q5 and q2, reinforcing the objective through a different specific pairing rather than a verbatim repeat; option c ('the low area fixes every next pass') is a plausible overgeneralization a young player might hold, not a joke distractor.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "Whether Gold 2 has stepped toward F2 in response is an equally useful third cue, since defenders react to the picture changing too.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q9",
+      "baseContentHash": "0e674d478bf7fbfee4e50d78abf2b06a9913fca9ecf3bb831a047106079626dd",
+      "verdict": "repair",
+      "reason": "This position question repeats q4's exact task ('Move YOU off the puck-side half wall to/toward a new low-support angle') with only the coordinates changed. Its original reference point (18,-4.5) sits just 2.06m from Gold 1 (20,-4) while barely moving toward the goal line, so it does not actually read as a 'low' support angle at all and adds no distinct decision or cue beyond q4's general comparison -- the q-vs-q duplication pattern (lesson 9) flagged across prior packets. The point itself was on ice, so this is a teaching-value/redundancy defect, not a geometry error.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "A genuinely distinct low-support example: moving toward the corner near F1 to test a tight give-and-go, which is what the replacement now does (25,-6): 4.24m from F1, 5.39m from Gold 1, on ice.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u15-015",
+      "questionId": "exp26-u15-015-q10",
+      "baseContentHash": "3c855c7a051397fa424cbbccca77038106a9327b21ebf26765317c220a443da2",
+      "verdict": "retain",
+      "reason": "This reflection asks what to check under direct wall pressure generally (F1, the slot lane, F2, before protecting/passing/resetting). It differs from q5's narrower graded choice (a single consequence of Gold 1 specifically vacating the slot route) in both format (open explain vs. single-answer choice) and scope (three-cue enumeration vs. one specific check), so it reinforces the objective rather than duplicating q5; no answer key exists here to leak.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (home-skater-1) at (19,-9) owns the puck, facing 0; F1 (home-skater-2) at (28,-3); F2 (home-skater-3) at (22,1); D1 (home-skater-4) at (11,2); Gold 1/A1 (away-skater-1) at (20,-4); Gold 2/A2 (away-skater-2) at (24,0); Gold 3/A3 (away-skater-3) at (15,2). No goalie is present in this selected-player view.",
+          "Carried-puck position for YOU (facing=0) via the renderer formula x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing): (20,-8.3).",
+          "F1 sits 0.87m past Gold's goal line (x=27.13) at x=28 -- genuinely below/behind the goal line; the point is on ice (isCoachRoutePoint true; 6.22m inside the 8.5344m corner radius from the corner centre (21.9456,-4.4196)).",
+          "Gold 1 (20,-4) is only 0.48m off the direct line from YOU (19,-9) to F2 (22,1) (perpendicular distance computed from the line's direction vector), tightly shading that route as the briefing states.",
+          "Gold 2 (24,0) is 2.24m from F2 (22,1), close enough to still affect a pass into the slot if Gold 1 vacates.",
+          "D1 (11,2) is 3.38m inside the near blue line (7.62) and is the home skater farthest from the goal line, matching 'high point'; F2 (22,1) is 5.13m in front of the goal line (in the slot), not below it; Gold 3/A3 (15,2) is an opponent, roughly 12m from the goal line, not a teammate and not near the goal line.",
+          "The low route from the carried puck (20,-8.3) to F1 (28,-3) passes 3.59m from Gold 1 and 4.71m from Gold 2 at closest approach -- open but not guaranteed clear."
+        ],
+        "stated": [
+          "Briefing/cues: YOU controls at the puck-side half wall; Gold 1 shades the slot route to F2; F1 is available below the goal line; D1 holds the high point; the exercise invites a possession read, not a forced shot.",
+          "Objective: compare a covered slot play with a low-zone support option.",
+          "Navy attacks Gold's net (+x) and defends Navy's net (-x), per the briefing and AUTHORING-CONTRACT.md; this scenario's family (offensive-possession-reset) has no own-net-proximity requirement, and none of these actors need to sit near x=-27/+27 as an own net -- consistent with the family/topic check."
+        ],
+        "unproven": [
+          "Whether Gold 1 or Gold 2 would actually intercept a given pass in real time is not simulated; the schema stores static positions only, not speed, reaction or a guaranteed interception outcome.",
+          "Facing values are a rendering cue only; none of these ten questions makes an explicit claim about where a player looked that the stored facing would contradict."
+        ]
+      },
+      "alternative": "A student could also note that D1 stepping into the play changes the picture, since point support is not frozen just because the puck carrier is under wall pressure.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u15-015",
+      "baseVersion": 1,
+      "baseScenarioHash": "389fbfb2edcabe228990274c7432bb8999646d6fd07754ed10e576dbd5c23865",
+      "replacement": {
+        "id": "exp26-u15-015",
+        "version": 2,
+        "ageBand": "U15",
+        "title": "Keep an attack alive when the slot is crowded",
+        "family": "offensive-possession-reset",
+        "topic": "Slot and low support",
+        "objective": "Compare a covered slot play with a low-zone support option.",
+        "briefing": "YOU control at the puck-side half wall. Gold 1 shades the slot route to F2, while F1 is available below the goal line. D1 holds the high point. The exercise invites a possession read rather than requiring a shot. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": -9,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 28,
+              "y": -3,
+              "facing": -2.5535900500422257
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 22,
+              "y": 1,
+              "facing": -1.8622531212727638
+            },
+            {
+              "id": "home-skater-4",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 2,
+              "facing": -0.9420000403794636
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": -4,
+              "facing": -1.7681918866447774
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 24,
+              "y": 0,
+              "facing": -2.0778948311872334
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 2,
+              "facing": -1.2220253232109897
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "F1 is behind Gold’s goal line; D1 remains high near the blue line.",
+          "YOU control at the puck-side half wall. Gold 1 shades the slot route to F2, while F1 is available below the goal line. D1 holds the high point. The exercise invites a possession read rather than requiring a shot."
+        ],
+        "tags": [
+          "offensive-possession-reset"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, puck management, cycling and support",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u15-015-q1",
+            "type": "choice",
+            "prompt": "Which teammate is below the attacking goal-line area?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1"
+              },
+              {
+                "id": "b",
+                "text": "D1"
+              },
+              {
+                "id": "c",
+                "text": "F2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "F1 is behind Gold’s goal line; D1 remains high near the blue line.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u15-015-q2",
+            "type": "multi",
+            "prompt": "Choose two checks before using low support.",
+            "options": [
+              {
+                "id": "a",
+                "text": "The assumption that a covered slot must still be forced"
+              },
+              {
+                "id": "b",
+                "text": "Whether the low route remains open"
+              },
+              {
+                "id": "c",
+                "text": "Whether F1 can receive away from Gold 2"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "Low support may preserve possession, but it creates another read rather than a guaranteed scoring chance.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-015-q3",
+            "type": "sequence",
+            "prompt": "Arrange a possession reset decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Recognize the crowded slot route"
+              },
+              {
+                "id": "b",
+                "text": "Compare low and high outlets"
+              },
+              {
+                "id": "c",
+                "text": "Use an available connection and reoffer"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Recognizing the crowded slot and comparing low/high outlets can overlap, since scanning continues the whole time; the routine only fixes that using a connection and reoffering come last, because the actual pass or carry cannot happen before that read. A shot or carry remains possible if the picture changes; this routine does not ban them."
+          },
+          {
+            "id": "exp26-u15-015-q4",
+            "type": "position",
+            "prompt": "Move YOU off the puck-side half wall to compare a new low-support angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 21,
+              "y": -7
+            },
+            "basis": "coaching",
+            "explanation": "The example changes the relation to Gold 1 and F1. Other pockets may preserve possession better under live pressure."
+          },
+          {
+            "id": "exp26-u15-015-q5",
+            "type": "choice",
+            "prompt": "Gold 1 leaves the slot route to pressure YOU on the wall. What should be checked?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Only the low pass from the old picture"
+              },
+              {
+                "id": "b",
+                "text": "Whether F2’s route has become usable"
+              },
+              {
+                "id": "c",
+                "text": "The assumption that the slot is still covered identically"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "A defender leaving one responsibility can open another, but Gold 2 may still affect the pass.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u15-015-q6",
+            "type": "explain",
+            "prompt": "Name two support areas in this scene and explain the different choices they offer.",
+            "basis": "coaching",
+            "explanation": "Contrast below the goal line with the high point or slot. Describe the pressure, not merely the geography."
+          },
+          {
+            "id": "exp26-u15-015-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate from low support?",
+            "options": [
+              {
+                "id": "a",
+                "text": "I am low support; check whether the slot lane opens"
+              },
+              {
+                "id": "b",
+                "text": "The slot is always covered"
+              },
+              {
+                "id": "c",
+                "text": "F1 stays the low outlet even when the carrier angle changes"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call identifies the low role and keeps the slot branch conditional."
+          },
+          {
+            "id": "exp26-u15-015-q8",
+            "type": "multi",
+            "prompt": "Which two cues affect low support?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 leaves the slot route"
+              },
+              {
+                "id": "b",
+                "text": "F2 remains a reachable outlet"
+              },
+              {
+                "id": "c",
+                "text": "The low area fixes every next pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Slot pressure and outlet access shape the low-support decision."
+          },
+          {
+            "id": "exp26-u15-015-q9",
+            "type": "position",
+            "prompt": "Move YOU toward the goal line to offer a lower give-and-go angle near F1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 25,
+              "y": -6
+            },
+            "basis": "coaching",
+            "explanation": "This point sits closer to F1 below the goal line than the half-wall spot, offering a different exchange than the general low-support comparison in the earlier question. It does not guarantee separation from Gold 2 near the slot."
+          },
+          {
+            "id": "exp26-u15-015-q10",
+            "type": "explain",
+            "prompt": "Gold 1 pressures YOU on the wall. What should be checked?",
+            "basis": "coaching",
+            "explanation": "Check F1, the slot lane and F2 before choosing protection, pass, or a reset; the wall pressure changes the original angle."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u15-015-q1",
+        "exp26-u15-015-q3",
+        "exp26-u15-015-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u15-015-q1"
+          ],
+          "issue": "Distractor option c named 'Gold 3', an opponent, as a candidate 'teammate' -- eliminable by team color alone, with zero hockey judgment, and also not near the goal line.",
+          "change": "Replaced option c's text with 'F2', a genuine teammate whose actual position (22,1; 5.13m in front of the goal line, in the slot) makes it a real-but-wrong answer. Options a/b, the answer key, and the explanation are unchanged verbatim.",
+          "evidence": "AUTHORING-CONTRACT.md / calibration lessons (opponent-as-teammate giveaway distractors); computed distance of A3/Gold 3 from the goal line (~12m) confirms it was also geometrically wrong for the claim being tested."
+        },
+        {
+          "questionIds": [
+            "exp26-u15-015-q3"
+          ],
+          "issue": "Sequence question implied a mandatory look-decide-execute order (recognize the crowded slot, then compare outlets, then use a connection) for two reads that can overlap, contradicting AUTHORING-CONTRACT.md's explicit rule against forcing an artificial scan order. The prior AI pass flagged this as teaching-P3 but did not resolve it.",
+          "change": "Replaced the explanation with wording stating the first two reads (recognize, compare) can overlap as scanning continues, while explaining that using the connection and reoffering still comes last because it depends on those reads. Options and answer key are unchanged verbatim.",
+          "evidence": "AUTHORING-CONTRACT.md, Answer and teaching contracts: 'Sequence belongs only where order itself teaches something useful... Do not imply a player must... follow an artificial look, decide, execute order for every read.' Precedent: calibration-adjudication.md U13-010 q3, resolved the same way. Also matches this scenario's own historical-checks.json teaching-exp26-u15-015-q3 P3 flag."
+        },
+        {
+          "questionIds": [
+            "exp26-u15-015-q9"
+          ],
+          "issue": "Near-verbatim duplicate of q4: same prompt task ('move YOU off the puck-side half wall...to a new low-support angle') and same teaching purpose, with only coordinates changed; its reference point (18,-4.5) sat 2.06m from Gold 1 and barely moved toward the goal line, so it neither read as 'low' support nor added a distinct decision or cue.",
+          "change": "Rewrote the prompt to a distinct task (move toward the goal line for a lower give-and-go angle near F1), moved the reference point to (25,-6) -- verified on ice, 4.24m from F1, 5.39m from Gold 1, 6.08m from Gold 2 -- and rewrote the explanation to name the distinct exchange this offers versus q4's general comparison. actorId, type and basis are unchanged.",
+          "evidence": "Calibration lessons on q-vs-q duplication (different IDs/coordinates alone do not prove a different tactical situation); geometry recomputed with the real isCoachRoutePoint/rink-bounds functions from validation/src/one-on-one/coachRouteSurfaceInput.js and validation/src/scenario-engine/rinkFrame.js."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u15-015-q1",
+            "contentHash": "8bcf7ea639480d2eff3f5d3e13a4a3b5ead4d360a24b4e67367ee24c5498f4c9",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Option c now reads 'F2' -- a genuine teammate who is nonetheless not below the goal line (5.13m in front of it, in the slot), so the option tests real scene knowledge instead of team-color elimination. Answer key, option a/b, and explanation are unchanged."
+          },
+          {
+            "questionId": "exp26-u15-015-q2",
+            "contentHash": "27589aa64c40261e773c4bfd532cd1d3d992cff19914e8b4da79e3a0602e5643",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q3",
+            "contentHash": "41456f8f53395db62037efd153eadfcdd55e90191b3799f5a69f19eeece5093b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Explanation now states the recognize/compare reads can overlap as scanning continues, and explains why using the connection and reoffering still comes last (it depends on those reads). Options and answer key (a,b,c) are unchanged."
+          },
+          {
+            "questionId": "exp26-u15-015-q4",
+            "contentHash": "fdc5efc502f00171170b11a350f9a2dcaffc54cb791abbaf7e66e7b2bbda03c7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q5",
+            "contentHash": "07750c3b4a7f708161f36b2f8bb8057e563a8afaf20727faa908c0a95f666ff4",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q6",
+            "contentHash": "58cff653df38b84e4728147fa017143bc361808a53cac7e1117ede05f44944a0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q7",
+            "contentHash": "68d19bfcdbfcdda208ca7803477dac9ea0463c32d6baac30e514850708d09241",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q8",
+            "contentHash": "43111476bcbee60c0662629ccaa96336ea4d4d3666eb1f8a968f9a3a4fb07392",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          },
+          {
+            "questionId": "exp26-u15-015-q9",
+            "contentHash": "bacdb258ff790f74e7bdaf81f25dcc0399536193f4aa16ad95a28d4f1069300a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Prompt, reference point and explanation now target a distinct decision (a lower give-and-go angle near F1 at (25,-6): 4.24m from F1, 5.39m from Gold 1, 6.08m from Gold 2, verified on ice) instead of repeating q4's general low-support comparison. actorId is unchanged."
+          },
+          {
+            "questionId": "exp26-u15-015-q10",
+            "contentHash": "3c855c7a051397fa424cbbccca77038106a9327b21ebf26765317c220a443da2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from the base version; scene (briefing/setup/cues/sources) and this question's own text are identical, so re-verification reconfirms the retain findings recorded in the coverage array above."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T15:00:00.000Z",
+      "access": "read",
+      "scope": "Fetched the PDF directly and read page 1 (its only page): a Hockey Canada 'U15/U18 LTPD Stage - Train to Train' chart (internal metadata title 'Draft 2017 - Bantam - Midget Pathway'). The 'Team Play / Offensive Skills' column lists Puck Protection, Puck Management, Quick Transition, Smart Puck Support Principles (Under Pressure), Entries, Retrievals, Hinging, Delays, Cycling, Net Drives and Anticipation -- directly supporting the source's declared use ('Page 1, puck management, cycling and support') for this scenario's age/topic placement. It does not certify these exact coordinates, this specific slot/low-support decision, or any guaranteed outcome.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U15/U18 LTPD Train-to-Train stage chart (Bantam/Midget); used here for U15 age/topic placement only, per AUTHORING-CONTRACT.md's allowance for disclosed source use.",
+      "claim": "Supports puck management, cycling and puck-support-under-pressure as age-appropriate U15 teaching topics; does not certify this scenario's specific setup, alternatives or suggested answers."
+    }
+  ],
+  "remainingQuestionIds": []
+}

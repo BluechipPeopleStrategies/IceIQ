@@ -59,6 +59,16 @@ function environment(run, reduced = false) {
   finally { for (const name of names) { if (prior[name]) Object.defineProperty(globalThis, name, prior[name]); else delete globalThis[name]; } }
 }
 const template = POSITIONING_TEMPLATES[0];
+test('embedded positioning omits discovery without rewriting an existing saved preference', () => environment(({ saved }) => {
+  const key = 'rinkreads_scenario_workshop_ui_v1:nav-player';
+  const preference = { templateId: template.id, mode: 'explore' };
+  saved.set(key, JSON.stringify(preference));
+  const component = mount({ playerId: 'nav-player', hideDiscovery: true }, ScenarioWorkshop);
+  assert.ok(component.find(node => node.type === 'select'));
+  assert.doesNotMatch(component.text(), /U7 · Explore the rink|SCENARIO LAB/);
+  assert.deepEqual(JSON.parse(saved.get(key)), preference);
+  component.unmount();
+}));
 function playback(t = template) { return advancePositioningPlayback(submitPositioningRead(movePositioningPlayer(createPositioningSession(t.id), t.teamSize === 1 ? { x: 27, y: -6 } : { x: 5, y: -7 }), 'I want room to read the puck.'), .37); }
 
 test('draft restore validates candidate and reason, separates player keys, and safely pauses exact playback', () => {
@@ -128,7 +138,7 @@ test('illustration rejection preserves the point and reason without grading it',
   lesson.move('D1', { x: f1.x, y: f1.y }); lesson.changeReason('I want to meet the carrier.');
   const before = saved.get(key); lesson.click('See what happens next');
   assert.equal(saved.get(key), before);
-  assert.match(lesson.text(), /illustration|overlap/i);
+  assert.match(lesson.text(), /Try a nearby spot/i);
   assert.equal(lesson.find(node => node.type === 'textarea').props.value, 'I want to meet the carrier.');
   assert.equal(JSON.parse(saved.get(key)).session.answers.length, 0); lesson.unmount();
 }));
@@ -201,11 +211,16 @@ test('explicit phone links select the intended exercise while retaining the sele
   discover.click('U11 · Position & explain');
   assert.equal(discover.find(node => node.type === 'select').props.value, t.id);
   discover.unmount();
+  window.location = { search: '?arena=sgs&sgs=mixed' };
+  const mixed = mount({ playerId: 'links' }, ScenarioWorkshop);
+  assert.match(mixed.text(), /A different way to read it/);
+  assert.equal(mixed.find(node => node.type === 'select').props.value, t.id);
+  mixed.unmount();
 }));
 
 test('actual SVG fallback renders every flight puck at its exact snapshot coordinates and default director rendering is unchanged', () => {
   const puckFrom = html => {
-    const match = html.match(/class="cq-puck" cx="([^"]+)" cy="([^"]+)"/);
+    const match = html.match(/data-puck-locator="true" transform="translate\(([^ ]+) ([^)]+)\)"/);
     assert.ok(match, 'the actual visible puck must be rendered');
     return { x: Number(match[1]), y: Number(match[2]) };
   };
@@ -243,4 +258,58 @@ test('the fresh 1v1 demo opens a representative whose 27 button paths can all be
   }
   visit(createPositioningSession(templateId), 0); assert.equal(completions, 27);
   workshop.unmount();
+}));
+
+test('optional explanations never block selected positions and empty answers reload unchanged', () => environment(({ saved }) => {
+  const key = workshopStorageKey('optional', template.id), props = { template, playerId: 'optional' };
+  let lesson = mount(props);
+  assert.match(lesson.text(), /Why would you be there\? \(optional\)/);
+  for (let read = 0; read < 3; read++) {
+    lesson.move('D1', { x: 27, y: -6 });
+    lesson.click(read === 2 ? 'Save my three reads' : 'See what happens next');
+    assert.equal(JSON.parse(saved.get(key)).session.answers[read].reason, '');
+    if (read < 2) { lesson.unmount(); lesson = mount(props); lesson.click('Go to next read'); }
+  }
+  const bytes = saved.get(key); lesson.unmount(); lesson = mount(props); lesson.unmount();
+  assert.equal(saved.get(key), bytes);
+  assert.equal(JSON.parse(bytes).session.phase, 'complete');
+}, true));
+
+test('rink failure blocks stale placement and submit callbacks while preserving the unfinished answer', () => environment(({ saved }) => {
+  const key = workshopStorageKey('unavailable', template.id), lesson = mount({ template, playerId: 'unavailable' });
+  lesson.move('D1', { x: 27, y: -6 }); lesson.changeReason('Keep this optional thought.');
+  const scene = lesson.find(node => Array.isArray(node.props.editableIds)), before = saved.get(key);
+  const submit = lesson.find(node => node.type === 'button' && node.props.className === 'sw-primary');
+  scene.props.onAvailabilityChange(false); scene.props.onMove('D1', { x: 26, y: -6 }); submit.props.onClick(); lesson.flush();
+  assert.equal(saved.get(key), before);
+  const blocked = lesson.find(node => Array.isArray(node.props.editableIds));
+  assert.deepEqual(blocked.props.editableIds, []); assert.deepEqual(blocked.props.fallback.props.allowedActorIds, []);
+  assert.equal(lesson.find(node => node.type === 'button' && node.props.className === 'sw-primary').props.disabled, true);
+  assert.equal(lesson.find(node => node.type === 'textarea').props.value, 'Keep this optional thought.');
+  assert.equal(lesson.find(node => node.type === 'button' && node.props.children === 'Back a little').props.disabled, true);
+  blocked.props.onAvailabilityChange(true); lesson.flush();
+  assert.equal(saved.get(key), before);
+  assert.equal(lesson.find(node => node.type === 'button' && node.props.className === 'sw-primary').props.disabled, false);
+  lesson.unmount();
+}));
+
+test('failed rink freezes exact playback before the next queued tick and recovery never resumes itself', () => environment(({ saved, frames, tick }) => {
+  const key = workshopStorageKey('lost-flight', template.id), lesson = mount({ template, playerId: 'lost-flight' });
+  lesson.move('D1', { x: 27, y: -6 }); lesson.click('See what happens next');
+  tick(1000); lesson.flush(); tick(1962); lesson.flush();
+  let scene = lesson.find(node => Array.isArray(node.props.editableIds));
+  const exactFrame = structuredClone(scene.props.state), answers = JSON.parse(saved.get(key)).session.answers;
+  const skip = lesson.find(node => node.type === 'button' && node.props.children === 'Go to next read');
+  scene.props.onAvailabilityChange(false); skip.props.onClick(); tick(9000); lesson.flush();
+  const stopped = JSON.parse(saved.get(key));
+  assert.ok(Math.abs(stopped.session.playbackProgress - .37) < 1e-9);
+  assert.equal(stopped.paused, true); assert.deepEqual(stopped.session.answers, answers);
+  scene = lesson.find(node => Array.isArray(node.props.editableIds));
+  assert.deepEqual(scene.props.state, exactFrame); assert.equal(frames.size, 0);
+  assert.equal(lesson.find(node => node.props['aria-label'] === 'Continuation progress').props.disabled, true);
+  scene.props.onAvailabilityChange(true); lesson.flush(); tick(12000); lesson.flush();
+  assert.equal(saved.get(key), JSON.stringify(stopped)); assert.equal(frames.size, 0);
+  lesson.click('Resume'); tick(15000); lesson.flush(); tick(15260); lesson.flush(); lesson.click('Pause');
+  assert.ok(Math.abs(JSON.parse(saved.get(key)).session.playbackProgress - .47) < 1e-9);
+  lesson.unmount();
 }));

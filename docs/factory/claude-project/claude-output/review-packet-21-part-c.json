@@ -1,0 +1,762 @@
+{
+  "scenariosOwned": [
+    "exp26-u13-004"
+  ],
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q1",
+      "baseContentHash": "505e31cc1cc5323bd195bda91519a77ba250cf17b138ecda9de2a73d96429218",
+      "verdict": "retain",
+      "reason": "Basis:scene question asks what job is explicitly assigned to YOU. The briefing states 'your first job is to offer a short inside outlet' in nearly the same words as answer c, and no other actor performs that job, so the single-answer key is directly supported by stated text, not inference. Independently recomputed contentHash with the real questionContentHash() function and it matches the packet's baseContentHash exactly.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck is owned by home-skater-2 (W); YOU is home-skater-1 at x=-3,y=1, a separate actor with no puck.",
+          "Five actors total: YOU, W, D1 (home/Navy skaters) and A1/A2 (away skaters, rendered as Gold 1/Gold 2 via actorDisplayName)."
+        ],
+        "stated": [
+          "Briefing: 'In this exercise your first job is to offer a short inside outlet.'"
+        ],
+        "unproven": [
+          "No timing, skating speed, or execution outcome is implied by this still freeze; the job is a stated instruction, not an observed action."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q2",
+      "baseContentHash": "0db564457adf7acc75c3be939e0dda40ffebb1f1741fd1e39df5668539e4bcc1",
+      "verdict": "retain",
+      "reason": "Correct pair (separation from Gold 1, a visible route) matches the 'short inside outlet' objective. Distractor c ('the greatest possible distance from W') is a credible U13-level misconception -- a young player might think bigger separation is always safer -- but it actually contradicts the stated 'short' requirement, so it is a believable wrong choice tied to this exact scene, not absurd trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 (away-skater-1, x=-7,y=7) sits roughly 3.6m from W (x=-10,y=9) -- verified with Math.hypot, a genuinely close pressure distance on a 60m-long rink."
+        ],
+        "stated": [
+          "Briefing establishes the outlet must be 'short.'"
+        ],
+        "unproven": [
+          "Whether W would actually see or use any specific outlet at game speed is not established by a still frame."
+        ]
+      },
+      "alternative": "If Gold 1 shifts to cut off the most direct route before YOU can offer it, a slightly wider or delayed angle can still satisfy the objective as long as W can actually see a clear release; separation and a visible route matter more than any single fixed spot.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q3",
+      "baseContentHash": "3881a8789901af274b1720911cd24a546d9e865a3f290def85e584af78dd6e1c",
+      "verdict": "retain",
+      "reason": "Historical P3 finding (catalog-review.json, id 'teaching-exp26-u13-004-q3') worried the ordered options ('Read Gold 1's approach' -> 'Move closer...' -> 'Prepare for a pass or another change') could imply a strict must-finish-before-next order. followup/u13-proposals.json re-reviewed this exact current hash and decided 'keep' because reading pressure while moving is a coherent, non-rigid routine. Independently re-read against the calibration adjudication's own precedent (U13-010 q3: 'watching, moving and offering the stick overlap... not an objectively scored timeline') and the question's own explanation, which already disclaims a rigid order ('the routine is not a rigid play call'): agree with keep. This is not a blanket acceptance of the historical pass label -- I re-derived the same conclusion from the actual current text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 at x=-7,y=7 is a real, positioned pressure actor between YOU's start (-3,1) and W (-10,9), so 'read Gold 1's approach' references an actual on-ice fact, not an invented threat."
+        ],
+        "stated": [
+          "Explanation: 'Keep updating pressure while moving; the routine is not a rigid play call.'"
+        ],
+        "unproven": [
+          "No forced timing or exclusive order is established; scanning and repositioning may legitimately overlap in real play."
+        ]
+      },
+      "alternative": "Reading pressure and adjusting position can happen together rather than strictly in sequence -- a player already moving while still checking Gold 1's angle is not doing it wrong, since scanning and repositioning legitimately overlap.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q4",
+      "baseContentHash": "673d13a427987641216254cf6c96356f2df0a7bc5e188830f6c0fe065e84c76e",
+      "verdict": "retain",
+      "reason": "Numerically verified with the real isCoachRoutePoint() and coordinate math: reference (-13,3) is on ice, is a genuine repositioning (10.2m from YOU's start at (-3,1), not a no-op), is strictly more negative in x than W's -10 (so it is actually 'closer to Navy's net than W', matching Navy-attacks-+x / Navy's-own-net-at--x convention), and is less extreme in |y| (3 vs 9) than W, so 'inside' is also satisfied. Explanation correctly hedges with 'several spots may work,' consistent with the contract's 'not an exclusive correct dot' rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at x=-3,y=1. Reference point given is x=-13,y=3. W is at x=-10,y=9."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU closer to Navy's net than W.' Project convention: Navy/home attacks +x, so Navy's own net is at the -x end and 'closer' means more negative x."
+        ],
+        "unproven": [
+          "No single dot is claimed as the only correct answer; the explanation explicitly allows other spots."
+        ]
+      },
+      "alternative": "Other points nearer Navy's net and inside W's line would also work as a short-outlet demonstration -- for example, tighter to the boards if Gold 1 shifts to cover the middle; the exact metres are illustrative, not a scored target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q5",
+      "baseContentHash": "b4570d32737d06cf1126ee0e660eb23e62fc4ec789c2e68614639e1493294220",
+      "verdict": "retain",
+      "reason": "Answer a ('may move forward while remaining available') correctly avoids a rigid positional rule, consistent with the project's 'responsibilities can change with the play; do not enforce rigid positional rules' instruction. Distractors b ('must remain underneath for the rest of the shift') and c ('stop watching the puck') are clearly-labeled wrong answers representing realistic youth misconceptions about fixed roles, not smuggled certainty presented as correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "No actor or puck state changes in the rendered scene; this is an explicit hypothetical layered on the static freeze."
+        ],
+        "stated": [
+          "Prompt itself states the hypothetical: 'If W escapes Gold 1 with secure possession, what changes?'"
+        ],
+        "unproven": [
+          "Whether W actually gains that separation is not shown or claimed as having happened; it is conditional."
+        ]
+      },
+      "alternative": "If W's possession is only briefly secure and pressure is about to return, staying underneath a little longer before advancing can also be reasonable; advancing is not automatic the instant Gold 1 is beaten.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q6",
+      "baseContentHash": "fe56816cf6e03a581c60f24ed548a454e9d67291a890b81d00269e1923b3d3dd",
+      "verdict": "retain",
+      "reason": "Open reflection (basis:coaching, type:explain) with no answer key and no scoring implied, consistent with the contract's 'no writing requirement or scoring penalty for skipping' rule. The explanation gives one legitimate hockey distinction (a different angle/time advantage vs. joining the same pressure) without asserting it is the only correct essay response.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 is pressuring W at the wall; YOU is a separate, uncommitted actor with no puck."
+        ],
+        "stated": [
+          "Objective: 'Offer an inside release beneath a teammate under pressure.'"
+        ],
+        "unproven": [
+          "No specific outcome of 'skating into the problem' is shown or asserted; this is a conceptual contrast, not an observed event."
+        ]
+      },
+      "alternative": "A valid response could also note that simply holding a calm, predictable spot (rather than moving) can help if it removes doubt about YOU's job, letting W commit to the boards read without tracking a moving option; movement is one way to add value, not the only way.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q7",
+      "baseContentHash": "e8b262defa6479d31d6769d46a847bc1f4f9ccceb8603de339b8bd6776fe6fb7",
+      "verdict": "retain",
+      "reason": "This question was previously repaired (docs/factory/research/question-review/repairs/u13-repairs.json) from 'What is YOU's stated first job?' (a near-duplicate of q1, flagged P2 'u13-p2-repeat-q7-targets') to the current 'Which Navy teammate offers a deeper reset behind YOU if W remains pinned?'. I did not just trust that receipt: I independently recomputed the current text's hash with questionContentHash() and it matches the packet's baseContentHash exactly, confirming the repaired version is what is actually live. I then independently re-verified the tactical claim: D1 (home-skater-3, x=-22,y=5) is numerically the only other Navy/home skater in the scene and is genuinely more negative in x (deeper, closer to Navy's own net) than YOU (x=-3), so 'D1 offers a deeper reset' is geometrically true, not asserted.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 at x=-22,y=5; YOU at x=-3,y=1. -22 < -3, confirmed by direct computation, so D1 is deeper toward Navy's own net than YOU."
+        ],
+        "stated": [
+          "Only three home/Navy skaters exist in this scene (YOU, W, D1); no other Navy teammate is available to name."
+        ],
+        "unproven": [
+          "Whether D1 would actually be open for a pass at game speed is not shown; the explanation appropriately hedges with 'if D1 is covered, hold a support angle instead.'"
+        ]
+      },
+      "alternative": "If D1 is also closely covered by a forechecker, holding possession or looking for a shorter wall-support option instead of forcing the pass to D1 is a defensible alternative to naming D1 automatically.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q8",
+      "baseContentHash": "28afaf2a716e1e92072f15bcb1b76a0adf690e71d6356dc56527d4b55e665e62",
+      "verdict": "retain",
+      "reason": "Correct pair (Gold 1's pressure on W, W's puck control) are the two live, checkable cues in this exact freeze. Distractor c ('D1's old position alone') is correctly excluded because a single static fact about a third player, considered alone, cannot answer an immediate support-distance question -- this is a credible reasoning-gap distractor, not trivia.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 at x=-7,y=7, ~3.6m from W; W owns the puck (home-skater-2)."
+        ],
+        "stated": [
+          "None beyond the briefing already covered in q1/q2."
+        ],
+        "unproven": [
+          "Actual tightness of W's puck control (loose vs. secure) is not rendered; the question treats it as a cue to keep reading, not a claimed fact."
+        ]
+      },
+      "alternative": "A third relevant cue not listed here -- whether YOU's own route to the middle is still open -- could also legitimately inform the stay-or-widen decision; pressure and control are the two offered here, not the only two a coach might accept.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q9",
+      "baseContentHash": "30ebe27a5f6d3fd50b8723edc06491501a1d19efd43abc7d9cd794c66ef003a4",
+      "verdict": "repair",
+      "reason": "Verified numerically with Math.hypot/direct coordinate comparison (not just reading the prompt): the given reference (x=-7,y=4) is LESS negative in x than W's x=-10. On the depth axis this scenario itself uses everywhere else -- q4's 'closer to Navy's net than W' at x=-13, q7's 'D1 is the deeper... option' at x=-22, and the scenario's own title 'Stay underneath a pressured wall receiver' -- YOU would remain up-ice of (not below/underneath) W at this reference point. Only the y-component (4 vs 9, 'inside') is actually satisfied. The prompt ('Move YOU below and inside W') and the explanation ('The lower-inside spot...') both assert a below/lower relationship to W that the given coordinates do not support. This is a genuine scene-text-vs-geometry conflict, not a stylistic quibble, and it was not caught by any prior AI pass -- every historical record for this exact hash (catalog-review.json, combined-review.json, historical-checks.json) says 'pass'/'no-open-ai-finding', which the project brief specifically warns is baseline evidence only. See the paired repair proposal below for the fix and its own independent geometric re-check.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU starts at x=-3,y=1. W is at x=-10,y=9. The given reference is x=-7,y=4."
+        ],
+        "stated": [
+          "Prompt: 'Move YOU below and inside W'. Explanation: 'The lower-inside spot gives W a short lane away from Gold 1.'"
+        ],
+        "unproven": [
+          "Whether 'below' was intended as a screen/rendering-relative description rather than the depth-relative (toward-own-net) sense used by every sibling question in this scene is not stated anywhere; either way the given point does not satisfy the depth sense this scenario otherwise relies on."
+        ]
+      },
+      "alternative": "Any point that is both deeper (more negative x, toward Navy's net) than W's x=-10 and closer to mid-ice (smaller |y|) than W's y=9 would work as an example; the exact metres chosen are illustrative, not a scored target.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u13-004",
+      "questionId": "exp26-u13-004-q10",
+      "baseContentHash": "4eb3775a99f31d1136ddff089fe99b55789d9df3200a41188b1a38161f201de0",
+      "verdict": "retain",
+      "reason": "Open reflection with no answer key. Explanation lists two legitimate, scene-grounded triggers for leaving the short-outlet position (W gains secure control and a better lane opens; pressure closes the route) and explicitly hedges with 'if W remains pinned, stay available' rather than asserting one guaranteed outcome.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 1 pressuring W at the wall; D1 available deeper in the zone; no puck-movement or outcome is depicted."
+        ],
+        "stated": [
+          "Objective and prior questions establish the short-outlet job this reflection asks about leaving."
+        ],
+        "unproven": [
+          "No specific future event (W escaping, pressure closing) is shown as having happened; both are framed as conditions to watch for."
+        ]
+      },
+      "alternative": "A player could also leave the position because the coach calls a new instruction or a teammate's movement changes the read, not only because of W's control or a closing lane; stoppages and coaching calls are additional legitimate triggers beyond the two named here.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u13-004",
+      "baseVersion": 1,
+      "baseScenarioHash": "411b45786042d6fe843af287892e734b527dc03e14daa54f75b3fff61726fd03",
+      "replacement": {
+        "id": "exp26-u13-004",
+        "version": 2,
+        "ageBand": "U13",
+        "title": "Stay underneath a pressured wall receiver",
+        "family": "centre-low-support",
+        "topic": "centre low support",
+        "objective": "Offer an inside release beneath a teammate under pressure.",
+        "briefing": "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "home-skater-2",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -10,
+              "y": 9,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-3",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": 5,
+              "facing": 0.3217505543966422
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -7,
+              "y": 7,
+              "facing": 2.5535900500422257
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 0,
+              "y": -2,
+              "facing": 2.3086113869153615
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+          "W has received the puck at the boards and Gold 1 is nearby. YOU are the centre, currently farther up ice than W. In this exercise your first job is to offer a short inside outlet."
+        ],
+        "tags": [
+          "centre-low-support"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u13-004-q1",
+            "type": "choice",
+            "prompt": "What support job is explicitly assigned to YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Wait at the far blue line"
+              },
+              {
+                "id": "b",
+                "text": "Pressure W as an opponent"
+              },
+              {
+                "id": "c",
+                "text": "Offer a short inside outlet"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing assigns a short inside outlet, rather than an immediate stretch.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u13-004-q2",
+            "type": "multi",
+            "prompt": "Which two features would suit that outlet?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Enough separation from Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "A route W can actually see"
+              },
+              {
+                "id": "c",
+                "text": "The greatest possible distance from W"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "Short support needs usable spacing and a route, not just proximity.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q3",
+            "type": "sequence",
+            "prompt": "Order a support response to W’s pressure.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read Gold 1’s approach"
+              },
+              {
+                "id": "b",
+                "text": "Move closer to Navy’s net and inside W"
+              },
+              {
+                "id": "c",
+                "text": "Prepare for a pass or another change"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Keep updating pressure while moving; the routine is not a rigid play call."
+          },
+          {
+            "id": "exp26-u13-004-q4",
+            "type": "position",
+            "prompt": "Move YOU closer to Navy’s net than W to suggest a short inside option.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "A position closer to Navy’s net and inside W can offer a release while avoiding the same wall pressure. Several spots may work."
+          },
+          {
+            "id": "exp26-u13-004-q5",
+            "type": "choice",
+            "prompt": "If W escapes Gold 1 with secure possession, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "You may move forward while remaining available"
+              },
+              {
+                "id": "b",
+                "text": "You must remain underneath for the rest of the shift"
+              },
+              {
+                "id": "c",
+                "text": "You should stop watching the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The support distance can expand when the carrier has time; possession quality still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u13-004-q6",
+            "type": "explain",
+            "prompt": "What is the difference between supporting W and skating into W’s problem?",
+            "basis": "coaching",
+            "explanation": "A useful option creates a different angle or time advantage instead of joining the same pressure."
+          },
+          {
+            "type": "choice",
+            "prompt": "Which Navy teammate offers a deeper reset behind YOU if W remains pinned?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 is the deeper Navy option behind YOU, so W can have a connected reset if Gold 1 keeps pressure on the wall; if D1 is covered, hold a support angle instead of forcing the pass.",
+            "id": "exp26-u13-004-q7"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues tell YOU whether to stay underneath W?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1’s pressure on W"
+              },
+              {
+                "id": "b",
+                "text": "W’s puck control"
+              },
+              {
+                "id": "c",
+                "text": "D1’s old position alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and control determine whether W needs a close outlet; D1’s old spot cannot answer the immediate support question.",
+            "id": "exp26-u13-004-q8"
+          },
+          {
+            "id": "exp26-u13-004-q9",
+            "type": "position",
+            "prompt": "Move YOU below and inside W to present the assigned short outlet.",
+            "basis": "coaching",
+            "explanation": "The lower-inside spot (deeper than W toward Navy’s net, and inside toward centre ice) gives W a short backward lane away from Gold 1; if W gains space, widen to support the next play.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -15,
+              "y": 6
+            }
+          },
+          {
+            "type": "explain",
+            "prompt": "What would make you leave the short-outlet position?",
+            "basis": "coaching",
+            "explanation": "Leave when W has secure control and a better visible lane opens, or when pressure closes your route; if W remains pinned, stay available.",
+            "id": "exp26-u13-004-q10"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u13-004-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u13-004-q9"
+          ],
+          "issue": "The prompt ('Move YOU below and inside W') and explanation ('The lower-inside spot...') claim YOU's example position is below/lower than W, but the original reference {x:-7,y:4} is numerically less negative in x than W's x=-10 (verified with Math.hypot/direct comparison via a Node script importing the repo's real coachRouteSurfaceInput.js/question-batch-core.mjs). On the depth axis this scene uses everywhere else (q4: 'closer to Navy's net than W' at x=-13; q7: D1 at x=-22 is 'the deeper... option'), YOU would still be up-ice of W at x=-7, not below/underneath it -- only the y-axis 'inside' half of the claim was actually true.",
+          "change": "Changed q9's reference from {x:-7,y:4} to {x:-15,y:6}. The new point is verified more negative in x than W's -10 (genuinely deeper/below, matching the scenario's own 'closer to Navy's net' convention from q4 and D1's 'deeper' framing from q7) and still closer to mid-ice than W's y=9 (still 'inside'). Also clarified the explanation's wording to spell out 'deeper than W toward Navy's net, and inside toward centre ice' so the same ambiguity cannot recur. Left the prompt, actorId, basis, and every other question in the scenario byte-identical; only q9 changed.",
+          "evidence": "Before: reference {x:-7,y:4}, contentHash 30ebe27a5f6d3fd50b8723edc06491501a1d19efd43abc7d9cd794c66ef003a4 (matches packet baseContentHash exactly, independently recomputed). After: reference {x:-15,y:6}, contentHash 01fe84f6051e22642491aeac4c4648d930f51898e1efc9a2c1deef3fd9908f74 (independently computed with the same questionContentHash() function against the replacement scenario, version 2). Verified with the repo's real validateExperimentalBank([replacement]) -> returns [] (no structural errors); isCoachRoutePoint({x:-15,y:6}) -> true (on ice); distance from YOU's start (-3,1) to the new reference -> 13.0m (a genuine repositioning, not a no-op, exceeding the validator's 0.1m minimum-move threshold); -15 < -10 confirms the new point is now genuinely deeper than W on the same x-axis convention q4 and q7 already use in this scene; all 9 other questions' contentHash recomputed against the replacement scenario and confirmed byte-identical to their original baseContentHash (because questionContentHash() excludes the scenario's `version` field from its hash input, so bumping version alone changes nothing else)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u13-004-q1",
+            "contentHash": "505e31cc1cc5323bd195bda91519a77ba250cf17b138ecda9de2a73d96429218",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash on the version-2 replacement confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q2",
+            "contentHash": "0db564457adf7acc75c3be939e0dda40ffebb1f1741fd1e39df5668539e4bcc1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q3",
+            "contentHash": "3881a8789901af274b1720911cd24a546d9e865a3f290def85e584af78dd6e1c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. Sequence ordering re-confirmed non-rigid per its own explanation."
+          },
+          {
+            "questionId": "exp26-u13-004-q4",
+            "contentHash": "673d13a427987641216254cf6c96356f2df0a7bc5e188830f6c0fe065e84c76e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. Its own (-13,3) reference is unaffected by q9's fix and remains independently verified as below/inside W."
+          },
+          {
+            "questionId": "exp26-u13-004-q5",
+            "contentHash": "b4570d32737d06cf1126ee0e660eb23e62fc4ec789c2e68614639e1493294220",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q6",
+            "contentHash": "fe56816cf6e03a581c60f24ed548a454e9d67291a890b81d00269e1923b3d3dd",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q7",
+            "contentHash": "e8b262defa6479d31d6769d46a847bc1f4f9ccceb8603de339b8bd6776fe6fb7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content. D1-deeper-than-YOU claim re-verified numerically."
+          },
+          {
+            "questionId": "exp26-u13-004-q8",
+            "contentHash": "28afaf2a716e1e92072f15bcb1b76a0adf690e71d6356dc56527d4b55e665e62",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          },
+          {
+            "questionId": "exp26-u13-004-q9",
+            "contentHash": "68d1272e1281eb483240f3911344680e07ba940128c2a97576566ea74d4cb9d7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content re-checked against the corrected reference {x:-15,y:6}: on ice (isCoachRoutePoint true), a genuine 13.0m repositioning from YOU's start, strictly more negative in x than W's -10 (now genuinely 'below'/deeper), and closer to mid-ice than W's y=9 (still 'inside'). Explanation reworded to spell out both axes explicitly so the ambiguity cannot recur. Distinct from q4's example point (-13,3) by 3.6m, so it is not a duplicate position question."
+          },
+          {
+            "questionId": "exp26-u13-004-q10",
+            "contentHash": "4eb3775a99f31d1136ddff089fe99b55789d9df3200a41188b1a38161f201de0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from original; recomputed hash confirms byte-identical content."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T00:00:00Z",
+      "access": "read",
+      "scope": "Fetched directly and read page 1 (WebFetch's text extraction failed on this PDF's compressed streams, so the Read tool was used directly on the saved PDF per the project's PDF-fallback instruction). Page 1 is a genuine Hockey Canada 'U13 SKILLS -- LTPD STAGE - Learn to Train' skills-by-category grid, confirming this is age-specific to U13 (not a generic or wrong-age document). Its 'Team Play' column lists 'Basic Positioning - D Zone', 'Basic Breakouts', 'Regroups', 'Entries', 'Forechecks', and its 'Individual Offensive Tactics' column lists puck protection, control skating, change of pace, etc. This supports the age/topic placement of a U13 breakout-support scenario (family: centre-low-support) but is only a skills checklist -- it gives no specific tactical instruction, geometry, or rule about 'offering a short inside outlet' or 'staying underneath' a pressured teammate, so it cannot certify any of this scenario's specific coaching claims, consistent with the source's own stated 'use' field.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U13 / LTPD 'Learn to Train' stage (approx. ages 12-13)",
+      "claim": "Age/topic placement only for the centre-low-support breakout-support family; does not certify specific tactical claims, geometry, or outcomes in exp26-u13-004."
+    }
+  ]
+}

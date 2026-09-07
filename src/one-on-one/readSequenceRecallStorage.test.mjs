@@ -171,7 +171,7 @@ test('unfinished or malformed completed sessions cannot create or reopen an atte
   const raw = storage.serializeReadSequenceRecallAttempt(session, { order });
   const malformed = [createReadSequenceSession(), { ...session, scenarioId: 'unknown' }];
   for (const change of [
-    draft => { draft.first.reason = ''; },
+    draft => { draft.first.reason = null; },
     draft => { draft.third.reason = 'x'.repeat(601); },
     draft => { draft.third.actorId = 'G'; },
     draft => { draft.third.point.x = 99; },

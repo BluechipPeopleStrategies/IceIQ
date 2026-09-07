@@ -1,0 +1,2 @@
+import fs from 'node:fs';import {readBankFiles} from '../tools/experimental-bank-files.mjs';
+const n=Number(process.argv[2]);const p=JSON.parse(fs.readFileSync('docs/factory/claude-project/claude-output/review-packet-'+n+'.json'));for(const s of readBankFiles().bank.filter(s=>p.coverage.some(q=>q.scenarioId===s.id))){const r=p.repairs.find(x=>x.scenarioId===s.id)?.replacement||s;console.log(JSON.stringify({id:r.id,version:r.version,title:r.title,objective:r.objective,briefing:r.briefing,setup:r.setup,cues:r.cues,questions:r.questions}));}

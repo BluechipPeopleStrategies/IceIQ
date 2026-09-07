@@ -1,0 +1,19 @@
+.scenario-image{margin:0 0 1.2rem;border:1px solid #C9A24B55;border-radius:18px;overflow:hidden;background:linear-gradient(130deg,#253a52,#0B1A33);box-shadow:0 14px 35px #07101e33,inset 0 1px #fff2;color:#F5EFE6;font-family:Inter,system-ui,sans-serif}
+.scenario-image-sticky{position:sticky;top:62px;z-index:10}
+.scenario-image-picture{position:relative;width:100%;overflow:hidden;background:#081421}
+.scenario-image-picture>img{display:block;width:100%;user-select:none}
+.scenario-image figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 9px 5px 14px;font-size:11px;letter-spacing:.025em;color:#d1dae5}
+.scenario-image button,.scenario-image-dialog button{min-height:44px;min-width:44px;border:1px solid #F5EFE633;border-radius:24px;background:#ffffff08;padding:9px 15px;color:#F5EFE6;font:600 12px/1.25 Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.scenario-image button:hover,.scenario-image-dialog button:hover{border-color:#C9A24B;background:#C9A24B20}
+.scenario-image button:focus-visible,.scenario-image-dialog button:focus-visible{outline:3px solid #e8c879;outline-offset:2px}
+.scenario-image-dialog{box-sizing:border-box;width:min(1380px,96vw);max-width:96vw;max-height:94dvh;padding:16px;border:1px solid #C9A24B80;border-radius:22px;background:linear-gradient(145deg,#1c304b,#0B1A33);color:#F5EFE6;box-shadow:0 25px 100px #0009;overflow:hidden}
+.scenario-image-dialog::backdrop{background:#020a15dd;backdrop-filter:blur(8px)}
+.scenario-image-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.scenario-image-dialog h2{font:700 clamp(18px,3vw,27px)/1.2 'Playfair Display',Georgia,serif;margin:0}
+.scenario-image-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;font:500 12px/1.5 Inter,system-ui,sans-serif;color:#d1dae5}
+.scenario-image-tools output{min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+.scenario-image-dialog button:disabled{opacity:.4;cursor:default}
+.scenario-image-inspection{max-height:calc(94dvh - 156px);overflow:auto;border-radius:12px;background:#071321;overscroll-behavior:contain;touch-action:pan-x pan-y;scrollbar-gutter:stable}
+.scenario-image-extent{position:relative}
+.scenario-image-composition{position:absolute;left:0;top:0;transform-origin:top left}
+@media(max-width:560px){.scenario-image-dialog{padding:12px;border-radius:16px}.scenario-image-tools>span{flex-basis:100%}.scenario-image-inspection{max-height:calc(94dvh - 190px)}.scenario-image figcaption{padding-left:10px}.scenario-image figcaption>span{font-size:10px}}

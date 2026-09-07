@@ -1,9 +1,39 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { OverlayLayer } from '../OverlayLayer.jsx';
+import ScenarioRinkView from './ScenarioRinkView.jsx';
+import { sourceScene3D } from './sourceScene3D.js';
 import './ScenarioImage.css';
+const useBrowserLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/** Authored image scenes now use the same read-only 3D rink as other lessons. */
+export default function ScenarioImage(props) {
+  const { media, overlays, questionId = '', sticky = false, onAvailabilityChange } = props;
+  const scene = useMemo(() => sourceScene3D({ media, overlays }), [media, overlays]);
+  const identity = JSON.stringify([questionId, media ?? null, overlays ?? null, scene?.id ?? null]);
+  const gateRef = useRef(null), callback = useRef(onAvailabilityChange);
+  if (gateRef.current?.identity !== identity) gateRef.current = { identity, mounted: true };
+  const gate = gateRef.current; callback.current = onAvailabilityChange;
+  const needsImage = !!media?.url && (!media.type || media.type === 'image');
+  useBrowserLayoutEffect(() => {
+    gate.mounted = true;
+    callback.current?.(!needsImage);
+    return () => { gate.mounted = false; };
+  }, [gate, needsImage]);
+  const reportAvailability = useMemo(() => available => {
+    if (gateRef.current === gate && gate.mounted) callback.current?.(available === true);
+  }, [gate]);
+  if (!scene) return <ImageInspection key={identity} {...props} onAvailabilityChange={reportAvailability} />;
+  return <figure className={`scenario-image${sticky ? ' scenario-image-sticky' : ''}`} data-source-scene={scene.id}>
+    <ScenarioRinkView key={identity} state={scene.state} bounds={scene.bounds} title={scene.caption} focusActorId={scene.focusActorId}
+      ageBand={props.ageBand} startingView={props.startingView} questionId={questionId}
+      overlays={scene.overlays} playing={false} labelledActors showBothGoals={scene.showBothGoals}
+      teamLabels={scene.teamLabels} onAvailabilityChange={reportAvailability} />
+    <figcaption><span>{scene.caption}</span></figcaption>
+  </figure>;
+}
 
 /** Read-only inspection. The exact source image, fit and overlays scale together. */
-export default function ScenarioImage({ media, overlays, sticky = false, frameRatio = '16/9' }) {
+function ImageInspection({ media, overlays, sticky = false, frameRatio = '16/9', onAvailabilityChange }) {
   const [open, setOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const dialog = useRef(null);
@@ -35,14 +65,14 @@ export default function ScenarioImage({ media, overlays, sticky = false, frameRa
   }, [open, media?.url]);
   // Older authored image questions omit `type`; their URL is still the source.
   if (!media?.url || (media.type && media.type !== 'image')) return null;
-  const picture = () => <div className="scenario-image-picture" style={{ aspectRatio: ratio || undefined }}>
-    <img src={media.url} alt={media.alt || 'Hockey scenario'} draggable={false} decoding="async"
+  const picture = (primary = false) => <div className="scenario-image-picture" style={{ aspectRatio: ratio || undefined }}>
+    <img src={media.url} alt={media.alt || 'Hockey scenario'} draggable={false} decoding="async" onLoad={primary ? () => onAvailabilityChange?.(true) : undefined} onError={primary ? () => onAvailabilityChange?.(false) : undefined}
       style={{ height: ratio ? '100%' : 'auto', objectFit: media.aspect ? 'cover' : 'contain' }} />
     <OverlayLayer overlays={overlays} />
   </div>;
   function close() { setOpen(false); trigger.current?.focus({ preventScroll: true }); }
   return <figure className={`scenario-image${sticky ? ' scenario-image-sticky' : ''}`}>
-    {picture()}
+    {picture(true)}
     <figcaption><span>Read the picture</span><button ref={trigger} type="button" onClick={() => { setZoom(1); setOpen(true); }} aria-haspopup="dialog">Enlarge picture <span aria-hidden="true">↗</span></button></figcaption>
     <dialog ref={dialog} className="scenario-image-dialog" aria-labelledby={title} onClose={close} onCancel={close}>
       <header><h2 id={title}>Look at the play</h2><button type="button" onClick={close} autoFocus>Close <span aria-hidden="true">×</span></button></header>

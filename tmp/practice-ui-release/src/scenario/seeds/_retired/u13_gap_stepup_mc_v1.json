@@ -1,0 +1,76 @@
+{
+  "id": "u13_gap_stepup_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.gap-control",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "gap-control",
+    "neutral-zone",
+    "defensive-zone-coverage",
+    "anticipate"
+  ],
+  "cat": "Defensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.44,
+      "y": 0.5,
+      "tag": "D"
+    },
+    {
+      "id": "od",
+      "kind": "defender",
+      "x": 0.66,
+      "y": 0.5,
+      "tag": "D"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.662,
+      "y": 0.498
+    },
+    {
+      "id": "ofwd",
+      "kind": "defender",
+      "x": 0.58,
+      "y": 0.3,
+      "tag": "F"
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "The puck is back with their defense and their forwards are flat-footed. Tap the ice you should step up to so you take away their time and space."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.56,
+    "y": 0.46,
+    "tolerance": 0.1
+  },
+  "mc": {
+    "stem": "The puck is back with their defenseman and their forwards are flat-footed. You are the defenseman. What is your read?",
+    "opts": [
+      "Step up under control to tighten the gap and take away open ice",
+      "Keep backing in even though the forwards have no speed",
+      "Pinch hard and gamble on the puck before they have even moved",
+      "Stay stationary and wait for the forwards to skate into you"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. When the attack slows down, take the ice back. Stepping up under control closes the gap before they rebuild speed.",
+    "wrong": "Backing in or drifting gives flat-footed forwards time to rebuild speed. Step up under control and take the ice away."
+  },
+  "tip": "When the attack has no speed, step up and take ice back to kill their time and space.",
+  "why": "When the attack slows, the defender can take ice back. Stepping up under control closes the gap before the forwards rebuild speed."
+}

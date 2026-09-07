@@ -1,0 +1,4 @@
+from pathlib import Path
+p=Path('src/one-on-one/hockeyPlayerRig.js');s=p.read_text().replace('for (const bone of bones) group.add(bone);','group.add(bones[0]); for (const bone of bones.slice(1)) bones[0].add(bone);').replace('finite(pose.lookYaw,-Math.PI,Math.PI)','finite(pose.lookYaw,-1.2,1.2)');s=s.replace("    const active = ['forward'", "    if (stride === 0 && lean === 0 && look === 0 && finite(pose.turn,-1,1) === 0) { group.updateMatrixWorld(true); skeleton.update(); return; }\n    const active = ['forward'")
+p.write_text(s)
+p=Path('src/visuals/characterPresentation.js');s=p.read_text().replace('bodyScale: .72','eyeHeight: 1.33875, bodyScale: .72').replace('bodyScale: 1,','eyeHeight: 1.545, bodyScale: 1,').replace('bodyScale: 1.13','eyeHeight: 1.6737, bodyScale: 1.13');p.write_text(s)

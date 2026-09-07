@@ -6,7 +6,7 @@ import LearningWorlds from './LearningWorlds.jsx';
 import { allowsRinkDiscovery } from './learningWorldsCore.js';
 import CoachQuestionLab from './CoachQuestionLab.jsx';
 import ReadSequence from './ReadSequence.jsx';
-import CoachLab, { draftFromPlay } from './CoachLab.jsx';
+import CoachLab from './CoachLab.jsx';
 import { RinkReadsLogo } from '../shared.jsx';
 import { bandsAvailable } from '../path/pathData.js';
 import { JOURNEY_WORLDS } from '../path/journeyPresentation.js';
@@ -37,7 +37,6 @@ export default function PracticeHub({player,initialSearch,onBack}) {
   function openLearningActivity(target){setNavigation(current=>({...current,tab:target.tab,learn:target.learn||current.learn,practice:target.practice||current.practice,learningProfile,learningAge:target.ageBand||learningAge,lessonId:target.lessonId||null,conceptId:target.conceptId||null}));setError('')}
   const [coachView,setCoachView]=useState('questions'),[questionDraft,setQuestionDraft]=useState(null),[questionRevision,setQuestionRevision]=useState(0);
   function openDirector(draft){setCoachDraft(draft);setDraftRevision(v=>v+1);setCoachView('director');setTab('coach');setError('')}
-  function openDraft(play){try{openDirector(draftFromPlay(play))}catch(e){setError(e.message)}}
   function askAboutDraft(draft){setQuestionDraft(structuredClone(draft));setQuestionRevision(v=>v+1);setCoachView('questions')}
   return <main className="pf-hub">
     <header className="pf-header">{onBack&&<button className="oo-secondary" onClick={onBack}>Back to Home</button>}<a onClick={onBack ? event=>{event.preventDefault();onBack();} : undefined} href="#" className="pf-brand"><RinkReadsLogo size={27} wordmark/><span>PRACTICE ARENA</span></a><nav aria-label="RinkReads arena">{TABS.map(([id,label])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setError('')}}>{label}</button>)}</nav></header>
@@ -46,7 +45,7 @@ export default function PracticeHub({player,initialSearch,onBack}) {
     {tab==='play'&&<OneOnOne key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/>}
     {tab==='learn'&&<><nav className="pf-learning-switch" aria-label="Learning collection">{[['worlds','Your hockey worlds'],['guided','Guided lessons'],['library','Lesson library'],['discover','Explore the rink']].filter(([id])=>id!=='discover'||discoveryAvailable).map(([id,label])=><button key={id} aria-pressed={learningView===id} onClick={()=>setNavigation(current=>({...current,learn:id}))}>{label}</button>)}</nav>
       {learningView==='worlds'?<LearningWorlds key={learningProfile} ageBand={learningAge} playerId={learningProfile} initialWorldId={navigation.worldId} onAgeChange={ageBand=>setNavigation(current=>({...current,learningProfile,learningAge:ageBand,lessonId:null,conceptId:null}))} onNavigate={openLearningActivity}/>
-        :learningView==='library'?<PracticeLibrary key={`${learningProfile}:${learningAge}:${navigation.conceptId||'all'}`} ageBand={learningAge} initialConcept={navigation.conceptId||''} onOpenDraft={openDraft} playerId={player?.id||'practice-preview'}/>
+        :learningView==='library'?<PracticeLibrary key={`${learningProfile}:${learningAge}:${navigation.conceptId||'all'}`} ageBand={learningAge} initialConcept={navigation.conceptId||''} playerId={player?.id||'practice-preview'}/>
         :learningView==='discover'?<Suspense fallback={<p>Opening the rink…</p>}><RinkDiscovery key={player?.id||'practice-preview'}/></Suspense>
         :<GuidedCurriculum playerId={player?.id||'practice-preview'} ageBand={learningAge} initialLessonId={navigation.lessonId}/>}
     </>}

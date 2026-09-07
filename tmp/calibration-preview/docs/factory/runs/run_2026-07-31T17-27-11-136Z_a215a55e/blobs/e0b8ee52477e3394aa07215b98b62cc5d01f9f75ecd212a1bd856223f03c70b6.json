@@ -1,0 +1,230 @@
+{
+  "kind": "simulation-trace",
+  "version": "simulation-trace-v1",
+  "value": {
+    "schemaVersion": "simulation-trace-v1",
+    "solverContract": {
+      "version": "level1-simulator-v3",
+      "rngAlgorithm": "none",
+      "rngVersion": null,
+      "seedConsumptionOrder": null,
+      "tieBreaking": "array-index-order",
+      "floatPolicy": "round6",
+      "coordinatePrecision": "rink-frame-native-metres",
+      "candidateIdDerivation": "versionedContentHash(kind='simulation-trace', version=SIMULATOR_VERSION, value={definitionId, definitionVersion, definitionContentHash})"
+    },
+    "definitionId": "sd_dz_breakout_variant_mistimed_pass",
+    "definitionVersion": 1,
+    "physicsProfileId": "physics-u13-v1",
+    "physicsClean": false,
+    "findings": [
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "unreachable-pass",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "D1",
+        "puck": true,
+        "actionIndex": 1,
+        "eventTime": 3,
+        "eventIntervalS": 0.10000000000000009,
+        "measuredValue": 96.2905851498509,
+        "threshold": 17.25,
+        "margin": 79.040585,
+        "units": "m/s",
+        "profileId": "physics-u13-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "puck decelerates at the profile's ice-friction rate for the whole path",
+          "no deflection/contact modeled"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "hard-failure",
+        "answerImpact": "changes-answer",
+        "explanation": "A pass covering 9.62m in 0.10s needs a 96.29 m/s launch speed accounting for ice deceleration, exceeding this age band's estimated pass-speed capability (15 m/s)."
+      },
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "possible-interception",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "W1",
+        "puck": true,
+        "actionIndex": 1,
+        "eventTime": 3.1,
+        "eventIntervalS": null,
+        "measuredValue": 0,
+        "threshold": 0.10000000000000009,
+        "margin": -0.1,
+        "units": "seconds",
+        "profileId": "physics-u13-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "straight-line reachability from current position only, not full defensive positioning/reaction",
+          "this is a WARNING, not a hard failure -- a simplification, not a proof the lane is closed"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "warning",
+        "answerImpact": "possible",
+        "explanation": "W1 could reach the nearest point on D1's pass path (0.00m away) in 0.00s, at or before the puck arrives there (~0.10s) -- worth a human/tactical-claim check, not treated as disproof on its own."
+      },
+      {
+        "schemaVersion": "structured-finding-v1",
+        "kind": "UNSUPPORTED_MODEL",
+        "validatorCode": "impossible-turning",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "D1",
+        "puck": false,
+        "actionIndex": null,
+        "eventTime": 3,
+        "reason": "a pass/shot's direction is set by release mechanics, not the skater's own turning radius -- not modeled by this detector"
+      }
+    ],
+    "unsupportedModelCount": 1,
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 3.1,
+        "pos": [
+          16.764,
+          -6.858
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "canonicalTraceHash": "a577565d9dc28392315030b2447771d41f46ede2aa91546ae1f9c6629ea02a9f"
+  }
+}

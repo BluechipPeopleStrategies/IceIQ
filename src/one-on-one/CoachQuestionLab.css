@@ -56,7 +56,7 @@
 .cq-board > figcaption { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; padding:13px 15px; border-bottom:1px solid #f5efe61a; }
 .cq-board > figcaption strong { font-size:12px; font-weight:600; }
 .cq-board > figcaption span { color:#9aa8ba; font-size:9px; }
-.cq-board svg { display:block; width:100%; height:auto; background:#0B1A33; font-family:Inter,system-ui,sans-serif; user-select:none; -webkit-user-select:none; }
+.cq-board > svg { display:block; width:100%; height:auto; background:#0B1A33; font-family:Inter,system-ui,sans-serif; user-select:none; -webkit-user-select:none; }
 .cq-board-framing { display:flex; flex-wrap:wrap; gap:6px; padding:9px 12px; }
 .cq-board-framing button { min-height:38px; padding:7px 11px; font-size:11px; }
 .cq-board-framing button[aria-pressed=true] { background:#D6B25E; color:#0B1A33; border-color:#E9CD87; }
@@ -134,3 +134,16 @@
 @media(prefers-reduced-motion:reduce) { .cq-root * { scroll-behavior:auto!important; transition:none!important; } }
 
 .cq-turn-controls{display:grid;gap:8px;margin-top:12px}.cq-turn-controls>span{font-size:9px;color:var(--cq-muted);letter-spacing:.08em}
+.cq-setup{margin:0 28px 22px;padding:18px;border:1px solid #c9a24b42;border-radius:14px;background:linear-gradient(135deg,#22394c88,#12243b88)}
+.cq-setup-heading{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:15px}
+.cq-setup-heading h3{margin:0 0 5px;font:600 17px/1.3 Inter,Arial,sans-serif}
+.cq-setup-heading p{margin:0;color:#b8c8d8;font:400 12px/1.6 Inter,Arial,sans-serif}
+.cq-setup-heading>span{color:#e8d19b;font-size:11px;white-space:nowrap}
+.cq-setup-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.cq-setup label{display:grid;gap:7px;font:500 11px/1.4 Inter,Arial,sans-serif;color:#d0dce8}
+.cq-setup select{width:100%;min-height:44px;padding:9px;border:1px solid #ffffff26;border-radius:8px;background:#0b1a33;color:#f5efe0;font:500 12px/1.4 Inter,Arial,sans-serif}
+.cq-setup label.cq-goalie-toggle{display:flex;align-items:center;gap:8px;min-height:44px;margin:3px 0 0}
+.cq-setup .cq-goalie-toggle input{width:17px;height:17px;min-height:0;margin:0;accent-color:#c9a24b}
+.cq-setup-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.cq-setup-actions button{min-height:44px}.cq-setup-actions button[aria-pressed=true]{border-color:#c9a24b;color:#efd69b}
+@media(max-width:560px){.cq-setup{margin:0 12px 18px;padding:13px}.cq-setup-heading{flex-direction:column;gap:6px}.cq-setup-fields{grid-template-columns:1fr 1fr;gap:10px}.cq-setup-fields>label{grid-column:1/-1}.cq-setup-actions>button{width:100%}}

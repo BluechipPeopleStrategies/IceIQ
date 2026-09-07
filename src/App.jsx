@@ -59,6 +59,7 @@ import {
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 import ScenarioImage from "./visuals/ScenarioImage.jsx";
+import { useQuestionVisualGate } from './visuals/useQuestionVisualGate.js';
 import { HockeyPlayerArt } from "./visuals/HockeyPlayerArt.jsx";
 import { RinkPlayTest } from "./RinkPlay.jsx";
 import { PathScreen } from "./path/PathScreen.jsx";
@@ -489,11 +490,11 @@ function lazyWithReload(factory) {
   }));
 }
 
-const GoalBuilder = lazyWithReload(() => import("./goals/GoalBuilder.jsx"));
-const CoachAssessment = lazyWithReload(() => import("./coach/CoachAssessment.jsx"));
-const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
+const GoalBuilder = lazyWithReload(() => import("./goals/GoalBuilder.jsx"));
+const CoachAssessment = lazyWithReload(() => import("./coach/CoachAssessment.jsx"));
 const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
 const BrowseScreen = lazyWithReload(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazyWithReload(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
@@ -1150,7 +1151,7 @@ function MCQuestion({ q, sel, onPick, colorblind }) {
             style={{
               background:bg, border:`1px solid ${bdr}`,
               borderLeft:`3px solid ${leftBdr}`,
-              borderRadius:12, padding:".95rem 1.1rem",
+              borderRadius:12, padding:".55rem .8rem", minHeight:44,
               cursor:sel!==null?"default":"pointer",
               textAlign:"left", color:col,
               fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
@@ -1238,7 +1239,7 @@ function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
               style={{
                 background:bg, border:`1px solid ${bdr}`,
                 borderLeft:`3px solid ${leftBdr}`,
-                borderRadius:12, padding:".95rem 1.1rem",
+                borderRadius:12, padding:".55rem .8rem", minHeight:44,
                 cursor:locked?"default":"pointer",
                 textAlign:"left", color:col,
                 fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
@@ -1379,7 +1380,7 @@ function NextQuestion({ q, sel, onPick, colorblind }) {
         } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
         return (
           <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
-            style={{background:bg,border:`1px solid ${bdr}`,borderLeft:`3px solid ${leftBdr}`,borderRadius:12,padding:".95rem 1.1rem",cursor:sel!==null?"default":"pointer",textAlign:"left",color:col,fontFamily:FONT.body,fontSize:14,lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:".75rem",transition:"all .15s",width:"100%"}}>
+            style={{background:bg,border:`1px solid ${bdr}`,borderLeft:`3px solid ${leftBdr}`,borderRadius:12,padding:".55rem .8rem", minHeight:44,cursor:sel!==null?"default":"pointer",textAlign:"left",color:col,fontFamily:FONT.body,fontSize:14,lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:".75rem",transition:"all .15s",width:"100%"}}>
             <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?V.correct:isWrong?V.wrong:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
               {picked?(isCorrect?"✓":isWrong?"✗":String.fromCharCode(65+i)):String.fromCharCode(65+i)}
             </span>
@@ -1968,6 +1969,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       ok: raw.ok !== undefined ? raw.ok : (typeof raw.correct === "number" ? raw.correct : raw.ok),
     };
   })();
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
+  const NON_RINK_ANSWER_TYPES = new Set(["mc","tf","multi","seq","mistake","next","scenario"]);
+  const isRinkQ = NEW_RINK_TYPES.includes(qtype) || (!!question?.rink && !NON_RINK_ANSWER_TYPES.has(qtype));
+
+  const questionVisual = useQuestionVisualGate(q, presentedCount, !isRinkQ);
   // Dev-only edit affordance — gated on ?dev=1 so kids can't see it.
   const editAllowed = (() => {
     try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
@@ -2004,10 +2010,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // hasn't answered yet. Resets on every new question. Reads dynamic
   // values inside the callback to avoid stale-closure issues.
   useEffect(() => {
-    if (!timedMode || !question) return;
-    if (sel !== null || seqAnswered || rinkQResult !== null) return;
+    if (!timedMode || !question || !questionVisual.ready) return;
+    if (!questionVisual.canAnswer() || sel !== null || seqAnswered || rinkQResult !== null) return;
     const t = setTimeout(() => {
-      if (sel !== null || seqAnswered || rinkQResult !== null) return;
+      if (!questionVisual.canAnswer() || sel !== null || seqAnswered || rinkQResult !== null) return;
       const qt = question?.type || "mc";
       const newResult = { id:question.id, cat:question.cat, ok:false, d:question.d||2, type:qt, speedBonus:0, timedOut:true };
       if (qt === "tf") {
@@ -2027,19 +2033,19 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       setResults(newResults);
       toast.warning("⏱ Time's up!", { duration: 1800 });
       if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
-    }, TIMED_DURATION_MS);
+    }, Math.max(0, TIMED_DURATION_MS - questionVisual.visibleMs()));
     return () => clearTimeout(t);
-  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
+  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult, questionVisual.key, questionVisual.ready, questionVisual.revision]);
 
   // Speed-bonus window (SPEED_TYPES / SPEED_DURATION_MS / SPEED_MAX_BONUS /
   // SPEED_GRACE_MS / computeSpeedBonus now live in utils/quizResults.js, where
   // the rest of the quiz maths is and where the grace can be asserted directly).
 
   function handlePick(i) {
-    if (sel !== null || !q) return;
+    if (!questionVisual.canAnswer() || sel !== null || !q) return;
     setSel(i);
     const ok = i === q.ok;
-    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    const bonus = computeSpeedBonus(qtype, ok, Date.now() - questionVisual.visibleMs());
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:qtype, speedBonus:bonus };
@@ -2059,11 +2065,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     // calcWeightedIQ() and the "N/M correct" results screen both divide by.
     // seqAnswered is reset per question alongside rinkQResult, so first answer
     // wins and later steps of the same question no longer double-record.
-    if (seqAnswered) return;
+    if (!questionVisual.canAnswer() || seqAnswered) return;
     setSeqAnswered(true);
     setSeqCorrect(ok);
     if (!ok) setSeqPerfect(false);
-    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    const bonus = computeSpeedBonus(qtype, ok, Date.now() - questionVisual.visibleMs());
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:q.type || "seq", speedBonus:bonus };
@@ -2077,7 +2083,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // it comes back. Answering it later goes through upsertResult, which REPLACES
   // this row rather than appending a second one.
   function handleSkip() {
-    if (!question) return;
+    if (!questionVisual.canAnswer() || !question) return;
     setResults(prev => upsertResult(prev, skipResult(question)));
     setSkippedQs(prev => (prev.some(x => x.id === question.id) ? prev : [...prev, question]));
     advance({ from: "skip" });
@@ -2145,9 +2151,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // q.rink (diagram-MC pattern: small inline rink above the options) but
   // they keep their normal MC-style answer flow — those don't get dispatched
   // to the interactive widget.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
-  const NON_RINK_ANSWER_TYPES = new Set(["mc","tf","multi","seq","mistake","next","scenario"]);
-  const isRinkQ = NEW_RINK_TYPES.includes(qtype) || (!!question?.rink && !NON_RINK_ANSWER_TYPES.has(qtype));
+
   const answered = isRinkQ
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
@@ -2216,10 +2220,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // component fires onAnswer(true|false); we dedupe via rinkQResult so a player
   // toggling/retrying inside the rink widget can't double-record.
   function handleRinkQAnswer(ok) {
-    if (rinkQResult !== null) return;
+    if (!questionVisual.canAnswer() || rinkQResult !== null) return;
     const okBool = !!ok;
     setRinkQResult(okBool);
-    const bonus = computeSpeedBonus(qtype, okBool, questionStartedAt);
+    const bonus = computeSpeedBonus(qtype, okBool, Date.now() - questionVisual.visibleMs());
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const nextResults = upsertResult(results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus });
@@ -2350,7 +2354,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             image as its own clickable canvas (hot-spots, drag-target,
             multi-tap, etc.) — otherwise the kid sees the picture twice. */}
         {q.media?.url && !isRinkQ && (
-          <ScenarioImage media={q.media} overlays={q.overlays} sticky />
+          <ScenarioImage key={questionVisual.key} questionId={q.id} ageBand={player.level ?? q.ageBand ?? q.level} startingView={q.startingView} media={q.media} overlays={q.overlays} sticky onAvailabilityChange={questionVisual.onAvailabilityChange} />
         )}
 
         {/* Mini-rink diagram — for any non-interactive MC-shape question
@@ -2442,9 +2446,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         {/* Speed-bonus timer — only for interactive types when NOT in timed
             mode. Holds full through the reading grace, then drains live;
             freezes on answer with the awarded bonus. Wrong answers freeze at 0. */}
-        {!timedMode && SPEED_TYPES.has(qtype) && (
+        {!timedMode && questionVisual.ready && SPEED_TYPES.has(qtype) && (
           <SpeedTimerBar
-            startedAt={questionStartedAt}
+            startedAt={questionVisual.timerStartedAt}
             durationMs={SPEED_DURATION_MS}
             graceMs={SPEED_GRACE_MS}
             maxBonus={SPEED_MAX_BONUS}
@@ -2456,14 +2460,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         {/* Time-pressure hard-cutoff bar — when ?timed=1 is on, every
             answerable type gets a 12-second countdown. Bar drains visibly;
             on expire the timeout effect below auto-records as wrong. */}
-        {timedMode && (
+        {timedMode && questionVisual.ready && (
           <div style={{marginBottom:".75rem",padding:".5rem .75rem",background:C.bgCard,border:`1px solid ${C.redBorder}`,borderRadius:10}}>
-            <TimedCountdownBar startedAt={questionStartedAt} durationMs={TIMED_DURATION_MS} frozen={answered}/>
+            <TimedCountdownBar startedAt={questionVisual.timerStartedAt} durationMs={TIMED_DURATION_MS} frozen={answered}/>
           </div>
         )}
 
         {/* Question component — single dispatch in renderQuestionBody() */}
-        {renderQuestionBody()}
+        <fieldset disabled={!questionVisual.ready} style={{border:0,padding:0,margin:0,minWidth:0}} aria-label="Question answers">{renderQuestionBody()}</fieldset>
+        {!questionVisual.ready && <p role="status" style={{color:C.dim,fontSize:12}}>The rink is loading or paused. Your answer and timer wait until it is ready.</p>}
 
         {/* Local-edit indicator + dev edit affordance. The badge is visible to
             anyone in dev mode so they can see when they're playing an edited
@@ -2638,7 +2643,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             is never a free pass, and the question is re-served before the
             session ends so it can still be earned back. */}
         {!answered && (
-          <button onClick={handleSkip}
+          <button onClick={handleSkip} disabled={!questionVisual.ready}
             style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,color:C.dim,fontSize:12,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".55rem",fontWeight:700}}>
             Skip for now — comes back later, counts wrong until you answer it
           </button>
@@ -3667,14 +3672,17 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
     });
   }, []);
 
+  const q = questions?.[current];
+  const questionVisual = useQuestionVisualGate(q, current);
+
   if (!questions) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading challenge…</div></Screen>;
 
-  const q = questions[current];
   const qtype = q?.type || "mc";
   const qLen = questions.length;
   const typeInfo = Q_TYPE_INFO(q);
 
   function submitAnswer(ok, extra = {}) {
+    if (!questionVisual.canAnswer()) return;
     const result = { id: q.id, cat: q.cat, type: qtype, d: q.d || 2, ok, ...extra };
     const newResults = [...results, result];
     setResults(newResults);
@@ -3689,19 +3697,19 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
   }
 
   function handlePick(i) {
-    if (sel !== null) return;
+    if (!questionVisual.canAnswer() || sel !== null) return;
     setSel(i);
     submitAnswer(i === q.ok);
   }
 
   function handleTF(val) {
-    if (sel !== null) return;
+    if (!questionVisual.canAnswer() || sel !== null) return;
     setSel(val ? "true" : "false");
     submitAnswer(val === q.ok);
   }
 
   function handleSeqAnswer(isCorrect) {
-    if (seqAnswered) return;
+    if (!questionVisual.canAnswer() || seqAnswered) return;
     setSeqAnswered(true);
     setSeqCorrect(isCorrect);
     submitAnswer(isCorrect);
@@ -3731,7 +3739,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         </div>
 
         {q.media?.url && (
-          <ScenarioImage media={q.media} overlays={q.overlays} />
+          <ScenarioImage key={questionVisual.key} questionId={q.id} ageBand={player.level ?? q.ageBand ?? q.level} startingView={q.startingView} media={q.media} overlays={q.overlays} onAvailabilityChange={questionVisual.onAvailabilityChange} />
         )}
         {(qtype === "mc" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
@@ -3779,6 +3787,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           </Card>
         )}
 
+        <fieldset disabled={!questionVisual.ready} style={{border:0,padding:0,margin:0,minWidth:0}} aria-label="Challenge answers">
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
@@ -3801,6 +3810,8 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           </div>
         )}
         {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
+        </fieldset>
+        {!questionVisual.ready && <p role="status" style={{color:C.dim,fontSize:12}}>The rink is loading or paused. Choose your answer when it is ready.</p>}
 
         {/* `scenario` questions are excluded for the same reason as seq/multi:
             ScenarioRenderer already renders its own verdict and coach tip from
@@ -5740,19 +5751,27 @@ function McFieldEditor({ draft, setField, setOpt, addOpt, removeOpt }) {
 // Minimal MC / TF / Sequence fallback for non-rink types so the preview
 // URL works for any question id, not just interactive rink ones.
 function QuestionPreviewFallback({ question, onAnswer }) {
-  const [sel, setSel] = useState(null);
+  const [selection, setSelection] = useState(null);
+  const submitted = useRef(null);
   const q = question;
+  const questionVisual = useQuestionVisualGate(q);
+  const sel = selection?.key === questionVisual.key ? selection.value : null;
   const isTF = q.type === "tf";
   const answered = sel !== null;
   const correctIdx = typeof q.correct === "number" ? q.correct : (typeof q.ok === "number" ? q.ok : null);
   const ok = isTF ? (sel === q.ok) : (correctIdx !== null && sel === correctIdx);
   useEffect(() => {
     if (answered && onAnswer) onAnswer(ok);
-  }, [answered]);
+  }, [answered, questionVisual.key]);
+  function pick(value) {
+    if (!questionVisual.canAnswer() || answered || submitted.current === questionVisual.key) return;
+    submitted.current = questionVisual.key;
+    setSelection({ key: questionVisual.key, value });
+  }
   return (
     <div>
       {q.media?.url && (
-        <ScenarioImage media={q.media} overlays={q.overlays} />
+        <ScenarioImage key={questionVisual.key} questionId={q.id} ageBand={q.ageBand ?? q.level} startingView={q.startingView} media={q.media} overlays={q.overlays} onAvailabilityChange={questionVisual.onAvailabilityChange} />
       )}
       <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
         <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".5rem",fontWeight:700}}>{isTF ? "True or False?" : q.sit ? "Game Situation" : "Question"}</div>
@@ -5765,7 +5784,7 @@ function QuestionPreviewFallback({ question, onAnswer }) {
             const isRight = answered && v === q.ok;
             const isWrongSel = answered && isSel && v !== q.ok;
             return (
-              <button key={String(v)} onClick={() => !answered && setSel(v)} disabled={answered}
+              <button key={String(v)} onClick={() => pick(v)} disabled={answered || !questionVisual.ready}
                 style={{background:isRight?"rgba(34,197,94,.15)":isWrongSel?"rgba(239,68,68,.15)":C.bgElevated,border:`2px solid ${isRight?C.green:isWrongSel?C.red:C.border}`,borderRadius:12,padding:"1.25rem",cursor:answered?"default":"pointer",fontWeight:700,fontSize:16,color:isRight?C.green:isWrongSel?C.red:C.white,fontFamily:FONT.body}}>
                 {v ? "True" : "False"}
               </button>
@@ -5779,7 +5798,7 @@ function QuestionPreviewFallback({ question, onAnswer }) {
             const showRight = answered && i === correctIdx;
             const showWrong = answered && isSel && i !== correctIdx;
             return (
-              <button key={i} onClick={() => !answered && setSel(i)} disabled={answered}
+              <button key={i} onClick={() => pick(i)} disabled={answered || !questionVisual.ready}
                 style={{width:"100%",textAlign:"left",marginBottom:".5rem",background:showRight?"rgba(34,197,94,.12)":showWrong?"rgba(239,68,68,.12)":C.bgElevated,border:`1.5px solid ${showRight?C.green:showWrong?C.red:C.border}`,borderRadius:10,padding:".85rem 1rem",cursor:answered?"default":"pointer",color:showRight?C.green:showWrong?C.red:C.white,fontFamily:FONT.body,fontSize:14}}>
                 {choice}
               </button>
@@ -5787,6 +5806,7 @@ function QuestionPreviewFallback({ question, onAnswer }) {
           })}
         </div>
       )}
+      {!questionVisual.ready && <p role="status" style={{color:C.dim,fontSize:12}}>The rink is loading or paused. Choose your answer when it is ready.</p>}
       {answered && (
         <Card style={{background:ok?"rgba(34,197,94,.06)":"rgba(239,68,68,.06)",border:`1px solid ${ok?C.greenBorder:C.redBorder}`,marginBottom:"1rem"}}>
           <div style={{fontSize:11,fontWeight:800,color:ok?C.green:C.red,marginBottom:".4rem",letterSpacing:".06em"}}>
@@ -6926,8 +6946,8 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
             {/* Owner review tools — jump straight to the board grid / triage deck
                 without logging in (the screens' auth gate honours dev bypass). */}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginTop:".4rem"}}>
-              <a href="#browse" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🗂 Browse grid</a>
-              <a href="#triage" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🃏 Triage deck</a>
+              <a href="?arena=experimental&review=browse#practice-arena" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🗂 Browse grid</a>
+              <a href="?arena=experimental&review=triage#practice-arena" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🃏 Triage deck</a>
             </div>
             <div style={{fontSize:10,color:"rgba(196,181,253,.55)",marginTop:".5rem",lineHeight:1.5}}>
               Console: <code style={{color:"#e9d5ff"}}>window.__dev</code> — <code style={{color:"#e9d5ff"}}>setTier</code>, <code style={{color:"#e9d5ff"}}>markFirstSixDone</code>, <code style={{color:"#e9d5ff"}}>reset</code>, <code style={{color:"#e9d5ff"}}>exitBypass</code>
@@ -7141,13 +7161,8 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 }
 
 // ─────────────────────────────────────────────────────────
-// DEPTH CHART — coach-private lineup tool, rendered inside each team card
+// COACH HOME — teams list, create team, roster
 // ─────────────────────────────────────────────────────────
-// NHL-style lineup card. Reads from depthChart storage, renders as forward
-// lines (LW / C / RW), D pairs (LD / RD), and goalies (Starter / Backup).
-// Coach can reassign a slot by tapping a player cell and picking from the
-// roster (bench includes anyone not yet on a line).
-
 const DEMO_COACH_TEAMS = [
   {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS",role:"Head Coach"},
   {id:"demo-t2",name:"U13 AAA River City Rush",level:"U13 / Peewee",season:SEASONS[0],code:"RUSH13",role:"Assistant Coach"},

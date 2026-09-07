@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads — Decision tree scenario</title>
+<style>
+:root{--navy:#0B1A33;--gold:#C9A24B;--ink:#1a2433;--muted:#6b7686;--line:#e3e7ee;--ok:#0B6B3A;--bad:#b4321f}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);background:#f4f6fa}
+header{background:var(--navy);color:#fff;padding:18px 24px}header h1{margin:0;font-size:19px}header p{margin:6px 0 0;font-size:13px;color:#c7d0e0;max-width:880px}
+.wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;padding:24px;max-width:1200px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(11,26,51,.06)}
+.tok{transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.qcard .sub{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gold)}
+.qcard h3{margin:4px 0 10px;font-size:16px;color:var(--navy)}
+.opt{display:block;width:100%;text-align:left;font-size:13.5px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;color:#3a4252;background:#fff;cursor:pointer;font-family:inherit}
+.opt:hover{border-color:var(--gold)}
+.opt.correct{border-left:4px solid var(--ok);background:#f2faf5;font-weight:700;color:var(--ink)}
+.opt.bad{border-left:4px solid var(--bad);background:#fdf3f1;color:#7a2a1c}
+.fb{font-size:12.5px;line-height:1.55;margin-top:10px;padding:10px 12px;border-radius:10px}
+.fb.ok{background:#f2faf5;color:#155f38;border:1px solid #bfe6cd}
+.fb.no{background:#fdf3f1;color:#7a2a1c;border:1px solid #f0ccc3}
+.matrix{font-size:12px;color:var(--muted);line-height:1.7;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.crumbs{font-size:11px;color:var(--muted);margin-bottom:8px}
+.btn{margin-top:12px;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+</style></head><body>
+<header><h1>One play → a decision tree</h1>
+<p>Answer #7's read; the pass spawns #23's read; that spawns the next. Each node could also ask what the D or the goalie should do — same frame, different actor. One scenario, many questions.</p></header>
+
+<div class="wrap">
+  <div class="card" style="padding:12px">
+    <svg viewBox="0 0 200 85" style="width:100%;height:auto;display:block">
+      <defs><filter id="sh" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0.6" stdDeviation="0.6" flood-color="#0b1a33" flood-opacity="0.35"/></filter></defs>
+      <rect x="2" y="2" width="196" height="81" rx="27" fill="#eef5fb" stroke="#0B1A33" stroke-width="1.4"/>
+      <rect x="99.2" y="2" width="1.6" height="81" fill="#d23a3a"/><rect x="74" y="2" width="2" height="81" fill="#2b6fd6"/><rect x="124" y="2" width="2" height="81" fill="#2b6fd6"/>
+      <rect x="11" y="9" width="0.7" height="67" fill="#d23a3a"/><rect x="188.3" y="9" width="0.7" height="67" fill="#d23a3a"/>
+      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#d23a3a" stroke-width="0.6"/>
+      <g fill="none" stroke="#d23a3a" stroke-width="0.6"><circle cx="169" cy="22" r="13"/><circle cx="169" cy="63" r="13"/><circle cx="31" cy="22" r="13"/><circle cx="31" cy="63" r="13"/></g>
+      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#bcdcff" stroke="#d23a3a" stroke-width="0.5"/><rect x="189" y="39" width="4" height="7" fill="none" stroke="#d23a3a" stroke-width="1"/>
+      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#bcdcff" stroke="#d23a3a" stroke-width="0.5"/><rect x="7" y="39" width="4" height="7" fill="none" stroke="#d23a3a" stroke-width="1"/>
+
+      <g id="puck" class="tok"><circle r="2.6" fill="none" stroke="#C9A24B" stroke-width="0.9"/><circle r="1.2" fill="#111"/></g>
+      <g id="pG" class="tok" filter="url(#sh)"><circle r="3.6" fill="#C9A24B" stroke="#0B1A33" stroke-width="0.4"/><text y="1.3" font-size="3" fill="#0B1A33" font-weight="800" text-anchor="middle" font-family="Inter,Arial">G</text></g>
+      <g id="pD" class="tok" filter="url(#sh)"><circle r="4.4" fill="#C9A24B" stroke="#0B1A33" stroke-width="0.4"/><text y="1.4" font-size="3.4" fill="#0B1A33" font-weight="800" text-anchor="middle" font-family="Inter,Arial">D</text></g>
+      <g id="p23" class="tok" filter="url(#sh)"><circle r="4.4" fill="#1a1a1a" stroke="#fff" stroke-width="0.4"/><text y="1.4" font-size="3.4" fill="#fff" font-weight="800" text-anchor="middle" font-family="Inter,Arial">23</text></g>
+      <g id="p7" class="tok" filter="url(#sh)"><circle r="4.4" fill="#1a1a1a" stroke="#fff" stroke-width="0.4"/><text y="1.4" font-size="3.4" fill="#fff" font-weight="800" text-anchor="middle" font-family="Inter,Arial">7</text></g>
+    </svg>
+  </div>
+
+  <div class="card qcard">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="sub" id="sub"></div>
+    <h3 id="q"></h3>
+    <div id="opts"></div>
+    <div id="fb"></div>
+    <div class="matrix" id="matrix"></div>
+  </div>
+</div>
+
+<script>
+const T = (id,x,y)=>document.getElementById(id).setAttribute("transform",`translate(${x},${y})`);
+function place(p){ for(const k in p) T(k,p[k][0],p[k][1]); }
+
+const NODES = {
+  A:{ sub:"U11 · 2-on-1 · #7 on the puck", crumb:"Rush",
+    pos:{p7:[150,56],p23:[158,28],pD:[174,44],pG:[184,42],puck:[145.5,56]},
+    q:"The lone D steps up to challenge you (#7). What's the play?",
+    matrix:"Same frame also asks → <b>the D:</b> step up or contain? · <b>#23:</b> stay wide for the back door.",
+    opts:[
+      {t:"Shoot far side", no:"The D stepped into your lane — he blocks it. With a teammate wide open, that's the low-percentage play."},
+      {t:"Pass cross-ice to #23 (back door)", ok:1, next:"B"},
+      {t:"Deke the D", no:"Deking invites the D back into the play and kills the odd-man advantage."},
+      {t:"Hold and wait", no:"Waiting lets the D recover and the goalie set. The window is now."},
+    ]},
+  B:{ sub:"U13 · the pass connects · #23 on the puck", crumb:"Pass → back door",
+    pos:{p7:[166,52],p23:[158,28],pD:[171,41],pG:[185,36],puck:[154,28]},
+    q:"You're #23 — you catch it at the back door and the goalie is still sliding across. Now what?",
+    matrix:"Same frame also asks → <b>#7:</b> drive the net for a rebound · <b>goalie:</b> slide or hold the post?",
+    opts:[
+      {t:"Shoot quick into the open side", ok:1, next:"GOAL"},
+      {t:"Keep skating to the corner", no:"You skated the puck off the open net — the goalie recovers. Chance gone."},
+      {t:"Pass back to #7", no:"#7 is covered now and the goalie's still moving. You gave up an open net."},
+      {t:"Hold the puck", no:"Every split second lets the goalie get square. Shoot now."},
+    ]},
+  GOAL:{ sub:"Goal!", crumb:"Pass → back door → finish", terminal:true,
+    pos:{p7:[166,52],p23:[155,30],pD:[171,41],pG:[178,30],puck:[191,44]},
+    q:"Goal! The step-up opened the back door, and the quick shot beat the sliding goalie.",
+    matrix:"That's three teachable reads off one play (#7 pass → #23 shoot → finish) — and we never even asked the D's or goalie's version. One scenario, many questions.",
+    opts:[] },
+};
+
+let cur="A";
+function render(id){
+  cur=id; const n=NODES[id]; place(n.pos);
+  document.getElementById("crumbs").textContent = n.crumb || "";
+  document.getElementById("sub").textContent = n.sub;
+  document.getElementById("q").textContent = n.q;
+  document.getElementById("matrix").innerHTML = n.matrix || "";
+  const fb=document.getElementById("fb"); fb.innerHTML="";
+  const box=document.getElementById("opts"); box.innerHTML="";
+  if(n.terminal){
+    const b=document.createElement("button"); b.className="btn"; b.textContent="↻ Replay from the top";
+    b.onclick=()=>render("A"); box.appendChild(b); return;
+  }
+  n.opts.forEach((o,i)=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=o.t;
+    b.onclick=()=>{
+      [...box.children].forEach(c=>c.disabled=true);
+      if(o.ok){ b.classList.add("correct");
+        fb.className="fb ok"; fb.textContent="Right read. Advancing…";
+        setTimeout(()=>render(o.next),750);
+      } else { b.classList.add("bad");
+        fb.className="fb no"; fb.innerHTML=o.no+' &nbsp; <button class="btn" style="padding:4px 10px" onclick="render(cur)">Try again</button>';
+      }
+    };
+    box.appendChild(b);
+  });
+}
+render("A");
+</script>
+</body></html>

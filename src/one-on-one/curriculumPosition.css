@@ -1,0 +1,23 @@
+.gc-format-picker { display:flex; flex-wrap:wrap; gap:.5rem; margin:1rem 0; }
+.gc-format-picker button, .gc-position-stay { border:1px solid #8092aa66; border-radius:999px; padding:.7rem 1rem; color:#f5f6f9; background:#0b1a3366; font:inherit; cursor:pointer; }
+.gc-format-picker button[aria-pressed="true"] { color:#09182c; background:linear-gradient(120deg,#f1d89b,#c69e42); border-color:#e0bd66; }
+.gc-position-exercise .gc-question-panel>p { line-height:1.55; color:#c5d2e1; }
+.gc-position-caption { font-size:.86rem; color:#bdcce0; padding:.5rem; }
+.gc-position-coordinates { margin:1rem 0; color:#c5d2e1; }
+.gc-position-coordinates>div { display:flex; gap:.6rem; margin-top:.6rem; }
+.gc-position-coordinates label { display:grid; gap:.35rem; min-width:0; }
+.gc-position-coordinates input { width:100%; min-width:0; box-sizing:border-box; }
+.gc-position-reason { display:grid; gap:.5rem; margin:1rem 0; color:#f3f6fa; }
+.gc-position-reason span { color:#b8c7d9; font-size:.85rem; }
+.gc-position-reason textarea, .gc-position-coordinates input { border:1px solid #8397b166; border-radius:.7rem; color:#f3f6fa; background:#0b1a33; padding:.65rem; font:inherit; }
+.gc-position-feedback { margin-top:1rem; padding:1rem; border:1px solid #d0ab555e; border-radius:1rem; background:#dbc16a10; }
+.gc-position-feedback h4 { font-size:1.25rem; margin:0 0 .6rem; color:#f0d795; }
+.gc-position-feedback ul { padding-left:1.2rem; line-height:1.6; }
+.gc-position-feedback.is-match { background:#7bb7ab12; border-color:#7bb7ab55; }
+.gc-position-boundary, .gc-position-review, .gc-position-save { color:#b6c6d8; font-size:.8rem; line-height:1.6; }
+.gc-position-save { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between; }
+.gc-position-save button { border:1px solid #8092aa66; border-radius:999px; padding:.6rem .9rem; background:#11233b; color:#e9f0f8; cursor:pointer; }
+.gc-position-review { margin-top:1rem; overflow-wrap:anywhere; }
+.gc-position-exercise button:disabled { cursor:wait; opacity:.45; }
+.gc-position-exercise button:focus-visible, .gc-format-picker button:focus-visible { outline:3px solid #e0bd66; outline-offset:3px; }
+@media(max-width:600px) { .gc-format-picker { display:grid; grid-template-columns:1fr 1fr; } .gc-format-picker button { padding:.7rem .5rem; } }

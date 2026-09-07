@@ -1,0 +1,639 @@
+{
+  "overview": {
+    "scenarios": 200,
+    "questions": 1600,
+    "uniqueOpeningGeometry": 200,
+    "questionPerGeometry": 8,
+    "ages": {
+      "U11": 50,
+      "U13": 50,
+      "U15": 30,
+      "U18": 20,
+      "U7": 20,
+      "U9": 30
+    },
+    "topics": 102,
+    "families": 195,
+    "sourceReferences": 62,
+    "observedQuestionTypes": {
+      "choice": 508,
+      "explain": 300,
+      "multi": 300,
+      "position": 295,
+      "sequence": 197
+    },
+    "basisCounts": {
+      "coaching": 1336,
+      "scene": 264
+    },
+    "domainSignalCounts": {
+      "defensive-play": 98,
+      "hockey-sense": 124,
+      "offensive-play": 127,
+      "puck-skills": 133,
+      "skating-movement": 8,
+      "transition-compete": 59
+    },
+    "caveats": [
+      "Question volume is not mastery coverage.",
+      "One opening geometry can support several question prompts; unique geometry is counted from canonical setup actors and puck only.",
+      "Domain signals are transparent text matches over current scenario metadata, not authored curriculum bindings.",
+      "Unseen delivery formats are backlog candidates, not automatic defects."
+    ]
+  },
+  "practice": {
+    "questions": 1500,
+    "typeCounts": {
+      "choice": 508,
+      "explain": 200,
+      "multi": 300,
+      "position": 295,
+      "sequence": 197
+    },
+    "note": "Routine practice retains one optional reflection per scenario. Direct links can select another authored reflection. Authored counts below include all questions."
+  },
+  "domains": [
+    {
+      "id": "skating-movement",
+      "name": "Skating & Movement",
+      "definition": "Edges, agility, and footwork — the mobility that lets a player get to ice and execute reads in time.",
+      "concepts": [
+        {
+          "id": "edges-balance",
+          "name": "Edges Balance",
+          "definition": "Athletic stance, edge control, and balance on both feet."
+        },
+        {
+          "id": "agility-mobility",
+          "name": "Agility Mobility",
+          "definition": "Crossovers, tight turns, pivots, and changing direction at speed."
+        },
+        {
+          "id": "backward-transitions",
+          "name": "Backward Transitions",
+          "definition": "Backward skating and forward-to-backward transitions (pivots, mohawks, open-ups)."
+        },
+        {
+          "id": "deception-with-feet",
+          "name": "Deception With Feet",
+          "definition": "The skating move itself: changes of pace and footwork fakes that unbalance a defender (the tool, not the when-to-use-it)."
+        }
+      ],
+      "signalScenarios": 8,
+      "signalQuestions": 64,
+      "uniqueOpeningGeometry": 8,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13"
+      ],
+      "topTopics": [
+        "Skating awareness",
+        "Defending",
+        "Skating",
+        "breakout support",
+        "neutral-zone entry"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    },
+    {
+      "id": "puck-skills",
+      "name": "Puck Skills",
+      "definition": "Controlling, protecting, moving, and shooting the puck — judged as decisions (when/where/whether), not just mechanics.",
+      "concepts": [
+        {
+          "id": "puck-control",
+          "name": "Puck Control",
+          "definition": "Head-up stickhandling and carrying the puck under control."
+        },
+        {
+          "id": "puck-protection",
+          "name": "Puck Protection",
+          "definition": "Using body position and angle to shield the puck from a defender."
+        },
+        {
+          "id": "passing",
+          "name": "Passing",
+          "definition": "Selecting a lane, timing, and weighting a pass; leading the receiver."
+        },
+        {
+          "id": "receiving",
+          "name": "Receiving",
+          "definition": "Catching and settling pucks, on the move, with a plan before they arrive."
+        },
+        {
+          "id": "shooting",
+          "name": "Shooting",
+          "definition": "Shot mechanics and selection; release, shooting in traffic and off the rush."
+        }
+      ],
+      "signalScenarios": 133,
+      "signalQuestions": 1058,
+      "uniqueOpeningGeometry": 133,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13",
+        "U15",
+        "U18"
+      ],
+      "topTopics": [
+        "Puck control",
+        "Passing",
+        "Teamwork",
+        "Off-puck support",
+        "Puck recovery",
+        "Scanning",
+        "Receiving",
+        "Possession changes"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    },
+    {
+      "id": "hockey-sense",
+      "name": "Hockey Sense",
+      "definition": "The cognitive core: scanning, reading the play, and choosing the right option. RinkReads' anchor domain.",
+      "concepts": [
+        {
+          "id": "scanning",
+          "name": "Scanning",
+          "definition": "Head on a swivel: shoulder checks and visual exploration before and after receiving."
+        },
+        {
+          "id": "reading-the-play",
+          "name": "Reading The Play",
+          "definition": "Anticipating what is about to happen from the cues on the ice."
+        },
+        {
+          "id": "decision-making",
+          "name": "Decision Making",
+          "definition": "Selecting the best option — pass, shoot, carry, delay — for the situation; risk vs reward."
+        },
+        {
+          "id": "time-and-space",
+          "name": "Time And Space",
+          "definition": "Recognizing, creating, and exploiting time and space; when to slow down vs attack."
+        },
+        {
+          "id": "creativity-under-pressure",
+          "name": "Creativity Under Pressure",
+          "definition": "Finding the second or third option when the first is taken away — expanding the option set under pressure."
+        }
+      ],
+      "signalScenarios": 124,
+      "signalQuestions": 988,
+      "uniqueOpeningGeometry": 124,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13",
+        "U15",
+        "U18"
+      ],
+      "topTopics": [
+        "Rink awareness",
+        "Puck control",
+        "Skating awareness",
+        "Scanning",
+        "Passing",
+        "Off-puck support",
+        "Puck recovery",
+        "Receiving"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    },
+    {
+      "id": "offensive-play",
+      "name": "Offensive Play",
+      "definition": "Creating and attacking with the puck and away from it — supporting, beating defenders, entering and extending offence.",
+      "concepts": [
+        {
+          "id": "puck-carrier-options",
+          "name": "Puck Carrier Options",
+          "definition": "Reading the 1v1/2v1 as the carrier: attack, delay, pass, or protect."
+        },
+        {
+          "id": "off-puck-support-offense",
+          "name": "Off Puck Support Offence",
+          "definition": "Off-puck support: getting open, give-and-go timing, support angles/triangles/distance, and driving the net to be the best option for the carrier."
+        },
+        {
+          "id": "attacking-1v1",
+          "name": "Attacking 1v1",
+          "definition": "Beating a defender one-on-one: the decision of when to take them vs make a play."
+        },
+        {
+          "id": "cycle-and-possession",
+          "name": "Cycle And Possession",
+          "definition": "Low cycle, F1/F2/F3 support, and extending offensive-zone possession."
+        },
+        {
+          "id": "zone-entry",
+          "name": "Zone Entry",
+          "definition": "Controlled vs dump entries; wide drive, delay, or cross based on the gap."
+        },
+        {
+          "id": "odd-man-reads",
+          "name": "Odd Man Reads",
+          "definition": "Reading odd-man situations as the attacker (2v1 / 3v2): pass, shoot, or drive based on the lone defender and the goalie."
+        },
+        {
+          "id": "net-front-play",
+          "name": "Net Front Play",
+          "definition": "Scoring-area reads off the puck: screen, tip/deflection, rebound timing, and finding the back door."
+        }
+      ],
+      "signalScenarios": 127,
+      "signalQuestions": 982,
+      "uniqueOpeningGeometry": 127,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13",
+        "U15",
+        "U18"
+      ],
+      "topTopics": [
+        "Passing",
+        "Puck control",
+        "Defending",
+        "Off-puck support",
+        "Rink awareness",
+        "Puck recovery",
+        "Scanning",
+        "Receiving"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    },
+    {
+      "id": "defensive-play",
+      "name": "Defensive Play",
+      "definition": "Taking away time and space — gaps, angles, positioning, and coverage to deny the read and recover the puck.",
+      "concepts": [
+        {
+          "id": "gap-control",
+          "name": "Gap Control",
+          "definition": "Closing time and space on the rush by managing the gap — including the lone defender's read on a 2v1 (take the pass vs force the shot)."
+        },
+        {
+          "id": "angling-steering",
+          "name": "Angling Steering",
+          "definition": "Steering the carrier to low-value ice with body angle and stick."
+        },
+        {
+          "id": "defensive-side-positioning",
+          "name": "Defensive Side Positioning",
+          "definition": "Individual net-side body position on one attacker: staying between your check and the net, body and stick on the inside."
+        },
+        {
+          "id": "coverage-reads",
+          "name": "Coverage Reads",
+          "definition": "Team d-zone reads: which threat is yours, switching assignments, and weak-side awareness (the heavy switching content is U15+ refinement)."
+        },
+        {
+          "id": "stick-and-body-detail",
+          "name": "Stick And Body Detail",
+          "definition": "Active stick in lanes, box-outs, and contain without over-committing."
+        }
+      ],
+      "signalScenarios": 98,
+      "signalQuestions": 736,
+      "uniqueOpeningGeometry": 98,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13",
+        "U15",
+        "U18"
+      ],
+      "topTopics": [
+        "Rink awareness",
+        "Puck control",
+        "Passing",
+        "Defending",
+        "Off-puck support",
+        "Puck recovery",
+        "Scanning",
+        "Receiving"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    },
+    {
+      "id": "transition-compete",
+      "name": "Transition & Compete",
+      "definition": "Switching between offence and defence and winning the puck — transition reads, breakouts, fore/backcheck, battles, talk.",
+      "concepts": [
+        {
+          "id": "transition-reads",
+          "name": "Transition Reads",
+          "definition": "The offence-to-defence switch and the first option after a change of possession."
+        },
+        {
+          "id": "breakout-and-regroup",
+          "name": "Breakout And Regroup",
+          "definition": "Support layers and options under forecheck; neutral-zone regroups."
+        },
+        {
+          "id": "forecheck-pressure",
+          "name": "Forecheck Pressure",
+          "definition": "Angling and pressure to recover the puck; F1 reads."
+        },
+        {
+          "id": "backcheck-recovery",
+          "name": "Backcheck Recovery",
+          "definition": "Picking up the right player and taking away the dangerous lane on the way back."
+        },
+        {
+          "id": "battles-and-compete",
+          "name": "Battles And Compete",
+          "definition": "1v1 wall and net battles, loose-puck recovery, and resilience after a mistake."
+        }
+      ],
+      "signalScenarios": 59,
+      "signalQuestions": 450,
+      "uniqueOpeningGeometry": 59,
+      "ageBands": [
+        "U7",
+        "U9",
+        "U11",
+        "U13",
+        "U15",
+        "U18"
+      ],
+      "topTopics": [
+        "Rink awareness",
+        "Defending",
+        "Puck recovery",
+        "Off-puck support",
+        "Transition",
+        "Skating",
+        "Backchecking",
+        "Loose-puck support"
+      ],
+      "mappingMethod": "Signal map from actual scenario tags, topic, family and objective; this is an inventory aid, not an authored concept binding."
+    }
+  ],
+  "topTopics": [
+    {
+      "topic": "Angling",
+      "ageBands": [
+        "U11"
+      ],
+      "scenarios": 3,
+      "questions": 26,
+      "uniqueOpeningGeometry": 3,
+      "questionPerGeometry": 8.67,
+      "topics": 1,
+      "families": 3,
+      "typeCounts": {
+        "choice": 8,
+        "explain": 5,
+        "multi": 5,
+        "position": 5,
+        "sequence": 3
+      },
+      "basisCounts": {
+        "coaching": 23,
+        "scene": 3
+      },
+      "topTags": [
+        "angling",
+        "expansion",
+        "experimental",
+        "forecheck-outlet",
+        "wide-angling"
+      ],
+      "sampleObjectives": [
+        "Use an inside approach to influence a wide carrier without assuming a forced turnover.",
+        "Use a carrier-and-outlet read to choose an approach instead of following the puck alone.",
+        "Use an inside angle to influence the carrier away from the middle without guessing the outcome."
+      ]
+    },
+    {
+      "topic": "angling recovery",
+      "ageBands": [
+        "U13"
+      ],
+      "scenarios": 1,
+      "questions": 10,
+      "uniqueOpeningGeometry": 1,
+      "questionPerGeometry": 10,
+      "topics": 1,
+      "families": 1,
+      "typeCounts": {
+        "choice": 3,
+        "explain": 2,
+        "multi": 2,
+        "position": 2,
+        "sequence": 1
+      },
+      "basisCounts": {
+        "coaching": 9,
+        "scene": 1
+      },
+      "topTags": [
+        "angling-recovery"
+      ],
+      "sampleObjectives": [
+        "Protect the middle while retaining a route back toward the net."
+      ]
+    },
+    {
+      "topic": "Attacking decisions",
+      "ageBands": [
+        "U11"
+      ],
+      "scenarios": 2,
+      "questions": 16,
+      "uniqueOpeningGeometry": 2,
+      "questionPerGeometry": 8,
+      "topics": 1,
+      "families": 2,
+      "typeCounts": {
+        "choice": 5,
+        "explain": 3,
+        "multi": 3,
+        "position": 3,
+        "sequence": 2
+      },
+      "basisCounts": {
+        "coaching": 14,
+        "scene": 2
+      },
+      "topTags": [
+        "attacking decisions",
+        "expansion",
+        "experimental",
+        "two-on-one-read"
+      ],
+      "sampleObjectives": [
+        "Compare a carrying or shooting route with a pass using the defender and goalie cues.",
+        "Read the defender and teammate before continuing a two-on-one carry."
+      ]
+    },
+    {
+      "topic": "backcheck recovery",
+      "ageBands": [
+        "U13"
+      ],
+      "scenarios": 1,
+      "questions": 10,
+      "uniqueOpeningGeometry": 1,
+      "questionPerGeometry": 10,
+      "topics": 1,
+      "families": 1,
+      "typeCounts": {
+        "choice": 3,
+        "explain": 2,
+        "multi": 2,
+        "position": 2,
+        "sequence": 1
+      },
+      "basisCounts": {
+        "coaching": 8,
+        "scene": 2
+      },
+      "topTags": [
+        "backcheck-recovery"
+      ],
+      "sampleObjectives": [
+        "Choose a recovery relationship to an inside attacking threat."
+      ]
+    },
+    {
+      "topic": "Backchecking",
+      "ageBands": [
+        "U11",
+        "U15"
+      ],
+      "scenarios": 3,
+      "questions": 26,
+      "uniqueOpeningGeometry": 3,
+      "questionPerGeometry": 8.67,
+      "topics": 1,
+      "families": 3,
+      "typeCounts": {
+        "choice": 8,
+        "explain": 5,
+        "multi": 5,
+        "position": 5,
+        "sequence": 3
+      },
+      "basisCounts": {
+        "coaching": 23,
+        "scene": 3
+      },
+      "topTags": [
+        "backcheck-assignment",
+        "backcheck-communication",
+        "backchecking",
+        "expansion",
+        "experimental"
+      ],
+      "sampleObjectives": [
+        "Separate the carrier’s pressure from a second attacker’s route.",
+        "Choose a backcheck relationship for the uncovered attacker while a teammate pressures the puck.",
+        "Coordinate recovering help rather than duplicate wide pressure."
+      ]
+    },
+    {
+      "topic": "Backchecking communication",
+      "ageBands": [
+        "U15"
+      ],
+      "scenarios": 1,
+      "questions": 6,
+      "uniqueOpeningGeometry": 1,
+      "questionPerGeometry": 6,
+      "topics": 1,
+      "families": 1,
+      "typeCounts": {
+        "choice": 2,
+        "explain": 1,
+        "multi": 1,
+        "position": 1,
+        "sequence": 1
+      },
+      "basisCounts": {
+        "coaching": 5,
+        "scene": 1
+      },
+      "topTags": [
+        "expansion",
+        "experimental"
+      ],
+      "sampleObjectives": [
+        "Track the second attacker after a puck-side handoff and keep the net-side lane in view."
+      ]
+    },
+    {
+      "topic": "Breakout communication",
+      "ageBands": [
+        "U15"
+      ],
+      "scenarios": 2,
+      "questions": 16,
+      "uniqueOpeningGeometry": 2,
+      "questionPerGeometry": 8,
+      "topics": 1,
+      "families": 2,
+      "typeCounts": {
+        "choice": 5,
+        "explain": 3,
+        "multi": 3,
+        "position": 3,
+        "sequence": 2
+      },
+      "basisCounts": {
+        "coaching": 14,
+        "scene": 2
+      },
+      "topTags": [
+        "expansion",
+        "experimental",
+        "goalie-outlet-support"
+      ],
+      "sampleObjectives": [
+        "Prepare a receiver and next option after a stated goalie outlet.",
+        "Prepare for a goalie outlet while treating the puck as loose until a player controls it."
+      ]
+    },
+    {
+      "topic": "breakout retrieval",
+      "ageBands": [
+        "U13"
+      ],
+      "scenarios": 2,
+      "questions": 16,
+      "uniqueOpeningGeometry": 2,
+      "questionPerGeometry": 8,
+      "topics": 1,
+      "families": 2,
+      "typeCounts": {
+        "choice": 5,
+        "explain": 3,
+        "multi": 3,
+        "position": 3,
+        "sequence": 2
+      },
+      "basisCounts": {
+        "coaching": 14,
+        "scene": 2
+      },
+      "topTags": [
+        "behind-net-escape",
+        "breakout retrieval",
+        "breakout-retrieval"
+      ],
+      "sampleObjectives": [
+        "Notice the forechecker before collecting a rim.",
+        "Recognize open ice behind the net and choose a support route that changes the forechecker’s angle"
+      ]
+    }
+  ]
+}

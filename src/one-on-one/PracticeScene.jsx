@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import Skater from './Skater.jsx';
 import RinkEnclosure from '../visuals/RinkEnclosure.jsx';
 import GoalNet from '../visuals/GoalNet.jsx';
+import { isFocusedActor } from '../visuals/PlayerLocator.jsx';
 import PuckLocator3D from '../visuals/PuckLocator3D.jsx';
 import { RINK, GOAL_X, makeIceTexture, roundedRinkShape } from './rinkMaterials.js';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
@@ -145,7 +146,7 @@ function RouteOverlay({ points }) {
   </group>;
 }
 
-function Content({ frameRef, ageBand, camera, onPlace, selectedActor, showGuides, roster, onSelect, axesRef, routePoints, onRoutePoint }) {
+function Content({ frameRef, ageBand, camera, onPlace, selectedActor, focusActorId, showGuides, roster, onSelect, axesRef, routePoints, onRoutePoint }) {
   const state = frameRef.current;
   const dragging = useRef(null);
   const routing = typeof onRoutePoint === 'function';
@@ -164,8 +165,8 @@ function Content({ frameRef, ageBand, camera, onPlace, selectedActor, showGuides
     <hemisphereLight args={['#f5fbff', '#486479', 1.35]} />
     <directionalLight position={[-10, 27, 0]} intensity={2.25} color="#fff9ed" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-35} shadow-camera-right={35} shadow-camera-top={38} shadow-camera-bottom={-38} shadow-camera-near={1} shadow-camera-far={75} shadow-bias={-.00015} shadow-normalBias={.025} />
     <CameraRig cameraMode={camera} axesRef={axesRef}/><Arena /><Ice /><Goal />
-    {roster ? roster.map((a,i)=><Skater ageBand={ageBand ?? state?.setup?.ageBand} key={a.id} frameRef={frameRef} actorKey={a.id} colour={a.team==='home'?'#0B1A33':'#C9A24B'} number={a.label||String(i+1)} goalie={a.role==='goalie'} selected={selectedActor===a.id}/>) : <><Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="attacker" colour="#0B1A33" number="17" selected={selectedActor === 'attacker' || (!selectedActor && state?.setup?.role !== 'defender')} />
-    <Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="defender" colour="#C9A24B" number="8" selected={selectedActor === 'defender' || (!selectedActor && state?.setup?.role === 'defender')} />
+    {roster ? roster.map((a,i)=><Skater ageBand={ageBand ?? state?.setup?.ageBand} key={a.id} frameRef={frameRef} actorKey={a.id} colour={a.team==='home'?'#0B1A33':'#C9A24B'} number={a.label||String(i+1)} goalie={a.role==='goalie'} selected={selectedActor===a.id} isLearner={isFocusedActor(a,focusActorId)}/>) : <><Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="attacker" colour="#0B1A33" number="17" selected={selectedActor === 'attacker' || (!selectedActor && state?.setup?.role !== 'defender')} isLearner={focusActorId === undefined ? state?.setup?.role !== 'defender' : focusActorId === 'attacker'} />
+    <Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="defender" colour="#C9A24B" number="8" selected={selectedActor === 'defender' || (!selectedActor && state?.setup?.role === 'defender')} isLearner={focusActorId === undefined ? state?.setup?.role === 'defender' : focusActorId === 'defender'} />
     <Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="goalie" colour="#0B1A33" number="1" goalie /></>}
     {roster&&<group rotation={[0,Math.PI,0]}><Goal/></group>}
     <Puck frameRef={frameRef} />{!roster&&<Guides frameRef={frameRef} visible={showGuides} />}

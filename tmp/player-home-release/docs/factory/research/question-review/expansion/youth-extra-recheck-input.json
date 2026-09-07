@@ -1,0 +1,290 @@
+{
+  "instruction": "Independently check these three exact final questions against the full scene. Other questions are context only.",
+  "assignedQuestionIds": [
+    "exp26-u7-001-q7",
+    "exp26-u7-001-q8",
+    "exp26-u7-001-q9"
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u7-001",
+      "version": 1,
+      "ageBand": "U7",
+      "title": "Who is on my team?",
+      "family": "team-recognition",
+      "topic": "Rink awareness",
+      "objective": "Find a teammate before choosing whom to involve.",
+      "briefing": "YOU have the puck in a sharing activity. Navy2 wears navy like you; Gold1 wears gold. The coach asks you to find your teammate. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": -2,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "H2",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": 4,
+            "facing": -2.5
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 3,
+            "y": -5,
+            "facing": 2.7
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "YOU and Navy2 are navy.",
+        "Gold1 is gold.",
+        "YOU have the puck."
+      ],
+      "tags": [
+        "team-recognition",
+        "foundation",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-u7-skills",
+          "title": "Hockey Canada: Fundamental skill development for Timbits U7 hockey",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+          "section": "U7 Skills Matrix: skating, puck control, passing and receiving",
+          "use": "Supports beginner skill topics, not the original scene answers or a digital measurement of technique."
+        },
+        {
+          "id": "usah-skill-progression-2019",
+          "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+          "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+          "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+          "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+        }
+      ],
+      "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Who is your teammate?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1 in gold"
+            },
+            {
+              "id": "b",
+              "text": "Navy2 in navy"
+            },
+            {
+              "id": "c",
+              "text": "Both players"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Navy2 is on the same navy team as YOU. The labels also identify the teams.",
+          "id": "exp26-u7-001-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two things can you find here?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Your navy teammate"
+            },
+            {
+              "id": "b",
+              "text": "A completed goal"
+            },
+            {
+              "id": "c",
+              "text": "The player holding the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "c"
+          ],
+          "basis": "scene",
+          "explanation": "Navy2 is your teammate and YOU have the puck. No goal has happened.",
+          "id": "exp26-u7-001-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Put this sharing routine in order.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find your teammate"
+            },
+            {
+              "id": "b",
+              "text": "Check the space between you"
+            },
+            {
+              "id": "c",
+              "text": "Try a pass when ready"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a suggested routine. Matching jerseys alone does not make a pass safe.",
+          "id": "exp26-u7-001-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU a little nearer Navy2 without standing on Navy2.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -3,
+            "y": 0
+          },
+          "basis": "coaching",
+          "explanation": "This example shortens the distance while keeping separate space. Other clear starting spots could work.",
+          "id": "exp26-u7-001-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Imagine Gold1 steps between you and Navy2. What could you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Check again before passing"
+            },
+            {
+              "id": "b",
+              "text": "Pass because the shirts match"
+            },
+            {
+              "id": "c",
+              "text": "Close your eyes"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "A teammate can become covered. Look again or find clearer space.",
+          "id": "exp26-u7-001-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "Tell a grown-up how you found your teammate.",
+          "basis": "coaching",
+          "explanation": "Mention navy, the Navy2 label or the team introduction. Pointing is fine.",
+          "id": "exp26-u7-001-q6"
+        },
+        {
+          "id": "exp26-u7-001-q7",
+          "type": "choice",
+          "prompt": "Imagine Gold1 takes the puck from YOU. What should you notice first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Who has it now?"
+            },
+            {
+              "id": "b",
+              "text": "Can I pass the old way?"
+            },
+            {
+              "id": "c",
+              "text": "Did Navy2 score?"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Gold1 now has the puck, so YOU must notice the change before deciding what to do. YOU cannot keep passing as though the puck were still yours."
+        },
+        {
+          "id": "exp26-u7-001-q8",
+          "type": "multi",
+          "prompt": "Imagine Navy2 moves to a new spot while YOU hold the puck. Which two players should YOU keep track of?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1, who may block the way"
+            },
+            {
+              "id": "b",
+              "text": "Navy2 in the new spot"
+            },
+            {
+              "id": "c",
+              "text": "Only where Navy2 used to stand"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Check where Navy2 is now and where Gold1 is before choosing a pass. A teammate’s old spot may no longer be useful."
+        },
+        {
+          "id": "exp26-u7-001-q9",
+          "type": "position",
+          "prompt": "Move YOU with the puck to try a different passing angle toward Navy2.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -5,
+            "y": -1
+          },
+          "basis": "coaching",
+          "explanation": "Try a controlled move that leaves a clear path toward Navy2 while keeping Gold1 in view. The puck stays with YOU. This is one example to discuss, not the only place that can work."
+        },
+        {
+          "id": "exp26-u7-001-q10",
+          "type": "explain",
+          "prompt": "Tell an adult what changed when Gold1 got closer.",
+          "basis": "coaching",
+          "explanation": "A useful answer names Gold1 as closer pressure and Navy2 as a teammate to find. The next puck touch should follow that new picture."
+        }
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "questionId": "exp26-u7-001-q7",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "02fb9eafb709f681a519a50d1db4a2e26acee080360816b47fffffd178655751"
+    },
+    {
+      "questionId": "exp26-u7-001-q8",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "e57b4afce8b94cf02ef8ffff2489beb97aef76358990cfdde5b1c85ded4333a7"
+    },
+    {
+      "questionId": "exp26-u7-001-q9",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "9fb85fd03ea4b259bc2809f27dfeebdc14fb1a48e75113f2f986e01e9447bb81"
+    }
+  ]
+}
