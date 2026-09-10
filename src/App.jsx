@@ -4589,7 +4589,7 @@ function MasteryStrip({ quizHistory }) {
     <Card style={{marginBottom:"1rem"}}>
       <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".5rem"}}>
         <Label>Category Mastery</Label>
-        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>{earned}/{ranked.length} CATEGORIES STARTED</div>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>{earned}/{ranked.length} CATEGORIES STARRED</div>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
         {top.map(([cat, m]) => {
@@ -4604,7 +4604,7 @@ function MasteryStrip({ quizHistory }) {
                 <div style={{fontSize:14,color:starColor,letterSpacing:".05em",flexShrink:0}}>{stars}</div>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11,color:C.dimmer}}>
-                <span>{m.attempts} attempts · {pct}%</span>
+                <span>{m.attempts} {m.attempts === 1 ? "attempt" : "attempts"} · {pct}%</span>
                 {next ? (
                   <span style={{color:C.dim}}>
                     {next.needAttempts > 0
