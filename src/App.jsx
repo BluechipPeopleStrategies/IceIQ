@@ -7131,7 +7131,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           <div style={{background:"rgba(201,162,75,0.07)",border:"1px solid rgba(201,162,75,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
               <div>
-                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,162,75,.9)",marginBottom:1}}>Team IQ by concept — where to coach next.</div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,162,75,.9)",marginBottom:1}}>Team Game Sense by concept — where to coach next.</div>
                 <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects · 16 players</div>
               </div>
             </div>
