@@ -9,6 +9,8 @@
 import { useEffect, useState } from "react";
 import * as SB from "./supabase";
 import { Card, Label, C, FONT } from "./shared.jsx";
+import { getTrainingLog } from "./utils/trainingLog.js";
+import { isDemoTeam, loadRosterTraining } from "./utils/coachTrainingSource.js";
 
 // Sum minutes across all sessions within the last `days` days.
 function summarize(sessions, days = 7) {
@@ -44,12 +46,15 @@ export function CoachTrainingSection({ teamId, roster }) {
     if (!teamId || !Array.isArray(roster) || !roster.length) { setLoading(false); return; }
     let cancelled = false;setLoading(true);setLoadError("");setByPlayer({});
     (async () => {
-      const out = {};
-      try { await Promise.all(roster.map(async (p) => {
-        if (!p?.id) return;
-        const sessions = await SB.getTrainingSessionsForPlayer(p.id,{strict:true});
-        if (!cancelled) out[p.id] = sessions || [];
-      })); } catch {if(!cancelled){setLoadError("Training history could not be loaded. This is not a zero-activity report.");setLoading(false);}return;}
+      let out = {};
+      // The landing-page coach demo roster (demo-t1, ids dr1..dr16) is seeded
+      // into the device log and must not be looked up in Supabase: the ids are
+      // not UUIDs, every read 400s, and the section reported a load failure.
+      try { out = await loadRosterTraining(roster, {
+        demo: isDemoTeam(teamId),
+        remote: (id, opts) => SB.getTrainingSessionsForPlayer(id, opts),
+        local: getTrainingLog,
+      }); } catch {if(!cancelled){setLoadError("Training history could not be loaded. This is not a zero-activity report.");setLoading(false);}return;}
       if (!cancelled) { setByPlayer(out); setLoading(false); }
     })();
     return () => { cancelled = true; };
