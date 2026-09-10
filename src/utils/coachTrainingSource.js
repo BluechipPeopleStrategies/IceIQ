@@ -9,8 +9,10 @@
 
 export const DEMO_TEAM_ID = "demo-t1";
 
+// All local demo teams: demo-t1..t3 (coach demo) and "demo-team" (player
+// preview). Real team ids are UUIDs, so this can never match one.
 export function isDemoTeam(teamId) {
-  return teamId === DEMO_TEAM_ID;
+  return typeof teamId === "string" && /^demo-(t\d+|team)$/.test(teamId);
 }
 
 /**

@@ -8,8 +8,13 @@ const roster = [{ id: "dr1" }, { id: "dr2" }, { id: null }];
 
 test("the demo team is recognised by id", () => {
   assert.equal(isDemoTeam(DEMO_TEAM_ID), true);
+  assert.equal(isDemoTeam("demo-t2"), true, "the coach demo's second and third teams");
+  assert.equal(isDemoTeam("demo-t3"), true);
+  assert.equal(isDemoTeam("demo-team"), true, "the player preview's team");
   assert.equal(isDemoTeam("11111111-2222-3333-4444-555555555555"), false);
+  assert.equal(isDemoTeam("demo-t1x"), false);
   assert.equal(isDemoTeam(undefined), false);
+  assert.equal(isDemoTeam(null), false);
 });
 
 test("a demo roster never touches the cloud and reads the device log", async () => {
