@@ -89,7 +89,11 @@
 .goal-builder__notice:not(:empty) { padding: .75rem 1rem; color: #d8f6df; background: #1c4038; border: 1px solid #93cda5; border-radius: 10px; margin-bottom: .8rem; }
 .goal-builder__error:not(:empty) { padding: .75rem 1rem; color: #ffe5d4; background: #543029; border: 1px solid #ebb096; border-radius: 10px; margin-bottom: .8rem; }
 @media (max-width: 760px) {
-  .goal-builder__layout { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track is minmax(auto, 1fr), so the
+     category strip's min-content width (its overflow-x:auto is meant to scroll
+     INSIDE the panel) stretched the track to ~1076px at 390px and the whole
+     page scrolled sideways (QA 2026-09-10). */
+  .goal-builder__layout { grid-template-columns: minmax(0, 1fr); padding: 1rem; gap: 1rem; }
   .goal-builder__focus-panel { position: static; }
   .goal-builder__categories { display: flex; overflow-x: auto; padding: .2rem .2rem .65rem; margin-top: .75rem; }
   .goal-builder__categories button { flex: 0 0 auto; min-width: 126px; max-width: 190px; }
