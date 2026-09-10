@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import * as SB from "./supabase";
 import { Card, Label, C, FONT } from "./shared.jsx";
 import { loadQB } from "./qbLoader.js";
+import { isDemoTeam } from "./utils/coachTrainingSource.js";
 
 // ─────────────────────────────────────────────
 // Helpers — question lookup + random picker
@@ -66,7 +67,8 @@ export function CoachChallengeSection({ teamId, coachId, teamLevel, roster }) {
     setResultsByChallenge(Object.fromEntries(entries));
     setLoading(false);
   }
-  useEffect(() => { if (teamId) refresh(); }, [teamId]);
+  // Demo team (demo-t1) is not in Supabase; skip the query (QA 2026-09-10).
+  useEffect(() => { if (!teamId) return; if (isDemoTeam(teamId)) { setLoading(false); return; } refresh(); }, [teamId]);
 
   const cats = useMemo(() => {
     if (!qb || !qb[level]) return [];

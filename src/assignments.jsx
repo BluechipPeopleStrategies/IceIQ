@@ -10,6 +10,7 @@
 
 import { useEffect, useState } from "react";
 import * as SB from "./supabase";
+import { isDemoTeam } from "./utils/coachTrainingSource.js";
 import { Card, Label, C, FONT } from "./shared.jsx";
 
 // ─────────────────────────────────────────────
@@ -267,6 +268,9 @@ export function CoachAssignmentsSection({ teamId, coachId, roster }) {
 
   useEffect(() => {
     if (!teamId) return;
+    // The landing-page coach demo team is not in Supabase; its id is not a
+    // UUID and every query 400s (QA 2026-09-10). Show the empty state instead.
+    if (isDemoTeam(teamId)) { setLoading(false); return; }
     refresh();
   }, [teamId]);
 
