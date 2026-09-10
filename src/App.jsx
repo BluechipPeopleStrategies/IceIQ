@@ -470,7 +470,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
 
 import { loadQB, preloadQB } from "./qbLoader.js";
 import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getNextUnlockDate, formatUnlockMoment, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
-import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
+import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, skillRatingProgress, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 
 // Wraps a lazy() factory so a chunk 404 after a deploy reloads the page once
@@ -4208,12 +4208,9 @@ function Skills({ player, tier, onSave, onBack, onUpgrade }) {
   const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
   const visibleSkills = (c) => hasFullAccess ? c.skills : c.skills.filter(s => FREE_SKILL_IDS.has(s.id));
   const lockedCount = hasFullAccess ? 0 : cats.reduce((n, c) => n + c.skills.filter(s => !FREE_SKILL_IDS.has(s.id)).length, 0);
-  const total = hasFullAccess
-    ? Object.keys(ratings).length
-    : cats.reduce((n, c) => n + visibleSkills(c).length, 0);
-  const rated = hasFullAccess
-    ? Object.values(ratings).filter(v=>v!==null).length
-    : cats.reduce((n, c) => n + visibleSkills(c).filter(s => ratings[s.id] !== null && ratings[s.id] !== undefined).length, 0);
+  // Denominator is the level's skill list, not the keys already in `ratings`
+  // (a sparse map from Supabase) -- see skillRatingProgress.
+  const { rated, total } = skillRatingProgress(player.level, ratings, { fullAccess: hasFullAccess });
   const selfScale = getSelfScale(player.level);
   const scaleType = RATING_SCALES[player.level]?.self?.type;
   return (

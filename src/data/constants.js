@@ -182,6 +182,27 @@ export const SKILLS={
 // the first skill of every category in every age group is free, so players
 // taste each competency without ever completing a full assessment. Upgrade
 // unlocks the remaining skills + the full radar + coach/parent side-by-side.
+/**
+ * "N/M rated" for the Skills screen header and progress bar.
+ *
+ * QA 2026-09-10: the PRO/Family/Team path used `Object.keys(ratings).length`
+ * as the denominator. Supabase returns self-ratings as a sparse map (only the
+ * skills actually rated), so a paid player saw "0/0 rated", then "1/1 rated"
+ * after one tap, and the progress bar was always full. Count the level's
+ * skills instead; FREE counts only the skills it can see.
+ */
+export function skillRatingProgress(level, ratings, { fullAccess = true } = {}) {
+  const cats = SKILLS[level] || [];
+  const r = ratings && typeof ratings === "object" ? ratings : {};
+  let rated = 0, total = 0;
+  for (const c of cats) for (const s of c.skills) {
+    if (!fullAccess && !FREE_SKILL_IDS.has(s.id)) continue;
+    total++;
+    if (r[s.id] !== null && r[s.id] !== undefined) rated++;
+  }
+  return { rated, total };
+}
+
 export const FREE_SKILL_IDS = new Set([
   // U9 / Novice (1 per cat · 5 total of 17)
   "u9s1", "u9p1", "u9h1", "u9c1", "u9d1",
