@@ -105,6 +105,31 @@ export function displayQuestionNumber(answered, qLen) {
 }
 
 // ─────────────────────────────────────────────────────────
+// Badges
+// ─────────────────────────────────────────────────────────
+
+/**
+ * Question types answered through the step-by-step "sequence" path in the
+ * quiz engine (App.jsx `handleSeq`). The Tactician badge is about these.
+ */
+export const SEQUENCE_FAMILY = new Set(["seq", "multi", "scenario"]);
+
+/**
+ * True when the session contained at least one sequence-family question and
+ * every one of them was answered correctly.
+ *
+ * QA 2026-09-10: the quiz's `seqPerfect` flag starts `true` and only flips on
+ * a failed sequence, so a session with no sequence question at all awarded
+ * "Tactician: Sequence question perfect" vacuously. Every plain-MC session
+ * showed the badge. A badge for something the player never did is noise that
+ * devalues the ones they earned.
+ */
+export function sequencePerfect(results) {
+  const seqs = (Array.isArray(results) ? results : []).filter(r => r && SEQUENCE_FAMILY.has(r.type));
+  return seqs.length > 0 && seqs.every(r => r.ok === true);
+}
+
+// ─────────────────────────────────────────────────────────
 // Speed bonus
 // ─────────────────────────────────────────────────────────
 

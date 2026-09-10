@@ -19,7 +19,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
-import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
+import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, sequencePerfect, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { canSetGoals } from "./data/goalBands.js";
@@ -608,7 +608,9 @@ function calcBadges(results, prevScore, totalSessions, hasSeqPerfect, mistakeStr
   const score = calcWeightedIQ(results);
   if (prevScore !== null && score > prevScore) earned.add("LEVEL_UP");
   if (totalSessions >= 5) earned.add("IRON_MAN");
-  if (hasSeqPerfect) earned.add("TACTICIAN");
+  // `hasSeqPerfect` starts true and only flips on a failed sequence, so on its
+  // own it awarded Tactician to every all-MC session. Require a real one.
+  if (hasSeqPerfect && sequencePerfect(results)) earned.add("TACTICIAN");
   if (mistakeStreak >= 3) earned.add("DETECTIVE");
   return [...earned].map(k => BADGES[k]).filter(Boolean);
 }

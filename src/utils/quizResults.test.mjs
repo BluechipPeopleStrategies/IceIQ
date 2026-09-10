@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node src/utils/quizResults.test.mjs
-import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./quizResults.js";
+import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, sequencePerfect, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./quizResults.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -175,6 +175,19 @@ ok("a result with no id still appends rather than vanishing", upsertResult([r("q
   ok("reading time used to cost points and now does not",
     withoutGrace < SPEED_MAX_BONUS && at(SPEED_GRACE_MS) === SPEED_MAX_BONUS);
 }
+
+// ---- sequencePerfect: Tactician needs an actual sequence question ----------
+// QA 2026-09-10: a 7-question all-MC session showed "Tactician: Sequence
+// question perfect" because the flag defaulted to true and nothing ever
+// touched it. The badge must require at least one sequence-family question.
+ok("no sequence question means no Tactician", sequencePerfect([r("a"), r("b", { type: "tf" })]) === false);
+ok("an empty session is not a perfect sequence", sequencePerfect([]) === false);
+ok("one correct seq question earns it", sequencePerfect([r("a"), r("s", { type: "seq" })]) === true);
+ok("multi and scenario count as the sequence family", sequencePerfect([r("m", { type: "multi" }), r("sc", { type: "scenario" })]) === true);
+ok("one wrong seq question loses it", sequencePerfect([r("s1", { type: "seq" }), r("s2", { type: "seq", ok: false })]) === false);
+ok("a skipped (unanswered) seq question is not perfect", sequencePerfect([skipResult({ id: "s", cat: "c", d: 2, type: "seq" })]) === false);
+ok("wrong MC answers do not affect it", sequencePerfect([r("a", { ok: false }), r("s", { type: "seq" })]) === true);
+ok("tolerates a non-array", sequencePerfect(null) === false);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
