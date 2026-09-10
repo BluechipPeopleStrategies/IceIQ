@@ -23,7 +23,9 @@ export default function ScenarioImage(props) {
     if (gateRef.current === gate && gate.mounted) callback.current?.(available === true);
   }, [gate]);
   if (!scene) return <ImageInspection key={identity} {...props} onAvailabilityChange={reportAvailability} />;
-  return <figure className={`scenario-image${sticky ? ' scenario-image-sticky' : ''}`} data-source-scene={scene.id}>
+  // `scenario-image-3d` lets the stylesheet unpin this tall figure on short
+  // viewports; pinned, it covered the stem and answers (QA 2026-09-10).
+  return <figure className={`scenario-image${sticky ? ' scenario-image-sticky scenario-image-3d' : ''}`} data-source-scene={scene.id}>
     <ScenarioRinkView key={identity} state={scene.state} bounds={scene.bounds} title={scene.caption} focusActorId={scene.focusActorId}
       ageBand={props.ageBand} startingView={props.startingView} questionId={questionId}
       overlays={scene.overlays} playing={false} labelledActors showBothGoals={scene.showBothGoals}

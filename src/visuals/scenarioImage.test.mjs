@@ -50,6 +50,28 @@ test('all 133 authored image questions render the shared3D scene, including the 
   }
 });
 
+test('the pinned 3D scene is marked so the stylesheet can unpin it on short viewports', () => {
+  // QA 2026-09-10: the 3D figure is ~700px tall. Pinned at top:62px it slid
+  // over the question stem and all four answers on any viewport shorter than
+  // ~1000px (Playwright: "figcaption intercepts pointer events" on Skip). The
+  // image variant is ~300px and keeps the plain sticky treatment.
+  const bank = JSON.parse(readFileSync(new URL('src/data/bank.json', root), 'utf8'));
+  let q = null;
+  (function visit(value) {
+    if (q) return;
+    if (Array.isArray(value)) value.forEach(visit);
+    else if (value && typeof value === 'object') { if (value.id && value.media?.url) { q = value; return; } Object.values(value).forEach(visit); }
+  })(bank);
+  globalThis.__sourceImageScene = [];
+  const scene = render({ media: q.media, overlays: q.overlays, sticky: true });
+  delete globalThis.__sourceImageScene;
+  assert.match(scene, /class="scenario-image scenario-image-sticky scenario-image-3d" data-source-scene=/);
+  assert.doesNotMatch(render({ media: { type: 'image', url: '/assets/example.png' }, overlays: [] }), /scenario-image-sticky|scenario-image-3d/);
+  const css = readFileSync(new URL('src/visuals/ScenarioImage.css', root), 'utf8');
+  assert.match(css, /\.scenario-image-sticky\.scenario-image-3d\{position:static\}/, 'unpinned by default');
+  assert.match(css, /@media\(min-height:\d+px\)\{\.scenario-image-sticky\.scenario-image-3d\{position:sticky\}\}/, 'pinned only where it leaves room to answer');
+});
+
 test('inspection preserves authored frame and fit while omitting absent or non-image media', () => {
   assert.equal(render({}), '');
   assert.equal(render({ media: { type: 'video', url: '/example.mp4' } }), '');

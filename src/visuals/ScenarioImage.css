@@ -1,5 +1,8 @@
 .scenario-image{margin:0 0 1.2rem;border:1px solid #C9A24B55;border-radius:18px;overflow:hidden;background:linear-gradient(130deg,#253a52,#0B1A33);box-shadow:0 14px 35px #07101e33,inset 0 1px #fff2;color:#F5EFE6;font-family:Inter,system-ui,sans-serif}
 .scenario-image-sticky{position:sticky;top:62px;z-index:10}
+/* The 3D scene figure is ~700px tall. Pinned, it slides over the question stem and answers on any viewport shorter than ~1000px, so only pin it where it leaves room to answer beneath it. */
+.scenario-image-sticky.scenario-image-3d{position:static}
+@media(min-height:1100px){.scenario-image-sticky.scenario-image-3d{position:sticky}}
 .scenario-image-picture{position:relative;width:100%;overflow:hidden;background:#081421}
 .scenario-image-picture>img{display:block;width:100%;user-select:none}
 .scenario-image figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 9px 5px 14px;font-size:11px;letter-spacing:.025em;color:#d1dae5}
