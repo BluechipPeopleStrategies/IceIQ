@@ -49,3 +49,16 @@ test("remote returning null becomes an empty list", async () => {
   const out = await loadRosterTraining([{ id: "a" }], { demo: false, remote: async () => null, local: () => ({}) });
   assert.deepEqual(out.a, []);
 });
+
+test("the coach dashboard never asks Supabase for a demo team's roster (QA 2026-09-10)", async () => {
+  // demo-t2 / demo-t3 have no preset roster, so expanding them called
+  // SB.getTeamRoster("demo-t2") -> HTTP 400 "invalid input syntax for type uuid".
+  // toggleRoster lives inline in App.jsx, so assert the guard at source level.
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(new URL("../App.jsx", import.meta.url), "utf8");
+  const start = src.indexOf("async function toggleRoster(");
+  assert.ok(start > 0, "toggleRoster exists");
+  const body = src.slice(start, src.indexOf("SB.getTeamRoster(", start));
+  assert.match(body, /isDemoTeam\(teamId\)/, "demo guard runs before the Supabase roster read");
+  assert.match(src, /import \{ isDemoTeam \} from "\.\/utils\/coachTrainingSource\.js"/);
+});

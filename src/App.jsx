@@ -19,6 +19,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
+import { isDemoTeam } from "./utils/coachTrainingSource.js";
 import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, sequencePerfect, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
@@ -7543,6 +7544,10 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
     if (expandedTeam === teamId) { setExpandedTeam(null); return; }
     setExpandedTeam(teamId);
     if (!rosters[teamId]) {
+      // Demo teams (demo-t2/t3 have no preset roster) are not in Supabase and
+      // their ids are not UUIDs: the roster read 400s (QA 2026-09-10, same
+      // class as the demo Training Activity bug). Show the empty roster.
+      if (isDemoTeam(teamId)) { setRosters(prev => ({ ...prev, [teamId]: [] })); return; }
       const r = await SB.getTeamRoster(teamId);
       // Bulk-fetch quiz history for the roster so TeamFocusCard + the new
       // analytics section can compute team-wide accuracy without N+1 round
