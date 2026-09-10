@@ -1648,7 +1648,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             digging into Settings or the dedicated training screen.
             Activity rows default collapsed; date input is capped to the
             last month to keep entries honest. */}
-        <TrainingLog playerId={player.id || "__demo__"} />
+        <TrainingLog playerId={player.id || "__demo__"} onLogged={onBumpQuestFlags} />
 
         {/* Homework from coach — shows only when there's anything assigned */}
         <HomeworkCard playerId={player.id} demoMode={demoMode} />

@@ -132,7 +132,10 @@ const ACTIVITIES = [
 // collapsed card is the entire body — so it passes `defaultExpanded`.
 export function TrainingLog(props) { return <TrainingLogSession key={props.playerId} {...props}/>; }
 
-function TrainingLogSession({ playerId, defaultExpanded = false }) {
+// `onLogged` fires after a session is saved so the parent can recount anything
+// derived from the log (the First Five "Log a training session" quest read
+// 0/1 until the next Home mount -- QA 2026-09-10).
+function TrainingLogSession({ playerId, defaultExpanded = false, onLogged }) {
   // Bump this whenever we save so the running log re-reads fresh LS.
   const [refreshTick, setRefreshTick] = useState(0);
   const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
@@ -240,6 +243,7 @@ function TrainingLogSession({ playerId, defaultExpanded = false }) {
     setRefreshTick(t => t + 1);
     setTimeout(() => setSaved(null), 2000);
     if (type === "pucks_shot") { setPuckCount(0); setShotType(null); }
+    try { onLogged?.(); } catch {}
   }
 
   return (
