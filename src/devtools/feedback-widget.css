@@ -27,3 +27,11 @@
 }
 .fbw-send:disabled { opacity: .5; cursor: default; }
 .fbw-status { font-size: 12.5px; color: #9fb3c9; }
+/* On phones and small tablets the fixed bottom nav (.rr-bottom-nav, width
+   min(560px, 100% - 24px), z-index 100) spans the viewport, and this
+   z-index 9999 button at bottom:16px/right:16px sat on top of its right-hand
+   tab: "Report" was unreachable at 390px (QA 2026-09-10). Lift the widget
+   above the nav (nav is ~70px tall at bottom 12px) only when a nav exists. */
+@media (max-width: 800px) {
+  body:has(.rr-bottom-nav) .fbw-root { bottom: calc(max(12px, env(safe-area-inset-bottom)) + 84px); }
+}
