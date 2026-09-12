@@ -2,6 +2,30 @@
 
 Version `rinkreads-character-pack-v1`, drafted 2026-09-04.
 
+## Owner update — September 12, 2026 — goalie handedness
+
+Thomas selected a **right-catching (full right) goalie**, superseding the
+September 4 "standard left-catching" direction. Right-catching means the
+catcher is on the goalie's right hand, blocker and stick on the left.
+
+- **Why:** it matches the character already rigged in the Shootout, so no
+  game code changes. The Shootout scores against four named targets
+  (`GLOVE HIGH/LOW`, `BLOCKER HIGH/LOW` in `src/cognitive-gym/ShootoutScene3D.jsx`)
+  that bind glove and blocker to specific hands. Adopting left-catching art
+  would have required remapping those targets, and a mismatch would animate
+  the blocker on a shot aimed glove-side — a teaching-correctness bug, not a
+  cosmetic one.
+- **Known cost, accepted:** right-catching is the rarer real-world style
+  (roughly one goalie in ten). Learners reading glove-side vs blocker-side
+  off this character are practicing against the uncommon case. Thomas framed
+  this as "for now", so treat it as revisitable, not permanent.
+- **What this does NOT do:** it does not mirror or relabel any existing
+  generated asset. Per the pack's standing rule, observed handedness is
+  recorded as-is and pixels are never flipped to hide a mismatch. Any
+  previously generated left-catching goalie art stays labeled as what it
+  actually is, and becomes historical reference rather than a silent
+  right-catching master.
+
 ## Owner update — September 6, 2026 — all scenarios
 
 Thomas confirmed that the shared player, uniform, hockey-motion and first-person readability requirements apply **across all scenarios**, including existing scenarios as they are brought up to this standard. A successful prototype does not establish coverage of the whole catalog.
@@ -18,7 +42,10 @@ Full decisions, proposed construction details and acceptance examples: [shared 3
 
 ## Character identity
 
-The authored target started as one youth-medium right-shot skater and one youth-medium goalie. Right-shot means anatomical left hand at the stick's top, right hand lower on the shaft. **The generated concept actually shows a left-shot skater** (right hand at top, left hand lower, blade to anatomical left); the inventory records observed handedness and does not relabel or mirror pixels to hide the mismatch. A future authored right-shot asset remains separate. The goalie is standard left-catching: left catcher, right blocker and stick. Distinct youth-small and youth-tall body/equipment fits can follow; uniform scaling alone does not turn an adolescent model into a young child's proportions. Camera art does not establish age curriculum eligibility.
+The authored target started as one youth-medium right-shot skater and one youth-medium goalie. Right-shot means anatomical left hand at the stick's top, right hand lower on the shaft. **The generated concept actually shows a left-shot skater** (right hand at top, left hand lower, blade to anatomical left); the inventory records observed handedness and does not relabel or mirror pixels to hide the mismatch. A future authored right-shot asset remains separate. The goalie is **right-catching (full right): right catcher, left blocker and
+stick** — owner decision, Thomas, 2026-09-12, superseding the earlier
+"standard left-catching" direction. See the September 12 owner update above
+for the reasoning and its known cost. Distinct youth-small and youth-tall body/equipment fits can follow; uniform scaling alone does not turn an adolescent model into a young child's proportions. Camera art does not establish age curriculum eligibility.
 
 Thomas clarified that “white” meant lighter skin visible inside the helmet, not a white jersey. The featured skater has a visible lighter-complexion human face behind its complete cage in the new navy/gold uniforms. Keep that correction in future prompts; do not hide the face behind an opaque black mask. The white-jersey generated variant is rejected as a misunderstanding, not an approved away uniform.
 
@@ -80,7 +107,9 @@ Export named clips from the manifest, in-place, with no extra root translation. 
 
 ## Handedness migration
 
-The current Shootout drawing is **full-right**: its glove is screen-left and blocker/stick screen-right. This new pack is **standard left-catching**, the opposite. Neither is a labeling error if the full character is internally consistent. The pack must not silently replace that mesh or horizontally flip the generated image.
+The current Shootout drawing is **full-right**: its glove is screen-left and blocker/stick screen-right. The pack was originally specced as **standard left-catching**, the opposite. Neither is a labeling error if the full character is internally consistent. The pack must not silently replace that mesh or horizontally flip the generated image.
+
+**Resolved 2026-09-12 (Thomas): the pack targets full-right, matching the existing Shootout character.** This takes the "legacy full-right, preserve the existing mapping" branch described below, so `gloveHi/gloveLo` and `blkrHi/blkrLo` keep their current target positions and no change to the scoring core is required. Any goalie art already generated as left-catching stays labeled as left-catching and becomes historical reference; it is not mirrored into a right-catching master. See the September 12 owner update at the top of this file for the accepted cost.
 
 Choose an explicit avatar handedness at integration. For standard front view, map `gloveHi/gloveLo` to viewer-right targets and `blkrHi/blkrLo` to viewer-left; for legacy full-right, preserve the existing mapping. `midHi` and `fiveHole` remain central. Keep core IDs anatomical, not defined by screen columns. Update target positions, labels, goalie limbs, hit areas, 2D fallback and animation lookup together. Test both handedness variants against identical open/covered IDs and scoring. Screenshots alone cannot prove this mapping. The initial generation has no permission to alter the scoring core.
 
