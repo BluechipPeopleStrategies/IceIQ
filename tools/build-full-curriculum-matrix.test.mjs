@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildFullCurriculumMatrix, buildCsv, loadLegacyBankRows, loadScenarioSeedRows, loadPovQuestionRows } from './build-full-curriculum-matrix.mjs';
-import { classifyChangedCue } from './lib/curriculum-changed-cue.mjs';
+import { classifyChangedCue, U11_MANUAL_VERIFICATION } from './lib/curriculum-changed-cue.mjs';
 import { cognitiveDemandFor, contextZoneForText } from './lib/curriculum-matrix-helpers.mjs';
 import { loadLedger } from './lib/curriculum-ledger.mjs';
 
@@ -182,7 +182,30 @@ test('real data: the U11 changed-cue manual-verification ledger only references 
   const u11Ids = new Set(report.rows.filter(r => r.catalog === 'experimental-bank' && r.ageBand === 'U11').map(r => r.questionId));
   assert.equal(report.u11ChangedCue.totalU11Questions, u11Ids.size);
   assert.ok(report.u11ChangedCue.manuallyVerifiedCount <= u11Ids.size);
-  assert.equal(report.u11ChangedCue.genuineChangedCueQuestions, report.u11ChangedCue.manuallyVerifiedGenuineCount, 'manual overrides are authoritative for every U11 question that was flagged, so the reported genuine count must equal the manual genuine count');
+  const u11Rows = report.rows.filter(r => r.catalog === 'experimental-bank' && r.ageBand === 'U11');
+  for (const [id, verdict] of Object.entries(U11_MANUAL_VERIFICATION)) {
+    const row = u11Rows.find(r => r.questionId === id);
+    assert.ok(row, `saved manual verdict references a live question: ${id}`);
+    assert.equal(row.changedCueManuallyVerified, true);
+    assert.equal(row.changedCueGenuine, verdict, `manual verdict is preserved for ${id}`);
+  }
+  const automaticMatches = u11Rows.filter(r => r.changedCueGenuine && !r.changedCueManuallyVerified);
+  assert.equal(report.u11ChangedCue.genuineChangedCueQuestions,
+    report.u11ChangedCue.manuallyVerifiedGenuineCount + automaticMatches.length);
+});
+
+test('new U11 classifier matches do not inherit manual verification from the historical ledger', () => {
+  const bank = [{
+    id: 'test-new-u11-cue', version: 1, ageBand: 'U11', actors: [],
+    questions: [{ id: 'test-new-u11-cue-q1', type: 'choice', basis: 'coaching',
+      prompt: 'Suppose D2 now moves into your reset lane. What would you reconsider?', options: [] }],
+  }];
+  const report = buildFullCurriculumMatrix({ experimental: { bank, bindings: [], review: { coverage: [] }, repairReport: null } });
+  const row = report.rows.find(r => r.questionId === 'test-new-u11-cue-q1');
+  assert.equal(row.changedCueGenuine, true);
+  assert.equal(row.changedCueManuallyVerified, false);
+  assert.equal(report.u11ChangedCue.genuineChangedCueQuestions, 1);
+  assert.equal(report.u11ChangedCue.manuallyVerifiedGenuineCount, 0);
 });
 
 test('real data: CSV has one header row plus exactly one data row per question, and every row is a well-formed quoted line', () => {

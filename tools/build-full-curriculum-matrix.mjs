@@ -426,11 +426,12 @@ export function buildFullCurriculumMatrix(overrides = {}) {
   });
 
   const u11Prompts = rawExperimentalBank.filter(s => s.ageBand === 'U11').flatMap(s => s.questions.map(q => q.prompt || ''));
+  const u11Rows = rows.filter(r => r.catalog === 'experimental-bank' && r.ageBand === 'U11');
   const u11ChangedCue = {
-    totalU11Questions: rows.filter(r => r.catalog === 'experimental-bank' && r.ageBand === 'U11').length,
-    genuineChangedCueQuestions: rows.filter(r => r.catalog === 'experimental-bank' && r.ageBand === 'U11' && r.changedCueGenuine).length,
-    manuallyVerifiedCount: Object.keys(U11_MANUAL_VERIFICATION).length,
-    manuallyVerifiedGenuineCount: Object.values(U11_MANUAL_VERIFICATION).filter(Boolean).length,
+    totalU11Questions: u11Rows.length,
+    genuineChangedCueQuestions: u11Rows.filter(r => r.changedCueGenuine).length,
+    manuallyVerifiedCount: u11Rows.filter(r => r.changedCueManuallyVerified).length,
+    manuallyVerifiedGenuineCount: u11Rows.filter(r => r.changedCueManuallyVerified && r.changedCueGenuine).length,
     naiveImagineSupposeKeywordCount: u11Prompts.filter(prompt => /^\s*(imagine|suppose)/i.test(prompt)).length,
     disclosure: 'Rule-based classification of all U11 experimental prompts with the saved manual exception ledger. The earlier 171 hand-read candidate claim was not reproducible and is withdrawn. Counts describe this classifier, not exhaustive semantic coverage; unmarked phrasing may be missed.',
   };
