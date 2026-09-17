@@ -55,7 +55,7 @@ These layouts can coexist behind the same Start/Continue action. Do not add thre
 
 ## Smallest useful next experiment
 
-Storyboard the same existing U7 lesson as a stepped mission and a short scrolling lesson. Storyboard one U11 lesson as a linear before/after comparison and a bounded decision story. Hold the question content and learning objective constant so layout is what changes. These four storyboards are proposed next work, not delivered prototypes.
+Storyboard the same existing U7 lesson as a stepped mission and a short scrolling lesson. Storyboard one U11 lesson as a linear before/after comparison and a bounded decision story. Hold the question content and learning objective constant so layout is what changes. Thomas approved this comparison; the four standalone storyboards are now [available for review](2026-09-17-articulate-layout-lab.html). See the [verification and limitations](2026-09-17-articulate-layout-lab-verification.md). No production integration is implied.
 
 Compare: can a player begin without adult navigation help; find the relevant cue; recover after an error; explain what changed; return later and handle a new example? Inspect phone/tablet readability and keyboard/tap alternatives. Record observed behavior before choosing a default; completion speed alone does not demonstrate learning.
 
