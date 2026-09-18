@@ -2,6 +2,9 @@
 
 Status: NOT cleared for the family pilot. No database policies, accounts or records changed.
 
+## Follow-up: client race repaired
+Release source `5bdf017` adds identity/generation guards to profile hydration, delayed enrichment and queued retries, with synchronous invalidation on sign-out and local-preview entry. Seven regression cases pass; six failed before the fix. This closes the reproduced client-state race below, including the earlier instruction to keep it open. It does not clear the live authorization matrix. The public release uses the separate no-account preview build, which excludes App/Supabase; Supabase dashboard currently requires owner sign-in. See [preview launch receipt](2026-09-18-preview-launch.md).
+
 ## Current findings
 1. **Session-state race reproduced locally.** `src/App.jsx` loadUser awaits a profile and later writes profile/player state without checking whether the authenticated identity changed while it waited. SIGNED_OUT clears the state, but an already pending response can reinstall it. The source harness reproduced a delayed coach profile arriving after sign-out clearing. This is stale client state and potential shared-device exposure; it is not evidence of bypassing Supabase RLS. Needs cancellation/identity generation guards and regression checks for sign-out, A-to-B switching, delayed enrichment and retries.
 2. **Live backend unavailable from this environment.** Anonymous auth-settings and minimal profiles/invite-code reads returned DNS/connect failures (ENOTFOUND / UND_ERR_CONNECT_TIMEOUT), not authorization responses. Do not interpret them as permission denials or missing tables.

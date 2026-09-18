@@ -21,7 +21,7 @@ is inspiration, not endorsement or permission to copy a curriculum. Preserve
 human hockey/content gates and mark draft content honestly.
 
 
-Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
+Make deliberate choices about palette, typography and layout that fit the actual brief. For RinkReads extensions, improve clarity within the accepted visual system. Explore a new aesthetic only when the owner asks for it; do not invent client history or require novelty for its own sake.
 
 ## Ground it in the subject
 

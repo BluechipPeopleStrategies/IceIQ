@@ -1,6 +1,6 @@
 # RinkReads Thanksgiving MVP — player/family pilot
 
-> September 18 access update: Thomas selected a **quick code preview without an account** and requested restoring RinkReads.com. This is an early public-preview milestone using sample content and device-local progress. It does not clear the later authenticated-account, content-review or physical-device gates below. Preview carries no payment or plan unlock. Current decisions: `../rinkreads-product-principles.md`.
+> September 18 access update: Thomas selected a **quick code preview without an account**. It is now live at https://rinkreads.com with FIRST-SHIFT, using sample content and device-local progress. This completes the early public access milestone; content review and physical-device/family rehearsal remain open. The account-based requirements below belong to a future account-enabled release and are not prerequisites for this public sample. Preview carries no payment or plan unlock. Current decisions: `../rinkreads-product-principles.md`; evidence: [launch receipt](2026-09-18-preview-launch.md). Dated baseline sections below are retained for comparison.
 
 **Target:** pilot begins over October 10–12, 2026, with Monday, October 12 as the start date. Canadian Thanksgiving is October 12 ([Government of Canada](https://www.canada.ca/en/revenue-agency/services/tax/public-holidays.html)). **Readiness decision: October 7.** October 8–9 are reserved for fixes and release preparation.
 

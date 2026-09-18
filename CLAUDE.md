@@ -27,10 +27,10 @@ Scenario-engine owner authority:
 `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
 
 For hockey movement, tactics, age progression and viewpoint-dependent question
-work, use `docs/hockey-authority/INDEX.md` and the
-`.claude/agents/hockey-authority.md` review role. This implements the existing
-Claude judgment policy; it does not replace human tactical-claim approval,
-physics gates or the question-packet calibration required above.
+work, consult `docs/hockey-authority/INDEX.md` for historical requirements.
+The Hockey Authority worker remains paused and unqualified; do not resume it
+or treat its prior labels as clearance. Current source research and human
+tactical-claim approval remain separate from physics and question-packet gates.
 
 ## Direction (2026-07-29)
 Build the scenario factory around approved tactical claims, correct-by-construction
@@ -43,7 +43,7 @@ content directly into the live bank.
 - **Goal:** Youth hockey game-sense development — adaptive question bank, SMART goals, progress tracking U7–U18.
 - **Stack:** React + Vite, plain JS/JSX (no TypeScript). Vercel auto-deploy on `main`.
 - **Environment:** Claude Code on Windows / PowerShell.
-- **Entry:** `src/main.jsx` → `src/App.jsx`.
+- **Entry:** `src/main.jsx` selects `src/player/PreviewPortal.jsx` in preview mode and `src/App.jsx` for the full account build.
 
 ## Architecture (modular — NOT a single file)
 `src/App.jsx` is the ~7,900-line core (routing, screens, quiz engine, tier gating), but the app is **modularized** — App.jsx imports ~25 sibling modules. Do not assume "everything lives in App.jsx," and feel free to add/extend modules where it fits the existing split:

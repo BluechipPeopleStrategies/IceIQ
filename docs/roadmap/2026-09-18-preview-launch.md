@@ -32,4 +32,9 @@ Qwen qwen3.8-huihui:27b received a compact official-source brief, one 120-second
 After disclosure, Codex worker /root/omha_curriculum_review independently checked official sources and wrote only `docs/research/2026-09-18-omha-pathway-crosswalk.md`. Coordinator reviewed the crosswalk and integrated conservative age guidance; source access/currency limits are retained. Worker token counters unavailable.
 
 ## Live result
-Pending deployment and domain verification. Do not use this candidate receipt as proof the site is live.
+- **Live:** https://rinkreads.com/ with public sample code `FIRST-SHIFT`, verified September 18 at approximately 18:06 UTC (12:06 MDT).
+- Tested release source: `5bdf017143fa537dfe68927f0c32f358b4ffc21c`, fast-forwarded to remote main after hosted-candidate verification. Production deployment: `3nYa8vcT8T8j9tQE1PSkKgVaGfxn`, Ready, build 49 seconds.
+- Added the existing apex domain to ice-iq Production. Vercel reports Valid Configuration. Existing DNS already pointed to Vercel; no DNS records, email records, paid plans or security controls were changed. No redirect to an unverified www hostname was added.
+- Unauthenticated HTTPS request returned 200. On the actual domain, code entry opened the U7 home and walkthrough; Start loaded the 3D rink; selecting Nets updated its explanation and explored count to 1/3.
+- Previous deployment `6RUqkMPeNBWE7LNjmMxgPNF2NiKc` remains available as a rollback reference, but it contains the older account application. Review access/content implications before rolling it back under the public domain.
+- Full account authorization remains uncleared: Supabase dashboard requires owner sign-in, live role-matrix/migration checks are still outstanding. Preview does not depend on that backend. Qualified content and physical-device/family checks remain open.
