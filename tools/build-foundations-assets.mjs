@@ -1,0 +1,14 @@
+import fs from 'node:fs';import vm from 'node:vm';import crypto from 'node:crypto';
+const path='docs/research/2026-09-17-articulate-layout-lab.html';const html=fs.readFileSync(path,'utf8');
+const payload=JSON.parse(html.match(/<script id="payload" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+const b=payload.lines.blue[1],g=payload.lines.goal[1];
+const tour=html.slice(html.indexOf('const spots=['),html.indexOf('function areas()'));
+const {spots,roles}=vm.runInNewContext(`const B=${b},G=${g};${tour};({spots,roles})`);
+const gearText=html.slice(html.indexOf('const gear=['),html.indexOf('let packed=new Set()'));
+const {gear,signals}=vm.runInNewContext(`${gearText};({gear,signals})`);
+fs.writeFileSync('src/one-on-one/foundationContent.json',JSON.stringify({revision:'2026-09-18-v1',reviewStatus:'draft',source:path,sourceSha256:crypto.createHash('sha256').update(html).digest('hex'),profile:payload.profile,lines:payload.lines,spots,roles,gear,signals},null,2));
+const renderer=html.slice(html.indexOf('function areas()'),html.indexOf('function renderTour()'));
+fs.writeFileSync('src/one-on-one/foundationRink.js',`// Adapted without content changes from the owner-reviewed prototype; human hockey review pending.\nimport data from './foundationContent.json';\nconst {profile:P,roles,spots}=data;const B=data.lines.blue[1],G=data.lines.goal[1];\nconst esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));\nexport function foundationRink({mode='landmarks',spot='blue',role='C',phase='attack',turnover='lose'}={}){\n${renderer}\nreturn base();\n}\n`);
+const ref=html.slice(html.indexOf('function refArt(s)'),html.indexOf('function choices()'));
+fs.writeFileSync('src/one-on-one/foundationSignals.js','// Original source-controlled SVG drawings; awaiting qualified official review.\nexport '+ref);
+console.log('Extracted exact prototype content and native rendering helpers.');

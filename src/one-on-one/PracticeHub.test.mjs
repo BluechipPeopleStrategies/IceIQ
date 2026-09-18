@@ -117,3 +117,5 @@ test('rink discovery is available only to U7 and U9, including old links', async
   if(!eligible) assert.ok(await view.component('LearningWorlds'),age);
  }
 });
+
+test('foundations review query cannot enable draft flow when development flag is absent',async()=>{const component=mount('?arena=foundations&age=U7&world=skating-movement');assert.equal(await component.component('FoundationFlow'),undefined);assert.ok(await component.component('LearningWorlds'));});

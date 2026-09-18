@@ -85,3 +85,7 @@ Local Qwen (`qwen3.8-huihui:27b`, loopback only) supplied a bounded schedule cri
 - Six starter calls: holding, roughing, head contact, goal scored, interference and slashing. Motion descriptions accompany the still illustrations. Include more signals only after the first set is reviewed.
 - All three ages can retry, reveal and restart without a timer or loss of earned progress. Prototype results are session-only and have no mastery value.
 - Reference: Hockey Canada 2026–2028 rulebook, printed pages 2–3, and Hockey Canada parent equipment/fitting guidance linked in the prototype. Drawings are original draft schematics, not copied photographs.
+
+
+## September 18 implementation checkpoint
+First native foundations sequence is available in the local app, with player/age device-local resume. See [integration verification](2026-09-18-foundations-flow-verification.md). Local access-routing checks pass; hosted access, human content review and family/device rehearsal remain open. Development-only availability; no release or entitlement change. Wider six-world progression remains unimplemented.

@@ -24,7 +24,7 @@ function WorldIcon({ kind }) {
 const artStyle = world => ({ '--world-color': world.color, '--world-position': `${(world.art % 3) * 50}% ${Math.floor(world.art / 3) * 100}%` });
 const availabilityLabel = { guided: 'Guided starter', library: 'In the library', study: 'Study the idea', loading: 'Checking lessons', unknown: 'Explore the idea' };
 
-export function LearningWorldsView({ ageBand = 'U11', initialWorldId, playerId = 'practice-preview', onAgeChange, onNavigate, library = [], libraryStatus = 'ready' }) {
+export function LearningWorldsView({ ageBand = 'U11', initialWorldId, playerId = 'practice-preview', onAgeChange, onNavigate, onStartFoundations, foundationStartLabel, library = [], libraryStatus = 'ready' }) {
   const { band, worlds, missionCount, guidedCount } = getLearningWorlds(ageBand, { library });
   const [selection, setSelection] = useState(() => ({ worldId: worlds.some(world => world.id === initialWorldId) ? initialWorldId : 'hockey-sense', conceptId: initialWorldId ? null : 'scanning' }));
   const [, bumpProgress] = useState(0);
@@ -69,6 +69,7 @@ export function LearningWorldsView({ ageBand = 'U11', initialWorldId, playerId =
 
     <section id={regionId} ref={detailRef} className="lw-detail" style={artStyle(world)} aria-labelledby={`${regionId}-title`}>
       <header className="lw-detail-heading"><div><p className="lw-kicker">{world.domainName} / {band}</p><h2 id={`${regionId}-title`}>{world.name}</h2><p>{world.description}</p></div><span className="lw-detail-count">{world.missions.length} <span>learning focuses</span></span></header>
+      {onStartFoundations&&world.id==='skating-movement'&&['U7','U9','U11'].includes(band)&&<div className="lw-foundations"><h3>Your first trip around the rink</h3><p>Places, positions, gear and referee signals, followed by a short practice and recap. Saved on this device.</p><p>Local review flow · human content review pending.</p><button type="button" className="lw-primary" data-start-foundations onClick={onStartFoundations}>{foundationStartLabel||'Start foundations'}</button></div>}
       {mission ? <div className="lw-mission-layout">
         <WorldMissionJourney key={`${band}:${world.id}`} missions={world.missions} selectedMissionId={mission.id} visitedIds={progress.visitedIds} suggestedMissionId={progress.suggestedMissionId} worldColor={world.color} onSelectMission={selectMission} />
         <article className="lw-mission" id={`${regionId}-mission`} aria-labelledby={`${regionId}-mission-title`}>

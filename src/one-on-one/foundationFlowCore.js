@@ -1,0 +1,11 @@
+import content from './foundationContent.json' with {type:'json'};
+export const STAGES=['Know the ice','Meet the positions','Pack your gear','Read the referee','Try a few calls','Your recap'];
+export const normalizeAge=value=>String(value||'').split(' ')[0];
+export function flowKey({playerId,ageBand}){const age=normalizeAge(ageBand);if(!['U7','U9','U11'].includes(age)||!playerId)throw new Error('A player and supported age are required');return `rinkreads_foundations_review_v1:${encodeURIComponent(playerId)}:${age}`;}
+export const newFlow=()=>({version:1,revision:content.revision,stage:0,spots:[],roles:[],packed:[],signals:[],answers:{}});
+const ids={spots:content.spots.map(x=>x[0]),roles:Object.keys(content.roles),packed:content.gear.map(x=>x[0]),signals:content.signals.map(x=>x.id)};
+function clean(value){if(!value||value.version!==1||value.revision!==content.revision||!Number.isInteger(value.stage)||value.stage<0||value.stage>=STAGES.length)return newFlow();const next={...newFlow(),stage:value.stage};for(const key of Object.keys(ids))next[key]=[...new Set((Array.isArray(value[key])?value[key]:[]).filter(id=>ids[key].includes(id)))];for(const s of content.signals)if(ids.signals.includes(value.answers?.[s.id]))next.answers[s.id]=value.answers[s.id];return next;}
+export function loadFlow(storage,scope){try{if(!storage)return {flow:newFlow(),available:false};return {flow:clean(JSON.parse(storage.getItem(flowKey(scope))||'null')),available:true};}catch{return {flow:newFlow(),available:false};}}
+export function saveFlow(storage,scope,flow){try{if(!storage)return {saved:false};storage.setItem(flowKey(scope),JSON.stringify(clean(flow)));return {saved:true};}catch{return {saved:false};}}
+export function canContinue(flow){switch(flow.stage){case 0:return ['blue','net','boards'].every(id=>flow.spots.includes(id));case 1:return ids.roles.every(id=>flow.roles.includes(id));case 2:return ids.packed.every(id=>flow.packed.includes(id));case 3:return ids.signals.every(id=>flow.signals.includes(id));case 4:return content.signals.every(s=>flow.answers[s.id]===s.id);default:return false;}}
+export function advanceFlow(flow){return canContinue(flow)?{...flow,stage:Math.min(flow.stage+1,STAGES.length-1)}:flow;}
