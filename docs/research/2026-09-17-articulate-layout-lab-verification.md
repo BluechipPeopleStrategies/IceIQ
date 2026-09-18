@@ -61,3 +61,7 @@ Evidence in this task: work/foundations-browser-checks.json; work/tour-final-che
 Local delegation: qwen3.8-huihui:27b on localhost:11434 supplied three compact critiques (ice-tour UI, MVP schedule, foundations UI); request/result pairs are work/ice-tour-qwen-*.json, work/mvp-qwen-*.json, work/foundations-qwen-*.json. One job at a time; no retries; 190/260/170 output-token caps. Accepted clear orientation/data labels, critical-path/buffer and explicit tap alternative. Rejected removing user-requested drag, equal-height layouts regardless of device, and single-family rehearsal. It generated no hockey facts and did not qualify content. No Claude or Codex workers. Savings unmeasured.
 
 Plan saved as rinkreads-thanksgiving-mvp-plan.md: U7–U11 family pilot target October 10–12; October 7 go/no-go; October 8–9 buffer. Named coach, official and equipment review, access/entitlement decision, actual devices and 2–3-family rehearsal are dependencies. Dates and effort are proposed, not scheduled commitments.
+
+
+## September 18 marker sizing
+Standardized position labels to 19 SVG units and landmark numbers to 16, removing mobile enlargement; vertically centered both within their circles. Added a dynamic gold-selected/navy-other explanation, including why centre is initially gold. Chromium bounding-box checks confirm all six position labels fit inside their circles at 1280, 760, 390 and 320px. Verified selecting LW moves the highlight and explanation. Screenshot inspected. Source payload and script syntax checks pass.
