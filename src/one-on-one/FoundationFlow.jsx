@@ -6,6 +6,14 @@ import {refArt} from './foundationSignals.js';
 import './FoundationFlow.css';
 import MovableIllustration from './MovableIllustration.jsx';
 const FoundationRink3D=lazy(()=>import('./FoundationRink3D.jsx'));
+const FoundationObject3D=lazy(()=>import('./FoundationObject3D.jsx'));
+
+function SamplePanel({kind}){
+  const [open,setOpen]=useState(false);
+  const helmet=kind==='helmet',gear=content.gear.find(g=>g[0]==='helmet');
+  const fallback=helmet?<svg viewBox="0 0 64 64" role="img" aria-label="Helmet illustration"><path d={gear[3]} fill="#e6b952" stroke="#244660" strokeWidth="3"/></svg>:<div dangerouslySetInnerHTML={{__html:refArt(content.signals.find(s=>s.id==='holding'))}}/>;
+  return <div className="ff-sample-toggle"><button aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'Close': 'Explore'} {helmet?'helmet':'holding signal'} 3D sample</button>{open&&<Suspense fallback={<p role="status">Loading the 3D sample…</p>}><FoundationObject3D kind={kind} fallback={fallback}/></Suspense>}</div>;
+}
 
 function deviceStorage(){try{return globalThis.localStorage;}catch{return null;}}
 export default function FoundationFlow({playerId,ageBand,onBack,backLabel='Back to worlds'}){
@@ -57,12 +65,14 @@ function Flow({scope,onBack,backLabel}){
       <p className="ff-note">Full-ice orientation example. U7/U9 game formats differ. Left/right are viewed toward the opponent’s net. Exact maps remain coaching-review drafts.</p>
     </>}
     {flow.stage===2&&<>
+      <SamplePanel kind="helmet"/>
       <p>{scope.ageBand==='U7'?'Pack together with an adult. Say each name as you put it in.':'Pack the kit, then explain why each piece belongs.'} Drag to the bag or tap a card. Tap again to unpack.</p>
       <div className="ff-gear-layout"><div className="ff-gear">{content.gear.map(g=><button key={g[0]} data-foundation-gear={g[0]} draggable aria-pressed={flow.packed.includes(g[0])} onDragStart={e=>{e.dataTransfer.setData('text/plain',g[0]);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDragging(false)} onClick={()=>pack(g[0],flowRef.current.packed.includes(g[0]))}><svg viewBox="0 0 64 64" aria-hidden="true"><path d={g[3]}/></svg><span>{g[1]}</span><small>{flow.packed.includes(g[0])?'Packed · tap to remove':'Drag or tap to pack'}</small></button>)}</div>
       <aside className={`ff-bag${dragging?' is-over':''}`} aria-label="Hockey bag drop area" onDragOver={e=>{e.preventDefault();setDragging(true);}} onDragLeave={()=>setDragging(false)} onDrop={e=>{e.preventDefault();setDragging(false);pack(e.dataTransfer.getData('text/plain'));}}><h2>Your hockey bag</h2><p role="status">{flow.packed.length} of 13 packed</p><progress max="13" value={flow.packed.length} aria-label="Gear packed"/><p aria-live="polite">{gearNote}</p><button onClick={()=>{update(current=>({...current,packed:[]}));setGearNote('Bag emptied.');}}>Empty the bag</button><details className="ff-gear-inspect"><summary>Look closely at this gear</summary><h3>{inspectedGear[1]}</h3><MovableIllustration key={gearInspectId} label={inspectedGear[1]}><svg viewBox="0 0 64 64" role="img" aria-label={inspectedGear[1]}><path d={inspectedGear[3]} fill="#e6b952" stroke="#244660" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"/></svg></MovableIllustration></details></aside></div>
       <p className="ff-note">A learning checklist, not a safety inspection. An adult checks real gear, fit, condition and program requirements. Goalies need a different kit. Bring a water bottle too.</p>
     </>}
     {(flow.stage===3||flow.stage===4)&&<>
+      {flow.stage===3&&currentSignal.id==='holding'&&<SamplePanel kind="referee"/>}
       <p>{flow.stage===3?'Notice the hands and arms. Learn the signal before trying the matching activity.':'Match the signal to its call. Read the feedback and try again as often as you need.'}</p>
       <p>Signal {signal+1} of {content.signals.length}</p>
       <div className="ff-signal-layout"><div><MovableIllustration key={currentSignal.id} label="Referee signal"><div className="ff-signal-art" dangerouslySetInnerHTML={{__html:refArt(currentSignal).split('</svg>')[0]+'</svg>'}}/></MovableIllustration><p><strong>Watch for:</strong> {currentSignal.cue}</p></div><div>

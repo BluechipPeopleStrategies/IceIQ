@@ -1,10 +1,12 @@
 import fs from 'node:fs';import crypto from 'node:crypto';import {build} from 'esbuild';import {refArt} from '../src/one-on-one/foundationSignals.js';
+import {HELMET_PARTS} from '../src/one-on-one/foundationSamples.js';
 const out=process.argv[2];if(!out)throw Error('Provide output directory');fs.mkdirSync(out,{recursive:true});
 const content=JSON.parse(fs.readFileSync('src/one-on-one/foundationContent.json','utf8'));
 const bundle=await build({entryPoints:['src/one-on-one/foundationRink.js'],bundle:true,write:false,format:'esm',platform:'node'});
 const {foundationRink}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const files=['src/one-on-one/foundationContent.json','src/one-on-one/foundationRink.js','src/one-on-one/foundationSignals.js','src/one-on-one/FoundationFlow.jsx','src/one-on-one/FoundationFlow.css','src/one-on-one/MovableIllustration.jsx','src/one-on-one/MovableIllustration.css','src/one-on-one/FoundationRink3D.jsx','src/one-on-one/FoundationRink3D.css','src/one-on-one/foundationCamera.js'];
+files.push('src/one-on-one/FoundationObject3D.jsx','src/one-on-one/FoundationObject3D.css','src/one-on-one/FoundationSampleModels.jsx','src/one-on-one/foundationSamples.js');
 const fileHashes=Object.fromEntries(files.map(f=>[f,hash(fs.readFileSync(f))]));const fingerprint=hash(JSON.stringify(fileHashes));
 const items=[];const add=(id,reviewer,title,copy,svg,check)=>items.push({id,reviewer,title,copy,svg,check});
 for(const s of content.spots)add('ice-'+s[0],'Coach',s[1],[s[5],s[6],s[7]],foundationRink({spot:s[0]}),'Check location, age wording and the distinction between rink markings and approximate tactical areas.');
@@ -14,6 +16,10 @@ for(const [id,r]of Object.entries(content.roles)){
 }
 for(const g of content.gear)add('gear-'+g[0],'Equipment helper',g[1],[g[2]],`<svg viewBox="0 0 64 64" role="img" aria-label="${g[1]}"><path d="${g[3]}" fill="#e6b952" stroke="#244660" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,'Check identification, missing equipment, protective standards/local requirements and adult fitting guidance. Drawing is not a fitting demonstration.');
 for(const s of content.signals)add('signal-'+s.id,'Qualified official',s.name,[s.cue,s.meaning],refArt(s).split('</svg>')[0]+'</svg>','Check pose, motion caption, call name and explanation under the current Hockey Canada rulebook and U7/U9/U11 local formats.');
+const helmetItem=items.find(item=>item.id==='gear-helmet');
+helmetItem.copy.push(...HELMET_PARTS.map(part=>part.name+': '+part.description));
+helmetItem.check+=' Also inspect the interactive 3D shell, cage, strap and their highlights; this printable icon cannot qualify the 3D model.';
+items.find(item=>item.id==='signal-holding').check+=' Inspect the 3D hands close-up and replay in the study step. Verify the wrist grip, hand visibility and transition; animation timing is illustrative, not a standard. Matching remains 2D.';
 for(const item of items){item.svg=item.svg.replaceAll('tour-clip',item.id+'-clip').replaceAll('tour-heat',item.id+'-heat').replaceAll('ref-stripes',item.id+'-stripes');item.sha256=hash(JSON.stringify(item));}
 const payload={revision:content.revision,fingerprint,fileHashes,items};fs.writeFileSync(out+'/rinkreads-review-manifest.json',JSON.stringify(payload,null,2));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

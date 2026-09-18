@@ -9,13 +9,13 @@ Owner decision: interactive movement now; full 3D is the next milestone.
 - Equipment: drag-to-bag plus a closer-view panel for the selected item with drag/pan, zoom and reset. Tap/keyboard packing remains available.
 - The pilot home presents one Start/Continue action. Parent controls are collapsed. Draft flow remains development-only.
 
-These are interactive 2D illustrations. No new full-3D assets are claimed complete.
+Update September 18: the first local 3D rink, helmet and holding-referee samples now exist. The helmet identifies shell/cage/strap; the referee has close-up, replay, pause and manual pose inspection. These are review candidates, not qualified production assets. The other gear and signals remain 2D. See [sample verification](2026-09-18-helmet-referee-verification.md).
 
 ## Next milestone: prove the 3D visual approach
 
 **Proposed target: September 22–25**, subject to asset quality and review availability. Use the existing Three.js / React Three Fiber stack; no additional package or paid service is authorized by this plan.
 
-Build three representative objects before expanding the set:
+Review and refine these three representative objects before expanding the set:
 1. The rink: orbit, zoom and reset, with accurate landmark geometry, readable labels, selected-role highlight and a reliable overhead view.
 2. A helmet: clearly recognizable protective equipment, rotatable on touch/mouse, resettable front/side views. It must not imply that a generic model demonstrates correct fit or certification.
 3. A referee holding pose: readable hands/wrist relationship from the teaching camera, with controlled inspection angles. Have the qualified official assess the actual pose; future animated motions also need exact signal review.
