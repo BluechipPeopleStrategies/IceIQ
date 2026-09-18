@@ -31,4 +31,6 @@ Keep early-preview content labelled as under review. The unqualified/paused Hock
 Thanksgiving target remains October 12, 2026, with October 7 go/no-go. The no-account preview is an earlier access milestone, not automatic completion of authenticated family-pilot or content gates. See the dated MVP plan and latest roadmap.
 
 ## Maintenance
+September 18 interactive-demo decisions: recommend lesson order but allow every demo section to be opened or skipped. Skipping is navigation, never completion. Make instructional links open the real relevant section. Use BlueChip Playfair Display headings and Inter body/labels from local licensed font assets, with a compact layered interface, glass-like position markers and reduced-motion support. Rink landmarks are directly selectable, and responsibility maps allow temporary puck/player placement without implying a prescribed route or mastery judgment. See `docs/roadmap/2026-09-18-interactive-demo-qa.md`.
+
 AGENTS.md routes here and to TASKS.md. Update TASKS.md after work. Refresh source-specific claims and tool availability instead of treating old reports as current. Review model output as draft evidence; invented tool actions, files or unsupported source claims are failures. Record Qwen → Claude → Codex escalation and measured usage; never infer subscription savings.

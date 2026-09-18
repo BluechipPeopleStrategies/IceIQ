@@ -11,6 +11,11 @@ Read `docs/rinkreads-product-principles.md` before designing. Preserve the appro
 six-world artwork, navy/gold palette and the user's accepted layout. A request to
 fix or extend it is not permission for a new aesthetic direction; the broader
 ideation advice below applies when a redesign is actually requested.
+The September 18 owner update explicitly selects BlueChip Playfair Display headings
+and Inter body/labels, compact layered surfaces and glass-like player markers.
+Serve the existing licensed fonts in the preview artifact too. Demo sections must
+be directly accessible and skippable without granting completion; walkthrough
+references must open real help or activities, not merely describe unavailable UI.
 Prioritize one clear activity, age-appropriate language, non-overlapping controls,
 a skippable/replayable section tour and truthful device-local progress. Keep 2D,
 keyboard and reduced-motion alternatives alongside interactive/3D samples.

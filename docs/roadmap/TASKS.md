@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-18 · RinkReads.com restored as the owner-requested no-account U7–U11 preview, code FIRST-SHIFT. Release source 5bdf017 is on remote main; production domain, code entry and rink interaction verified. 68 registered test scripts and both builds pass. Session hydration race fixed with seven regressions. First-visit tour, native foundations, interactive/3D samples and OMHA/Hockey Canada-inspired age guidance are included. Current principles and project design/testing skills refreshed. See [launch receipt](2026-09-18-preview-launch.md). Next: qualified content review, physical-device/family rehearsal and separately restoring authenticated Supabase access for the full account audit. Thanksgiving target remains October 12 with October 7 go/no-go. The dated status blocks and changelog below describe earlier states, not the current public release.
+**Last updated:** 2026-09-18 · Public preview QA and owner-directed interactive MVP update: directly skippable sections, clickable rink, movable puck/players, glass-like markers, compact BlueChip typography/layering, working parent-help actions, camera-depth repair and age/home fixes. All 68 test scripts pass. [Interactive demo QA](2026-09-18-interactive-demo-qa.md) owns the current release status; [original launch](2026-09-18-preview-launch.md) records restoration. Next: live verification, qualified content review and physical-device/family rehearsal. Account authorization remains separate and unverified.
 
 
 **Last updated (QA baseline):** 2026-09-10 · Owner-requested QA and safe bug-fix pass on local branch `qa/2026-09-10-pass` (from `main` dd9607b; nothing pushed, not merged). Nine reproduced defects fixed with regression tests: tall 3D scene figure covering the quiz answers on short viewports, Tactician badge awarded to all-MC sessions, Skills header "0/0 rated" for paid tiers, First Five training quest not recounting after a log, empty "Your reason:" line in connected reads, landing coach demo hitting Supabase with non-UUID demo ids (training activity, assignments, challenges, second/third team rosters), Feedback button covering the Report tab on phones, and the Goals screen scrolling sideways on phones; plus two copy fixes (coach preview "Game Sense", Report mastery labels). Full `test:*` sweep and production build pass on 259864c. Priorities below unchanged; Supabase, shared-3D redesign and Hockey Authority qualification remain deferred/paused.
@@ -72,6 +72,9 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-18 interactive demo** · Implemented owner-requested skipping, direct landmark/role interaction, puck/player placement, compact glass-like visuals, local BlueChip fonts and real parent-help links; repaired depth separation and session navigation. [QA and review receipt](2026-09-18-interactive-demo-qa.md).
+
 
 - **2026-09-18 release** · Published the no-account preview at https://rinkreads.com from 5bdf017; valid production domain and live code/landmark interaction verified. Refreshed principles, design/testing skills and roadmap; auth client race fixed, live role matrix remains open. [Release receipt](2026-09-18-preview-launch.md).
 
