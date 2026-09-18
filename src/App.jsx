@@ -493,6 +493,7 @@ function lazyWithReload(factory) {
   }));
 }
 
+const PreviewPortal = lazyWithReload(() => import("./player/PreviewPortal.jsx"));
 const PilotHome = lazyWithReload(() => import("./player/PilotHome.jsx"));
 const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
@@ -7130,7 +7131,9 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           </div>
         )}
 
-        {/* Coach preview — only coach-side demo remains; players sign up. */}
+        <a href="#preview" style={{display:"block",margin:"20px 0",padding:"16px",border:"1px solid #c9a24b",borderRadius:12,color:C.gold,textAlign:"center",fontWeight:800}}>Preview with a code — no account needed</a>
+
+        {/* Coach preview */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
           <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See the dashboard</div>
           <div style={{background:"rgba(201,162,75,0.07)",border:"1px solid rgba(201,162,75,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
@@ -7724,8 +7727,12 @@ export default function App() {
   // SIGNED_OUT with `session === null` clobbers a dev/demo profile via the
   // `else { setProfile(null) }` branch (root cause of the gear→landing bug).
   const demoModeRef = useRef(false);
+  const authScopeRef = useRef({userId:null,generation:0});
   // Set the guard synchronously: INITIAL_SESSION can arrive before React renders.
-  const setDemoMode = (enabled) => setLocalSessionMode(demoModeRef, setDemoModeState, enabled);
+  const setDemoMode = (enabled) => {
+    authScopeRef.current={userId:null,generation:authScopeRef.current.generation+1};
+    setLocalSessionMode(demoModeRef, setDemoModeState, enabled);
+  };
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   // Restore the screen the player was on before a reload or a crash. Lazily
   // initialised so it costs nothing on the common path, and the module only
@@ -8037,18 +8044,20 @@ export default function App() {
   useEffect(() => {
     preloadQB();
     if (!hasSupabase) { setAuthReady(true); return; }
-    if (demoMode) { setAuthReady(true); return; }
+    if (demoMode || hashRoute === "preview") { setAuthReady(true); return; }
     let mounted = true;
+    const startupGeneration=authScopeRef.current.generation;
     const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 2000);
     (async () => {
       try {
         const session = await SB.getSession();
-        if (session?.user && mounted && !demoModeRef.current) {
+        if (session?.user && mounted && !demoModeRef.current && authScopeRef.current.generation===startupGeneration) {
           // A session exists: disarm the 2s authReady escape so the app can't
           // paint the logged-out landing while the profile is still loading
           // (the sign-in flash). The escape stays armed only for the
           // no-session / hung-network path, which renders landing anyway.
           clearTimeout(timeout);
+          authScopeRef.current={userId:session.user.id,generation:startupGeneration+1};
           setUserEmail(session.user.email || null);
           await loadUser(session.user.id);
         }
@@ -8083,18 +8092,21 @@ export default function App() {
         // to Supabase. USER_UPDATED likewise carries no new profile.
         const RELOADS_PROFILE = ["INITIAL_SESSION", "SIGNED_IN", "PASSWORD_RECOVERY"];
         if (event && !RELOADS_PROFILE.includes(event)) return;
+        const generation=authScopeRef.current.generation+1;
+        if(authScopeRef.current.userId!==session.user.id){setProfile(null);setPlayer(null);setProfileProbe("pending");}
+        authScopeRef.current={userId:session.user.id,generation};
         setTimeout(() => {
-          if (!mounted || demoModeRef.current) return;
-          loadUser(session.user.id).catch((e) => console.error("loadUser after auth change failed:", e));
+          if (!mounted || demoModeRef.current || authScopeRef.current.generation!==generation) return;
+          loadUser(session.user.id,0,generation).catch((e) => console.error("loadUser after auth change failed:", e));
         }, 0);
       }
       // Reset the probe too, or the next sign-in inherits the last account's
       // verdict -- a "missing" left over from a stranded account would show the
       // recovery form instantly to whoever signs in next, before we have looked.
-      else { setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); forgetScreen(); setScreen("home"); }
+      else { authScopeRef.current={userId:null,generation:authScopeRef.current.generation+1}; setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); forgetScreen(); setScreen("home"); }
     });
-    return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
-  }, [demoMode]);
+    return () => { mounted = false; clearTimeout(timeout); authScopeRef.current={userId:null,generation:authScopeRef.current.generation+1}; data?.subscription?.unsubscribe?.(); };
+  }, [demoMode, hashRoute === "preview"]);
 
   // Password recovery: when a reset email link lands the user, Supabase
   // creates a recovery session and fires PASSWORD_RECOVERY. Without routing
@@ -8108,8 +8120,11 @@ export default function App() {
     return () => data?.subscription?.unsubscribe?.();
   }, []);
 
-  async function loadUser(userId, attempt = 0) {
+  async function loadUser(userId, attempt = 0, generation = authScopeRef.current.generation) {
+    const isCurrent=()=>!demoModeRef.current && authScopeRef.current.userId===userId && authScopeRef.current.generation===generation;
+    if(!isCurrent())return;
     const p = await SB.getProfile(userId);
+    if(!isCurrent())return;
     if (!p) {
       // A brand-new account has no profile row yet: SB.signUp() writes it
       // AFTER supabase.auth.signUp() resolves, so the SIGNED_IN subscriber can
@@ -8124,7 +8139,7 @@ export default function App() {
       // the auth screen rather than looping forever.
       if (attempt < 5) {
         setProfileProbe("pending");
-        setTimeout(() => { loadUser(userId, attempt + 1).catch(() => {}); }, 200 * (attempt + 1));
+        setTimeout(() => { loadUser(userId, attempt + 1, generation).catch(() => {}); }, 200 * (attempt + 1));
       } else {
         // Budget spent. The row is genuinely absent, not slow -- this is the
         // stranded-account case FinishSetupScreen exists for. Recording it as
@@ -8143,6 +8158,7 @@ export default function App() {
         SB.getPlayerGoals(userId),
         SB.getSelfRatings(userId),
       ]);
+      if(!isCurrent())return;
       const quizHistory = sessions.map(s => ({ results: s.results, score: s.score, date: s.completed_at }));
       const enriched = {
         id: p.id,
@@ -8325,11 +8341,15 @@ export default function App() {
 
   async function handleSignOut() {
     if (demoMode) { exitDemo(); return; }
+    authScopeRef.current={userId:null,generation:authScopeRef.current.generation+1};
     clearCachedPlayer(player?.id);
+    setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending");
     await SB.signOut();
-    setProfile(null); setPlayer(null);
     setScreen("home");
   }
+
+  // Public sample is independent of account services and never hydrates real data.
+  if (hashRoute === "preview") return <Suspense fallback={<LazyFallback/>}><PreviewPortal/></Suspense>;
 
   // Loading while auth settles
   if (!authReady) {
@@ -8441,7 +8461,7 @@ export default function App() {
       return <div style={{minHeight:"100vh",background:C.bg,color:C.white,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem",fontFamily:FONT.body,textAlign:"center"}}>
         <div>
           <div style={{fontSize:"1.2rem",color:C.red,marginBottom:"1rem"}}>Supabase not configured</div>
-          <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>Create a <code style={{color:C.gold}}>.env</code> file with<br/><code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</div>
+          <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>Account access is not available here yet. You can still explore the sample.<br/><a href="#preview" style={{color:C.gold}}>Preview with a code</a></div>
         </div>
       </div>;
     }
@@ -8466,7 +8486,7 @@ export default function App() {
     if (preApp === "finish-setup") {
       return <FinishSetupScreen
         email={userEmail}
-        onDone={async (row) => { setProfile(row); await loadUser(row.id); }}
+        onDone={async (row) => { await loadUser(row.id); }}
         onSignOut={handleSignOut}
       />;
     }

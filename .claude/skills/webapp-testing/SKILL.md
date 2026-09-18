@@ -6,7 +6,23 @@ license: Complete terms in LICENSE.txt
 
 # Web Application Testing
 
-To test local web applications, write native Python Playwright scripts.
+## RinkReads-specific checks (September 18, 2026)
+Read `docs/rinkreads-product-principles.md` from the repository root. Use an existing
+Playwright runtime (JavaScript or Python); do not install dependencies merely to
+follow examples. Prefer DOM-ready + a specific visible UI condition over generic
+network-idle waits when external services can fail or keep connections open.
+
+Test the selected release mode. `build:preview` must serve code entry at the root,
+accept valid codes and reject typos, work without signup/Supabase requests, isolate
+device-local progress, support U7/U9/U11, and survive reload/exit or blocked storage.
+Verify 320/390/768/1280px layouts and keyboard controls; inspect a screenshot for
+container overlap. The full account build additionally needs identity-generation
+race tests and authenticated role-matrix evidence before a backend clearance.
+A synthetic player, local build, zero console errors or service-role query alone
+cannot establish deployed account authorization. Record physical-device gaps.
+
+## General browser workflow
+To test local web applications, use the existing project-compatible Playwright runtime.
 
 **Helper Scripts Available**:
 - `scripts/with_server.py` - Manages server lifecycle (supports multiple servers)
@@ -26,7 +42,7 @@ User task → Is it static HTML?
         │        Then use the helper + write simplified Playwright script
         │
         └─ Yes → Reconnaissance-then-action:
-            1. Navigate and wait for networkidle
+            1. Navigate and wait for the expected UI
             2. Take screenshot or inspect DOM
             3. Identify selectors from rendered state
             4. Execute actions with discovered selectors
@@ -57,7 +73,7 @@ with sync_playwright() as p:
     browser = p.chromium.launch(headless=True) # Always launch chromium in headless mode
     page = browser.new_page()
     page.goto('http://localhost:5173') # Server already running and ready
-    page.wait_for_load_state('networkidle') # CRITICAL: Wait for JS to execute
+    page.locator('body').wait_for() # Then wait for the specific app control needed
     # ... your automation logic
     browser.close()
 ```

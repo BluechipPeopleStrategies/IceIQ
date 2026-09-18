@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { reviewServerPlugin } from './tools/review-server-plugin.mjs'
@@ -7,8 +8,16 @@ import { practiceReviewAssetsPlugin } from './tools/practice-review-assets.mjs'
 import { practiceContentAssetsPlugin } from './tools/practice-content-assets.mjs'
 import { coachingFeedbackPlugin } from './tools/coaching-feedback-plugin.mjs'
 
-export default defineConfig({
-  plugins: [react(), reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin(), practiceReviewAssetsPlugin(), practiceContentAssetsPlugin(), coachingFeedbackPlugin()],
+export default defineConfig(({mode}) => ({
+  publicDir: mode === 'preview' ? false : 'public',
+  plugins: [react(), ...(mode === 'preview' ? [{
+    name: 'public-preview-assets',
+    generateBundle() {
+      for (const fileName of ['assets/journey/worlds-v1.png','favicon.svg','splash.jpg']) {
+        this.emitFile({type:'asset',fileName,source:readFileSync(new URL(`./public/${fileName}`,import.meta.url))});
+      }
+    },
+  }] : [reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin(), practiceReviewAssetsPlugin(), practiceContentAssetsPlugin(), coachingFeedbackPlugin()])],
   build: {
     minify: 'terser',
     terserOptions: {
@@ -49,4 +58,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

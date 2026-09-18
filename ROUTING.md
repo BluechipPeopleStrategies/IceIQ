@@ -1,9 +1,13 @@
 # RinkReads Routing and Storage Map
 
-**Current as of:** 2026-07-29
+**Current as of:** 2026-09-18
 
 This file is the short current route map. Verify paths against code before a
 destructive or public action.
+
+Current product philosophy and access modes: `docs/rinkreads-product-principles.md`.
+Public preview entry: `src/player/PreviewPortal.jsx`; code/age scope: `previewAccess.js`.
+Current hosted build: `npm run build:preview` via `vercel.json`; full account build remains separate.
 
 ## Read order
 
@@ -69,5 +73,6 @@ history only. Do not follow its operational steps for current content.
 - BlueChip business repository: `C:\Users\mtsli\BlueChip`
 
 Do not mix BlueChip business instructions, data, or brand rules into IceIQ.
-Local edits and tests on a feature branch are allowed. Never auto-push, deploy,
-publish, or commit directly to `main`.
+Local edits and tests on a feature branch are allowed. Publish only within the
+current user-authorized task after verifying the exact release build; old notes
+do not create standing permission for unrelated publishing.

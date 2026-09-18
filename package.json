@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:preview": "vite build --mode preview",
     "preview": "vite preview",
     "preflight": "node tools/preflight.mjs",
     "smoke:homework": "node scripts/smoke-homework.mjs",
@@ -96,6 +97,8 @@
     "test:bank-content": "node src/data/bankContent.test.mjs",
     "test:best-option-offside": "node src/cognitive-gym/bestOptionOffside.test.mjs",
     "test:welcome-tour": "node --test src/player/welcomeTourCore.test.mjs",
+    "test:auth-hydration": "node --test src/utils/authHydration.test.mjs",
+    "test:preview-access": "node --test src/player/previewAccess.test.mjs",
     "test:auth-routing": "node src/utils/authRouting.test.mjs",
     "test:invite-code": "node --test src/utils/inviteCode.test.mjs",
     "invite:create": "node scripts/create-invite-code.mjs",

@@ -6,6 +6,21 @@ license: Complete terms in LICENSE.txt
 
 # Frontend Design
 
+## RinkReads scope (September 18, 2026)
+Read `docs/rinkreads-product-principles.md` before designing. Preserve the approved
+six-world artwork, navy/gold palette and the user's accepted layout. A request to
+fix or extend it is not permission for a new aesthetic direction; the broader
+ideation advice below applies when a redesign is actually requested.
+Prioritize one clear activity, age-appropriate language, non-overlapping controls,
+a skippable/replayable section tour and truthful device-local progress. Keep 2D,
+keyboard and reduced-motion alternatives alongside interactive/3D samples.
+The no-account code preview is a public sample, not a private-data authorization
+mechanism. Do not introduce pricing, plan unlocks or an account funnel by assumption.
+Use Explore → Try → Revisit as an organizing pattern; age-specific pathway research
+is inspiration, not endorsement or permission to copy a curriculum. Preserve
+human hockey/content gates and mark draft content honestly.
+
+
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 
 ## Ground it in the subject

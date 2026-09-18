@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
+const App = React.lazy(() => import.meta.env.MODE === 'preview' ? import('./player/PreviewPortal.jsx') : import('./App'))
 import './brand.css'
 import './ui/glass.css'
 
@@ -61,7 +61,7 @@ class RootErrorBoundary extends React.Component {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RootErrorBoundary>
-      <App />
+      <React.Suspense fallback={<p style={{padding:24,color:"#eaf2f8"}} role="status">Getting RinkReads ready…</p>}><App /></React.Suspense>
     </RootErrorBoundary>
   </React.StrictMode>
 )

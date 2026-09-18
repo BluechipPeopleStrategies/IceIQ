@@ -7,6 +7,13 @@ read `docs/factory/SCENARIO-ENGINE-DECISIONS.md` and
 The same conventions apply regardless of which agent (Claude Code or Codex) is
 doing the work.
 
+## Current product decisions
+
+Read `docs/rinkreads-product-principles.md` for the current access modes, learning
+philosophy, visual choices and verification boundaries (refreshed September 18, 2026).
+Use `.claude/skills/webapp-testing/SKILL.md` for project testing and
+`.claude/skills/frontend-design/SKILL.md` for UI changes.
+
 ## World artwork
 
 For world environments, journey art and world thumbnails, read
