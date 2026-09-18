@@ -1,5 +1,9 @@
 -- RinkReads database schema
--- Paste this into Supabase Dashboard → SQL Editor → New query → Run
+-- Historical bootstrap only: apply BEFORE numbered migrations on a new database.
+-- Never replay this file by itself over an existing/hardened database: its legacy
+-- policies reopen profile insertion, team enumeration and direct membership writes.
+-- Later migrations 0022 and 0025 replace/remove those policies. Verify the full
+-- migration sequence and role-based tests in a disposable database before release.
 
 -- ─────────────────────────────────────────────
 -- PROFILES (extends auth.users)

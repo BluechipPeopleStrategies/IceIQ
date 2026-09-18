@@ -439,3 +439,5 @@
 - 2026-09-18: Delivered helmet parts and holding-signal 3D study samples; fixed raised Start-button/text crowding and verified no overlapping pills across five widths. 30 focused tests pass. Existing matching/progress remain unchanged; no release or new dependencies.
 
 - 2026-09-18: Added player Home and pilot welcome walkthroughs. First visit, skip/complete, replay, keyboard focus, separate profiles, blocked storage and 320–1280px layouts verified. See `2026-09-18-frontend-auth-review.md`; live backend authorization remains a separate release gate.
+
+- 2026-09-18: Completed a read-only authorization re-audit with Qwen attempt and Claude review; reconciled historical closures, reproduced a stale profile response after sign-out, and confirmed live DNS/connect failures plus incomplete local Supabase CLI. See [backend review](2026-09-18-backend-authorization-review.md). Added bootstrap replay warnings; no SQL applied. Backend release gate remains open.

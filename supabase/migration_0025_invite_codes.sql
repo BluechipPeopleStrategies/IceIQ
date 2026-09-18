@@ -125,8 +125,8 @@ grant execute on function public.redeem_invite_code(text, text, text, text, text
 -- entirely, making the gate decoration. redeem_invite_code() is SECURITY
 -- DEFINER so it still inserts fine without this policy.
 --
--- Safe to drop as of 2026-09-07: no accounts exist yet, and the only two client
--- paths that inserted a profile (signUp and the FinishSetupScreen recovery) both
+-- The two current client paths that created a profile
+-- (signUp and the FinishSetupScreen recovery) both
 -- route through the function now. Profile UPDATE is a separate policy and is
 -- untouched, so editing a profile still works.
 drop policy if exists "insert own profile" on public.profiles;
