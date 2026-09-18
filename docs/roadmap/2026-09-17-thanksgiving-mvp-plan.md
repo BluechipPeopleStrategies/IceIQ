@@ -89,3 +89,7 @@ Local Qwen (`qwen3.8-huihui:27b`, loopback only) supplied a bounded schedule cri
 
 ## September 18 implementation checkpoint
 First native foundations sequence is available in the local app, with player/age device-local resume. See [integration verification](2026-09-18-foundations-flow-verification.md). Local access-routing checks pass; hosted access, human content review and family/device rehearsal remain open. Development-only availability; no release or entitlement change. Wider six-world progression remains unimplemented.
+
+
+## September 18 home, review and visual checkpoint
+The simpler local pilot home and exact-version reviewer pack are ready for owner review. Interactive 2D movement is implemented; full 3D is the next milestone, starting with rink/helmet/referee reference objects. [3D scope and readiness gate](2026-09-18-foundations-3d-milestones.md). Human decisions remain pending; the pack is not automatic curriculum approval. Preserve October 7 go/no-go and interactive 2D fallback if 3D misses review.

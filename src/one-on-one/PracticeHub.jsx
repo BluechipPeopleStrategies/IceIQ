@@ -13,6 +13,7 @@ import { bandsAvailable } from '../path/pathData.js';
 import { JOURNEY_WORLDS } from '../path/journeyPresentation.js';
 import './practiceFramework.css';
 import './practiceGlass.css';
+const PilotHome=lazy(()=>import('../player/PilotHome.jsx'));
 const FoundationFlow=lazy(()=>import('./FoundationFlow.jsx'));
 const CognitiveGym=lazy(()=>import('../cognitive-gym/CognitiveGym.jsx'));
 const ScenarioWorkshop=lazy(()=>import('./ScenarioWorkshop.jsx'));
@@ -22,6 +23,7 @@ const TABS=[['practice','Practice'],['learn','Learn the game'],['play','Play'],[
 export function initialHubNavigation(search = typeof window === 'undefined' ? '' : window.location.search) {
   const query = new URLSearchParams(search);
   const context = { ...(bandsAvailable().includes(query.get('age')) ? { ageBand: query.get('age') } : {}), ...(Object.hasOwn(JOURNEY_WORLDS, query.get('world')) ? { worldId: query.get('world') } : {}) };
+  if(query.get('arena')==='pilot') return {tab:'learn',practice:'choose',learn:'pilot',fromPilot:true,...context};
   if(query.get('arena')==='foundations') return {tab:'learn',practice:'choose',learn:'foundations',...context};
   if(query.get('arena')==='experimental') return {tab:'practice',practice:'experimental',learn:'worlds',...context};
   if(query.get('arena')==='library') return {tab:'learn',practice:'choose',learn:'library',...context};
@@ -42,8 +44,9 @@ export default function PracticeHub({player,initialSearch,onBack}) {
     if(checkpoint.stage===5)foundationStartLabel='View your recap';
     else if(checkpoint.stage>0||checkpoint.spots.length)foundationStartLabel=`Continue: ${STAGES[checkpoint.stage]}`;
   }
+  const pilotActive=foundationAvailable&&tab==='learn'&&navigation.learn==='pilot';
   const foundationActive=foundationAvailable&&tab==='learn'&&navigation.learn==='foundations';
-  const learningView=navigation.learn==='foundations'&&!foundationAvailable?'worlds':navigation.learn==='discover'&&!discoveryAvailable?'worlds':navigation.learn;
+  const learningView=['foundations','pilot'].includes(navigation.learn)&&!foundationAvailable?'worlds':navigation.learn==='discover'&&!discoveryAvailable?'worlds':navigation.learn;
   const setTab=value=>setNavigation(current=>({...current,tab:value}));
   function openLearningActivity(target){setNavigation(current=>({...current,tab:target.tab,learn:target.learn||current.learn,practice:target.practice||current.practice,learningProfile,learningAge:target.ageBand||learningAge,lessonId:target.lessonId||null,conceptId:target.conceptId||null}));setError('')}
   const [coachView,setCoachView]=useState('questions'),[questionDraft,setQuestionDraft]=useState(null),[questionRevision,setQuestionRevision]=useState(0);
@@ -51,12 +54,13 @@ export default function PracticeHub({player,initialSearch,onBack}) {
   function openDraft(play){try{openDirector(draftFromPlay(play))}catch(e){setError(e.message)}}
   function askAboutDraft(draft){setQuestionDraft(structuredClone(draft));setQuestionRevision(v=>v+1);setCoachView('questions')}
   return <main className="pf-hub">
-    <header className="pf-header">{onBack&&<button className="oo-secondary" onClick={onBack}>Back to Home</button>}<a onClick={onBack ? event=>{event.preventDefault();onBack();} : undefined} href="#" className="pf-brand"><RinkReadsLogo size={27} wordmark/><span>PRACTICE ARENA</span></a>{!foundationActive&&<nav aria-label="RinkReads arena">{TABS.map(([id,label])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setError('')}}>{label}</button>)}</nav>}</header>
+    {!pilotActive&&<header className="pf-header">{onBack&&!foundationActive&&<button className="oo-secondary" onClick={onBack}>Back to Home</button>}<a onClick={onBack ? event=>{event.preventDefault();onBack();} : undefined} href="#" className="pf-brand"><RinkReadsLogo size={27} wordmark/><span>PRACTICE ARENA</span></a>{!foundationActive&&!pilotActive&&<nav aria-label="RinkReads arena">{TABS.map(([id,label])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setError('')}}>{label}</button>)}</nav>}</header>}
     {error&&<p role="alert">{error}</p>}
     {tab==='practice'&&<><nav className="pf-learning-switch" aria-label="Practice activity">{[['choose','Choose the play'],['position','Find your position'],['experimental','Experimental scenarios']].map(([id,label])=><button key={id} aria-pressed={navigation.practice===id} onClick={()=>setNavigation(current=>({...current,practice:id}))}>{label}</button>)}</nav>{navigation.practice==='choose'?<ReadSequence key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/>:navigation.practice==='experimental'?<Suspense fallback={<p>Opening experimental scenarios…</p>}><ExperimentalPractice initialAge={learningAge} key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/></Suspense>:<Suspense fallback={<p>Opening positioning practice…</p>}><ScenarioWorkshop key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'} hideDiscovery/></Suspense>}</>}
     {tab==='play'&&<OneOnOne key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/>}
-    {foundationActive&&<Suspense fallback={<p>Opening foundations…</p>}><FoundationFlow playerId={player?.id||'practice-preview'} ageBand={learningAge} onBack={()=>setNavigation(current=>({...current,learn:'worlds',worldId:'skating-movement'}))}/></Suspense>}
-    {tab==='learn'&&!foundationActive&&<><nav className="pf-learning-switch" aria-label="Learning collection">{[['worlds','Your hockey worlds'],['guided','Guided lessons'],['library','Lesson library'],['discover','Explore the rink']].filter(([id])=>id!=='discover'||discoveryAvailable).map(([id,label])=><button key={id} aria-pressed={learningView===id} onClick={()=>setNavigation(current=>({...current,learn:id}))}>{label}</button>)}</nav>
+    {pilotActive&&<Suspense fallback={<p>Opening your next step…</p>}><PilotHome playerId={player?.id||'practice-preview'} ageBand={learningAge} onStart={()=>setNavigation(current=>({...current,learn:'foundations',fromPilot:true}))} onAgeChange={ageBand=>setNavigation(current=>({...current,learningAge:ageBand,learningProfile}))}/></Suspense>}
+    {foundationActive&&<Suspense fallback={<p>Opening foundations…</p>}><FoundationFlow playerId={player?.id||'practice-preview'} ageBand={learningAge} backLabel={navigation.fromPilot||onBack?'Back to start':'Back to worlds'} onBack={()=>{if(onBack&&!navigation.fromPilot)onBack();else setNavigation(current=>({...current,learn:current.fromPilot?'pilot':'worlds',worldId:'skating-movement'}));}}/></Suspense>}
+    {tab==='learn'&&!foundationActive&&!pilotActive&&<><nav className="pf-learning-switch" aria-label="Learning collection">{[['worlds','Your hockey worlds'],['guided','Guided lessons'],['library','Lesson library'],['discover','Explore the rink']].filter(([id])=>id!=='discover'||discoveryAvailable).map(([id,label])=><button key={id} aria-pressed={learningView===id} onClick={()=>setNavigation(current=>({...current,learn:id}))}>{label}</button>)}</nav>
       {learningView==='worlds'?<LearningWorlds key={learningProfile} ageBand={learningAge} playerId={learningProfile} initialWorldId={navigation.worldId} onAgeChange={ageBand=>setNavigation(current=>({...current,learningProfile,learningAge:ageBand,lessonId:null,conceptId:null}))} onNavigate={openLearningActivity} foundationStartLabel={foundationStartLabel} onStartFoundations={foundationAvailable?()=>setNavigation(current=>({...current,learn:'foundations'})):undefined}/>
         :learningView==='library'?<PracticeLibrary key={`${learningProfile}:${learningAge}:${navigation.conceptId||'all'}`} ageBand={learningAge} initialConcept={navigation.conceptId||''} onOpenDraft={openDraft} playerId={player?.id||'practice-preview'}/>
         :learningView==='discover'?<Suspense fallback={<p>Opening the rink…</p>}><RinkDiscovery key={player?.id||'practice-preview'}/></Suspense>

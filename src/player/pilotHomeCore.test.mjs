@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {pilotHomeModel} from './pilotHomeCore.js';
+import {newFlow,saveFlow} from '../one-on-one/foundationFlowCore.js';
+const mem=()=>{const m=new Map();return {getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v)}};
+test('fresh supported player gets one Start action',()=>{const m=pilotHomeModel({playerId:'p',ageBand:'U7 / Initiation',storage:mem()});assert.equal(m.label,'Start');assert.equal(m.age,'U7');assert.equal(m.next,'Know the ice');});
+test('partial first step and later checkpoints say Continue; completed flow says View recap',()=>{const storage=mem(),scope={playerId:'p',ageBand:'U9'};saveFlow(storage,scope,{...newFlow(),spots:['net']});assert.equal(pilotHomeModel({...scope,storage}).label,'Continue');saveFlow(storage,scope,{...newFlow(),stage:2});assert.equal(pilotHomeModel({...scope,storage}).next,'Pack your gear');saveFlow(storage,scope,{...newFlow(),stage:5});assert.equal(pilotHomeModel({...scope,storage}).label,'View recap');assert.equal(pilotHomeModel({...scope,storage,playerId:'q'}).label,'Start');});
+test('unsupported age has no pilot route; unavailable storage is honest',()=>{assert.equal(pilotHomeModel({playerId:'p',ageBand:'U18'}).supported,false);assert.equal(pilotHomeModel({playerId:'p',ageBand:'U11',storage:null}).available,false);});

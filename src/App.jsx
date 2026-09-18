@@ -22,6 +22,7 @@ import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.j
 import { isDemoTeam } from "./utils/coachTrainingSource.js";
 import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, sequencePerfect, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
+import { setLocalSessionMode } from "./utils/localSessionMode.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { canSetGoals } from "./data/goalBands.js";
 import { rememberScreen, recallScreen, forgetScreen } from "./utils/routeMemory.js";
@@ -492,6 +493,7 @@ function lazyWithReload(factory) {
   }));
 }
 
+const PilotHome = lazyWithReload(() => import("./player/PilotHome.jsx"));
 const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
@@ -1597,6 +1599,8 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
     const iv = setInterval(tick, 60000);
     return () => clearInterval(iv);
   }, [player?.id]);
+
+  if(import.meta.env.DEV&&['U7','U9','U11'].includes(String(player?.level).split(' ')[0]))return <Suspense fallback={<LazyFallback/>}><PilotHome playerId={player.id} ageBand={player.level} onStart={()=>onNav({kind:'player-learning',search:new URLSearchParams({arena:'foundations',age:String(player.level).split(' ')[0],world:'skating-movement'}).toString()})} onParentNavigate={id=>id==='worlds'?onNav({kind:'player-learning',search:new URLSearchParams({arena:'worlds',age:String(player.level).split(' ')[0]}).toString()}):onNav(id==='history'?'journey':id)}/></Suspense>;
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,fontFamily:FONT.body,color:C.white,paddingBottom:80}}>
@@ -7713,14 +7717,15 @@ export default function App() {
   // profile" and were previously treated as the latter. See preAppScreen.
   const [profileProbe, setProfileProbe] = useState("pending");
   const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
-  const [demoMode, setDemoMode] = useState(false);
+  const [demoMode, setDemoModeState] = useState(false);
   // Tracked-fresh ref so async Supabase auth callbacks see the latest demoMode
   // even when their closure was captured before dev-bypass entry. Without this,
   // a stale `onAuthChange` callback firing INITIAL_SESSION / TOKEN_REFRESHED /
   // SIGNED_OUT with `session === null` clobbers a dev/demo profile via the
   // `else { setProfile(null) }` branch (root cause of the gear→landing bug).
   const demoModeRef = useRef(false);
-  demoModeRef.current = demoMode;
+  // Set the guard synchronously: INITIAL_SESSION can arrive before React renders.
+  const setDemoMode = (enabled) => setLocalSessionMode(demoModeRef, setDemoModeState, enabled);
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   // Restore the screen the player was on before a reload or a crash. Lazily
   // initialised so it costs nothing on the common path, and the module only
@@ -8038,7 +8043,7 @@ export default function App() {
     (async () => {
       try {
         const session = await SB.getSession();
-        if (session?.user && mounted) {
+        if (session?.user && mounted && !demoModeRef.current) {
           // A session exists: disarm the 2s authReady escape so the app can't
           // paint the logged-out landing while the profile is still loading
           // (the sign-in flash). The escape stays armed only for the
@@ -8691,7 +8696,7 @@ export default function App() {
         /></Suspense>}
       </div>
 
-      {typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations","admin-dashboard","password-reset"].includes(screen) && (
+      {!(import.meta.env.DEV&&screen==="home"&&["U7","U9","U11"].includes(String(player?.level).split(" " )[0])) && typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations","admin-dashboard","password-reset"].includes(screen) && (
         <BottomNav active={screen} onNav={(next) => {
           // In preview mode, tapping Home while already on home returns to
           // the public landing — otherwise the button appears inert and
@@ -8994,5 +8999,4 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
     </div>
   );
 }
-
 
