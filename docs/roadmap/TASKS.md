@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-18 · Public preview QA and owner-directed interactive MVP update: directly skippable sections, clickable rink, movable puck/players, glass-like markers, compact BlueChip typography/layering, working parent-help actions, camera-depth repair and age/home fixes. All 68 test scripts pass. [Interactive demo QA](2026-09-18-interactive-demo-qa.md) owns the current release status; [original launch](2026-09-18-preview-launch.md) records restoration. Next: live verification, qualified content review and physical-device/family rehearsal. Account authorization remains separate and unverified.
+**Last updated:** 2026-09-18 · Image-based equipment, helmet inside view, source-linked parent fitting guide, optional accessories and Find the gear mini-game implemented. Verification and release status: [gear games QA](2026-09-18-gear-games-qa.md). Qualified content review and physical-device/family rehearsal remain open; account authorization is separate.
 
 
 **Last updated (QA baseline):** 2026-09-10 · Owner-requested QA and safe bug-fix pass on local branch `qa/2026-09-10-pass` (from `main` dd9607b; nothing pushed, not merged). Nine reproduced defects fixed with regression tests: tall 3D scene figure covering the quiz answers on short viewports, Tactician badge awarded to all-MC sessions, Skills header "0/0 rated" for paid tiers, First Five training quest not recounting after a log, empty "Your reason:" line in connected reads, landing coach demo hitting Supabase with non-UUID demo ids (training activity, assignments, challenges, second/third team rosters), Feedback button covering the Report tab on phones, and the Goals screen scrolling sideways on phones; plus two copy fixes (coach preview "Game Sense", Report mastery labels). Full `test:*` sweep and production build pass on 259864c. Priorities below unchanged; Supabase, shared-3D redesign and Hockey Authority qualification remain deferred/paused.
@@ -72,6 +72,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-18** · Added literal ChatGPT Image equipment/bag art, inside helmet exploration, parent sizing guidance and an optional clue game/accessory checklist. See the gear-games QA receipt for sources, test results and remaining review gates.
 
 - **2026-09-18 interactive demo** · Implemented owner-requested skipping, direct landmark/role interaction, puck/player placement, compact glass-like visuals, local BlueChip fonts and real parent-help links; repaired depth separation and session navigation. [QA and review receipt](2026-09-18-interactive-demo-qa.md).
 

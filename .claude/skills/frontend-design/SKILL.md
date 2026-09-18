@@ -16,6 +16,7 @@ and Inter body/labels, compact layered surfaces and glass-like player markers.
 Serve the existing licensed fonts in the preview artifact too. Demo sections must
 be directly accessible and skippable without granting completion; walkthrough
 references must open real help or activities, not merely describe unavailable UI.
+For equipment and other representational objects, automatically use ChatGPT Image for literal, recognizable imagery (owner direction September 18). Preserve labels and accessible interaction, inspect image crops, include useful inside views, and never represent generated stills as a true 3D model or claim an unverified model version.
 Prioritize one clear activity, age-appropriate language, non-overlapping controls,
 a skippable/replayable section tour and truthful device-local progress. Keep 2D,
 keyboard and reduced-motion alternatives alongside interactive/3D samples.

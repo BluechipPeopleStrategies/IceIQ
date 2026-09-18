@@ -28,4 +28,4 @@ Accepted: age reset, misleading initial save assertion, unavailable-3D controls 
 - Backend account authorization, qualified hockey/equipment/official review and physical-device/family rehearsal remain open. Public preview uses no account backend.
 
 ## Release
-Pending final production verification. Refresh the live page after release to load the new demo controls; existing local progress is preserved.
+Production verified September 18, 2026. App commit 99851e9; Vercel deployment J63uWJSc6g6mLRxNiNCkxbHmXtCL Ready and mapped to rinkreads.com. Live browser verified direct Home-to-Pack your gear access, Skip for now advancing to Read the referee with 0/13 gear packed, and direct return to Pack your gear still showing 0/13. Both local font URLs returned HTTP 200. Refresh an older open page to load the new controls; existing progress is preserved.

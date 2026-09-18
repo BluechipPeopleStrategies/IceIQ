@@ -13,7 +13,7 @@ export default defineConfig(({mode}) => ({
   plugins: [react(), ...(mode === 'preview' ? [{
     name: 'public-preview-assets',
     generateBundle() {
-      for (const fileName of ['assets/journey/worlds-v1.png','favicon.svg','splash.jpg','fonts/Inter.ttf','fonts/PlayfairDisplay.ttf','fonts/OFL-Inter.txt','fonts/OFL-PlayfairDisplay.txt']) {
+      for (const fileName of ['assets/gear/accessories-v1.png','assets/gear/helmet-fit-kids-v1.png','assets/gear/helmet-inside-v1.png','assets/gear/referee-holding-v1.png','assets/gear/helmet-views-v1.png','assets/gear/gear-atlas-v1.png','assets/gear/hockey-bag-v1.png','assets/journey/worlds-v1.png','favicon.svg','splash.jpg','fonts/Inter.ttf','fonts/PlayfairDisplay.ttf','fonts/OFL-Inter.txt','fonts/OFL-PlayfairDisplay.txt']) {
         this.emitFile({type:'asset',fileName,source:readFileSync(new URL(`./public/${fileName}`,import.meta.url))});
       }
     },

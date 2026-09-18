@@ -4,6 +4,10 @@ import {STAGES, normalizeAge, newFlow, loadFlow, saveFlow, canContinue, advanceF
 import {foundationRink} from './foundationRink.js';
 import {refArt} from './foundationSignals.js';
 import './FoundationFlow.css';
+import GearPacking from './GearPacking.jsx';
+import HelmetExplorer from './HelmetExplorer.jsx';
+import ParentGearGuide from './ParentGearGuide.jsx';
+import GearAccessories from './GearAccessories.jsx';
 import MovableIllustration from './MovableIllustration.jsx';
 import {rinkLandmarks,rinkRole,initialRolePositions,clampRinkPoint} from './foundationInteraction.js';
 const FoundationRink3D=lazy(()=>import('./FoundationRink3D.jsx'));
@@ -11,8 +15,9 @@ const FoundationObject3D=lazy(()=>import('./FoundationObject3D.jsx'));
 
 function SamplePanel({kind}){
   const [open,setOpen]=useState(false);
-  const helmet=kind==='helmet',gear=content.gear.find(g=>g[0]==='helmet');
-  const fallback=helmet?<svg viewBox="0 0 64 64" role="img" aria-label="Helmet illustration"><path d={gear[3]} fill="#e6b952" stroke="#244660" strokeWidth="3"/></svg>:<div dangerouslySetInnerHTML={{__html:refArt(content.signals.find(s=>s.id==='holding'))}}/>;
+  const helmet=kind==='helmet';
+  if(helmet)return <div className="ff-sample-toggle"><button aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'Close helmet explorer':'Explore the helmet'}</button>{open&&<HelmetExplorer/>}</div>;
+  const fallback=<img className="ff-ref-photo" src="/assets/gear/referee-holding-v1.png" alt="Referee holding one wrist with the opposite hand in front of the chest"/>;
   return <div className="ff-sample-toggle"><button aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'Close': 'Explore'} {helmet?'helmet':'holding signal'} 3D sample</button>{open&&<Suspense fallback={<p role="status">Loading the 3D sample…</p>}><FoundationObject3D kind={kind} fallback={fallback}/></Suspense>}</div>;
 }
 
@@ -28,11 +33,11 @@ function Flow({scope,onBack,backLabel,allowSkip,initialStage}){
   const [spot,setSpot]=useState(initial.flow.spots.at(-1)||'blue'),[role,setRole]=useState(initial.flow.roles.at(-1)||'C');
   const [map,setMap]=useState(false),[phase,setPhase]=useState('attack'),[turnover,setTurnover]=useState('lose');
   const [signal,setSignal]=useState(()=>Math.max(0,content.signals.findIndex(s=>initial.flow.stage===3?!initial.flow.signals.includes(s.id):initial.flow.answers[s.id]!==s.id)));
-  const [gearInspectId,setGearInspectId]=useState('helmet');
+
   const [rinkView,setRinkView]=useState('3d');
   const [nearby,setNearby]=useState([]),[tool,setTool]=useState('explore'),[puck,setPuck]=useState({x:12,y:3}),[positions,setPositions]=useState(initialRolePositions);
-  const inspectedGear=content.gear.find(g=>g[0]===gearInspectId);
-  const [gearNote,setGearNote]=useState('Select a piece to learn about it.'),[dragging,setDragging]=useState(false);
+
+
   const heading=useRef(null),rinkRef=useRef(null),pendingFocus=useRef(null),flowRef=useRef(initial.flow);
   useEffect(()=>{if(pendingFocus.current){rinkRef.current?.querySelector(pendingFocus.current)?.focus({preventScroll:true});pendingFocus.current=null;}},[flow]);
   useEffect(()=>{heading.current?.focus({preventScroll:true});},[flow.stage]);
@@ -53,7 +58,7 @@ function Flow({scope,onBack,backLabel,allowSkip,initialStage}){
     const svg=event.currentTarget.querySelector('svg'),matrix=svg?.getScreenCTM();if(!matrix)return;
     const point=new DOMPoint(event.clientX,event.clientY).matrixTransform(matrix.inverse());pointRink((point.x-350)/9.7,(point.y-190)/9.7);
   }
-  function pack(id,remove=false){const item=content.gear.find(g=>g[0]===id);if(!item)return;setGearInspectId(id);update(current=>({...current,packed:remove?current.packed.filter(x=>x!==id):[...new Set([...current.packed,id])]}));setGearNote((remove?'Taken out. ':'')+item[2]);}
+  function pack(id,remove=false){const item=content.gear.find(g=>g[0]===id);if(!item)return;update(current=>({...current,packed:remove?current.packed.filter(x=>x!==id):[...new Set([...current.packed,id])]}));}
   function chooseRink(event){const marker=event.target.closest('[data-spot],[data-role]');if(!marker)return;pendingFocus.current=marker.dataset.spot?`[data-spot="${marker.dataset.spot}"]`:`[data-role="${marker.dataset.role}"]`;if(marker.dataset.spot){setSpot(marker.dataset.spot);visit('spots',marker.dataset.spot);}else{setRole(marker.dataset.role);visit('roles',marker.dataset.role);}}
   const currentSpot=content.spots.find(s=>s[0]===spot),currentRole=content.roles[role],currentSignal=content.signals[signal];
   const correct=flow.answers[currentSignal.id]===currentSignal.id;
@@ -86,9 +91,9 @@ function Flow({scope,onBack,backLabel,allowSkip,initialStage}){
     </>}
     {flow.stage===2&&<>
       <SamplePanel kind="helmet"/>
-      <p>{scope.ageBand==='U7'?'Pack together with an adult. Say each name as you put it in.':'Pack the kit, then explain why each piece belongs.'} Drag to the bag or tap a card. Tap again to unpack.</p>
-      <div className="ff-gear-layout"><div className="ff-gear">{content.gear.map(g=><button key={g[0]} data-foundation-gear={g[0]} draggable aria-pressed={flow.packed.includes(g[0])} onDragStart={e=>{e.dataTransfer.setData('text/plain',g[0]);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDragging(false)} onClick={()=>pack(g[0],flowRef.current.packed.includes(g[0]))}><svg viewBox="0 0 64 64" aria-hidden="true"><path d={g[3]}/></svg><span>{g[1]}</span><small>{flow.packed.includes(g[0])?'Packed · tap to remove':'Drag or tap to pack'}</small></button>)}</div>
-      <aside className={`ff-bag${dragging?' is-over':''}`} aria-label="Hockey bag drop area" onDragOver={e=>{e.preventDefault();setDragging(true);}} onDragLeave={()=>setDragging(false)} onDrop={e=>{e.preventDefault();setDragging(false);pack(e.dataTransfer.getData('text/plain'));}}><h2>Your hockey bag</h2><p role="status">{flow.packed.length} of 13 packed</p><progress max="13" value={flow.packed.length} aria-label="Gear packed"/><p aria-live="polite">{gearNote}</p><button onClick={()=>{update(current=>({...current,packed:[]}));setGearNote('Bag emptied.');}}>Empty the bag</button><details className="ff-gear-inspect"><summary>Look closely at this gear</summary><h3>{inspectedGear[1]}</h3><MovableIllustration key={gearInspectId} label={inspectedGear[1]}><svg viewBox="0 0 64 64" role="img" aria-label={inspectedGear[1]}><path d={inspectedGear[3]} fill="#e6b952" stroke="#244660" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"/></svg></MovableIllustration></details></aside></div>
+      <ParentGearGuide/>
+      <GearPacking gear={content.gear} packed={flow.packed} onPack={pack} onEmpty={()=>update(current=>({...current,packed:[]}))} ageBand={scope.ageBand}/>
+      <GearAccessories/>
       <p className="ff-note">A learning checklist, not a safety inspection. An adult checks real gear, fit, condition and program requirements. Goalies need a different kit. Bring a water bottle too.</p>
     </>}
     {(flow.stage===3||flow.stage===4)&&<>
