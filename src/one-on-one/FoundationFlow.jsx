@@ -1,10 +1,11 @@
-import {useEffect, useRef, useState} from 'react';
+import {lazy, Suspense, useEffect, useRef, useState} from 'react';
 import content from './foundationContent.json';
 import {STAGES, normalizeAge, newFlow, loadFlow, saveFlow, canContinue, advanceFlow} from './foundationFlowCore.js';
 import {foundationRink} from './foundationRink.js';
 import {refArt} from './foundationSignals.js';
 import './FoundationFlow.css';
 import MovableIllustration from './MovableIllustration.jsx';
+const FoundationRink3D=lazy(()=>import('./FoundationRink3D.jsx'));
 
 function deviceStorage(){try{return globalThis.localStorage;}catch{return null;}}
 export default function FoundationFlow({playerId,ageBand,onBack,backLabel='Back to worlds'}){
@@ -19,6 +20,7 @@ function Flow({scope,onBack,backLabel}){
   const [map,setMap]=useState(false),[phase,setPhase]=useState('attack'),[turnover,setTurnover]=useState('lose');
   const [signal,setSignal]=useState(()=>Math.max(0,content.signals.findIndex(s=>initial.flow.stage===3?!initial.flow.signals.includes(s.id):initial.flow.answers[s.id]!==s.id)));
   const [gearInspectId,setGearInspectId]=useState('helmet');
+  const [rinkView,setRinkView]=useState('3d');
   const inspectedGear=content.gear.find(g=>g[0]===gearInspectId);
   const [gearNote,setGearNote]=useState('Select a piece to learn about it.'),[dragging,setDragging]=useState(false);
   const heading=useRef(null),rinkRef=useRef(null),pendingFocus=useRef(null),flowRef=useRef(initial.flow);
@@ -38,12 +40,13 @@ function Flow({scope,onBack,backLabel}){
     <p className="ff-review">Local review · content awaiting coach, equipment and official review. No mastery credit or world unlocks.</p>
     <p className="ff-save" role="status">{saved?'Saved on this device for this player and age.':'Not saved: device storage is unavailable. You can continue, but reloading may lose this session.'}</p>
     <ol className="ff-stages" aria-label="Learning path">{STAGES.map((name,i)=><li key={name} aria-current={flow.stage===i?'step':undefined}><span>{i+1}</span>{name}</li>)}</ol>
-    <h1 ref={heading} tabIndex={-1}>{STAGES[flow.stage]}</h1>
+    <div className="ff-chapter" key={flow.stage}><span>FROZEN TRAILS · {String(flow.stage+1).padStart(2,'0')} / 06</span><h1 ref={heading} tabIndex={-1}>{STAGES[flow.stage]}</h1></div>
     {flow.stage===0&&<p>Find three familiar places first: the blue lines, the net and the boards. Explore the other spots whenever you like.</p>}
     {flow.stage===1&&<p>Meet the six positions. These are starting places, not places to stay. Younger players explore different roles.</p>}
     {flow.stage<=1&&<>
       <div className="ff-direction"><span>← Our net</span><span>We attack this way →</span></div>
-      <MovableIllustration label="Rink"><div className="ff-rink" ref={rinkRef} onClick={chooseRink} onKeyDown={e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('g[role="button"]')){e.preventDefault();chooseRink(e);}}} dangerouslySetInnerHTML={{__html:foundationRink({mode:flow.stage===0?'landmarks':map?'heat':'lineup',spot,role,phase,turnover})}}/></MovableIllustration>
+      {rinkView==='3d'?<Suspense fallback={<p role="status">Loading the 3D rink… You can switch to 2D below.</p>}><FoundationRink3D svg={foundationRink({mode:flow.stage===0?'landmarks':map?'heat':'lineup',spot,role,phase,turnover})}/></Suspense>:<MovableIllustration label="Rink"><div className="ff-rink" ref={rinkRef} onClick={chooseRink} onKeyDown={e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('g[role="button"]')){e.preventDefault();chooseRink(e);}}} dangerouslySetInnerHTML={{__html:foundationRink({mode:flow.stage===0?'landmarks':map?'heat':'lineup',spot,role,phase,turnover})}}/></MovableIllustration>}
+      <div className="ff-options" aria-label="Rink display"><button aria-pressed={rinkView==='3d'} onClick={()=>setRinkView('3d')}>3D rink</button><button aria-pressed={rinkView==='2d'} onClick={()=>setRinkView('2d')}>2D rink</button></div>
       <div className="ff-options">{flow.stage===0?content.spots.map(s=><button key={s[0]} data-foundation-spot={s[0]} aria-pressed={spot===s[0]} onClick={()=>{setSpot(s[0]);visit('spots',s[0]);}}>{s[1]}{flow.spots.includes(s[0])?' · explored':''}</button>):Object.entries(content.roles).map(([id,r])=><button key={id} data-foundation-role={id} aria-pressed={role===id} onClick={()=>{setRole(id);visit('roles',id);}}>{id} · {r.name}{flow.roles.includes(id)?' · explored':''}</button>)}</div>
       {flow.stage===0?<article className="ff-explanation" aria-live="polite"><h2>{currentSpot[1]}</h2><p>{currentSpot[6]}</p><p>{currentSpot[7]}</p></article>:<>
         <p>{map?`Responsibility map for ${currentRole.name}.`:`Gold = selected player (${currentRole.name}); navy = other players. Centre starts selected.`}</p>
