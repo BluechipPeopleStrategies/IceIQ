@@ -2,6 +2,8 @@ import {useEffect,useState} from 'react';
 import {pilotHomeModel} from './pilotHomeCore.js';
 import {STAGES} from '../one-on-one/foundationFlowCore.js';
 import './PilotHome.css';
+import WelcomeTour from './WelcomeTour.jsx';
+import {PILOT_TOUR_STEPS} from './welcomeTourCore.js';
 function storage(){try{return globalThis.localStorage;}catch{return null;}}
 export default function PilotHome({playerId,ageBand,onStart,onAgeChange,onParentNavigate}){
   const [,refresh]=useState(0);
@@ -11,6 +13,7 @@ export default function PilotHome({playerId,ageBand,onStart,onAgeChange,onParent
   return <section className="ph-root" aria-label="Pilot player home">
     <header className="ph-header"><strong>RinkReads<span>.</span></strong><span>{model.age} · Player pilot</span></header>
     <p className="ph-review">Local pilot preview · human content review pending</p>
+    <WelcomeTour playerId={playerId} variant="pilot" steps={PILOT_TOUR_STEPS}/>
     <div className="ph-hero"><div className="ph-world-art" role="img" aria-label="Frozen Trails: a winding ice path through a snowy forest toward a warmly lit cabin."/><div className="ph-intro"><p className="ph-kicker">FROZEN TRAILS · YOUR FIRST HOCKEY WORLD</p><h1>{model.completed?'Look what you explored.':model.started?'Ready to keep going?':'Your next step starts here.'}</h1><p>Learn the rink, meet the positions and get ready to play. One small activity at a time.</p></div>
       <article className="ph-next"><p>{model.completed?'YOUR RECAP':model.started?'PICK UP HERE':'FIRST UP'}</p><h2>{model.next}</h2><button data-pilot-start onClick={onStart}>{model.label}<span aria-hidden="true"> →</span></button><p className="ph-save" role="status">{model.available?'Your place is saved on this device, separately for each player and age.':'Device storage is unavailable. You can practice, but your place may be lost when you leave.'}</p></article>
     </div>

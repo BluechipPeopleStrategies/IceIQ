@@ -4,6 +4,7 @@ import { loadQB } from '../qbLoader.js';
 import { masteryStorageKey } from '../one-on-one/spacedMasteryCore.js';
 import { buildPlayerHomeModel, HOME_ACTIONS, loadHomePractice } from './playerLearningHomeCore.js';
 import './PlayerLearningHome.css';
+import WelcomeTour from './WelcomeTour.jsx';
 
 function HomeIcon({ kind }) {
   const paths = {
@@ -28,6 +29,11 @@ export function PlayerLearningHomeView({ player = {}, ageBand, onAgeChange, onNa
   const navigate = (id, extra = {}) => onNavigate?.({ id, ageBand: band, ...extra });
   const p = practice.policy;
   return <section className="plh-root" aria-label="Player learning home" data-player-age={band}>
+    <WelcomeTour playerId={model.playerId} variant="player" steps={[
+      {title:'Explore your hockey worlds',body:'Each world groups a part of hockey to learn. Choose a world to see its missions, or use Learn the game to browse lessons.'},
+      ...HOME_ACTIONS.map(action=>({title:action.title,body:action.description})),
+      {title:'More ways to practise and look back',body:'Play, Brain Gym and Take a quiz offer other activities. Activity history holds earlier quiz sessions. Use Show me around to see this introduction again.'},
+    ]}/>
     <div className="plh-hero">
       <header className="plh-welcome">
         <p className="plh-eyebrow">YOUR HOCKEY · {band}</p>

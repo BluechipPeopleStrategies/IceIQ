@@ -8,7 +8,7 @@ const output = new URL('../../node_modules/.cache/player-learning-home/component
 mkdirSync(new URL('./', output), { recursive: true });
 await build({ entryPoints: [fileURLToPath(new URL('./PlayerLearningHome.jsx', import.meta.url))], outfile: fileURLToPath(output), bundle: true, packages: 'external', platform: 'node', format: 'esm', jsx: 'automatic', loader: { '.css': 'empty' }, logLevel: 'silent', plugins: [{ name: 'home-view-tests', setup(api) {
   api.onResolve({ filter: /^react$/ }, () => ({ path: 'hooks', namespace: 'home-hooks' }));
-  api.onLoad({ filter: /.*/, namespace: 'home-hooks' }, () => ({ contents: ['useState', 'useEffect', 'useId'].map(name => `export const ${name}=(...args)=>globalThis.__homeHooks.${name}(...args);`).join('\n') }));
+  api.onLoad({ filter: /.*/, namespace: 'home-hooks' }, () => ({ contents: ['useState', 'useEffect', 'useId', 'useRef'].map(name => `export const ${name}=(...args)=>globalThis.__homeHooks.${name}(...args);`).join('\n') }));
   api.onResolve({ filter: /qbLoader\.js$/ }, () => ({ path: 'catalog', namespace: 'home-bank' }));
   api.onLoad({ filter: /.*/, namespace: 'home-bank' }, () => ({ contents: 'export const loadQB=()=>globalThis.__homeBank();' }));
 } }] });
@@ -19,6 +19,7 @@ function mount(props = {}, Component = PlayerLearningHomeView) {
   const hooks = {
     useState(initial) { const slot = slots[cursor++] ||= { value: typeof initial === 'function' ? initial() : initial }; return [slot.value, value => { slot.value = typeof value === 'function' ? value(slot.value) : value; }]; },
     useId() { return 'home-test'; },
+    useRef(initial) { return slots[cursor++] ||= { current: initial }; },
     useEffect(run, deps) { const index = cursor++, old = slots[index]; if (!old || deps.some((v, i) => !Object.is(v, old.deps[i]))) { old?.cleanup?.(); const current = slots[index] = { deps }; effects.push(() => { current.cleanup = run(); }); } },
   };
   let current = { player: { id: 'home-a', level: 'U13 / Peewee', quizHistory: [{}, {}] }, onNavigate: action => navigations.push(action), ...props };
