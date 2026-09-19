@@ -1,5 +1,12 @@
 # RinkReads Context (v2026.9)
 
+Shared BlueChip/RinkReads quality-control standard (2026-09-19, synced copy
+of `C:/Users/mtsli/BlueChip/references/video/quality-control-standard.md`):
+`docs/quality-control-standard.md`. Read it for the build-verification gate
+below and for what deliberately stays different between the two projects
+(push/publish authorization, review gates) — this repo stays a separate
+repo/codebase from `bluechip-os` regardless of shared brand ownership.
+
 Current product decisions: `docs/rinkreads-product-principles.md`. Read this before
 using older access, publishing, visual or curriculum assumptions. Pricing below
 is historical product context, not a new preview entitlement or purchase flow.
@@ -178,6 +185,12 @@ Brain write. (Standing rule, Thomas, 2026-07-11.)
 ## Git & Commits (auto-commit)
 - **AUTO-COMMIT:** after completing a code or content change in this repo, commit it
   to git without asking — clear conventional-commit message + `Co-Authored-By` trailer.
+- **Build-verification gate (added 2026-09-19, see `docs/quality-control-standard.md`):**
+  before any commit touching `src/` is pushed to `main`, run `npm run build`
+  (what Vercel actually runs) or the fast parse-only check documented there.
+  `npm run test:practice` alone is not sufficient — it never parses or builds
+  `App.jsx`, which is how a hard Babel parse failure reached `origin/main` and
+  broke production on 2026-09-07 despite a fully green test suite.
 - **Scope to what changed:** stage only the files for the change at hand
   (`git add <paths>`). Never `git add -A`/`.` to sweep unrelated WIP into the commit.
   If unrelated edits are mixed into a file you're committing, surface that and confirm
